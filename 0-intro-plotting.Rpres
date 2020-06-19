@@ -1,0 +1,539 @@
+Basics and Plotting
+========================================================
+author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
+date: 2019
+transition: none
+width: 1680
+height: 1050
+
+```{r include=FALSE}
+## better font size for slides
+library(ggplot2)
+theme_set(theme_grey(base_size = 22))
+opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=TRUE,comment=NA,cache=FALSE)
+opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
+```
+<style>
+.small-code pre code {
+  font-size: 0.5em;
+}
+</style>
+
+Introduction to the course
+========================================================
+type: section
+
+
+Goals of this course
+========================================================
+By the end of the course you should be able to...
+
+- write neat R scripts and markdown reports in R studio
+- find, read, and understand package and function documentation 
+- read and write tabular data into R from flat files
+- perform basic manipulations on tabular data: subsetting, manipulating and summarizing data, and joining
+- visualize tabluar data using line and scatter plots along with color and facets
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" width=800 height=300>
+</div>
+
+Tidyverse
+========================================================
+<div align="center">
+<img src="https://pbs.twimg.com/media/DuRP1tVVAAEcpxO.jpg">
+</div>
+
+Resources for this course
+========================================================
+
+R for Data Science (R4DS): https://r4ds.had.co.nz
+<div align="center">
+<img src="https://r4ds.had.co.nz/cover.png">
+</div>
+
+***
+
+- Fundamentals: ch 1, 4, 6
+- Input/output: ch 11
+- Data manipulation: ch 5, 13
+- Visualization: ch 3, 28
+
+Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+
+Getting Started in RStudio
+========================================================
+type: section
+
+
+The basics of interaction using the console window
+========================================================
+The R console window is the left (or lower-left) window in RStudio.
+The R console uses a "read, eval, print" loop. This is sometimes
+called a REPL.
+- Read: R reads what you type ...
+- Eval: R evaluates it ...
+- Print: R prints the result ...
+- Loop: (repeat forever)
+
+
+A simple example in the console
+========================================================
+- The box contains an expression that will be evaluated by R, followed by the result of evaluating that expression.
+```{r}
+1 + 2
+```
+- `3` is the answer
+- Ignore the `[1]` for now. 
+
+- R performs operations (called *functions*) on data and values
+- These can be composed arbitrarily
+```{r}
+log(1+3)
+paste("The answer is", log(1+3))
+```
+
+How do I...
+===
+- typing 
+```
+?function_name
+``` 
+gives you information about what the function does
+- Google is your friend. Try "function_name R language" or "how do I X in R?"
+- stackoverflow is your friend. It might take some scrolling, but you will eventually find what you need
+
+Quadratic Equation
+===
+type: prompt
+incremental: true
+
+One of the solutions to a polynomial equation $ax^2 + bx + c = 0$ is given by
+
+$$x = \frac{-b + \sqrt{b^2 -4ac}}{2a}$$
+
+Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate $x$ given $a=3, b=14, c=-5$.
+
+```{r}
+(-14 + sqrt(14^2 - 4*3*(-5)))/(2*3)
+```
+
+What did you learn? What did you notice?
+- Parentheses are used to encapsulate the *arguments* to a function like `sqrt()`
+- Operators like `\`, `*`, and `^` are useful for math
+- Parentheses can also be used to establish order of operations
+
+Packages
+===
+- The amazing thing about programming is that you are not limited to what is built into the language
+- Millions of R users have written their own functions that you can use
+- These are bundled together into *packages*
+- To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
+```{r, eval=F}
+install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
+library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
+```
+
+Packages
+===
+- The `tidyverse` package has a function called `read_csv()` that lets you read csv (comma-separated values) files into R. 
+- csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
+
+```{r}
+# I have a file called "mpg.csv" in a folder called data 
+my_data = read_csv("data/mpg.csv")
+```
+
+- This fails because I haven't yet loaded the `tidyverse` package
+```{r, eval=F}
+library(tidyverse)
+```
+```{r, include=F}
+library(tidyverse)
+```
+
+```{r}
+my_data = read_csv("data/mpg.csv")
+```
+
+Packages
+===
+- packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
+- once the package is loaded it doesn't need to be loaded again before each function call
+```{r}
+my_data_2 = read_csv("data/poly.csv") # reading another csv file
+```
+
+
+Using R to look at your data
+========================================================
+type: section
+
+Data analysis workflow
+====
+1. Read data into R (done!)
+2. ~~Manipulate data~~
+3. Get results, **make plots and figures**
+
+Getting your data in R
+===
+- Getting your data into R is easy. We already saw, for example:
+
+```{r}
+my_data = read_csv("data/mpg.csv")
+```
+
+- `read_csv()` requires you to tell it where to find the file you want to read in
+  - Windows, e.g.: `"C:\Users\me\Desktop\myfile.csv"`
+  - Mac, e.g.: `"/Users/me/Desktop/myfile.csv"`
+- If your data is not already in csv format, google "covert X format to csv" or "read X format data in R"
+- We'll learn the details of this later, but this is enough to get you started! 
+- the `mpg` dataset actually comes pre-loaded with `tidyverse`, so you have it already
+
+Looking at data
+===
+- `mpg` is now a dataset loaded into R. To look at it, just type
+```{r}
+mpg
+```
+
+This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
+- Similar to an Excel spreadsheet.
+- One ro ~ one
+instance of some (real-world) object.
+- One column ~ one variable, containing the values for the
+corresponding instances.
+- All the values in one column should be of the same type (a number, a category, text, etc.), but
+different columns can be of different types.
+
+Investigating a relationship
+===
+Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
+- Can we use R to make a plot of these two variables?
+
+```{r, tidy=F}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
+```
+
+- `ggplot(dataset)` says "start a chart with this dataset"
+- `+ geom_point(...)` says "put points on this chart"
+- `aes(x=x_values y=y_values)` says "map the values in the column `x_values` to the x-axis, and map the values in the column `y_values` to the y-axis" (`aes` is short for *aesthetic*)
+
+ggplot
+===
+
+```{r, tidy=F}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
+```
+
+***
+
+- `ggplot` is short for "grammar of graphics plot"
+  - This is a language for describing how data get linked to visual elements
+- `ggplot()` and `geom_point()` are functions imported from the `ggplot2` package, which is one of the "sub-packages" of the `tidyverse` package we loaded earlier
+
+Investigating a relationship
+===
+type: prompt
+incremental: true
+
+Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
+```{r, tidy=F}
+ggplot(mpg) + 
+  geom_point(aes(x = hwy, y = cyl))
+```
+
+
+Investigating a relationship
+===
+type: prompt
+incremental: true
+
+Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
+
+```{r, tidy=F}
+ggplot(mpg) + 
+  geom_point(aes(x = hwy, y = cyl))
+```
+
+Investigating a relationship
+===
+Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
+
+```{r, tidy=F, echo=F}
+mpg %>%
+  mutate(red=displ>5&hwy>21) %>%
+ggplot() + 
+  geom_point(aes(x = displ, y = hwy, color=red)) +
+  theme(legend.position = "none")  +
+  scale_color_manual(values=c("black", "red"))
+```
+
+- What's going on with these cars? They have higher gas mileage than cars of similar engine size, so maybe they are hybrids?
+- If they are hybrids, they would probably be of `class` "compact" or "subcompact"?
+
+Aesthetics
+===
+- Aesthetics aren't just for mapping columns to the x- and y-axis
+- You can also use them to assign color, for instance
+
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    color=class
+  )) 
+```
+
+- ggplot automatically gives each value of the column a unique level of the aesthetic (here a color) and adds a legend
+- What did we learn about the cars we were interested in?
+
+***
+```{r, tidy=F, echo=F, out.width="90%"}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    color=class
+  )) +
+  theme(legend.position="bottom")
+```
+
+Aesthetics
+===
+- Aesthetics aren't just for mapping columns to the x- and y-axis
+- Or we could have done a shape
+
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    shape=class
+  )) 
+```
+
+
+***
+```{r, tidy=F, echo=F, out.width="90%"}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    shape=class
+  )) +
+  theme(legend.position="bottom")
+```
+
+Aesthetics
+===
+- Aesthetics aren't just for mapping columns to the x- and y-axis
+- Or size
+
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    size=class
+  )) 
+```
+- This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
+
+***
+```{r, tidy=F, echo=F, out.width="90%"}
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    size=class
+  )) +
+  theme(legend.position="bottom")
+```
+
+Aesthetics
+===
+- If we set a property *outside* of the aesthetic, it no longer maps that property to a column. 
+
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy
+    ),
+    color = "blue"
+  ) 
+```
+- However, we can use this to assign fixed properties to the plot that don't depend on the data
+
+***
+```{r, tidy=F, echo=F, out.width="90%"}
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy
+    ),
+    color = "blue"
+  ) 
+```
+
+Exercise
+===
+incremental: true
+type: prompt
+
+Can you recreate this plot?
+
+```{r, tidy=F, echo=F}
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy,
+      color = displ,
+      size = hwy
+    )
+  ) 
+```
+***
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy,
+      color = displ,
+      size = hwy
+    )
+  ) 
+```
+
+Exercise
+===
+incremental: true
+type: prompt
+
+What will this do? Why?
+
+```{r, tidy=F, eval=F}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy, color = "blue"))
+```
+***
+```{r, tidy=F, echo=F}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy, color = "blue"))
+```
+
+Facets
+===
+- Aesthetics are useful for mapping columns to particular properties of a single plot
+- Use **facets** to generate multiple plots with shared structure
+
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+```
+- `facet_wrap` is good for faceting according to unordered categories
+
+Facets
+===
+- `facet_grid` is better for ordered categories, and can be used with two variables
+
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) + 
+  facet_grid(drv ~ cyl)
+```
+
+Exercise
+===
+type:prompt
+incremental: true
+
+Run this code and comment on what role `.` plays:
+
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+```
+
+
+Geoms
+===
+
+```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center"}
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
+```
+- Both these plots represent the same data, but they use a different geometric representation ("geom")
+- e.g. bar chart vs. line chart, etc. 
+
+***
+```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center", message=F}
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy))
+```
+
+Geoms
+===
+- Different geoms are configured to work with different aesthetics. 
+- e.g. you can set the shape of a point, but you ca’t set the “shape” of a line.
+- On the other hand, you *can* set the "line type" of a line:
+
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy, linetype = drv))
+```
+
+Geoms
+===
+- It's possible to add multiple geoms to the same plot
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
+  geom_point(aes(x = displ, y = hwy, color = drv))
+```
+
+Geoms
+===
+- To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
+  geom_smooth() + 
+  geom_point()
+```
+
+Geoms
+===
+- You can also use different mappings in different geoms
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) + 
+  geom_smooth()
+```
+
+Exercise
+===
+type: prompt
+- Use google or other resources to figure out how to receate this plot in R:
+
+```
+ggplot(mpg) + 
+  ...
+```
+
+```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(mpg) + 
+  geom_bar(aes(x = manufacturer, fill=trans))
+```
+
+- What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
+
