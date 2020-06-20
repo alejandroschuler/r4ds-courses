@@ -17,7 +17,6 @@ Introduction to the course
 ========================================================
 type: section
 
-
 Goals of this course
 ========================================================
 By the end of the course you should be able to...
@@ -54,6 +53,7 @@ R for Data Science (R4DS): https://r4ds.had.co.nz
 - Visualization: ch 3, 28
 
 Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+
 
 Getting Started in RStudio
 ========================================================
@@ -144,7 +144,7 @@ Packages
 
 ```r
 > # I have a file called 'mpg.csv' in a folder called data
-> my_data = read_csv("data/mpg.csv")
+> mpg = read_csv("data/mpg.csv")
 Error in read_csv("data/mpg.csv"): could not find function "read_csv"
 ```
 
@@ -157,7 +157,7 @@ Error in read_csv("data/mpg.csv"): could not find function "read_csv"
 
 
 ```r
-> my_data = read_csv("data/mpg.csv")
+> mpg = read_csv("data/mpg.csv")
 Parsed with column specification:
 cols(
   `18.0   8   307.0      130.0      3504.      12.0   70  1` = col_character(),
@@ -171,7 +171,7 @@ Packages
 - once the package is loaded it doesn't need to be loaded again before each function call
 
 ```r
-> my_data_2 = read_csv("data/poly.csv")  # reading another csv file
+> poly = read_csv("data/poly.csv")  # reading another csv file
 Parsed with column specification:
 cols(
   x = col_double(),
@@ -196,7 +196,7 @@ Getting your data in R
 
 
 ```r
-> my_data = read_csv("data/mpg.csv")
+> mpg = read_csv("data/mpg.csv")
 Parsed with column specification:
 cols(
   `18.0   8   307.0      130.0      3504.      12.0   70  1` = col_character(),
@@ -217,20 +217,20 @@ Looking at data
 
 ```r
 > mpg
-# A tibble: 234 x 11
-   manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
-   <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
- 1 audi         a4         1.8  1999     4 auto(l… f        18    29 p     comp…
- 2 audi         a4         1.8  1999     4 manual… f        21    29 p     comp…
- 3 audi         a4         2    2008     4 manual… f        20    31 p     comp…
- 4 audi         a4         2    2008     4 auto(a… f        21    30 p     comp…
- 5 audi         a4         2.8  1999     6 auto(l… f        16    26 p     comp…
- 6 audi         a4         2.8  1999     6 manual… f        18    26 p     comp…
- 7 audi         a4         3.1  2008     6 auto(a… f        18    27 p     comp…
- 8 audi         a4 quat…   1.8  1999     4 manual… 4        18    26 p     comp…
- 9 audi         a4 quat…   1.8  1999     4 auto(l… 4        16    25 p     comp…
-10 audi         a4 quat…   2    2008     4 manual… 4        20    28 p     comp…
-# … with 224 more rows
+# A tibble: 397 x 2
+   `18.0   8   307.0      130.0      3504.      12.0 … `chevrolet chevelle mali…
+   <chr>                                               <chr>                    
+ 1 15.0   8   350.0      165.0      3693.      11.5  … buick skylark 320        
+ 2 18.0   8   318.0      150.0      3436.      11.0  … plymouth satellite       
+ 3 16.0   8   304.0      150.0      3433.      12.0  … amc rebel sst            
+ 4 17.0   8   302.0      140.0      3449.      10.5  … ford torino              
+ 5 15.0   8   429.0      198.0      4341.      10.0  … ford galaxie 500         
+ 6 14.0   8   454.0      220.0      4354.       9.0  … chevrolet impala         
+ 7 14.0   8   440.0      215.0      4312.       8.5  … plymouth fury iii        
+ 8 14.0   8   455.0      225.0      4425.      10.0  … pontiac catalina         
+ 9 15.0   8   390.0      190.0      3850.       8.5  … amc ambassador dpl       
+10 15.0   8   383.0      170.0      3563.      10.0  … dodge challenger se      
+# … with 387 more rows
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
@@ -251,6 +251,7 @@ Let's say we're curious about the relationship between a car's engine size (the 
 ```r
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
 ![plot of chunk unnamed-chunk-13](0-intro-plotting-figure/unnamed-chunk-13-1.png)
@@ -266,6 +267,7 @@ ggplot
 ```r
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
 ![plot of chunk unnamed-chunk-14](0-intro-plotting-figure/unnamed-chunk-14-1.png)
@@ -286,31 +288,21 @@ Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
 ```r
 > ggplot(mpg) + 
 +   geom_point(aes(x = hwy, y = cyl))
+Error in FUN(X[[i]], ...): object 'hwy' not found
 ```
 
 ![plot of chunk unnamed-chunk-15](0-intro-plotting-figure/unnamed-chunk-15-1.png)
-
-
-Investigating a relationship
-===
-type: prompt
-incremental: true
-
-Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
-
-
-```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = hwy, y = cyl))
-```
-
-![plot of chunk unnamed-chunk-16](0-intro-plotting-figure/unnamed-chunk-16-1.png)
 
 Investigating a relationship
 ===
 Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
 
-![plot of chunk unnamed-chunk-17](0-intro-plotting-figure/unnamed-chunk-17-1.png)
+
+```
+Error: Problem with `mutate()` input `red`.
+x object 'displ' not found
+ℹ Input `red` is `displ > 5 & hwy > 21`.
+```
 
 - What's going on with these cars? They have higher gas mileage than cars of similar engine size, so maybe they are hybrids?
 - If they are hybrids, they would probably be of `class` "compact" or "subcompact"?
@@ -334,7 +326,12 @@ Aesthetics
 - What did we learn about the cars we were interested in?
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="90%" />
+
+```
+Error in FUN(X[[i]], ...): object 'displ' not found
+```
+
+<img src="0-intro-plotting-figure/unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" width="90%" />
 
 Aesthetics
 ===
@@ -355,13 +352,10 @@ Aesthetics
 ***
 
 ```
-Warning: The shape palette can deal with a maximum of 6 discrete values because
-more than 6 becomes difficult to discriminate; you have 7. Consider
-specifying shapes manually if you must have them.
-Warning: Removed 62 rows containing missing values (geom_point).
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" width="90%" />
 
 Aesthetics
 ===
@@ -382,10 +376,10 @@ Aesthetics
 ***
 
 ```
-Warning: Using size for a discrete variable is not advised.
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" width="90%" />
 
 Aesthetics
 ===
@@ -405,7 +399,12 @@ Aesthetics
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" width="90%" />
+
+```
+Error in FUN(X[[i]], ...): object 'displ' not found
+```
+
+<img src="0-intro-plotting-figure/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" width="90%" />
 
 Exercise
 ===
@@ -414,7 +413,12 @@ type: prompt
 
 Can you recreate this plot?
 
-![plot of chunk unnamed-chunk-26](0-intro-plotting-figure/unnamed-chunk-26-1.png)
+
+```
+Error in FUN(X[[i]], ...): object 'displ' not found
+```
+
+![plot of chunk unnamed-chunk-25](0-intro-plotting-figure/unnamed-chunk-25-1.png)
 ***
 
 ```r
@@ -442,7 +446,12 @@ What will this do? Why?
 +   geom_point(aes(x = displ, y = hwy, color = "blue"))
 ```
 ***
-![plot of chunk unnamed-chunk-29](0-intro-plotting-figure/unnamed-chunk-29-1.png)
+
+```
+Error in FUN(X[[i]], ...): object 'displ' not found
+```
+
+![plot of chunk unnamed-chunk-28](0-intro-plotting-figure/unnamed-chunk-28-1.png)
 
 Facets
 ===
@@ -454,9 +463,12 @@ Facets
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy)) + 
 +   facet_wrap(~ class, nrow = 2)
+Error: At least one layer must contain all faceting variables: `class`.
+* Plot is missing `class`
+* Layer 1 is missing `class`
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
@@ -468,9 +480,12 @@ Facets
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy)) + 
 +   facet_grid(drv ~ cyl)
+Error: At least one layer must contain all faceting variables: `drv`.
+* Plot is missing `drv`
+* Layer 1 is missing `drv`
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -484,9 +499,12 @@ Run this code and comment on what role `.` plays:
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy)) +
 +   facet_grid(drv ~ .)
+Error: At least one layer must contain all faceting variables: `drv`.
+* Plot is missing `drv`
+* Layer 1 is missing `drv`
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
 
 
 Geoms
@@ -496,9 +514,10 @@ Geoms
 ```r
 > ggplot(mpg) + 
 +   geom_point(aes(x = displ, y = hwy))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
@@ -507,9 +526,10 @@ Geoms
 ```r
 > ggplot(mpg) + 
 +   geom_smooth(aes(x = displ, y = hwy))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -521,9 +541,10 @@ Geoms
 ```r
 > ggplot(mpg) + 
 +   geom_smooth(aes(x = displ, y = hwy, linetype = drv))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -533,9 +554,10 @@ Geoms
 > ggplot(mpg) + 
 +   geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
 +   geom_point(aes(x = displ, y = hwy, color = drv))
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -545,9 +567,10 @@ Geoms
 > ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
 +   geom_smooth() + 
 +   geom_point()
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -557,9 +580,10 @@ Geoms
 > ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
 +   geom_point(aes(color = class)) + 
 +   geom_smooth()
+Error in FUN(X[[i]], ...): object 'displ' not found
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-38-1.png" title="plot of chunk unnamed-chunk-38" alt="plot of chunk unnamed-chunk-38" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -571,7 +595,12 @@ ggplot(mpg) +
   ...
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" style="display: block; margin: auto;" />
+
+```
+Error in FUN(X[[i]], ...): object 'manufacturer' not found
+```
+
+<img src="0-intro-plotting-figure/unnamed-chunk-38-1.png" title="plot of chunk unnamed-chunk-38" alt="plot of chunk unnamed-chunk-38" style="display: block; margin: auto;" />
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to fix the labels overlapping at the bottom?

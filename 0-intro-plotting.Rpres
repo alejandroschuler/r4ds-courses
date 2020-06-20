@@ -9,7 +9,7 @@ height: 1050
 ```{r include=FALSE}
 ## better font size for slides
 library(ggplot2)
-theme_set(theme_grey(base_size = 22))
+# theme_set(theme_grey(base_size = 22))
 opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=TRUE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
@@ -22,7 +22,6 @@ opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 Introduction to the course
 ========================================================
 type: section
-
 
 Goals of this course
 ========================================================
@@ -60,6 +59,7 @@ R for Data Science (R4DS): https://r4ds.had.co.nz
 - Visualization: ch 3, 28
 
 Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+
 
 Getting Started in RStudio
 ========================================================
@@ -141,7 +141,7 @@ Packages
 
 ```{r}
 # I have a file called "mpg.csv" in a folder called data 
-my_data = read_csv("data/mpg.csv")
+mpg = read_csv("data/mpg.csv")
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -153,7 +153,7 @@ library(tidyverse)
 ```
 
 ```{r}
-my_data = read_csv("data/mpg.csv")
+mpg = read_csv("data/mpg.csv")
 ```
 
 Packages
@@ -161,7 +161,7 @@ Packages
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
 ```{r}
-my_data_2 = read_csv("data/poly.csv") # reading another csv file
+poly = read_csv("data/poly.csv") # reading another csv file
 ```
 
 
@@ -179,8 +179,8 @@ Getting your data in R
 ===
 - Getting your data into R is easy. We already saw, for example:
 
-```{r}
-my_data = read_csv("data/mpg.csv")
+```{r, eval=F}
+mpg = read_csv("data/mpg.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -240,19 +240,6 @@ type: prompt
 incremental: true
 
 Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
-```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(x = hwy, y = cyl))
-```
-
-
-Investigating a relationship
-===
-type: prompt
-incremental: true
-
-Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
-
 ```{r, tidy=F}
 ggplot(mpg) + 
   geom_point(aes(x = hwy, y = cyl))
