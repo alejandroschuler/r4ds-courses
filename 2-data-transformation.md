@@ -13,10 +13,17 @@ height: 1050
 }
 </style>
 
+dplyr
+========================================================
+This section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`). 
+
+<div align="center">
+<img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png"; style="max-width:800px;"; class="center">
+</div>
 
 dplyr verbs
 ========================================================
-The rest of this section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`). Each operation takes a data frame and produces a new data frame.
+Each operation takes a data frame and produces a new data frame.
 
 - `filter()` picks out rows according to specified conditions
 - `select()` picks out columns according to their names
@@ -751,7 +758,7 @@ incremental: true
 
 - More on this in the section on functional programming!
 
-Exercise
+Exercise: mutate()
 ===
 type:prompt
 incremental:true
@@ -777,7 +784,23 @@ incremental:true
 # … with 224 more rows, and 1 more variable: avg_mpg <dbl>
 ```
 
-Exercise
+Exercise: mutate() and ggplot
+===
+type:prompt
+incremental:true
+
+In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
+
+![plot of chunk unnamed-chunk-44](2-data-transformation-figure/unnamed-chunk-44-1.png)
+
+
+```r
+> sports = mutate(mpg, sports_car = class=="2seater")
+> ggplot(sports) + 
++   geom_point(aes(x=displ, y=hwy, color=sports_car))
+```
+
+Exercise: putting it together
 ===
 type:prompt
 incremental:true
@@ -806,24 +829,143 @@ I'm considering buying a car. I know Toyotas and Subarus are reliable so I'd lik
 10 toyota       camry        manual(m5)  1999    23.7
 ```
 
-Exercise
+
+Piping
 ===
-type:prompt
+type:section
+
+Why pipe?
+===
 incremental:true
 
-In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
-
-![plot of chunk unnamed-chunk-45](2-data-transformation-figure/unnamed-chunk-45-1.png)
+- in our last exercise, we used a number of different function applications to arrive at our answer. 
 
 
 ```r
-> sports = mutate(mpg, sports_car = class=="2seater")
-> ggplot(sports) + 
-+   geom_point(aes(x=displ, y=hwy, color=sports_car))
+> toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+> with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+> sorted = arrange(with_avg_mpg, desc(avg_mpg))
+> top_10 = filter(sorted, row_number()<=10)
+> select(top_10, manufacturer, model, trans, year, avg_mpg)
+```
+
+- we used temporary variables to keep our code clean. Compare to the same code using nested calls:
+
+
+```r
+> select(
++   filter(
++     arrange(
++       mutate(
++         filter(
++           mpg, manufacturer=='toyota' | manufacturer=='subaru'), 
++         avg_mpg = (2*cty + hwy)/3), 
++       desc(avg_mpg)), 
++     row_number()<=10), 
++   manufacturer, model, trans, year, avg_mpg
++ ) 
+```
+
+- what makes either of these hard to read or understand?
+
+The pipe operator
+===
+
+- tidyverse solves these problems with the pipe operator `%>%`
+
+
+```r
+> mpg %>% 
++   filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
++   mutate(avg_mpg = (2*cty + hwy)/3) %>%
++   arrange(desc(avg_mpg)) %>%
++   filter(row_number()<=10) %>%
++   select(manufacturer, model, trans, year, avg_mpg)
+```
+
+- how does this compare with our code before? What do you notice?
+
+
+```r
+> toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+> with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+> sorted = arrange(with_avg_mpg, desc(avg_mpg))
+> top_10 = filter(sorted, row_number()<=10)
+> select(top_10, manufacturer, model, trans, year, avg_mpg)
+```
+
+Pipe details
+=================================================================
+
+```r
+> df1 %>% fun(x)
+```
+is converted into:
+
+```r
+> fun(df1, x)
+```
+- That is: the thing being piped in is used as the _first_ argument of `fun`.
+- The tidyverse functions are consistently designed so that the first argument is a data frame, and the result is a data frame, so you can push a dataframe all the way through a series of functions
+
+Pipe details
+=================================================================
+- The pipe works for all variables and functions, not just tidyverse functions
+
+```r
+> c(1, 44, 21, 0, -4) %>% sum()  # instead of sum(c(1,44,21,0,-4))
+[1] 62
+```
+
+
+```r
+> 1 %>% +1  # `+` is just a function that takes two arguments!
+[1] 2
+```
+
+Piping to another position
+===
+- The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function 
+
+```r
+> mean %>% slide_vec(1:10, ., .before = 2)
+ [1] 1.0 1.5 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0
+```
+- Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
+- More about this in the functional programming section
+
+Pipe to ggplot
+===
+type:prompt
+incremental: true
+
+- Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
+
+
+```r
+> outliers = filter(mpg, displ > 5, hwy > 21)
+> outliers = mutate(outliers, sports_car = class=="2seater")
+> ggplot(outliers) + 
++   geom_bar(aes(x=sports_car)) +
++   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
++   ggtitle("How many of the outliers are sports cars?")
+```
+
+
+```r
+> mpg %>%
++   filter(displ > 5, hwy > 21) %>%
++   mutate(outliers, sports_car = class=="2seater") %>%
++ ggplot() + 
++   geom_bar(aes(x=sports_car)) +
++   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
++   ggtitle("How many of the outliers are sports cars?")
 ```
 
 <!-- ^^  COMPLETE   ^^ -->
 <!-- vv IN PROGRESS vv -->
+
+
 
 summarize() computes desired summaires across rows
 ================================================================
@@ -980,89 +1122,12 @@ Error in filter(data1_by_gender, age == min(age)): object 'data1_by_gender' not 
 ```
 - This shows how filter can be applied to grouped data. Instead of applying the condition across all the data, it applies it group-by-group.
 
-Chaining: combining a sequence of function calls
-=================================================================
-type: section
-
-Both nesting and temporary variables can be ugly and hard to read
-=================================================================
-- In this expression, the result of `summarize` is used as an argument to `arrange`.
-- The operations are performed "inside out": first `summarize`, then `arrange`.
-
-```r
-> arrange(summarize(group_by(state_data, region), sd_area = sd(area)), sd_area)
-```
-- We could store the first result in a temporary variable:
-
-```r
-> state_data_by_region <- group_by(state_data, region)
-Error in group_by(state_data, region): object 'state_data' not found
-> region_area_sds <- summarize(state_data_by_region, sd_area = sd(area))
-Error in summarize(state_data_by_region, sd_area = sd(area)): object 'state_data_by_region' not found
-> arrange(region_area_sds, sd_area)
-Error in arrange(region_area_sds, sd_area): object 'region_area_sds' not found
-```
-
-
-Chaining using the pipe operator
-=================================================================
-- Or, we can use a new operator, `%>%`, to "pipe" the result from the first
-function call to the second function call.
-
-```r
-> state_data %>% group_by(region) %>% summarize(sd_area = sd(area)) %>% arrange(sd_area)
-Error in eval(lhs, parent, parent): object 'state_data' not found
-```
-
-- This makes explicit the flow of data through operations:
-  - Start with `state_data`
-  - group it by region
-  - summarize by region, computing `sd_area`
-  - arrange rows by `sd_area`
-- The code reads like instructions that a human could understand
-- putting the function calls on different lines also improves readability
-
-Pipe: details
-=================================================================
-
-```r
-> df1 %>% fun(x)
-```
-is converted into:
-
-```r
-> fun(df1, x)
-```
-- That is: the thing being piped in is used as the _first_ argument of `fun`.
-- The tidyverse functions are consistently designed so that the first argument is a data frame, and the result is a data frame, so piping always works as intended.
-
-Pipe: details
-=================================================================
-- However, the pipe works for all variables and functions, not just tidyverse functions
-
-```r
-> c(1, 44, 21, 0, -4) %>% sum()
-[1] 62
-> sum(c(1, 44, 21, 0, -4))
-[1] 62
-> 1 %>% +1  # `+` is just a function that takes two arguments!
-[1] 2
-```
-
-Piping to another position
-===
-- The pipe typically pipes into the first argument of a function, but you can use the `.` syntax to send the argument elsewhere:
-
-```r
-> values = c(1, 2, 3, NA)
-> 
-> TRUE %>% mean(values, na.rm = .)
-[1] 2
-```
-- This is typically not done, but can be a handy shortcut in many situations
 
 dplyr cheatsheet
 ============================================================
-<div align="center">
-<img src="https://www.rstudio.com/wp-content/uploads/2018/08/data-transformation.png", height=1000, width=1400>
-</div>
+<!-- <embed src="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" width="500" height="375"  -->
+<!--  type="application/pdf"> -->
+ 
+<!-- <div align="center"> -->
+<!-- <img src="https://www.rstudio.com/wp-content/uploads/2018/08/data-transformation.png", height=1000, width=1400> -->
+<!-- </div> -->

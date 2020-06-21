@@ -19,10 +19,17 @@ opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 }
 </style>
 
+dplyr
+========================================================
+This section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`). 
+
+<div align="center">
+<img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png"; style="max-width:800px;"; class="center">
+</div>
 
 dplyr verbs
 ========================================================
-The rest of this section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`). Each operation takes a data frame and produces a new data frame.
+Each operation takes a data frame and produces a new data frame.
 
 - `filter()` picks out rows according to specified conditions
 - `select()` picks out columns according to their names
@@ -381,7 +388,7 @@ mutate(profits, avg_2_day_profit = slide_vec(profit, mean, .before=1))
 
 - More on this in the section on functional programming!
 
-Exercise
+Exercise: mutate()
 ===
 type:prompt
 incremental:true
@@ -392,22 +399,7 @@ incremental:true
 mutate(mpg, avg_mpg = (2*cty + hwy)/3)
 ```
 
-Exercise
-===
-type:prompt
-incremental:true
-
-I'm considering buying a car. I know Toyotas and Subarus are reliable so I'd like for the car to be either a Toyota or Subaru. Besides that the only thing I really care about is overall fuel efficiency. I usually drive twice as many miles in the city as I do on the highway. Can you produce me a rank-ordered list of the top 10 cars that I should consider, from best to worst? I'd just like the make, model, transmission, year, and overall fuel efficiency.
-
-```{r}
-toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-sorted = arrange(with_avg_mpg, desc(avg_mpg))
-top_10 = filter(sorted, row_number()<=10)
-select(top_10, manufacturer, model, trans, year, avg_mpg)
-```
-
-Exercise
+Exercise: mutate() and ggplot
 ===
 type:prompt
 incremental:true
@@ -426,8 +418,146 @@ ggplot(sports) +
   geom_point(aes(x=displ, y=hwy, color=sports_car))
 ```
 
+Exercise: putting it together
+===
+type:prompt
+incremental:true
+
+I'm considering buying a car. I know Toyotas and Subarus are reliable so I'd like for the car to be either a Toyota or Subaru. Besides that the only thing I really care about is overall fuel efficiency. I usually drive twice as many miles in the city as I do on the highway. Can you produce me a rank-ordered list of the top 10 cars that I should consider, from best to worst? I'd just like the make, model, transmission, year, and overall fuel efficiency.
+
+```{r}
+toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number()<=10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
+```
+
+
+Piping
+===
+type:section
+
+Why pipe?
+===
+incremental:true
+
+- in our last exercise, we used a number of different function applications to arrive at our answer. 
+
+```{r, eval=F, tidy=F}
+toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number()<=10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
+```
+
+- we used temporary variables to keep our code clean. Compare to the same code using nested calls:
+
+```{r, eval=F, tidy=F}
+select(
+  filter(
+    arrange(
+      mutate(
+        filter(
+          mpg, manufacturer=='toyota' | manufacturer=='subaru'), 
+        avg_mpg = (2*cty + hwy)/3), 
+      desc(avg_mpg)), 
+    row_number()<=10), 
+  manufacturer, model, trans, year, avg_mpg
+) 
+```
+
+- what makes either of these hard to read or understand?
+
+The pipe operator
+===
+
+- tidyverse solves these problems with the pipe operator `%>%`
+
+```{r, eval=F, tidy=F}
+mpg %>% 
+  filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
+  mutate(avg_mpg = (2*cty + hwy)/3) %>%
+  arrange(desc(avg_mpg)) %>%
+  filter(row_number()<=10) %>%
+  select(manufacturer, model, trans, year, avg_mpg)
+```
+
+- how does this compare with our code before? What do you notice?
+
+```{r, eval=F, tidy=F}
+toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number()<=10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
+```
+
+Pipe details
+=================================================================
+```{r eval=FALSE}
+df1 %>% fun(x)
+```
+is converted into:
+```{r eval=FALSE}
+fun(df1, x)
+```
+- That is: the thing being piped in is used as the _first_ argument of `fun`.
+- The tidyverse functions are consistently designed so that the first argument is a data frame, and the result is a data frame, so you can push a dataframe all the way through a series of functions
+
+Pipe details
+=================================================================
+- The pipe works for all variables and functions, not just tidyverse functions
+```{r}
+c(1,44,21,0,-4) %>%
+    sum() # instead of sum(c(1,44,21,0,-4))
+```
+
+```{r}
+1 %>% `+`(1) # `+` is just a function that takes two arguments!
+```
+
+Piping to another position
+===
+- The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function 
+```{r}
+mean %>%
+  slide_vec(1:10, ., .before=2)
+```
+- Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
+- More about this in the functional programming section
+
+Pipe to ggplot
+===
+type:prompt
+incremental: true
+
+- Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
+
+```{r, eval=F, tidy=F}
+outliers = filter(mpg, displ > 5, hwy > 21)
+outliers = mutate(outliers, sports_car = class=="2seater")
+ggplot(outliers) + 
+  geom_bar(aes(x=sports_car)) +
+  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
+  ggtitle("How many of the outliers are sports cars?")
+```
+
+```{r, eval=F, tidy=F}
+mpg %>%
+  filter(displ > 5, hwy > 21) %>%
+  mutate(outliers, sports_car = class=="2seater") %>%
+ggplot() + 
+  geom_bar(aes(x=sports_car)) +
+  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
+  ggtitle("How many of the outliers are sports cars?")
+```
+
 <!-- ^^  COMPLETE   ^^ -->
 <!-- vv IN PROGRESS vv -->
+
+
 
 summarize() computes desired summaires across rows
 ================================================================
@@ -558,79 +688,12 @@ filter(data1_by_gender, age==min(age))
 ```
 - This shows how filter can be applied to grouped data. Instead of applying the condition across all the data, it applies it group-by-group.
 
-Chaining: combining a sequence of function calls
-=================================================================
-type: section
-
-Both nesting and temporary variables can be ugly and hard to read
-=================================================================
-- In this expression, the result of `summarize` is used as an argument to `arrange`.
-- The operations are performed "inside out": first `summarize`, then `arrange`.
-```{r eval=FALSE}
-arrange(summarize(group_by(state_data, region), sd_area = sd(area)), sd_area)
-```
-- We could store the first result in a temporary variable:
-```{r}
-state_data_by_region <- group_by(state_data, region)
-region_area_sds <- summarize(state_data_by_region, sd_area = sd(area))
-arrange(region_area_sds, sd_area)
-```
-
-
-Chaining using the pipe operator
-=================================================================
-- Or, we can use a new operator, `%>%`, to "pipe" the result from the first
-function call to the second function call.
-```{r}
-state_data %>%
-  group_by(region) %>%
-  summarize(sd_area = sd(area)) %>%
-  arrange(sd_area)
-```
-
-- This makes explicit the flow of data through operations:
-  - Start with `state_data`
-  - group it by region
-  - summarize by region, computing `sd_area`
-  - arrange rows by `sd_area`
-- The code reads like instructions that a human could understand
-- putting the function calls on different lines also improves readability
-
-Pipe: details
-=================================================================
-```{r eval=FALSE}
-df1 %>% fun(x)
-```
-is converted into:
-```{r eval=FALSE}
-fun(df1, x)
-```
-- That is: the thing being piped in is used as the _first_ argument of `fun`.
-- The tidyverse functions are consistently designed so that the first argument is a data frame, and the result is a data frame, so piping always works as intended.
-
-Pipe: details
-=================================================================
-- However, the pipe works for all variables and functions, not just tidyverse functions
-```{r}
-c(1,44,21,0,-4) %>%
-    sum()
-sum(c(1,44,21,0,-4))
-1 %>% `+`(1) # `+` is just a function that takes two arguments!
-```
-
-Piping to another position
-===
-- The pipe typically pipes into the first argument of a function, but you can use the `.` syntax to send the argument elsewhere:
-```{r}
-values = c(1,2,3,NA)
-
-TRUE %>%
-  mean(values, na.rm=.)
-```
-- This is typically not done, but can be a handy shortcut in many situations
 
 dplyr cheatsheet
 ============================================================
-<div align="center">
-<img src="https://www.rstudio.com/wp-content/uploads/2018/08/data-transformation.png", height=1000, width=1400>
-</div>
+<!-- <embed src="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" width="500" height="375"  -->
+<!--  type="application/pdf"> -->
+ 
+<!-- <div align="center"> -->
+<!-- <img src="https://www.rstudio.com/wp-content/uploads/2018/08/data-transformation.png", height=1000, width=1400> -->
+<!-- </div> -->
