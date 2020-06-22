@@ -15,7 +15,7 @@ height: 1050
 
 dplyr
 ========================================================
-This section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`). 
+This section shows the basic data frame functions ("verbs") in the `dplyr` package (part of `tidyverse`).
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png"; style="max-width:800px;"; class="center">
@@ -703,7 +703,7 @@ incremental: true
 > cumsum(c(1, 2, 3))
 [1] 1 3 6
 ```
-- `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions 
+- `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions
 
 
 ```r
@@ -796,7 +796,7 @@ In the first lecture we identified that sports cars (`class=="2seater"`) were ou
 
 ```r
 > sports = mutate(mpg, sports_car = class=="2seater")
-> ggplot(sports) + 
+> ggplot(sports) +
 +   geom_point(aes(x=displ, y=hwy, color=sports_car))
 ```
 
@@ -838,7 +838,7 @@ Why pipe?
 ===
 incremental:true
 
-- in our last exercise, we used a number of different function applications to arrive at our answer. 
+- in our last exercise, we used a number of different function applications to arrive at our answer.
 
 
 ```r
@@ -858,12 +858,12 @@ incremental:true
 +     arrange(
 +       mutate(
 +         filter(
-+           mpg, manufacturer=='toyota' | manufacturer=='subaru'), 
-+         avg_mpg = (2*cty + hwy)/3), 
-+       desc(avg_mpg)), 
-+     row_number()<=10), 
++           mpg, manufacturer=='toyota' | manufacturer=='subaru'),
++         avg_mpg = (2*cty + hwy)/3),
++       desc(avg_mpg)),
++     row_number()<=10),
 +   manufacturer, model, trans, year, avg_mpg
-+ ) 
++ )
 ```
 
 - what makes either of these hard to read or understand?
@@ -875,7 +875,7 @@ The pipe operator
 
 
 ```r
-> mpg %>% 
+> mpg %>%
 +   filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
 +   mutate(avg_mpg = (2*cty + hwy)/3) %>%
 +   arrange(desc(avg_mpg)) %>%
@@ -925,7 +925,7 @@ Pipe details
 
 Piping to another position
 ===
-- The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function 
+- The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
 
 ```r
 > mean %>% slide_vec(1:10, ., .before = 2)
@@ -945,7 +945,7 @@ incremental: true
 ```r
 > outliers = filter(mpg, displ > 5, hwy > 21)
 > outliers = mutate(outliers, sports_car = class=="2seater")
-> ggplot(outliers) + 
+> ggplot(outliers) +
 +   geom_bar(aes(x=sports_car)) +
 +   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
 +   ggtitle("How many of the outliers are sports cars?")
@@ -956,7 +956,7 @@ incremental: true
 > mpg %>%
 +   filter(displ > 5, hwy > 21) %>%
 +   mutate(outliers, sports_car = class=="2seater") %>%
-+ ggplot() + 
++ ggplot() +
 +   geom_bar(aes(x=sports_car)) +
 +   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
 +   ggtitle("How many of the outliers are sports cars?")
@@ -965,7 +965,7 @@ incremental: true
 <!-- ^^  COMPLETE   ^^ -->
 <!-- vv IN PROGRESS vv -->
 
-
+===
 
 summarize() computes desired summaires across rows
 ================================================================
@@ -1096,7 +1096,6 @@ Error in eval(expr, envir, enclos): object 'state_data' not found
 ```
 - How many states are in each region?
 
-
 Answer: count states in each region
 =====================================================================
 
@@ -1106,7 +1105,6 @@ Error in group_by(state_data, region): object 'state_data' not found
 > summarize(state_data_by_region, n_states = n())
 Error in summarize(state_data_by_region, n_states = n()): object 'state_data_by_region' not found
 ```
-
 
 Challenge exercise: finding rows by group
 ===================================================================
@@ -1122,12 +1120,7 @@ Error in filter(data1_by_gender, age == min(age)): object 'data1_by_gender' not 
 ```
 - This shows how filter can be applied to grouped data. Instead of applying the condition across all the data, it applies it group-by-group.
 
-
-dplyr cheatsheet
 ============================================================
-<!-- <embed src="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" width="500" height="375"  -->
-<!--  type="application/pdf"> -->
- 
-<!-- <div align="center"> -->
-<!-- <img src="https://www.rstudio.com/wp-content/uploads/2018/08/data-transformation.png", height=1000, width=1400> -->
-<!-- </div> -->
+<div align="center">
+<img src="https://miro.medium.com/max/1200/1*O4LZwd_rTEGY2zMyDkvR9A.png"; style="max-width:1500;"; class="center">
+</div>

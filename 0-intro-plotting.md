@@ -197,11 +197,6 @@ Getting your data in R
 
 ```r
 > mpg = read_csv("data/mpg.csv")
-Parsed with column specification:
-cols(
-  `18.0   8   307.0      130.0      3504.      12.0   70  1` = col_character(),
-  `chevrolet chevelle malibu` = col_character()
-)
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -615,3 +610,8 @@ From **R for Data Science**:
 > Another useful resource is the R Graphics Cookbook by Winston Chang. Much of the contents are available online at http://www.cookbook-r.com/Graphs/.
 
 > I also recommend Graphical Data Analysis with R, by Antony Unwin. This is a book-length treatment similar to the material covered in this chapter, but has the space to go into much greater depth.
+
+===
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/21d683072b0c21cbd9b41fc0e37a587ad26b9525/cbf41/wp-content/uploads/2018/08/data-visualization-2.1.png"; style="max-width:1500;"; class="center">
+</div>

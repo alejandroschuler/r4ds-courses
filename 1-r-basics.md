@@ -402,6 +402,11 @@ Vectors of other types
 ```r
 > my_string = "hello"
 ```
+- when using data that is text in R, you have to refer to it using quotation marks (why?)
+
+```r
+> my_string = hello  # what does this code do?
+```
 - you can have a vector of strings, and functions can operate on these too:
 
 ```r
