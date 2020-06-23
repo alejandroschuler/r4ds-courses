@@ -664,99 +664,65 @@ x non-numeric argument to binary operator
 ```
 - if you save the result into a column that already exists, it will be overwritten
 
-mutate() for computing offsets
-===
-incremental: true
+<!-- mutate() for computing offsets -->
+<!-- === -->
+<!-- incremental: true -->
+<!-- ```{r} -->
+<!-- lead(c(1,2,3)) -->
+<!-- lag(c(1,2,3)) -->
+<!-- ``` -->
 
-```r
-> lead(c(1, 2, 3))
-[1]  2  3 NA
-> lag(c(1, 2, 3))
-[1] NA  1  2
-```
+<!-- ```{r, tidy=F} -->
+<!-- scores = tibble( -->
+<!--   day = c(1,2,3,4), -->
+<!--   score = c(72, 87, 94, 99) -->
+<!-- ) -->
+<!-- ``` -->
 
+<!-- ```{r} -->
+<!-- mutate(scores, daily_improvement = score - lag(score)) -->
+<!-- ``` -->
 
-```r
-> scores = tibble(
-+   day = c(1,2,3,4),
-+   score = c(72, 87, 94, 99)
-+ )
-```
+<!-- mutate() for cumulative functions -->
+<!-- === -->
+<!-- incremental: true -->
+<!-- ```{r} -->
+<!-- cumsum(c(1,2,3)) -->
+<!-- ``` -->
+<!-- - `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions -->
 
+<!-- ```{r, tidy=F} -->
+<!-- profits = tibble( -->
+<!--   day = c(1,2,3,4), -->
+<!--   profit = c(12, 40, 19, 13) -->
+<!-- ) -->
+<!-- ``` -->
 
-```r
-> mutate(scores, daily_improvement = score - lag(score))
-# A tibble: 4 x 3
-    day score daily_improvement
-  <dbl> <dbl>             <dbl>
-1     1    72                NA
-2     2    87                15
-3     3    94                 7
-4     4    99                 5
-```
+<!-- ```{r} -->
+<!-- mutate(profits, profit_to_date = cumsum(profit)) -->
+<!-- ``` -->
 
-mutate() for cumulative functions
-===
-incremental: true
+<!-- mutate() for rolling functions -->
+<!-- === -->
+<!-- incremental: true -->
+<!-- ```{r} -->
+<!-- library("slider") -->
+<!-- slide_vec(c(1,2,3,4), mean, .before=1) -->
+<!-- ``` -->
+<!-- - `slide_vec` applies a function using a sliding window across a vector (sometimes called "rolling" functions) -->
 
-```r
-> cumsum(c(1, 2, 3))
-[1] 1 3 6
-```
-- `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions
+<!-- ```{r, tidy=F} -->
+<!-- profits = tibble( -->
+<!--   day = c(1,2,3,4), -->
+<!--   profit = c(12, 40, 19, 13) -->
+<!-- ) -->
+<!-- ``` -->
 
+<!-- ```{r} -->
+<!-- mutate(profits, avg_2_day_profit = slide_vec(profit, mean, .before=1)) -->
+<!-- ``` -->
 
-```r
-> profits = tibble(
-+   day = c(1,2,3,4),
-+   profit = c(12, 40, 19, 13)
-+ )
-```
-
-
-```r
-> mutate(profits, profit_to_date = cumsum(profit))
-# A tibble: 4 x 3
-    day profit profit_to_date
-  <dbl>  <dbl>          <dbl>
-1     1     12             12
-2     2     40             52
-3     3     19             71
-4     4     13             84
-```
-
-mutate() for rolling functions
-===
-incremental: true
-
-```r
-> library("slider")
-> slide_vec(c(1, 2, 3, 4), mean, .before = 1)
-[1] 1.0 1.5 2.5 3.5
-```
-- `slide_vec` applies a function using a sliding window across a vector (sometimes called "rolling" functions)
-
-
-```r
-> profits = tibble(
-+   day = c(1,2,3,4),
-+   profit = c(12, 40, 19, 13)
-+ )
-```
-
-
-```r
-> mutate(profits, avg_2_day_profit = slide_vec(profit, mean, .before = 1))
-# A tibble: 4 x 3
-    day profit avg_2_day_profit
-  <dbl>  <dbl>            <dbl>
-1     1     12             12  
-2     2     40             26  
-3     3     19             29.5
-4     4     13             16  
-```
-
-- More on this in the section on functional programming!
+<!-- - More on this in the section on functional programming! -->
 
 Exercise: mutate()
 ===
@@ -791,7 +757,7 @@ incremental:true
 
 In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
 
-![plot of chunk unnamed-chunk-44](2-data-transformation-figure/unnamed-chunk-44-1.png)
+![plot of chunk unnamed-chunk-35](2-data-transformation-figure/unnamed-chunk-35-1.png)
 
 
 ```r
@@ -929,7 +895,7 @@ Piping to another position
 
 ```r
 > mean %>% slide_vec(1:10, ., .before = 2)
- [1] 1.0 1.5 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0
+Error in slide_vec(1:10, ., .before = 2): could not find function "slide_vec"
 ```
 - Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
 - More about this in the functional programming section
@@ -965,9 +931,11 @@ incremental: true
 <!-- ^^  COMPLETE   ^^ -->
 <!-- vv IN PROGRESS vv -->
 
+summarize
 ===
+type:section
 
-summarize() computes desired summaires across rows
+summarize() computes desired summaries across rows
 ================================================================
 
 ```r
