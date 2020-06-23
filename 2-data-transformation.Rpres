@@ -271,7 +271,7 @@ select(mpg, hwy_milage = hwy)
 rename(mpg, hwy_milage = hwy)
 ```
 
-select and filter
+Exercise: select and filter
 ===
 incremental:true
 type:prompt
@@ -285,6 +285,19 @@ select(filter(mpg, class == "compact"), hwy)
 - what is wrong with this?
 ```{r, eval=F}
 filter(select(mpg, hwy), class == "compact")
+```
+
+Exercise: select text columns
+===
+incremental:true
+type:prompt
+
+- use select to subset the `mpg` dataframe to just those columns that contain text data. 
+- Can you do this programmatically without specifying the names of each of the desired columns? 
+- What base R function will help you determine if a column is textual or not?
+
+```{r}
+select(mpg, where(is.character))
 ```
 
 

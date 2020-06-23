@@ -557,7 +557,7 @@ rename()
 # … with 224 more rows
 ```
 
-select and filter
+Exercise: select and filter
 ===
 incremental:true
 type:prompt
@@ -587,6 +587,34 @@ type:prompt
 
 ```r
 > filter(select(mpg, hwy), class == "compact")
+```
+
+Exercise: select text columns
+===
+incremental:true
+type:prompt
+
+- use select to subset the `mpg` dataframe to just those columns that contain text data. 
+- Can you do this programmatically without specifying the names of each of the desired columns? 
+- What base R function will help you determine if a column is textual or not?
+
+
+```r
+> select(mpg, where(is.character))
+# A tibble: 234 x 6
+   manufacturer model      trans      drv   fl    class  
+   <chr>        <chr>      <chr>      <chr> <chr> <chr>  
+ 1 audi         a4         auto(l5)   f     p     compact
+ 2 audi         a4         manual(m5) f     p     compact
+ 3 audi         a4         manual(m6) f     p     compact
+ 4 audi         a4         auto(av)   f     p     compact
+ 5 audi         a4         auto(l5)   f     p     compact
+ 6 audi         a4         manual(m5) f     p     compact
+ 7 audi         a4         auto(av)   f     p     compact
+ 8 audi         a4 quattro manual(m5) 4     p     compact
+ 9 audi         a4 quattro auto(l5)   4     p     compact
+10 audi         a4 quattro manual(m6) 4     p     compact
+# … with 224 more rows
 ```
 
 
@@ -757,7 +785,7 @@ incremental:true
 
 In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
 
-![plot of chunk unnamed-chunk-35](2-data-transformation-figure/unnamed-chunk-35-1.png)
+![plot of chunk unnamed-chunk-36](2-data-transformation-figure/unnamed-chunk-36-1.png)
 
 
 ```r
