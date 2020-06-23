@@ -10,7 +10,7 @@
 | Larry Kalesinskas | TA | lkalesin@stanford.edu |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020
-- Time: Tuesday/Thursday 12 PM - 1:30 PM PST
+- Time: Tuesday/Thursday 12 PM - 1:30 PM PDT
 - Location: `zoom link`
 
 ### Overview
