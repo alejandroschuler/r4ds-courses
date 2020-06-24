@@ -10,7 +10,7 @@ height: 1050
 ## better font size for slides
 library(ggplot2)
 # theme_set(theme_grey(base_size = 22))
-opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=TRUE,comment=NA,cache=FALSE)
+opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
 <style>
@@ -101,7 +101,7 @@ How do I...
 ?function_name
 ``` 
 gives you information about what the function does
-- Google is your friend. Try "function_name R language" or "how do I X in R?"
+- Google is your friend. Try "function_name R language" or "how do I X in R?". I also strongly recommend using "tidyverse" in your queries or the name of a tidyverse package (more in a moment) that has related functions
 - stackoverflow is your friend. It might take some scrolling, but you will eventually find what you need
 
 Quadratic Equation

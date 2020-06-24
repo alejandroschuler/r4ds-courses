@@ -59,9 +59,9 @@ Filter rows with filter()
 
 
 ```r
-> nrow(mpg)
+nrow(mpg)
 [1] 234
-> filter(mpg, hwy <= 25)
+filter(mpg, hwy <= 25)
 # A tibble: 133 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -84,24 +84,24 @@ Exercise
 
 
 ```r
-> nrow(mpg)
+nrow(mpg)
 [1] 234
 ```
 
 
 ```r
-> filter(mpg, hwy <= 25)
-> filter(mpg, cyl <= 4)
-> nrow(mpg)
+filter(mpg, hwy <= 25)
+filter(mpg, cyl <= 4)
+nrow(mpg)
 ```
 
 - remember, functions usually do not change their arguments!
 
 
 ```r
-> low_mileage = filter(mpg, hwy <= 25)
-> low_mileage_few_cyl = filter(low_mileage, cyl <= 4)
-> nrow(low_mileage_few_cyl)
+low_mileage = filter(mpg, hwy <= 25)
+low_mileage_few_cyl = filter(low_mileage, cyl <= 4)
+nrow(low_mileage_few_cyl)
 [1] 13
 ```
 
@@ -109,7 +109,7 @@ Combining constraints in filter
 ========================================================
 
 ```r
-> filter(mpg, hwy <= 25, year > 2000)
+filter(mpg, hwy <= 25, year > 2000)
 # A tibble: 70 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -133,7 +133,7 @@ Filtering out all rows
 =========================================================
 
 ```r
-> filter(mpg, hwy > 60)
+filter(mpg, hwy > 60)
 # A tibble: 0 x 11
 # … with 11 variables: manufacturer <chr>, model <chr>, displ <dbl>,
 #   year <int>, cyl <int>, trans <chr>, drv <chr>, cty <int>, hwy <int>,
@@ -149,7 +149,7 @@ Comparison operators
 - these can also be used directly on vectors outside of data frames
 
 ```r
-> c(1, 5, -22, 4) > 0
+c(1, 5, -22, 4) > 0
 [1]  TRUE  TRUE FALSE  TRUE
 ```
 
@@ -157,18 +157,36 @@ Aside: computers are not perfect, so be careful with checking equality
 ===
 
 ```r
-> sqrt(2)^2 == 2
+sqrt(2)^2 == 2
 [1] FALSE
-> 1/49 * 49 == 1
+1/49 * 49 == 1
 [1] FALSE
 ```
 
 You can use `near()` to check that two numbers are the same (up to "machine precision")
 
 ```r
-> near(sqrt(2)^2, 2)
+near(sqrt(2)^2, 2)
 [1] TRUE
-> near(1/49 * 49, 1)
+near(1/49 * 49, 1)
+[1] TRUE
+```
+
+Comparing to NA
+===
+- The other "gotcha" is that `==` cannot be used to compare to `NA`:
+
+```r
+x = NA
+x == NA
+[1] NA
+```
+- The result actually makes sense though, because I'm asking if "I don't know" is the same as "I don't know". Since either side could be any value, the right answer is "I don't know".
+- To check if something is `NA`, use `is.na()`
+
+```r
+x = NA
+is.na(x)
 [1] TRUE
 ```
 
@@ -176,7 +194,7 @@ Logical conjunctions
 =========================================================
 
 ```r
-> filter(mpg, hwy > 30 | hwy < 20)
+filter(mpg, hwy > 30 | hwy < 20)
 # A tibble: 100 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -200,7 +218,7 @@ Logical conjunctions
 =========================================================
 
 ```r
-> filter(mpg, !(hwy > 30 | hwy < 20))
+filter(mpg, !(hwy > 30 | hwy < 20))
 # A tibble: 134 x 11
    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
    <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
@@ -222,7 +240,7 @@ Logical conjunctions
 =========================================================
 
 ```r
-> filter(mpg, cyl %in% c(6, 8))  # equivalent to filter(mtc, cyl==6 | cyl==8)
+filter(mpg, cyl %in% c(6, 8))  # equivalent to filter(mtc, cyl==6 | cyl==8)
 # A tibble: 149 x 11
    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
    <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
@@ -248,7 +266,7 @@ incremental: true
 - How many Audis are there in this dataset?
 
 ```r
-> nrow(filter(mpg, manufacturer == "audi"))
+nrow(filter(mpg, manufacturer == "audi"))
 [1] 18
 ```
 
@@ -260,7 +278,7 @@ incremental: true
 - create a dataset of all the cars from before the year 2000
 
 ```r
-> filter(mpg, year < 2000)
+filter(mpg, year < 2000)
 # A tibble: 117 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -285,7 +303,7 @@ incremental: true
 - create a dataset of all the Audis from before the year 2000
 
 ```r
-> filter(mpg, manufacturer == "audi", year < 2000)
+filter(mpg, manufacturer == "audi", year < 2000)
 # A tibble: 9 x 11
   manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class 
   <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr> 
@@ -308,7 +326,7 @@ incremental: true
 - create a dataset of all the Audis and Jeeps from before the year 2000
 
 ```r
-> filter(mpg, manufacturer == "audi" | manufacturer == "jeep", year < 2000)
+filter(mpg, manufacturer == "audi" | manufacturer == "jeep", year < 2000)
 # A tibble: 11 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -325,11 +343,50 @@ incremental: true
 11 jeep         grand ch…   4.7  1999     8 auto(… 4        14    17 r     suv  
 ```
 
+Exercise: getting rid of NAs
+==========================================================
+type: prompt
+incremental: true
+
+- filter any rows where `x` is `NA` out of this dataset:
+
+```r
+df = tibble(x = c(1, 2, 3, NA, 5, 6), y = c(11, 12, 13, 14, 15, 16))
+```
+
+- Your answer should be:
+
+```
+# A tibble: 5 x 2
+      x     y
+  <dbl> <dbl>
+1     1    11
+2     2    12
+3     3    13
+4     5    15
+5     6    16
+```
+
+***
+
+
+```r
+filter(df, !is.na(x))
+# A tibble: 5 x 2
+      x     y
+  <dbl> <dbl>
+1     1    11
+2     2    12
+3     3    13
+4     5    15
+5     6    16
+```
+
 Filtering by row number
 ==========================================================
 
 ```r
-> filter(mpg, row_number() <= 3)
+filter(mpg, row_number() <= 3)
 # A tibble: 3 x 11
   manufacturer model displ  year   cyl trans      drv     cty   hwy fl    class 
   <chr>        <chr> <dbl> <int> <int> <chr>      <chr> <int> <int> <chr> <chr> 
@@ -343,7 +400,7 @@ Sampling rows
 ==========================================================
 
 ```r
-> sample_n(mtc, 5)
+sample_n(mtc, 5)
 Error in sample_n(mtc, 5): object 'mtc' not found
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
@@ -360,7 +417,7 @@ Arrange rows with arrange()
 - again, the first argument is the data frame and the other arguments tell the function what to do with it
 
 ```r
-> arrange(mpg, hwy)
+arrange(mpg, hwy)
 # A tibble: 234 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -382,7 +439,7 @@ Arrange can sort by more than one column
 - This is useful if there is a tie in sorting by the first column.
 
 ```r
-> arrange(mpg, hwy, displ)
+arrange(mpg, hwy, displ)
 # A tibble: 234 x 11
    manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
    <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
@@ -404,7 +461,7 @@ Use the desc function to sort by descending values
 ===========================================================
 
 ```r
-> arrange(mpg, desc(hwy))
+arrange(mpg, desc(hwy))
 # A tibble: 234 x 11
    manufacturer model   displ  year   cyl trans   drv     cty   hwy fl    class 
    <chr>        <chr>   <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr> 
@@ -430,7 +487,7 @@ Use `arrange()` and `filter()` to get the data for the 5 cars with the highest h
 
 
 ```r
-> filter(arrange(mpg, desc(hwy)), row_number() <= 5)  # 'nesting' the calls to filter and arrange
+filter(arrange(mpg, desc(hwy)), row_number() <= 5)  # 'nesting' the calls to filter and arrange
 # A tibble: 5 x 11
   manufacturer model   displ  year   cyl trans   drv     cty   hwy fl    class  
   <chr>        <chr>   <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>  
@@ -443,8 +500,8 @@ Use `arrange()` and `filter()` to get the data for the 5 cars with the highest h
 or
 
 ```r
-> cars_by_mpg = arrange(mpg, desc(hwy))  # using a temporary variable
-> filter(cars_by_mpg, row_number() <= 5)
+cars_by_mpg = arrange(mpg, desc(hwy))  # using a temporary variable
+filter(cars_by_mpg, row_number() <= 5)
 # A tibble: 5 x 11
   manufacturer model   displ  year   cyl trans   drv     cty   hwy fl    class  
   <chr>        <chr>   <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>  
@@ -463,7 +520,7 @@ Select columns with select()
 =========================================================
 
 ```r
-> select(mpg, hwy, cyl, manufacturer)
+select(mpg, hwy, cyl, manufacturer)
 # A tibble: 234 x 3
      hwy   cyl manufacturer
    <int> <int> <chr>       
@@ -486,7 +543,7 @@ Select columns with select()
 - `select()` can also be used with handy helpers like `starts_with()` and `contains()`
 
 ```r
-> select(mpg, starts_with("m"))
+select(mpg, starts_with("m"))
 # A tibble: 234 x 2
    manufacturer model     
    <chr>        <chr>     
@@ -508,7 +565,7 @@ Select columns with select()
 
 
 ```r
-> select(mpg, contains("l"))
+select(mpg, contains("l"))
 # A tibble: 234 x 5
    model      displ   cyl fl    class  
    <chr>      <dbl> <int> <chr> <chr>  
@@ -532,7 +589,7 @@ select() subsets columns by name
 - `select()` can also be used to select everything **except for** certain columns
 
 ```r
-> select(mpg, -contains("l"), -hwy)
+select(mpg, -contains("l"), -hwy)
 # A tibble: 234 x 5
    manufacturer  year trans      drv     cty
    <chr>        <int> <chr>      <chr> <int>
@@ -555,7 +612,7 @@ select() subsets columns by name
 
 
 ```r
-> select(mpg, where(is.integer))
+select(mpg, where(is.integer))
 # A tibble: 234 x 4
     year   cyl   cty   hwy
    <int> <int> <int> <int>
@@ -577,7 +634,7 @@ pull() is a friend of select()
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
 
 ```r
-> select(mpg, hwy)
+select(mpg, hwy)
 # A tibble: 234 x 1
      hwy
    <int>
@@ -592,7 +649,7 @@ pull() is a friend of select()
  9    25
 10    28
 # … with 224 more rows
-> pull(mpg, hwy)
+pull(mpg, hwy)
   [1] 29 29 31 30 26 26 27 26 25 28 27 25 25 25 25 24 25 23 20 15 20 17 17 26 23
  [26] 26 25 24 19 14 15 17 27 30 26 29 26 24 24 22 22 24 24 17 22 21 23 23 19 18
  [51] 17 17 19 19 12 17 15 17 17 12 17 16 18 15 16 12 17 17 16 12 15 16 17 15 17
@@ -610,7 +667,7 @@ rename()
 - `select()` can be used to rename variables, but it drops all variables not selected
 
 ```r
-> select(mpg, hwy_milage = hwy)
+select(mpg, hwy_milage = hwy)
 # A tibble: 234 x 1
    hwy_milage
         <int>
@@ -630,7 +687,7 @@ rename()
 - `rename()` is better suited for this because it keeps all the columns
 
 ```r
-> rename(mpg, hwy_milage = hwy)
+rename(mpg, hwy_milage = hwy)
 # A tibble: 234 x 11
    manufacturer model displ  year   cyl trans drv     cty hwy_milage fl    class
    <chr>        <chr> <dbl> <int> <int> <chr> <chr> <int>      <int> <chr> <chr>
@@ -656,7 +713,7 @@ type:prompt
 
 
 ```r
-> select(filter(mpg, class == "compact"), hwy)
+select(filter(mpg, class == "compact"), hwy)
 # A tibble: 47 x 1
      hwy
    <int>
@@ -676,7 +733,7 @@ type:prompt
 - what is wrong with this?
 
 ```r
-> filter(select(mpg, hwy), class == "compact")
+filter(select(mpg, hwy), class == "compact")
 ```
 
 Exercise: select text columns
@@ -690,7 +747,7 @@ type:prompt
 
 
 ```r
-> select(mpg, where(is.character))
+select(mpg, where(is.character))
 # A tibble: 234 x 6
    manufacturer model      trans      drv   fl    class  
    <chr>        <chr>      <chr>      <chr> <chr> <chr>  
@@ -716,8 +773,8 @@ Add new variables with mutate()
 ================================================================
 
 ```r
-> mpg_vars_subset = select(mpg, hwy, displ)
-> mutate(mtc_vars_subset, hw_gallons_per_mile = 1/hwy)
+mpg_vars_subset = select(mpg, hwy, displ)
+mutate(mtc_vars_subset, hw_gallons_per_mile = 1/hwy)
 Error in mutate(mtc_vars_subset, hw_gallons_per_mile = 1/hwy): object 'mtc_vars_subset' not found
 ```
 - This uses `mutate()` to add a new column to which is the reciprocal of `hwy`.
@@ -729,10 +786,10 @@ mutate() can create multiple new columns at once
 ================================================================
 
 ```r
-> mutate(mpg_vars_subset, # the newlines make it more readable
-+       hw_gallons_per_mile = 1/hwy,
-+       mpg_displ_ratio = hwy/displ
-+ )
+mutate(mpg_vars_subset, # the newlines make it more readable
+      hw_gallons_per_mile = 1/hwy,
+      mpg_displ_ratio = hwy/displ
+)
 # A tibble: 234 x 4
      hwy displ hw_gallons_per_mile mpg_displ_ratio
    <int> <dbl>               <dbl>           <dbl>
@@ -755,15 +812,15 @@ mutate() for data type conversion
 - Data is sometimes given to you in a form that makes it difficult to do operations on
 
 ```r
-> df = tibble(number = c("1", "2", "3"))
-> df
+df = tibble(number = c("1", "2", "3"))
+df
 # A tibble: 3 x 1
   number
   <chr> 
 1 1     
 2 2     
 3 3     
-> mutate(df, number_plus_1 = number + 1)
+mutate(df, number_plus_1 = number + 1)
 Error: Problem with `mutate()` input `number_plus_1`.
 x non-numeric argument to binary operator
 ℹ Input `number_plus_1` is `number + 1`.
@@ -772,7 +829,7 @@ x non-numeric argument to binary operator
 - `mutate()` is also useful for converting data types, in this case text to numbers
 
 ```r
-> mutate(df, number = as.numeric(number))
+mutate(df, number = as.numeric(number))
 # A tibble: 3 x 1
   number
    <dbl>
@@ -851,7 +908,7 @@ incremental:true
 
 
 ```r
-> mutate(mpg, avg_mpg = (2 * cty + hwy)/3)
+mutate(mpg, avg_mpg = (2 * cty + hwy)/3)
 # A tibble: 234 x 12
    manufacturer model displ  year   cyl trans drv     cty   hwy fl    class
    <chr>        <chr> <dbl> <int> <int> <chr> <chr> <int> <int> <chr> <chr>
@@ -875,13 +932,13 @@ incremental:true
 
 In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
 
-![plot of chunk unnamed-chunk-41](2-data-transformation-figure/unnamed-chunk-41-1.png)
+![plot of chunk unnamed-chunk-46](2-data-transformation-figure/unnamed-chunk-46-1.png)
 
 
 ```r
-> sports = mutate(mpg, sports_car = class=="2seater")
-> ggplot(sports) +
-+   geom_point(aes(x=displ, y=hwy, color=sports_car))
+sports = mutate(mpg, sports_car = class=="2seater")
+ggplot(sports) +
+  geom_point(aes(x=displ, y=hwy, color=sports_car))
 ```
 
 Exercise: putting it together
@@ -893,11 +950,11 @@ I'm considering buying a car. I know Toyotas and Subarus are reliable so I'd lik
 
 
 ```r
-> toyotas_and_subarus = filter(mpg, manufacturer == "toyota" | manufacturer == "subaru")
-> with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2 * cty + hwy)/3)
-> sorted = arrange(with_avg_mpg, desc(avg_mpg))
-> top_10 = filter(sorted, row_number() <= 10)
-> select(top_10, manufacturer, model, trans, year, avg_mpg)
+toyotas_and_subarus = filter(mpg, manufacturer == "toyota" | manufacturer == "subaru")
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2 * cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number() <= 10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
 # A tibble: 10 x 5
    manufacturer model        trans       year avg_mpg
    <chr>        <chr>        <chr>      <int>   <dbl>
@@ -926,28 +983,28 @@ incremental:true
 
 
 ```r
-> toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-> with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-> sorted = arrange(with_avg_mpg, desc(avg_mpg))
-> top_10 = filter(sorted, row_number()<=10)
-> select(top_10, manufacturer, model, trans, year, avg_mpg)
+toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number()<=10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
 ```
 
 - we used temporary variables to keep our code clean. Compare to the same code using nested calls:
 
 
 ```r
-> select(
-+   filter(
-+     arrange(
-+       mutate(
-+         filter(
-+           mpg, manufacturer=='toyota' | manufacturer=='subaru'),
-+         avg_mpg = (2*cty + hwy)/3),
-+       desc(avg_mpg)),
-+     row_number()<=10),
-+   manufacturer, model, trans, year, avg_mpg
-+ )
+select(
+  filter(
+    arrange(
+      mutate(
+        filter(
+          mpg, manufacturer=='toyota' | manufacturer=='subaru'),
+        avg_mpg = (2*cty + hwy)/3),
+      desc(avg_mpg)),
+    row_number()<=10),
+  manufacturer, model, trans, year, avg_mpg
+)
 ```
 
 - what makes either of these hard to read or understand?
@@ -959,35 +1016,35 @@ The pipe operator
 
 
 ```r
-> mpg %>%
-+   filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
-+   mutate(avg_mpg = (2*cty + hwy)/3) %>%
-+   arrange(desc(avg_mpg)) %>%
-+   filter(row_number()<=10) %>%
-+   select(manufacturer, model, trans, year, avg_mpg)
+mpg %>%
+  filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
+  mutate(avg_mpg = (2*cty + hwy)/3) %>%
+  arrange(desc(avg_mpg)) %>%
+  filter(row_number()<=10) %>%
+  select(manufacturer, model, trans, year, avg_mpg)
 ```
 
 - how does this compare with our code before? What do you notice?
 
 
 ```r
-> toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-> with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-> sorted = arrange(with_avg_mpg, desc(avg_mpg))
-> top_10 = filter(sorted, row_number()<=10)
-> select(top_10, manufacturer, model, trans, year, avg_mpg)
+toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
+with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
+sorted = arrange(with_avg_mpg, desc(avg_mpg))
+top_10 = filter(sorted, row_number()<=10)
+select(top_10, manufacturer, model, trans, year, avg_mpg)
 ```
 
 Pipe details
 =================================================================
 
 ```r
-> df1 %>% fun(x)
+df1 %>% fun(x)
 ```
 is converted into:
 
 ```r
-> fun(df1, x)
+fun(df1, x)
 ```
 - That is: the thing being piped in is used as the _first_ argument of `fun`.
 - The tidyverse functions are consistently designed so that the first argument is a data frame, and the result is a data frame, so you can push a dataframe all the way through a series of functions
@@ -997,13 +1054,13 @@ Pipe details
 - The pipe works for all variables and functions, not just tidyverse functions
 
 ```r
-> c(1, 44, 21, 0, -4) %>% sum()  # instead of sum(c(1,44,21,0,-4))
+c(1, 44, 21, 0, -4) %>% sum()  # instead of sum(c(1,44,21,0,-4))
 [1] 62
 ```
 
 
 ```r
-> 1 %>% +1  # `+` is just a function that takes two arguments!
+1 %>% +1  # `+` is just a function that takes two arguments!
 [1] 2
 ```
 
@@ -1012,7 +1069,7 @@ Piping to another position
 - The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
 
 ```r
-> mean %>% slide_vec(1:10, ., .before = 2)
+mean %>% slide_vec(1:10, ., .before = 2)
 Error in slide_vec(1:10, ., .before = 2): could not find function "slide_vec"
 ```
 - Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
@@ -1027,186 +1084,332 @@ incremental: true
 
 
 ```r
-> outliers = filter(mpg, displ > 5, hwy > 21)
-> outliers = mutate(outliers, sports_car = class=="2seater")
-> ggplot(outliers) +
-+   geom_bar(aes(x=sports_car)) +
-+   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
-+   ggtitle("How many of the outliers are sports cars?")
+outliers = filter(mpg, displ > 5, hwy > 21)
+outliers = mutate(outliers, sports_car = class=="2seater")
+ggplot(outliers) +
+  geom_bar(aes(x=sports_car)) +
+  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
+  ggtitle("How many of the outliers are sports cars?")
 ```
 
 
 ```r
-> mpg %>%
-+   filter(displ > 5, hwy > 21) %>%
-+   mutate(outliers, sports_car = class=="2seater") %>%
-+ ggplot() +
-+   geom_bar(aes(x=sports_car)) +
-+   scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
-+   ggtitle("How many of the outliers are sports cars?")
+mpg %>%
+  filter(displ > 5, hwy > 21) %>%
+  mutate(outliers, sports_car = class=="2seater") %>%
+ggplot() +
+  geom_bar(aes(x=sports_car)) +
+  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
+  ggtitle("How many of the outliers are sports cars?")
 ```
 
-<!-- ^^  COMPLETE   ^^ -->
-<!-- vv IN PROGRESS vv -->
-
-summarize
+Grouped summaries with summarise()
 ===
 type:section
 
-summarize() computes desired summaries across rows
+Grouped summaries with summarise()
 ================================================================
 
 ```r
-> summarize(mtc, mpg_avg = mean(mpg))
-Error in summarize(mtc, mpg_avg = mean(mpg)): object 'mtc' not found
+summarize(mpg, hwy_avg = mean(hwy))
+# A tibble: 1 x 1
+  hwy_avg
+    <dbl>
+1    23.4
 ```
-- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `mpg_avg` that contains the mean of the `mpg` column
-- Summaries can be very useful when you apply them to subgoups of the data, which we will soon see how to do.
+- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `hwy_avg` that contains the mean of the `hwy` column
+- as with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
+- `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
+- Summaries are more useful when you apply them to subgoups of the data, which we will soon see how to do.
 
-summarize() computes desired summaires across rows
+Grouped summaries with summarise()
 ================================================================
-- you can also pass in multiple conditions that operate on multiple columns at the same time
+- note that you can also pass in multiple conditions that operate on multiple columns at the same time
 
 ```r
-> summarize(mtc, # newlines not necessary, again just increase clarity
-+           mpg_avg = mean(mpg),
-+           mpg_2x_max = max(2*mpg),
-+           hp_mpg_ratio_min = min(hp/mpg))
-Error in summarize(mtc, mpg_avg = mean(mpg), mpg_2x_max = max(2 * mpg), : object 'mtc' not found
+mpg %>% 
+summarize( # newlines not necessary, again just increase clarity
+  hwy_avg = mean(hwy),
+  hwy_2x_max = max(2*hwy),
+  displ_hwy_ratio_min = min(displ/hwy)
+)
+# A tibble: 1 x 3
+  hwy_avg hwy_2x_max displ_hwy_ratio_min
+    <dbl>      <dbl>               <dbl>
+1    23.4         88              0.0432
 ```
 
-dplyr verbs summary
-========================================================
-
-- `filter()` picks out rows according to specified conditions
-- `select()` picks out columns according to their names
-- `arrange()` sorts the row by values in some column(s)
-- `mutate()` creates new columns, often based on operations on other columns
-- `summarize()` collapses many values in one or more columns down to one value per column
-
-All verbs work similarly:
-
-1. The first argument is a data frame.
-2. The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
-3. The result is a new data frame.
-
-Together these properties make it easy to chain together multiple simple steps to achieve a complex result.
-
-Computing over groups
+Grouped summaries with summarise()
 ==================================================================
-type: section
-
-
-group_by() groups data according to some variable(s)
-==================================================================
-First, let's load in some new data.
+- Summaries are more useful when you apply them to subgoups of the data
 
 ```r
-> data1 <- read_csv("http://stanford.edu/~sbagley2/bios205/data/data1.csv")
-Error in open.connection(con, "rb"): HTTP error 404.
-> data1
-Error in eval(expr, envir, enclos): object 'data1' not found
+mpg %>% 
+  group_by(manufacturer) %>%
+  summarize(hwy_avg = mean(hwy))
+# A tibble: 15 x 2
+   manufacturer hwy_avg
+   <chr>          <dbl>
+ 1 audi            26.4
+ 2 chevrolet       21.9
+ 3 dodge           17.9
+ 4 ford            19.4
+ 5 honda           32.6
+ 6 hyundai         26.9
+ 7 jeep            17.6
+ 8 land rover      16.5
+ 9 lincoln         17  
+10 mercury         18  
+11 nissan          24.6
+12 pontiac         26.4
+13 subaru          25.6
+14 toyota          24.9
+15 volkswagen      29.2
 ```
-- `<chr>` is short for "character string", which means text data
-- Let's compute the mean weight for each gender.
-- There are two values of gender in this data, so there will be two groups.
-- The following builds a new version of the data frame that saves the grouping information:
 
-```r
-> data1_by_gender <- group_by(data1, gender)
-Error in group_by(data1, gender): object 'data1' not found
-```
-- We can now use the grouped data frame in further calculations.
+***
 
-group_by() groups data according to some variable(s)
-==================================================================
-
-```r
-> data1_by_gender
-Error in eval(expr, envir, enclos): object 'data1_by_gender' not found
-```
-- The grouped data looks exactly the same, but under the hood, `R` knows that this is really two sub-data-frames (one for each group) instead of one.
-
-Grouped summary: computing the mean of each group
-===================================================================
-
-```r
-> summarize(data1_by_gender, mean_weight = mean(weight))
-Error in summarize(data1_by_gender, mean_weight = mean(weight)): object 'data1_by_gender' not found
-```
-- `summarize()` works the same as before, except now it returns two rows instead of one because there are two groups that were defined by `group_by(gender)`.
+- `group_by()` is a helper function that "groups" the data according to the unique values in the column(s) it gets passed. 
+- Its output is a grouped data frame that looks the same as the original except for some additional metadata that subsequent functions can use
+- `summarize()` works the same as before, except now it returns as many rows as there are groups in the data
 - The result also always contains colunmns corresponding to the unique values of the grouping variable
 
-Grouping can also be applied across multiple variables
+Multiple columns can be used to group the data simultaneously
 ===================================================================
-- This computes the mean weight and the mean age for each group:
+
 
 ```r
-> data1_by_gender_and_shoesize = group_by(data1, gender, shoesize)
-Error in group_by(data1, gender, shoesize): object 'data1' not found
-> summarize(data1_by_gender_and_shoesize, mean_weight = mean(weight), mean_age = mean(age))
-Error in summarize(data1_by_gender_and_shoesize, mean_weight = mean(weight), : object 'data1_by_gender_and_shoesize' not found
+mpg %>% 
+  group_by(manufacturer, year) %>%
+  summarize(hwy_avg = mean(hwy))
+# A tibble: 30 x 3
+# Groups:   manufacturer [15]
+   manufacturer  year hwy_avg
+   <chr>        <int>   <dbl>
+ 1 audi          1999    26.1
+ 2 audi          2008    26.8
+ 3 chevrolet     1999    21.6
+ 4 chevrolet     2008    22.1
+ 5 dodge         1999    18.4
+ 6 dodge         2008    17.6
+ 7 ford          1999    18.6
+ 8 ford          2008    20.5
+ 9 honda         1999    31.6
+10 honda         2008    33.8
+# … with 20 more rows
 ```
-- Now both `gender` and `shoesize` appear as columns in the result
-- There are 3 rows because there are 3 unique combinations of `gender` and `shoesize` in the original data
+
+- the result has the summary value for each unique combination of the grouping variables
 
 Computing the number of rows in each group
 =====================================================================
 - The `n()` function counts the number of rows in each group:
 
 ```r
-> summarize(data1_by_gender, count = n())
-Error in summarize(data1_by_gender, count = n()): object 'data1_by_gender' not found
+mpg %>% 
+  group_by(manufacturer) %>%
+  summarize(how_many = n())
+# A tibble: 15 x 2
+   manufacturer how_many
+   <chr>           <int>
+ 1 audi               18
+ 2 chevrolet          19
+ 3 dodge              37
+ 4 ford               25
+ 5 honda               9
+ 6 hyundai            14
+ 7 jeep                8
+ 8 land rover          4
+ 9 lincoln             3
+10 mercury             4
+11 nissan             13
+12 pontiac             5
+13 subaru             14
+14 toyota             34
+15 volkswagen         27
+```
+- You can also use `count()`, which is just a shorthand for the same thing
+
+```r
+mpg %>% 
+  group_by(manufacturer) %>%
+  count()
+```
+
+***
+
+- `n_distinct()` counts the number of unique elements in a column
+
+```r
+mpg %>% 
+  group_by(manufacturer) %>%
+  summarize(n_models = n_distinct(model))
+# A tibble: 15 x 2
+   manufacturer n_models
+   <chr>           <int>
+ 1 audi                3
+ 2 chevrolet           4
+ 3 dodge               4
+ 4 ford                4
+ 5 honda               1
+ 6 hyundai             2
+ 7 jeep                1
+ 8 land rover          1
+ 9 lincoln             1
+10 mercury             1
+11 nissan              3
+12 pontiac             1
+13 subaru              2
+14 toyota              6
+15 volkswagen          4
 ```
 
 
-Computing the number of distinct values of a column in each group
+Exercise: mileage range per model
 =====================================================================
-- The `n_distinct()` function counts the number of distinct (unique) values in the specified column:
+type:prompt
+incremental:true
+
+- What is the highest highway gas mileage attained by each model of car in the `mpg` dataset?
+- What about the lowest?
 
 ```r
-> summarize(data1_by_gender, n_sizes = n_distinct(shoesize))
-Error in summarize(data1_by_gender, n_sizes = n_distinct(shoesize)): object 'data1_by_gender' not found
+mpg %>% 
+  group_by(model) %>%
+  summarize(
+    max_hwy = max(hwy),
+    min_hwy = min(hwy)
+  )
+# A tibble: 38 x 3
+   model              max_hwy min_hwy
+   <chr>                <int>   <int>
+ 1 4runner 4wd             20      17
+ 2 a4                      31      26
+ 3 a4 quattro              28      25
+ 4 a6 quattro              25      23
+ 5 altima                  32      26
+ 6 c1500 suburban 2wd      20      15
+ 7 camry                   31      26
+ 8 camry solara            31      26
+ 9 caravan 2wd             24      17
+10 civic                   36      29
+# … with 28 more rows
 ```
-- Note: `distinct()` filters out any duplicate rows in a dataframe. The equivalent for vectors is `unique()`
+
+Exercise: summarize and plot
+===
+type:prompt
+incremental:true
+
+Recreate this plot:
+
+![plot of chunk unnamed-chunk-68](2-data-transformation-figure/unnamed-chunk-68-1.png)
 
 
-Exercise: count states in each region
-=====================================================================
+***
+
 
 ```r
-> state_data <- read_csv("http://stanford.edu/~sbagley2/bios205/data/state_data.csv")
-Error in open.connection(con, "rb"): HTTP error 404.
-> state_data
-Error in eval(expr, envir, enclos): object 'state_data' not found
+mpg %>% 
+  group_by(cyl, class) %>%
+  summarize(mean_hwy = mean(hwy)) %>%
+ggplot() +
+  geom_point(aes(y=class, x=mean_hwy)) + 
+  facet_grid(cyl ~ ., labeller = label_both)
 ```
-- How many states are in each region?
 
-Answer: count states in each region
-=====================================================================
+Grouped mutates and filters
+===
+type:section
+
+Filtering grouped data
+===
+
+- `filter()` is aware of grouping. When used on a grouped dataset, it applies the filtering condition separately in each group
+
 
 ```r
-> state_data_by_region <- group_by(state_data, region)
-Error in group_by(state_data, region): object 'state_data' not found
-> summarize(state_data_by_region, n_states = n())
-Error in summarize(state_data_by_region, n_states = n()): object 'state_data_by_region' not found
+mpg %>% 
+  group_by(class) %>%
+  filter(hwy == max(hwy))
+# A tibble: 11 x 11
+# Groups:   class [7]
+   manufacturer model    displ  year   cyl trans  drv     cty   hwy fl    class 
+   <chr>        <chr>    <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr> 
+ 1 chevrolet    corvette   5.7  1999     8 manua… r        16    26 p     2seat…
+ 2 chevrolet    corvette   6.2  2008     8 manua… r        16    26 p     2seat…
+ 3 dodge        caravan…   2.4  1999     4 auto(… f        18    24 r     miniv…
+ 4 dodge        caravan…   3    1999     6 auto(… f        17    24 r     miniv…
+ 5 dodge        caravan…   3.3  2008     6 auto(… f        17    24 r     miniv…
+ 6 dodge        caravan…   3.3  2008     6 auto(… f        17    24 r     miniv…
+ 7 nissan       altima     2.5  2008     4 manua… f        23    32 r     midsi…
+ 8 subaru       foreste…   2.5  2008     4 manua… 4        20    27 r     suv   
+ 9 toyota       toyota …   2.7  2008     4 manua… 4        17    22 r     pickup
+10 volkswagen   jetta      1.9  1999     4 manua… f        33    44 d     compa…
+11 volkswagen   new bee…   1.9  1999     4 manua… f        35    44 d     subco…
 ```
 
-Challenge exercise: finding rows by group
-===================================================================
-`filter()` the grouped data in `data1_by_gender` to pick out the rows for the youngest male and female (hint: use `min()` and `==`).
+- Why do we get back multiple rows per `class`?
+- This is an extremely convenient idiom for finding the rows that minimize or maximize a condition
 
+Exercise: 2008 doubly best-in-class
+===
 
-Answer: finding rows by group
-===================================================================
+What are the 2008 cars that have both the best highway *and* city mileage among other cars in their class?
+
 
 ```r
-> filter(data1_by_gender, age == min(age))
-Error in filter(data1_by_gender, age == min(age)): object 'data1_by_gender' not found
+mpg %>% 
+  filter(year == 2008) %>%
+  group_by(class) %>%
+  filter(hwy == max(hwy), cty==max(cty))
+# A tibble: 7 x 11
+# Groups:   class [6]
+  manufacturer model     displ  year   cyl trans   drv     cty   hwy fl    class
+  <chr>        <chr>     <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
+1 chevrolet    corvette    6.2  2008     8 manual… r        16    26 p     2sea…
+2 dodge        caravan …   3.3  2008     6 auto(l… f        17    24 r     mini…
+3 dodge        caravan …   3.3  2008     6 auto(l… f        17    24 r     mini…
+4 nissan       altima      2.5  2008     4 manual… f        23    32 r     mids…
+5 subaru       forester…   2.5  2008     4 manual… 4        20    27 r     suv  
+6 toyota       corolla     1.8  2008     4 manual… f        28    37 r     comp…
+7 toyota       toyota t…   2.7  2008     4 manual… 4        17    22 r     pick…
 ```
-- This shows how filter can be applied to grouped data. Instead of applying the condition across all the data, it applies it group-by-group.
+
+Mutating grouped data
+===
+
+- `mutate()` is aware of grouping. When used on a grouped dataset, it applies the mutation separately in each group
+
+
+```r
+mpg %>%
+  group_by(manufacturer) %>%
+  mutate(hwy_diff_from_mfg_avg = hwy - mean(hwy)) %>%
+  select(model, year, cyl, trans, hwy_diff_from_mfg_avg)
+# A tibble: 234 x 6
+# Groups:   manufacturer [15]
+   manufacturer model       year   cyl trans      hwy_diff_from_mfg_avg
+   <chr>        <chr>      <int> <int> <chr>                      <dbl>
+ 1 audi         a4          1999     4 auto(l5)                   2.56 
+ 2 audi         a4          1999     4 manual(m5)                 2.56 
+ 3 audi         a4          2008     4 manual(m6)                 4.56 
+ 4 audi         a4          2008     4 auto(av)                   3.56 
+ 5 audi         a4          1999     6 auto(l5)                  -0.444
+ 6 audi         a4          1999     6 manual(m5)                -0.444
+ 7 audi         a4          2008     6 auto(av)                   0.556
+ 8 audi         a4 quattro  1999     4 manual(m5)                -0.444
+ 9 audi         a4 quattro  1999     4 auto(l5)                  -1.44 
+10 audi         a4 quattro  2008     4 manual(m6)                 1.56 
+# … with 224 more rows
+```
+
+- As always, mutate does not change the number of rows in the dataset
 
 ============================================================
 <div align="center">
 <img src="https://miro.medium.com/max/1200/1*O4LZwd_rTEGY2zMyDkvR9A.png"; style="max-width:1500;"; class="center">
 </div>
+
+<!-- ^^  COMPLETE   ^^ -->
+<!-- vv IN PROGRESS vv -->

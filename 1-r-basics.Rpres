@@ -18,7 +18,7 @@ Learning Goals:
 ## better font size for slides
 library(ggplot2)
 theme_set(theme_grey(base_size = 22))
-opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=TRUE,comment=NA,cache=FALSE)
+opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
 <style>
@@ -446,6 +446,28 @@ Data frame properties
 ```{r}
 glimpse(my_data)
 head(my_data, n=2)
+```
+
+
+Missing Data
+===
+type:section
+
+NA
+===
+- R has a special value that represents missing data- it's called `NA`
+```{r}
+c(1,2,NA,4)
+```
+- NA can appear anywhere that R would expect some other kind of data
+- NA usually ruins computations:
+```{r}
+1 + NA + 3
+```
+- The result makes sense because if I don't know what I'm adding together, I don't know the result either
+- some functions have options to ignore the missing values in vectors:
+```{r}
+mean(c(1,2,NA,4), na.rm=TRUE)
 ```
 
 Scripts
