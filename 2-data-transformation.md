@@ -6,6 +6,13 @@ transition: none
 width: 1680
 height: 1050
 
+- filter rows of a dataset based on conditions
+- arrange rows of a dataset based on one or more columns
+- select columns of a dataset
+- mutate existing columns to create new columns
+- group and summarize data by one or more columns
+- use the pipe to combine multiple operations
+
 
 <style>
 .small-code pre code {
@@ -146,14 +153,24 @@ Comparison operators
 [1]  TRUE  TRUE FALSE  TRUE
 ```
 
-<!-- Finite precision arithemetic -->
-<!-- === -->
-<!-- ```{r} -->
-<!-- sqrt(2) ^ 2 == 2 -->
-<!-- 1 / 49 * 49 == 1 -->
-<!-- near(sqrt(2) ^ 2,  2) -->
-<!-- near(1 / 49 * 49, 1) -->
-<!-- ``` -->
+Aside: computers are not perfect, so be careful with checking equality
+===
+
+```r
+> sqrt(2)^2 == 2
+[1] FALSE
+> 1/49 * 49 == 1
+[1] FALSE
+```
+
+You can use `near()` to check that two numbers are the same (up to "machine precision")
+
+```r
+> near(sqrt(2)^2, 2)
+[1] TRUE
+> near(1/49 * 49, 1)
+[1] TRUE
+```
 
 Logical conjunctions
 =========================================================
@@ -233,6 +250,79 @@ incremental: true
 ```r
 > nrow(filter(mpg, manufacturer == "audi"))
 [1] 18
+```
+
+Exercise: old cars
+==========================================================
+type: prompt
+incremental: true
+
+- create a dataset of all the cars from before the year 2000
+
+```r
+> filter(mpg, year < 2000)
+# A tibble: 117 x 11
+   manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
+   <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
+ 1 audi         a4          1.8  1999     4 auto(… f        18    29 p     comp…
+ 2 audi         a4          1.8  1999     4 manua… f        21    29 p     comp…
+ 3 audi         a4          2.8  1999     6 auto(… f        16    26 p     comp…
+ 4 audi         a4          2.8  1999     6 manua… f        18    26 p     comp…
+ 5 audi         a4 quatt…   1.8  1999     4 manua… 4        18    26 p     comp…
+ 6 audi         a4 quatt…   1.8  1999     4 auto(… 4        16    25 p     comp…
+ 7 audi         a4 quatt…   2.8  1999     6 auto(… 4        15    25 p     comp…
+ 8 audi         a4 quatt…   2.8  1999     6 manua… 4        17    25 p     comp…
+ 9 audi         a6 quatt…   2.8  1999     6 auto(… 4        15    24 p     mids…
+10 chevrolet    c1500 su…   5.7  1999     8 auto(… r        13    17 r     suv  
+# … with 107 more rows
+```
+
+Exercise: old Audis
+==========================================================
+type: prompt
+incremental: true
+
+- create a dataset of all the Audis from before the year 2000
+
+```r
+> filter(mpg, manufacturer == "audi", year < 2000)
+# A tibble: 9 x 11
+  manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class 
+  <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr> 
+1 audi         a4         1.8  1999     4 auto(l… f        18    29 p     compa…
+2 audi         a4         1.8  1999     4 manual… f        21    29 p     compa…
+3 audi         a4         2.8  1999     6 auto(l… f        16    26 p     compa…
+4 audi         a4         2.8  1999     6 manual… f        18    26 p     compa…
+5 audi         a4 quat…   1.8  1999     4 manual… 4        18    26 p     compa…
+6 audi         a4 quat…   1.8  1999     4 auto(l… 4        16    25 p     compa…
+7 audi         a4 quat…   2.8  1999     6 auto(l… 4        15    25 p     compa…
+8 audi         a4 quat…   2.8  1999     6 manual… 4        17    25 p     compa…
+9 audi         a6 quat…   2.8  1999     6 auto(l… 4        15    24 p     midsi…
+```
+
+Exercise: old Audis and Jeeps
+==========================================================
+type: prompt
+incremental: true
+
+- create a dataset of all the Audis and Jeeps from before the year 2000
+
+```r
+> filter(mpg, manufacturer == "audi" | manufacturer == "jeep", year < 2000)
+# A tibble: 11 x 11
+   manufacturer model     displ  year   cyl trans  drv     cty   hwy fl    class
+   <chr>        <chr>     <dbl> <int> <int> <chr>  <chr> <int> <int> <chr> <chr>
+ 1 audi         a4          1.8  1999     4 auto(… f        18    29 p     comp…
+ 2 audi         a4          1.8  1999     4 manua… f        21    29 p     comp…
+ 3 audi         a4          2.8  1999     6 auto(… f        16    26 p     comp…
+ 4 audi         a4          2.8  1999     6 manua… f        18    26 p     comp…
+ 5 audi         a4 quatt…   1.8  1999     4 manua… 4        18    26 p     comp…
+ 6 audi         a4 quatt…   1.8  1999     4 auto(… 4        16    25 p     comp…
+ 7 audi         a4 quatt…   2.8  1999     6 auto(… 4        15    25 p     comp…
+ 8 audi         a4 quatt…   2.8  1999     6 manua… 4        17    25 p     comp…
+ 9 audi         a6 quatt…   2.8  1999     6 auto(… 4        15    24 p     mids…
+10 jeep         grand ch…   4    1999     6 auto(… 4        15    20 r     suv  
+11 jeep         grand ch…   4.7  1999     8 auto(… 4        14    17 r     suv  
 ```
 
 Filtering by row number
@@ -785,7 +875,7 @@ incremental:true
 
 In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
 
-![plot of chunk unnamed-chunk-36](2-data-transformation-figure/unnamed-chunk-36-1.png)
+![plot of chunk unnamed-chunk-41](2-data-transformation-figure/unnamed-chunk-41-1.png)
 
 
 ```r
@@ -928,7 +1018,7 @@ Error in slide_vec(1:10, ., .before = 2): could not find function "slide_vec"
 - Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
 - More about this in the functional programming section
 
-Pipe to ggplot
+Exercise: Pipe to ggplot
 ===
 type:prompt
 incremental: true

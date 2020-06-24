@@ -1,4 +1,4 @@
-Basics and Plotting
+R for Data Science
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
 date: 2019
@@ -19,19 +19,15 @@ opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 }
 </style>
 
-Introduction to the course
-========================================================
-type: section
-
 Goals of this course
 ========================================================
 By the end of the course you should be able to...
 
-- write neat R scripts and markdown reports in R studio
-- find, read, and understand package and function documentation 
-- read and write tabular data into R from flat files
-- perform basic manipulations on tabular data: subsetting, manipulating and summarizing data, and joining
-- visualize tabluar data using line and scatter plots along with color and facets
+- comfortably use R through the Rstudio interface
+- read and write tabular data between R and flat files
+- subset, transform, summarize, join, and plot data
+- write reusable and readable programs
+- seek out, learn, and integrate new packages into your analyses
 
 <div align="center">
 <img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" width=800 height=300>
@@ -53,18 +49,23 @@ R for Data Science (R4DS): https://r4ds.had.co.nz
 
 ***
 
-- Fundamentals: ch 1, 4, 6
-- Input/output: ch 11
-- Data manipulation: ch 5, 13
-- Visualization: ch 3, 28
-
 Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020
 
-
-Getting Started in RStudio
+Basics and Plotting
 ========================================================
-type: section
+type:section
 
+Learning Goals:
+
+- issue commands to R using the Rstudio REPL interface
+- load a package into R
+- read some tabluar data into R
+- visualize tabluar data using ggplot geoms, aesthetics, and facets
+
+Basics
+========================================================
+type:section
 
 The basics of interaction using the console window
 ========================================================
@@ -152,15 +153,17 @@ library(tidyverse)
 library(tidyverse)
 ```
 
-```{r}
+```{r, eval=F}
 mpg = read_csv("data/mpg.csv")
 ```
+
+- Now there is no error message
 
 Packages
 ===
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
-```{r}
+```{r, eval=F}
 poly = read_csv("data/poly.csv") # reading another csv file
 ```
 

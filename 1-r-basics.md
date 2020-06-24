@@ -6,6 +6,14 @@ transition: none
 width: 1680
 height: 1050
 
+Learning Goals:
+
+- save values to variables
+- find and call R functions with multiple arguments by position and name
+- recognize vectors and vectorized functions
+- recognize and inspect data frames
+- issue commands to R using the Rstudio script pane
+
 
 <style>
 .small-code pre code {
@@ -437,6 +445,35 @@ type: prompt
 [1] 0
 ```
 
+Exercise: a vector of variables
+===
+type: prompt
+incremental: true
+
+- Predict the output of the following code:
+
+```r
+> a = 1
+> b = 2
+> x = c(a, b)
+> 
+> a = 3
+> print(x)
+```
+
+***
+
+
+```r
+> a = 1
+> b = 2
+> x = c(a, b)
+> 
+> a = 3
+> print(x)
+[1] 1 2
+```
+
 Data Frames
 ===
 type:section
@@ -532,3 +569,38 @@ Adding comments
 - Use a `#` to start a comment.
 - A comment extends to the end of the
 line and is ignored by R.
+
+Exercise: Plotting a parabola
+===
+type: prompt
+incremental: true
+
+Write an R script that starts with:
+
+
+```r
+> A = 1
+> B = 2
+> C = 3
+```
+
+In the rest of the script, do the following:
+
+- generate an evenly-spaced sequence of 100 values between -5 and 5 (find an R function that does this). Call this `x`
+- generate the corresponding y-values `y` by computing the formula $y = Ax^2 + Bx + C$
+- create a data frame with `x` and `y` as columns
+- use ggplot to create a line plot of `x` vs `y`
+
+Run your script to see the generated plot. Try changing the values of `A`, `B`, and `C` at the top of the script to see how the plot changes.
+
+***
+
+
+```r
+> x = seq(-5, 5, length.out = 100)
+> y = A * x^2 + B * x + C
+> df = tibble(x = x, y = y)
+> ggplot(df) + geom_line(aes(x, y))
+```
+
+![plot of chunk unnamed-chunk-43](1-r-basics-figure/unnamed-chunk-43-1.png)
