@@ -144,7 +144,7 @@ Packages
 
 
 ```r
-# I have a file called 'mpg.csv' in a folder called data
+# I have a file called 'lupusGenes.csv' in a folder called data
 genes = read_csv("data/LupusGenes.csv")
 Error in read_csv("data/LupusGenes.csv"): could not find function "read_csv"
 ```

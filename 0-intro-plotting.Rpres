@@ -141,7 +141,7 @@ Packages
 - csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
 
 ```{r}
-# I have a file called "mpg.csv" in a folder called data 
+# I have a file called "lupusGenes.csv" in a folder called data 
 genes = read_csv("data/LupusGenes.csv")
 ```
 
