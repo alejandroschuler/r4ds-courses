@@ -141,8 +141,8 @@ Packages
 - csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
 
 ```{r}
-# I have a file called "mpg.csv" in a folder called data 
-mpg = read_csv("data/mpg.csv")
+# I have a file called "lupusGenes.csv" in a folder called data 
+genes = read_csv("data/LupusGenes.csv")
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -154,7 +154,7 @@ library(tidyverse)
 ```
 
 ```{r, eval=F}
-mpg = read_csv("data/mpg.csv")
+genes = read_csv("data/LupusGenes.csv")
 ```
 
 - Now there is no error message
@@ -182,43 +182,54 @@ Getting your data in R
 ===
 - Getting your data into R is easy. We already saw, for example:
 
-```{r, eval=F}
-mpg = read_csv("data/mpg.csv")
+```{r echo = T, results = 'hide', message=FALSE}
+genes = read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
   - Windows, e.g.: `"C:\Users\me\Desktop\myfile.csv"`
   - Mac, e.g.: `"/Users/me/Desktop/myfile.csv"`
+  - Internet, e.g.: `"http://www.mywebsite.com/myfile.csv"`
 - If your data is not already in csv format, google "covert X format to csv" or "read X format data in R"
 - We'll learn the details of this later, but this is enough to get you started! 
-- the `mpg` dataset actually comes pre-loaded with `tidyverse`, so you have it already
 
 Looking at data
 ===
-- `mpg` is now a dataset loaded into R. To look at it, just type
+- `genes` is now a dataset loaded into R. To look at it, just type
 ```{r}
-mpg
+genes
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
 - Similar to an Excel spreadsheet.
-- One ro ~ one
+- One row ~ one
 instance of some (real-world) object.
 - One column ~ one variable, containing the values for the
 corresponding instances.
 - All the values in one column should be of the same type (a number, a category, text, etc.), but
 different columns can be of different types.
 
+The Dataset
+===
+```{r}
+genes
+```
+This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between SLE patients and healthy controls.
+- 29 SLE Patients, 30 Healthy Controls
+- We have basic metadata as well as the levels of multiple genes in blood.
+- Let's see if we can find anything interesting from this already-generated data!
+
 Investigating a relationship
 ===
-Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
+Let's say we're curious about the relationship between two genes RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
 - Can we use R to make a plot of these two variables?
 
-```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+```{r, tidy=F, out.height="80%"}
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
+***
 - `ggplot(dataset)` says "start a chart with this dataset"
 - `+ geom_point(...)` says "put points on this chart"
 - `aes(x=x_values y=y_values)` says "map the values in the column `x_values` to the x-axis, and map the values in the column `y_values` to the y-axis" (`aes` is short for *aesthetic*)
@@ -227,8 +238,8 @@ ggplot
 ===
 
 ```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_point(aes(x = VAPA, y = EIF3L))
 ```
 
 ***
@@ -242,27 +253,24 @@ Investigating a relationship
 type: prompt
 incremental: true
 
-Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
+Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset)
 ```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(x = hwy, y = cyl))
+ggplot(genes) + 
+  geom_point(aes(x = phenotype, y = IFI44))
 ```
 
 Investigating a relationship
 ===
-Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
+Let's say we're curious about the relationship between RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
 
 ```{r, tidy=F, echo=F}
-mpg %>%
-  mutate(red=displ>5&hwy>21) %>%
-ggplot() + 
-  geom_point(aes(x = displ, y = hwy, color=red)) +
-  theme(legend.position = "none")  +
-  scale_color_manual(values=c("black", "red"))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype)) +
+  theme(legend.position = "none")
 ```
 
-- What's going on with these cars? They have higher gas mileage than cars of similar engine size, so maybe they are hybrids?
-- If they are hybrids, they would probably be of `class` "compact" or "subcompact"?
+- What's going on here? It seems like there are two clusters. 
+- What is driving this clustering? Age? Sex? Ancestry? Phenotype?
 
 Aesthetics
 ===
@@ -270,25 +278,21 @@ Aesthetics
 - You can also use them to assign color, for instance
 
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
-  geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    color=class
-  )) 
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, 
+                 y = IFI44,
+                 color = phenotype))
 ```
 
 - ggplot automatically gives each value of the column a unique level of the aesthetic (here a color) and adds a legend
-- What did we learn about the cars we were interested in?
+- What did we learn about the genes that we are interested in?
 
 ***
 ```{r, tidy=F, echo=F, out.width="90%"}
-ggplot(mpg) + 
-  geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    color=class
-  )) +
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, 
+                 y = IFI44,
+                 color = phenotype)) +
   theme(legend.position="bottom")
 ```
 
@@ -298,22 +302,22 @@ Aesthetics
 - Or we could have done a shape
 
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    shape=class
+    x = RSAD2, 
+    y = IFI44, 
+    shape=phenotype
   )) 
 ```
 
 
 ***
 ```{r, tidy=F, echo=F, out.width="90%"}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    shape=class
+    x = RSAD2, 
+    y = IFI44, 
+    shape=phenotype
   )) +
   theme(legend.position="bottom")
 ```
@@ -324,22 +328,22 @@ Aesthetics
 - Or size
 
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    size=class
+    x = RSAD2, 
+    y = IFI44, 
+    size=ancestry
   )) 
 ```
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
 
 ***
 ```{r, tidy=F, echo=F, out.width="90%"}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    size=class
+    x = RSAD2, 
+    y = IFI44, 
+    size=ancestry
   )) +
   theme(legend.position="bottom")
 ```
@@ -349,11 +353,11 @@ Aesthetics
 - If we set a property *outside* of the aesthetic, it no longer maps that property to a column. 
 
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy
+      x = RSAD2, 
+      y = IFI44
     ),
     color = "blue"
   ) 
@@ -362,11 +366,11 @@ ggplot(mpg) +
 
 ***
 ```{r, tidy=F, echo=F, out.width="90%"}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy
+      x = RSAD2, 
+      y = IFI44
     ),
     color = "blue"
   ) 
@@ -380,25 +384,25 @@ type: prompt
 Can you recreate this plot?
 
 ```{r, tidy=F, echo=F}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy,
-      color = displ,
-      size = hwy
+      x = RSAD2, 
+      y = IFI44,
+      color = phenotype,
+      size = EIF3L
     )
   ) 
 ```
 ***
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy,
-      color = displ,
-      size = hwy
+      x = RSAD2, 
+      y = IFI44,
+      color = phenotype,
+      size = EIF3L
     )
   ) 
 ```
@@ -411,13 +415,13 @@ type: prompt
 What will this do? Why?
 
 ```{r, tidy=F, eval=F}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, color = "blue"))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
 ***
 ```{r, tidy=F, echo=F}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, color = "blue"))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
 
 Facets
@@ -426,9 +430,9 @@ Facets
 - Use **facets** to generate multiple plots with shared structure
 
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) + 
-  facet_wrap(~ class, nrow = 2)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_wrap(~ phenotype, nrow = 2)
 ```
 - `facet_wrap` is good for faceting according to unordered categories
 
@@ -437,9 +441,9 @@ Facets
 - `facet_grid` is better for ordered categories, and can be used with two variables
 
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) + 
-  facet_grid(drv ~ cyl)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_grid(phenotype ~ gender)
 ```
 
 Exercise
@@ -450,9 +454,9 @@ incremental: true
 Run this code and comment on what role `.` plays:
 
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(drv ~ .)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) +
+  facet_grid(ancestry ~ .)
 ```
 
 
@@ -460,16 +464,16 @@ Geoms
 ===
 
 ```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center"}
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44))
 ```
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
 ***
 ```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center", message=F}
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
 Geoms
@@ -479,24 +483,24 @@ Geoms
 - On the other hand, you *can* set the "line type" of a line:
 
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy, linetype = drv))
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
 Geoms
 ===
 - It's possible to add multiple geoms to the same plot
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
-  geom_point(aes(x = displ, y = hwy, color = drv))
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44, color = phenotype)) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
 Geoms
 ===
 - To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
+ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) + 
   geom_smooth() + 
   geom_point()
 ```
@@ -505,8 +509,8 @@ Geoms
 ===
 - You can also use different mappings in different geoms
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(aes(color = class)) + 
+ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) + 
+  geom_point(aes(color = ancestry)) + 
   geom_smooth()
 ```
 
@@ -516,17 +520,17 @@ type: prompt
 - Use google or other resources to figure out how to receate this plot in R:
 
 ```
-ggplot(mpg) + 
+ggplot(genes) + 
   ...
 ```
 
 ```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(mpg) + 
-  geom_bar(aes(x = manufacturer, fill=trans))
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
-- If you accomplish making the plot, can you figure out how to fix the labels overlapping at the bottom?
+- If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
 Learning More
 ===
