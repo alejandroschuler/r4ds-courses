@@ -202,7 +202,7 @@ mpg
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
 - Similar to an Excel spreadsheet.
-- One ro ~ one
+- One row ~ one
 instance of some (real-world) object.
 - One column ~ one variable, containing the values for the
 corresponding instances.
@@ -379,7 +379,7 @@ type: prompt
 
 Can you recreate this plot?
 
-```{r, tidy=F, echo=F}
+```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
 ggplot(mpg) + 
   geom_point(
     aes(
@@ -513,7 +513,9 @@ ggplot(mpg, mapping = aes(x = displ, y = hwy)) +
 Exercise
 ===
 type: prompt
-- Use google or other resources to figure out how to receate this plot in R:
+incremental: true
+
+Use google or other resources to figure out how to receate this plot in R:
 
 ```
 ggplot(mpg) + 
@@ -527,6 +529,11 @@ ggplot(mpg) +
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to fix the labels overlapping at the bottom?
+
+```{r, eval=F, tidy=F, message=F}
+ggplot(mpg) + 
+  geom_bar(aes(x = manufacturer, fill=trans))
+```
 
 Learning More
 ===

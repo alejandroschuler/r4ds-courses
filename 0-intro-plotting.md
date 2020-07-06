@@ -77,7 +77,7 @@ A simple example in the console
 - The box contains an expression that will be evaluated by R, followed by the result of evaluating that expression.
 
 ```r
-> 1 + 2
+1 + 2
 [1] 3
 ```
 - `3` is the answer
@@ -87,9 +87,9 @@ A simple example in the console
 - These can be composed arbitrarily
 
 ```r
-> log(1 + 3)
+log(1 + 3)
 [1] 1.386294
-> paste("The answer is", log(1 + 3))
+paste("The answer is", log(1 + 3))
 [1] "The answer is 1.38629436111989"
 ```
 
@@ -100,7 +100,7 @@ How do I...
 ?function_name
 ``` 
 gives you information about what the function does
-- Google is your friend. Try "function_name R language" or "how do I X in R?"
+- Google is your friend. Try "function_name R language" or "how do I X in R?". I also strongly recommend using "tidyverse" in your queries or the name of a tidyverse package (more in a moment) that has related functions
 - stackoverflow is your friend. It might take some scrolling, but you will eventually find what you need
 
 Quadratic Equation
@@ -116,7 +116,7 @@ Figure out how to use R functions and operations for square roots, exponentiatio
 
 
 ```r
-> (-14 + sqrt(14^2 - 4 * 3 * (-5)))/(2 * 3)
+(-14 + sqrt(14^2 - 4 * 3 * (-5)))/(2 * 3)
 [1] 0.3333333
 ```
 
@@ -133,8 +133,8 @@ Packages
 - To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
 
 ```r
-> install.packages("tidyverse")  # go download the package called 'tidyverse'- only have to do this once
-> library("tidyverse")  # load the package into the current R session - do this every time you use R and need functions from this package
+install.packages("tidyverse")  # go download the package called 'tidyverse'- only have to do this once
+library("tidyverse")  # load the package into the current R session - do this every time you use R and need functions from this package
 ```
 
 Packages
@@ -144,21 +144,21 @@ Packages
 
 
 ```r
-> # I have a file called 'mpg.csv' in a folder called data
-> mpg = read_csv("data/mpg.csv")
+# I have a file called 'mpg.csv' in a folder called data
+mpg = read_csv("data/mpg.csv")
 Error in read_csv("data/mpg.csv"): could not find function "read_csv"
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
 
 ```r
-> library(tidyverse)
+library(tidyverse)
 ```
 
 
 
 ```r
-> mpg = read_csv("data/mpg.csv")
+mpg = read_csv("data/mpg.csv")
 ```
 
 - Now there is no error message
@@ -169,7 +169,7 @@ Packages
 - once the package is loaded it doesn't need to be loaded again before each function call
 
 ```r
-> poly = read_csv("data/poly.csv")  # reading another csv file
+poly = read_csv("data/poly.csv")  # reading another csv file
 ```
 
 
@@ -189,7 +189,7 @@ Getting your data in R
 
 
 ```r
-> mpg = read_csv("data/mpg.csv")
+mpg = read_csv("data/mpg.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -204,7 +204,7 @@ Looking at data
 - `mpg` is now a dataset loaded into R. To look at it, just type
 
 ```r
-> mpg
+mpg
 # A tibble: 234 x 11
    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
    <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
@@ -223,7 +223,7 @@ Looking at data
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
 - Similar to an Excel spreadsheet.
-- One ro ~ one
+- One row ~ one
 instance of some (real-world) object.
 - One column ~ one variable, containing the values for the
 corresponding instances.
@@ -237,8 +237,8 @@ Let's say we're curious about the relationship between a car's engine size (the 
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy))
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
 ```
 
 ![plot of chunk unnamed-chunk-13](0-intro-plotting-figure/unnamed-chunk-13-1.png)
@@ -252,8 +252,8 @@ ggplot
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy))
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
 ```
 
 ![plot of chunk unnamed-chunk-14](0-intro-plotting-figure/unnamed-chunk-14-1.png)
@@ -272,8 +272,8 @@ incremental: true
 Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = hwy, y = cyl))
+ggplot(mpg) + 
+  geom_point(aes(x = hwy, y = cyl))
 ```
 
 ![plot of chunk unnamed-chunk-15](0-intro-plotting-figure/unnamed-chunk-15-1.png)
@@ -294,12 +294,12 @@ Aesthetics
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(
-+     x = displ, 
-+     y = hwy, 
-+     color=class
-+   )) 
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    color=class
+  )) 
 ```
 
 - ggplot automatically gives each value of the column a unique level of the aesthetic (here a color) and adds a legend
@@ -315,12 +315,12 @@ Aesthetics
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(
-+     x = displ, 
-+     y = hwy, 
-+     shape=class
-+   )) 
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    shape=class
+  )) 
 ```
 
 
@@ -342,12 +342,12 @@ Aesthetics
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(
-+     x = displ, 
-+     y = hwy, 
-+     size=class
-+   )) 
+ggplot(mpg) + 
+  geom_point(aes(
+    x = displ, 
+    y = hwy, 
+    size=class
+  )) 
 ```
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
 
@@ -365,14 +365,14 @@ Aesthetics
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(
-+     aes(
-+       x = displ, 
-+       y = hwy
-+     ),
-+     color = "blue"
-+   ) 
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy
+    ),
+    color = "blue"
+  ) 
 ```
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
@@ -390,15 +390,15 @@ Can you recreate this plot?
 ***
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(
-+     aes(
-+       x = displ, 
-+       y = hwy,
-+       color = displ,
-+       size = hwy
-+     )
-+   ) 
+ggplot(mpg) + 
+  geom_point(
+    aes(
+      x = displ, 
+      y = hwy,
+      color = displ,
+      size = hwy
+    )
+  ) 
 ```
 
 Exercise
@@ -410,8 +410,8 @@ What will this do? Why?
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy, color = "blue"))
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy, color = "blue"))
 ```
 ***
 ![plot of chunk unnamed-chunk-28](0-intro-plotting-figure/unnamed-chunk-28-1.png)
@@ -423,9 +423,9 @@ Facets
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy)) + 
-+   facet_wrap(~ class, nrow = 2)
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
@@ -437,9 +437,9 @@ Facets
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy)) + 
-+   facet_grid(drv ~ cyl)
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) + 
+  facet_grid(drv ~ cyl)
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
@@ -453,9 +453,9 @@ Run this code and comment on what role `.` plays:
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy)) +
-+   facet_grid(drv ~ .)
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
@@ -466,8 +466,8 @@ Geoms
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(x = displ, y = hwy))
+ggplot(mpg) + 
+  geom_point(aes(x = displ, y = hwy))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
@@ -477,8 +477,8 @@ Geoms
 ***
 
 ```r
-> ggplot(mpg) + 
-+   geom_smooth(aes(x = displ, y = hwy))
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
@@ -491,8 +491,8 @@ Geoms
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_smooth(aes(x = displ, y = hwy, linetype = drv))
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy, linetype = drv))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
@@ -502,9 +502,9 @@ Geoms
 - It's possible to add multiple geoms to the same plot
 
 ```r
-> ggplot(mpg) + 
-+   geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
-+   geom_point(aes(x = displ, y = hwy, color = drv))
+ggplot(mpg) + 
+  geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
+  geom_point(aes(x = displ, y = hwy, color = drv))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
@@ -514,9 +514,9 @@ Geoms
 - To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
 
 ```r
-> ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
-+   geom_smooth() + 
-+   geom_point()
+ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
+  geom_smooth() + 
+  geom_point()
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
@@ -526,9 +526,9 @@ Geoms
 - You can also use different mappings in different geoms
 
 ```r
-> ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
-+   geom_point(aes(color = class)) + 
-+   geom_smooth()
+ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) + 
+  geom_smooth()
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
@@ -536,7 +536,9 @@ Geoms
 Exercise
 ===
 type: prompt
-- Use google or other resources to figure out how to receate this plot in R:
+incremental: true
+
+Use google or other resources to figure out how to receate this plot in R:
 
 ```
 ggplot(mpg) + 
@@ -547,6 +549,12 @@ ggplot(mpg) +
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to fix the labels overlapping at the bottom?
+
+
+```r
+ggplot(mpg) + 
+  geom_bar(aes(x = manufacturer, fill=trans))
+```
 
 Learning More
 ===
