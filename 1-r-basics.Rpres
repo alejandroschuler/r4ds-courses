@@ -34,12 +34,16 @@ Programming Basics
 library(tidyverse)
 ```
 ```{r, eval=F}
-mpg = read_csv('data/mpg.csv')
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
+```
+```{r, include=F}
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
 - We know this reads a .csv from a file and creates something called a "data frame" 
 - We've been using this data frame in code like
 ```{r, eval=F}
-ggplot(mpg) + geom_bar(aes(x=manufacturer))
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 - But what does this syntax really mean? Is it useful outside of making plots?
 
@@ -97,9 +101,9 @@ x
 Assignment has no undo
 ========================================================
 ```{r}
-x <- 10
+x = 10
 x
-x <- x + 1
+x = x + 1
 x
 ```
 - If you assign to a name with an existing value, that value is overwritten.
@@ -119,7 +123,7 @@ what can be a name.
 Case matters for names in R
 ========================================================
 ```{r, eval=F}
-a <- 1
+a = 1
 A # this causes an error because A does not have a value
 ```
 ```
@@ -147,7 +151,7 @@ string-length (hyphen)
 R saves some names for itself
 ========================================================
 ```{r eval=FALSE}
-for <- 7 # this causes an error
+for = 7 # this causes an error
 ```
 - `for` is a reserved word in R. (It is used in loop control.)
 - ADVANCED: see `?Reserved` for the complete rules.
@@ -209,8 +213,8 @@ Arguments by position
 argument for each name in the function parameter list, and in the
 same order
 ```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(displ, hwy))
+ggplot(genes) + 
+  geom_point(aes(VAPA, EIF3L))
 ```
 
 ***
@@ -220,8 +224,8 @@ variable `=` value.
 - When using names, the order of the named arguments
 does not matter.
 ```{r, tidy=F}
-ggplot(data=mpg) + 
-  geom_point(mapping=aes(y=hwy, x=displ))
+ggplot(data=genes) + 
+  geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
 Exercise
@@ -229,11 +233,11 @@ Exercise
 incremental: true
 type: prompt
 
-What is wrong with this code?
+Why does this code generate errors?
 
 ```{r, tidy=F}
-ggplot(dta=mpg) + 
-  geom_point(maps=aes(y=hwy, x=displ))
+ggplot(the_data=genes) + 
+  geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
 ```
 
 - If you use names, they have to be spelled correctly
@@ -243,12 +247,23 @@ Exercise
 incremental: true
 type: prompt
 
-Why is this plot on its side relative to the format we've been looking at?
+I'm trying to generate this plot:
+
+```{r, echo=F, tidy=F}
+ggplot(data=genes) + 
+  geom_point(aes(EIF3L, VAPA))
+```
+
+***
+
+But when I use this code, I get:
 
 ```{r, tidy=F}
-ggplot(mpg) + 
-  geom_point(aes(hwy, displ))
+ggplot(data=genes) + 
+  geom_point(aes(VAPA, EIF3L))
 ```
+
+What am I doing wrong?
 
 - If you use positional arguments, they have to be in the right order
 
@@ -275,7 +290,6 @@ library(dplyr)
 ?stats::filter
 ?dplyr::filter
 ```
-- This also works when calling the function in your code
 
 Vectors
 ========================================================
@@ -345,11 +359,11 @@ sqrt(0:10)
 Some functions operate on vectors and give back a single number
 ========================================================
 ```{r}
-shoesize <- c(9, 12, 6, 10, 10, 16, 8, 4)
-shoesize
-sum(shoesize)
-sum(shoesize)/length(shoesize)
-mean(shoesize)
+numbers <- c(9, 12, 6, 10, 10, 16, 8, 4)
+numbers
+sum(numbers)
+sum(numbers)/length(numbers)
+mean(numbers)
 ```
 
 Vectors of other types
@@ -418,9 +432,9 @@ type:section
 Making data frames
 ========================================================
 - use `tibble()` to make your own data frames from scratch in R
-```{r}
-my_data = tibble( 
-  mrn = c(1, 2, 3, 4),
+```{r, tidy=F}
+my_data = tibble(
+  person = c("carlos", "nathalie", "christina", "alejandro"),
   age = c(33, 48, 8, 29)
 )
 my_data
@@ -526,11 +540,20 @@ In the rest of the script, do the following:
 - create a data frame with `x` and `y` as columns
 - use ggplot to create a line plot of `x` vs `y`
 
-Run your script to see the generated plot. Try changing the values of `A`, `B`, and `C` at the top of the script to see how the plot changes.
+Run your script to see the generated plot. Try changing the values of `A`, `B`, and `C` at the top of the script and re-running to see how the plot changes.
 
 ***
 
-```{r}
+Your result should be:
+
+```{r, echo=F}
+x = seq(-5, 5, length.out=100)
+y = A*x^2 + B*x + C
+df = tibble(x=x, y=y)
+ggplot(df) + geom_line(aes(x,y))
+```
+
+```{r, eval=F}
 x = seq(-5, 5, length.out=100)
 y = A*x^2 + B*x + C
 df = tibble(x=x, y=y)

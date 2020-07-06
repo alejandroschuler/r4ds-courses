@@ -183,7 +183,7 @@ Getting your data in R
 - Getting your data into R is easy. We already saw, for example:
 
 ```{r echo = T, results = 'hide', message=FALSE}
-genes = read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/lupusGenes.csv")
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in

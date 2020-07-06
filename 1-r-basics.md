@@ -27,13 +27,14 @@ Programming Basics
 
 
 ```r
-> mpg = read_csv("data/mpg.csv")
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
+
 - We know this reads a .csv from a file and creates something called a "data frame" 
 - We've been using this data frame in code like
 
 ```r
-> ggplot(mpg) + geom_bar(aes(x = manufacturer))
+ggplot(genes) + geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 - But what does this syntax really mean? Is it useful outside of making plots?
 
@@ -48,13 +49,13 @@ Assignment
 names to things.
 
 ```r
-> mpg = read_csv("data/mpg.csv")
+mpg = read_csv("data/mpg.csv")
 ```
 - This code *assigns* the result of running `read_csv('data/mpg.csv')` to the name `mpg`
 - You can do this with any values and/or functions
 
 ```r
-> x = (13 + 7)/2
+x = (13 + 7)/2
 ```
 - R prints no result from this assignment, but what you entered
 causes a side effect: R has stored the association between
@@ -64,9 +65,9 @@ Using the value of a variable
 ========================================================
 
 ```r
-> x
+x
 [1] 10
-> x/5
+x/5
 [1] 2
 ```
 - When R sees the name of a variable, it uses the stored value of
@@ -88,11 +89,11 @@ to type this using one key combination.
 
 
 ```r
-> x <- 10
-> x
+x <- 10
+x
 [1] 10
-> x = 20
-> x
+x = 20
+x
 [1] 20
 ```
 
@@ -100,11 +101,11 @@ Assignment has no undo
 ========================================================
 
 ```r
-> x <- 10
-> x
+x = 10
+x
 [1] 10
-> x <- x + 1
-> x
+x = x + 1
+x
 [1] 11
 ```
 - If you assign to a name with an existing value, that value is overwritten.
@@ -125,8 +126,8 @@ Case matters for names in R
 ========================================================
 
 ```r
-> a <- 1
-> A  # this causes an error because A does not have a value
+a = 1
+A  # this causes an error because A does not have a value
 ```
 ```
 Error: object 'A' not found
@@ -155,7 +156,7 @@ R saves some names for itself
 ========================================================
 
 ```r
-> for <- 7 # this causes an error
+for = 7 # this causes an error
 ```
 - `for` is a reserved word in R. (It is used in loop control.)
 - ADVANCED: see `?Reserved` for the complete rules.
@@ -172,10 +173,10 @@ incremental: true
 
 
 ```r
-> my_age_end_of_year = 30
-> this_year = 2020
-> my_birth_year = this_year - my_age_end_of_year
-> my_birth_year
+my_age_end_of_year = 30
+this_year = 2020
+my_birth_year = this_year - my_age_end_of_year
+my_birth_year
 [1] 1990
 ```
 
@@ -190,7 +191,7 @@ arguments in parentheses. (Use a comma to separate the arguments, if
                            more than one.)
 
 ```r
-> sqrt(2)
+sqrt(2)
 [1] 1.414214
 ```
 
@@ -199,16 +200,16 @@ Functions and variable assignment
 ========================================================
 
 ```r
-> x = 4
-> sqrt(x)
+x = 4
+sqrt(x)
 [1] 2
-> x
+x
 [1] 4
-> y = sqrt(x)
-> y
+y = sqrt(x)
+y
 [1] 2
-> x = 10
-> y
+x = 10
+y
 [1] 2
 ```
 - What do you observe?
@@ -227,11 +228,11 @@ argument for each name in the function parameter list, and in the
 same order
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(displ, hwy))
+ggplot(genes) + 
+  geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-16](1-r-basics-figure/unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-17](1-r-basics-figure/unnamed-chunk-17-1.png)
 
 ***
 
@@ -241,27 +242,28 @@ variable `=` value.
 does not matter.
 
 ```r
-> ggplot(data=mpg) + 
-+   geom_point(mapping=aes(y=hwy, x=displ))
+ggplot(data=genes) + 
+  geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
-![plot of chunk unnamed-chunk-17](1-r-basics-figure/unnamed-chunk-17-1.png)
+![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
 
 Exercise
 ========================================================
 incremental: true
 type: prompt
 
-What is wrong with this code?
+Why does this code generate errors?
 
 
 ```r
-> ggplot(dta=mpg) + 
-+   geom_point(maps=aes(y=hwy, x=displ))
-Warning: Ignoring unknown parameters: maps
+ggplot(the_data=genes) + 
+  geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
+Warning: Ignoring unknown aesthetics: y_axis, x_axis
+Error in FUN(X[[i]], ...): object 'EIF3L' not found
 ```
 
-![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
 
 - If you use names, they have to be spelled correctly
 
@@ -270,15 +272,23 @@ Exercise
 incremental: true
 type: prompt
 
-Why is this plot on its side relative to the format we've been looking at?
+I'm trying to generate this plot:
+
+![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
+
+***
+
+But when I use this code, I get:
 
 
 ```r
-> ggplot(mpg) + 
-+   geom_point(aes(hwy, displ))
+ggplot(data=genes) + 
+  geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
+![plot of chunk unnamed-chunk-21](1-r-basics-figure/unnamed-chunk-21-1.png)
+
+What am I doing wrong?
 
 - If you use positional arguments, they have to be in the right order
 
@@ -297,17 +307,16 @@ Calling functions from a package
 - For instance:
 
 ```r
-> ?filter # returns documentation for a function called filter in the stats package
-> library(dplyr)
-> ?filter # now returns documentation for a function called filter in the dplyr package!
+?filter # returns documentation for a function called filter in the stats package
+library(dplyr)
+?filter # now returns documentation for a function called filter in the dplyr package!
 ```
 - You can tell R which function you want by specifying the package name and then `::` before the function name
 
 ```r
-> ?stats::filter
-> ?dplyr::filter
+?stats::filter
+?dplyr::filter
 ```
-- This also works when calling the function in your code
 
 Vectors
 ========================================================
@@ -318,18 +327,18 @@ Repetitive calculations
 ========================================================
 
 ```r
-> x1 = 1
-> x2 = 2
-> x3 = 3
+x1 = 1
+x2 = 2
+x3 = 3
 ```
 
 Let's say I have these variables and I want to add 1 to all of them and save the result.
 
 
 ```r
-> y1 = 1 + x1
-> y2 = 2 + x2
-> y3 = 3 + x3
+y1 = 1 + x1
+y2 = 2 + x2
+y3 = 3 + x3
 ```
 
 This does the trick but it's a lot of copy-paste
@@ -339,9 +348,9 @@ Vectors
 - Vectors solve the problem
 
 ```r
-> x = c(1, 2, 3)
-> y = x + 1
-> y
+x = c(1, 2, 3)
+y = x + 1
+y
 [1] 2 3 4
 ```
 - A vector is a one-dimensional sequence of zero or more values
@@ -353,7 +362,7 @@ Ranges
 ===
 
 ```r
-> 1:50
+1:50
  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
 [26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
 ```
@@ -370,20 +379,20 @@ Elementwise operations on a vector
 - This multiplies each element of `1:10` by the corresponding element of `1:10`, that is, it squares each element.
 
 ```r
-> (1:10) * (1:10)
+(1:10) * (1:10)
  [1]   1   4   9  16  25  36  49  64  81 100
 ```
 - Equivalently, we could use exponentiation:
 
 ```r
-> (1:10)^2
+(1:10)^2
  [1]   1   4   9  16  25  36  49  64  81 100
 ```
 - Many basic R functions operate on multi-element vectors as
 easily as on vectors containing a single number.
 
 ```r
-> sqrt(0:10)
+sqrt(0:10)
  [1] 0.000000 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751
  [9] 2.828427 3.000000 3.162278
 ```
@@ -392,14 +401,14 @@ Some functions operate on vectors and give back a single number
 ========================================================
 
 ```r
-> shoesize <- c(9, 12, 6, 10, 10, 16, 8, 4)
-> shoesize
+numbers <- c(9, 12, 6, 10, 10, 16, 8, 4)
+numbers
 [1]  9 12  6 10 10 16  8  4
-> sum(shoesize)
+sum(numbers)
 [1] 75
-> sum(shoesize)/length(shoesize)
+sum(numbers)/length(numbers)
 [1] 9.375
-> mean(shoesize)
+mean(numbers)
 [1] 9.375
 ```
 
@@ -408,18 +417,18 @@ Vectors of other types
 - text data in R is called a "string"
 
 ```r
-> my_string = "hello"
+my_string = "hello"
 ```
 - when using data that is text in R, you have to refer to it using quotation marks (why?)
 
 ```r
-> my_string = hello  # what does this code do?
+my_string = hello  # what does this code do?
 ```
 - you can have a vector of strings, and functions can operate on these too:
 
 ```r
-> words = c("hello", "how", "are", "you", "?")
-> paste(words, collapse = " ")
+words = c("hello", "how", "are", "you", "?")
+paste(words, collapse = " ")
 [1] "hello how are you ?"
 ```
 
@@ -430,18 +439,18 @@ type: prompt
 
 
 ```r
-> x = c(7, 3, 1, 9)
+x = c(7, 3, 1, 9)
 ```
 - Subtract the mean of `x` from `x`, and then `sum` the result.
 
 
 ```r
-> x = c(7, 3, 1, 9)
-> mean(x)
+x = c(7, 3, 1, 9)
+mean(x)
 [1] 5
-> x - mean(x)
+x - mean(x)
 [1]  2 -2 -4  4
-> sum(x - mean(x))  # answer in one expression
+sum(x - mean(x))  # answer in one expression
 [1] 0
 ```
 
@@ -453,24 +462,24 @@ incremental: true
 - Predict the output of the following code:
 
 ```r
-> a = 1
-> b = 2
-> x = c(a, b)
-> 
-> a = 3
-> print(x)
+a = 1
+b = 2
+x = c(a, b)
+
+a = 3
+print(x)
 ```
 
 ***
 
 
 ```r
-> a = 1
-> b = 2
-> x = c(a, b)
-> 
-> a = 3
-> print(x)
+a = 1
+b = 2
+x = c(a, b)
+
+a = 3
+print(x)
 [1] 1 2
 ```
 
@@ -483,15 +492,18 @@ Making data frames
 - use `tibble()` to make your own data frames from scratch in R
 
 ```r
-> my_data = tibble(mrn = c(1, 2, 3, 4), age = c(33, 48, 8, 29))
-> my_data
+my_data = tibble(
+  person = c("carlos", "nathalie", "christina", "alejandro"),
+  age = c(33, 48, 8, 29)
+)
+my_data
 # A tibble: 4 x 2
-    mrn   age
-  <dbl> <dbl>
-1     1    33
-2     2    48
-3     3     8
-4     4    29
+  person      age
+  <chr>     <dbl>
+1 carlos       33
+2 nathalie     48
+3 christina     8
+4 alejandro    29
 ```
 
 Data frame properties
@@ -499,19 +511,19 @@ Data frame properties
 - `dim()` gives the dimensions of the data frame. `ncol()` and `nrow()` give you the number of columns and the number of rows, respectively.
 
 ```r
-> dim(my_data)
+dim(my_data)
 [1] 4 2
-> ncol(my_data)
+ncol(my_data)
 [1] 2
-> nrow(my_data)
+nrow(my_data)
 [1] 4
 ```
 
 - `names()` gives you the names of the columns (a vector)
 
 ```r
-> names(my_data)
-[1] "mrn" "age"
+names(my_data)
+[1] "person" "age"   
 ```
 
 Data frame properties
@@ -519,17 +531,45 @@ Data frame properties
 - `glimpse()` shows you a lot of information, `head()` returns the first `n` rows
 
 ```r
-> glimpse(my_data)
+glimpse(my_data)
 Rows: 4
 Columns: 2
-$ mrn <dbl> 1, 2, 3, 4
-$ age <dbl> 33, 48, 8, 29
-> head(my_data, n = 2)
+$ person <chr> "carlos", "nathalie", "christina", "alejandro"
+$ age    <dbl> 33, 48, 8, 29
+head(my_data, n = 2)
 # A tibble: 2 x 2
-    mrn   age
-  <dbl> <dbl>
-1     1    33
-2     2    48
+  person     age
+  <chr>    <dbl>
+1 carlos      33
+2 nathalie    48
+```
+
+
+Missing Data
+===
+type:section
+
+NA
+===
+- R has a special value that represents missing data- it's called `NA`
+
+```r
+c(1, 2, NA, 4)
+[1]  1  2 NA  4
+```
+- NA can appear anywhere that R would expect some other kind of data
+- NA usually ruins computations:
+
+```r
+1 + NA + 3
+[1] NA
+```
+- The result makes sense because if I don't know what I'm adding together, I don't know the result either
+- some functions have options to ignore the missing values in vectors:
+
+```r
+mean(c(1, 2, NA, 4), na.rm = TRUE)
+[1] 2.333333
 ```
 
 Scripts
@@ -562,8 +602,8 @@ Adding comments
 ========================================================
 
 ```r
-> ## This is a comment
-> 1 + 2  # add some numbers
+## This is a comment
+1 + 2  # add some numbers
 [1] 3
 ```
 - Use a `#` to start a comment.
@@ -579,9 +619,9 @@ Write an R script that starts with:
 
 
 ```r
-> A = 1
-> B = 2
-> C = 3
+A = 1
+B = 2
+C = 3
 ```
 
 In the rest of the script, do the following:
@@ -591,16 +631,18 @@ In the rest of the script, do the following:
 - create a data frame with `x` and `y` as columns
 - use ggplot to create a line plot of `x` vs `y`
 
-Run your script to see the generated plot. Try changing the values of `A`, `B`, and `C` at the top of the script to see how the plot changes.
+Run your script to see the generated plot. Try changing the values of `A`, `B`, and `C` at the top of the script and re-running to see how the plot changes.
 
 ***
 
+Your result should be:
+
+![plot of chunk unnamed-chunk-48](1-r-basics-figure/unnamed-chunk-48-1.png)
+
 
 ```r
-> x = seq(-5, 5, length.out = 100)
-> y = A * x^2 + B * x + C
-> df = tibble(x = x, y = y)
-> ggplot(df) + geom_line(aes(x, y))
+x = seq(-5, 5, length.out = 100)
+y = A * x^2 + B * x + C
+df = tibble(x = x, y = y)
+ggplot(df) + geom_line(aes(x, y))
 ```
-
-![plot of chunk unnamed-chunk-43](1-r-basics-figure/unnamed-chunk-43-1.png)
