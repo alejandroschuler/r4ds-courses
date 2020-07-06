@@ -44,15 +44,23 @@ Each operation takes a data frame and produces a new data frame.
 - `mutate()` creates new columns, often based on operations on other columns
 - `summarize()` collapses many values in one or more columns down to one value per column
 
-These can all be used in conjunction with `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the verbs for a language of data manipulation.
+These can all be used in conjunction with `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the "verbs" for a language of data manipulation.
 
-All verbs work similarly:
+All work similarly:
 
 1. The first argument is a data frame.
 2. The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
 3. The result is a new data frame.
 
-Together these properties make it easy to chain together multiple simple steps to achieve a complex result. Let’s dive in and see how these verbs work.
+Together these properties make it easy to chain together multiple simple steps to achieve a complex result. 
+
+GTEx data
+===
+**Nicole- please add some description here**
+```{r, message=F}
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt') # includes normalized expression data for GTEx individuals across four tissues
+nrow(gtex_data)
+```
 
 Filter rows with filter()
 ====
@@ -63,9 +71,7 @@ Filter rows with filter()
 - `filter()` lets you filter out rows of a dataset that meet a certain condition
 - it takes two arguments: the dataset and the condition
 
-```{r}
-gtex_data = read_tsv('../data/gtex.tissue.zscores.advance2020.txt') # includes normalized expression data for GTEx individuals across four tissues
-nrow(gtex_data)
+```{r, message=F}
 filter(gtex_data, Blood >= 12)
 ```
 
@@ -202,7 +208,7 @@ Exercise: High and low expression events
 type: prompt
 incremental: true
 
-- create a dataset of all high and low expression instances (Z > 3 or < -3) in any tissue
+- create a dataset of all high and low expression instances (Z > 3 or < -3) in any tissue (`?abs` may be helpful)
 ```{r}
 filter(gtex_data, abs(Blood) > 3 | abs(Heart) > 3 | abs(Lung) > 3 | abs(Liver) > 3)
 ```
@@ -212,23 +218,10 @@ Exercise: getting rid of NAs
 type: prompt
 incremental: true
 
-- filter any rows where `x` is `NA` out of this dataset:
-```{r}
-df = tibble(
-  x = c(1,2,3,NA,5,6),
-  y = c(11, 12, 13, 14, 15,16)
-)
-```
-
-- Your answer should be:
-```{r, echo=F}
-filter(df, !is.na(x))
-```
-
-***
+- filter any rows where `Heart` is `NA` out of the GTEx data
 
 ```{r}
-filter(df, !is.na(x))
+filter(gtex_data, !is.na(Heart))
 ```
 
 Filtering by row number
@@ -278,7 +271,7 @@ Exercise: top 5 high expression instances
 type:prompt
 incremental:true
 
-Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes for any gene in blood
+Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
 filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
@@ -336,6 +329,11 @@ pull() is a friend of select()
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
 ```{r}
 select(gtex_data, Gene)
+```
+
+***
+
+```{r}
 pull(gtex_data, Gene)
 ```
 
@@ -356,7 +354,7 @@ Exercise: select and filter
 incremental:true
 type:prompt
 
-- create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data for gene WDR34 (`Gene`) in the `gtex_data` dataset.
+- create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
 
 ```{r}
 select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
@@ -374,7 +372,7 @@ type:prompt
 
 - use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
 - Can you do this programmatically without specifying the names of each of the desired columns? 
-- What base R function will help you determine if a column is textual or not?
+- What base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
 
 ```{r}
 select(gtex_data, where(is.character))
@@ -506,6 +504,13 @@ ggplot(blood_outliers) +
   geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
 ```
 
+```{r, eval=F, fig.width=10}
+gene_data = filter(gtex_data, Gene == 'MYL1')
+blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
+ggplot(blood_outliers) +
+  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
+```
+
 Exercise: putting it together
 ===
 type:prompt
@@ -610,6 +615,7 @@ Piping to another position
 ===
 - The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
 ```{r}
+library(slider)
 mean %>%
   slide_vec(1:10, ., .before=2)
 ```
@@ -690,7 +696,7 @@ Multiple columns can be used to group the data simultaneously
 ```{r, tidy=F, message=F}
 gtex_data %>% 
   group_by(Gene,Ind) %>%
-  summarize(exp_avg = mean(c(Blood,Heart,Lung,Liver),na.rm=T))
+  summarize(max_blood = max(Blood))
 ```
 
 - the result has the summary value for each unique combination of the grouping variables
@@ -712,8 +718,8 @@ gtex_data %>%
   count()
 ```
 
-***
-
+Computing the number of distinct elements in a column, per group
+=====================================================================
 - `n_distinct()` counts the number of unique elements in a column
 ```{r, tidy=F, message=F}
 gtex_data %>% 
@@ -727,14 +733,14 @@ Exercise: top expression per tissue
 type:prompt
 incremental:true
 
-- What is the highest liver expression value seen for each gene in the `gtex_data` dataset?
+- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex_data` dataset?
 - What about the lowest?
 ```{r, tidy=F, message=F}
 gtex_data %>% 
   group_by(Gene) %>%
   summarize(
-    max_liver = max(Liver,na.rm=T),
-    min_liver = min(Liver,na.rm=T)
+    max_liver = max(Liver, na.rm=T),
+    min_liver = min(Liver, na.rm=T)
   )
 ```
 
@@ -749,9 +755,9 @@ Recreate this plot:
 gtex_data %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
   group_by(Gene, NTissues) %>%
-  summarize(max_exp_across_tissues = max(c(Blood, Heart, Lung, Liver),na.rm=T)) %>% 
+  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=Gene, x=max_exp_across_tissues)) + 
+  geom_point(aes(y=Gene, x=max_heart)) + 
   facet_grid(NTissues ~ ., labeller = label_both)
 ```
 
@@ -762,9 +768,9 @@ ggplot() +
 gtex_data %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
   group_by(Gene, NTissues) %>%
-  summarize(max_exp_across_tissues = max(c(Blood, Heart, Lung, Liver),na.rm=T)) %>% 
+  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=Gene, x=max_exp_across_tissues)) + 
+  geom_point(aes(y=Gene, x=max_heart)) + 
   facet_grid(NTissues ~ ., labeller = label_both)
 ```
 
