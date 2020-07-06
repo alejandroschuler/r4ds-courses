@@ -144,9 +144,9 @@ Packages
 
 
 ```r
-# I have a file called 'mpg.csv' in a folder called data
-mpg = read_csv("data/mpg.csv")
-Error in read_csv("data/mpg.csv"): could not find function "read_csv"
+# I have a file called 'lupusGenes.csv' in a folder called data
+genes = read_csv("data/LupusGenes.csv")
+Error in read_csv("data/LupusGenes.csv"): could not find function "read_csv"
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -158,7 +158,7 @@ library(tidyverse)
 
 
 ```r
-mpg = read_csv("data/mpg.csv")
+genes = read_csv("data/LupusGenes.csv")
 ```
 
 - Now there is no error message
@@ -189,36 +189,36 @@ Getting your data in R
 
 
 ```r
-mpg = read_csv("data/mpg.csv")
+genes = read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
   - Windows, e.g.: `"C:\Users\me\Desktop\myfile.csv"`
   - Mac, e.g.: `"/Users/me/Desktop/myfile.csv"`
+  - Internet, e.g.: `"http://www.mywebsite.com/myfile.csv"`
 - If your data is not already in csv format, google "covert X format to csv" or "read X format data in R"
 - We'll learn the details of this later, but this is enough to get you started! 
-- the `mpg` dataset actually comes pre-loaded with `tidyverse`, so you have it already
 
 Looking at data
 ===
-- `mpg` is now a dataset loaded into R. To look at it, just type
+- `genes` is now a dataset loaded into R. To look at it, just type
 
 ```r
-mpg
-# A tibble: 234 x 11
-   manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
-   <chr>        <chr>    <dbl> <int> <int> <chr>   <chr> <int> <int> <chr> <chr>
- 1 audi         a4         1.8  1999     4 auto(l… f        18    29 p     comp…
- 2 audi         a4         1.8  1999     4 manual… f        21    29 p     comp…
- 3 audi         a4         2    2008     4 manual… f        20    31 p     comp…
- 4 audi         a4         2    2008     4 auto(a… f        21    30 p     comp…
- 5 audi         a4         2.8  1999     6 auto(l… f        16    26 p     comp…
- 6 audi         a4         2.8  1999     6 manual… f        18    26 p     comp…
- 7 audi         a4         3.1  2008     6 auto(a… f        18    27 p     comp…
- 8 audi         a4 quat…   1.8  1999     4 manual… 4        18    26 p     comp…
- 9 audi         a4 quat…   1.8  1999     4 auto(l… 4        16    25 p     comp…
-10 audi         a4 quat…   2    2008     4 manual… 4        20    28 p     comp…
-# … with 224 more rows
+genes
+# A tibble: 59 x 11
+   sampleid   age gender ancestry phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>    <dbl> <chr>  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057…    70 F      Caucasi… SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057…    78 F      Caucasi… SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057…    64 F      Caucasi… SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057…    32 F      Asian    SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057…    33 F      Caucasi… SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057…    46 M      Maori    SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057…    45 F      Asian    SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057…    67 M      Caucasi… SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057…    33 F      Caucasi… SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057…    28 F      Caucasi… SLE         19.9  7.21 278.  217.   972. 
+# … with 49 more rows, and 1 more variable: VAPA <dbl>
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
@@ -230,19 +230,45 @@ corresponding instances.
 - All the values in one column should be of the same type (a number, a category, text, etc.), but
 different columns can be of different types.
 
+The Dataset
+===
+
+```r
+genes
+# A tibble: 59 x 11
+   sampleid   age gender ancestry phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>    <dbl> <chr>  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057…    70 F      Caucasi… SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057…    78 F      Caucasi… SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057…    64 F      Caucasi… SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057…    32 F      Asian    SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057…    33 F      Caucasi… SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057…    46 M      Maori    SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057…    45 F      Asian    SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057…    67 M      Caucasi… SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057…    33 F      Caucasi… SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057…    28 F      Caucasi… SLE         19.9  7.21 278.  217.   972. 
+# … with 49 more rows, and 1 more variable: VAPA <dbl>
+```
+This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between SLE patients and healthy controls.
+- 29 SLE Patients, 30 Healthy Controls
+- We have basic metadata as well as the levels of multiple genes in blood.
+- Let's see if we can find anything interesting from this already-generated data!
+
 Investigating a relationship
 ===
-Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
+Let's say we're curious about the relationship between two genes RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
 - Can we use R to make a plot of these two variables?
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-![plot of chunk unnamed-chunk-13](0-intro-plotting-figure/unnamed-chunk-13-1.png)
+<img src="0-intro-plotting-figure/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" height="80%" />
 
+***
 - `ggplot(dataset)` says "start a chart with this dataset"
 - `+ geom_point(...)` says "put points on this chart"
 - `aes(x=x_values y=y_values)` says "map the values in the column `x_values` to the x-axis, and map the values in the column `y_values` to the y-axis" (`aes` is short for *aesthetic*)
@@ -252,11 +278,11 @@ ggplot
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_point(aes(x = VAPA, y = EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-14](0-intro-plotting-figure/unnamed-chunk-14-1.png)
+![plot of chunk unnamed-chunk-15](0-intro-plotting-figure/unnamed-chunk-15-1.png)
 
 ***
 
@@ -269,23 +295,23 @@ Investigating a relationship
 type: prompt
 incremental: true
 
-Make a scatterplot of `hwy` vs `cyl` (how many cylinders the car has)
+Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset)
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = hwy, y = cyl))
+ggplot(genes) + 
+  geom_point(aes(x = phenotype, y = IFI44))
 ```
-
-![plot of chunk unnamed-chunk-15](0-intro-plotting-figure/unnamed-chunk-15-1.png)
-
-Investigating a relationship
-===
-Let's say we're curious about the relationship between a car's engine size (the column `displ`) and a car's highway fuel efficiency (column `hww`).
 
 ![plot of chunk unnamed-chunk-16](0-intro-plotting-figure/unnamed-chunk-16-1.png)
 
-- What's going on with these cars? They have higher gas mileage than cars of similar engine size, so maybe they are hybrids?
-- If they are hybrids, they would probably be of `class` "compact" or "subcompact"?
+Investigating a relationship
+===
+Let's say we're curious about the relationship between RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
+
+![plot of chunk unnamed-chunk-17](0-intro-plotting-figure/unnamed-chunk-17-1.png)
+
+- What's going on here? It seems like there are two clusters. 
+- What is driving this clustering? Age? Sex? Ancestry? Phenotype?
 
 Aesthetics
 ===
@@ -294,19 +320,17 @@ Aesthetics
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    color=class
-  )) 
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, 
+                 y = IFI44,
+                 color = phenotype))
 ```
 
 - ggplot automatically gives each value of the column a unique level of the aesthetic (here a color) and adds a legend
-- What did we learn about the cars we were interested in?
+- What did we learn about the genes that we are interested in?
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-18-1.png" title="plot of chunk unnamed-chunk-18" alt="plot of chunk unnamed-chunk-18" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="90%" />
 
 Aesthetics
 ===
@@ -315,25 +339,17 @@ Aesthetics
 
 
 ```r
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    shape=class
+    x = RSAD2, 
+    y = IFI44, 
+    shape=phenotype
   )) 
 ```
 
 
 ***
-
-```
-Warning: The shape palette can deal with a maximum of 6 discrete values because
-more than 6 becomes difficult to discriminate; you have 7. Consider
-specifying shapes manually if you must have them.
-Warning: Removed 62 rows containing missing values (geom_point).
-```
-
-<img src="0-intro-plotting-figure/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" width="90%" />
 
 Aesthetics
 ===
@@ -342,11 +358,11 @@ Aesthetics
 
 
 ```r
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(aes(
-    x = displ, 
-    y = hwy, 
-    size=class
+    x = RSAD2, 
+    y = IFI44, 
+    size=ancestry
   )) 
 ```
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
@@ -357,7 +373,7 @@ ggplot(mpg) +
 Warning: Using size for a discrete variable is not advised.
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" width="90%" />
 
 Aesthetics
 ===
@@ -365,11 +381,11 @@ Aesthetics
 
 
 ```r
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy
+      x = RSAD2, 
+      y = IFI44
     ),
     color = "blue"
   ) 
@@ -377,7 +393,7 @@ ggplot(mpg) +
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" width="90%" />
+<img src="0-intro-plotting-figure/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" width="90%" />
 
 Exercise
 ===
@@ -386,17 +402,17 @@ type: prompt
 
 Can you recreate this plot?
 
-![plot of chunk unnamed-chunk-25](0-intro-plotting-figure/unnamed-chunk-25-1.png)
+![plot of chunk unnamed-chunk-26](0-intro-plotting-figure/unnamed-chunk-26-1.png)
 ***
 
 ```r
-ggplot(mpg) + 
+ggplot(genes) + 
   geom_point(
     aes(
-      x = displ, 
-      y = hwy,
-      color = displ,
-      size = hwy
+      x = RSAD2, 
+      y = IFI44,
+      color = phenotype,
+      size = EIF3L
     )
   ) 
 ```
@@ -410,11 +426,11 @@ What will this do? Why?
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, color = "blue"))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
 ***
-![plot of chunk unnamed-chunk-28](0-intro-plotting-figure/unnamed-chunk-28-1.png)
+![plot of chunk unnamed-chunk-29](0-intro-plotting-figure/unnamed-chunk-29-1.png)
 
 Facets
 ===
@@ -423,12 +439,12 @@ Facets
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) + 
-  facet_wrap(~ class, nrow = 2)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_wrap(~ phenotype, nrow = 2)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
@@ -437,12 +453,12 @@ Facets
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) + 
-  facet_grid(drv ~ cyl)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_grid(phenotype ~ gender)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -453,12 +469,12 @@ Run this code and comment on what role `.` plays:
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy)) +
-  facet_grid(drv ~ .)
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) +
+  facet_grid(ancestry ~ .)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
 
 
 Geoms
@@ -466,22 +482,22 @@ Geoms
 
 
 ```r
-ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
 ***
 
 ```r
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy))
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -491,70 +507,62 @@ Geoms
 
 
 ```r
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy, linetype = drv))
-```
-
-<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
-
-Geoms
-===
-- It's possible to add multiple geoms to the same plot
-
-```r
-ggplot(mpg) + 
-  geom_smooth(aes(x = displ, y = hwy, color = drv)) + 
-  geom_point(aes(x = displ, y = hwy, color = drv))
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
 
 Geoms
 ===
-- To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
+- It's possible to add multiple geoms to the same plot
 
 ```r
-ggplot(mpg, aes(x = displ, y = hwy, color = drv)) + 
-  geom_smooth() + 
-  geom_point()
+ggplot(genes) + 
+  geom_smooth(aes(x = RSAD2, y = IFI44, color = phenotype)) + 
+  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
 
 Geoms
 ===
-- You can also use different mappings in different geoms
+- To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
 
 ```r
-ggplot(mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point(aes(color = class)) + 
-  geom_smooth()
+ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) + 
+  geom_smooth() + 
+  geom_point()
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
 
-Exercise
+Geoms
 ===
-type: prompt
-incremental: true
+- You can also use different mappings in different geoms
 
-Use google or other resources to figure out how to receate this plot in R:
-
-```
-ggplot(mpg) + 
-  ...
+```r
+ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) + 
+  geom_point(aes(color = ancestry)) + 
+  geom_smooth()
 ```
 
 <img src="0-intro-plotting-figure/unnamed-chunk-38-1.png" title="plot of chunk unnamed-chunk-38" alt="plot of chunk unnamed-chunk-38" style="display: block; margin: auto;" />
 
-- What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
-- If you accomplish making the plot, can you figure out how to fix the labels overlapping at the bottom?
+Exercise
+===
+type: prompt
+- Use google or other resources to figure out how to receate this plot in R:
 
-
-```r
-ggplot(mpg) + 
-  geom_bar(aes(x = manufacturer, fill=trans))
 ```
+ggplot(genes) + 
+  ...
+```
+
+<img src="0-intro-plotting-figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" style="display: block; margin: auto;" />
+
+- What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
+- If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
 Learning More
 ===

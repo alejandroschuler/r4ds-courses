@@ -11,7 +11,7 @@
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020
 - Time: Tuesday/Thursday 12 PM - 1:30 PM PDT
-- Location: `zoom link`
+- Location: https://stanford.zoom.us/j/93589312185?pwd=OXQ0aWhHcGcxOE8rRE9sNXJoWFVyQT09 (9430520)
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
