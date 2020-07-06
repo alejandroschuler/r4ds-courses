@@ -214,7 +214,7 @@ The Dataset
 ```{r}
 genes
 ```
-This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between SLE patients and healthy controls.
+This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
 - 29 SLE Patients, 30 Healthy Controls
 - We have basic metadata as well as the levels of multiple genes in blood.
 - Let's see if we can find anything interesting from this already-generated data!
@@ -299,7 +299,7 @@ ggplot(genes) +
 Aesthetics
 ===
 - Aesthetics aren't just for mapping columns to the x- and y-axis
-- Or we could have done a shape
+- We could have used a shape
 
 ```{r, tidy=F, eval=F}
 ggplot(genes) + 
@@ -480,7 +480,7 @@ ggplot(genes) +
 Geoms
 ===
 - Different geoms are configured to work with different aesthetics. 
-- e.g. you can set the shape of a point, but you ca’t set the “shape” of a line.
+- e.g. you can set the shape of a point, but you can’t set the “shape” of a line.
 - On the other hand, you *can* set the "line type" of a line:
 
 ```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
@@ -527,17 +527,19 @@ ggplot(genes) +
   ...
 ```
 
-```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+```{r, echo=F, tidy=F, fig.height = 8, fig.width = 10, fig.align = "center", message=F}
 ggplot(genes) + 
   geom_bar(aes(x = ancestry, fill = phenotype))
 ```
+
+***
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
 ```{r, eval=F, tidy=F, message=F}
-ggplot(mpg) + 
-  geom_bar(aes(x = manufacturer, fill=trans))
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 
 Learning More

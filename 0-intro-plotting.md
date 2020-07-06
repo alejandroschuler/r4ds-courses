@@ -250,7 +250,7 @@ genes
 10 GSM3057…    28 F      Caucasi… SLE         19.9  7.21 278.  217.   972. 
 # … with 49 more rows, and 1 more variable: VAPA <dbl>
 ```
-This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between SLE patients and healthy controls.
+This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
 - 29 SLE Patients, 30 Healthy Controls
 - We have basic metadata as well as the levels of multiple genes in blood.
 - Let's see if we can find anything interesting from this already-generated data!
@@ -335,7 +335,7 @@ ggplot(genes) +
 Aesthetics
 ===
 - Aesthetics aren't just for mapping columns to the x- and y-axis
-- Or we could have done a shape
+- We could have used a shape
 
 
 ```r
@@ -401,6 +401,7 @@ incremental: true
 type: prompt
 
 Can you recreate this plot?
+
 
 ![plot of chunk unnamed-chunk-26](0-intro-plotting-figure/unnamed-chunk-26-1.png)
 ***
@@ -502,7 +503,7 @@ ggplot(genes) +
 Geoms
 ===
 - Different geoms are configured to work with different aesthetics. 
-- e.g. you can set the shape of a point, but you ca’t set the “shape” of a line.
+- e.g. you can set the shape of a point, but you can’t set the “shape” of a line.
 - On the other hand, you *can* set the "line type" of a line:
 
 
@@ -552,7 +553,9 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
 Exercise
 ===
 type: prompt
-- Use google or other resources to figure out how to receate this plot in R:
+incremental: true
+
+Use google or other resources to figure out how to receate this plot in R:
 
 ```
 ggplot(genes) + 
@@ -561,8 +564,16 @@ ggplot(genes) +
 
 <img src="0-intro-plotting-figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" style="display: block; margin: auto;" />
 
+***
+
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
+
+
+```r
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
+```
 
 Learning More
 ===
