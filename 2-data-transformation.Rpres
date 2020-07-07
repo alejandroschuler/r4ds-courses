@@ -1,7 +1,7 @@
 Data Transformation
 ========================================================
-author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham, updated to include GTEx sample data by Nicole Ferraro
+date: 2019, updated July 2020
 transition: none
 width: 1680
 height: 1050
@@ -44,15 +44,23 @@ Each operation takes a data frame and produces a new data frame.
 - `mutate()` creates new columns, often based on operations on other columns
 - `summarize()` collapses many values in one or more columns down to one value per column
 
-These can all be used in conjunction with `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the verbs for a language of data manipulation.
+These can all be used in conjunction with `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the "verbs" for a language of data manipulation.
 
-All verbs work similarly:
+All work similarly:
 
 1. The first argument is a data frame.
 2. The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
 3. The result is a new data frame.
 
-Together these properties make it easy to chain together multiple simple steps to achieve a complex result. Let’s dive in and see how these verbs work.
+Together these properties make it easy to chain together multiple simple steps to achieve a complex result. 
+
+GTEx data
+===
+**Nicole- please add some description here**
+```{r, message=F}
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt') # includes normalized expression data for GTEx individuals across four tissues
+nrow(gtex_data)
+```
 
 Filter rows with filter()
 ====
@@ -63,9 +71,8 @@ Filter rows with filter()
 - `filter()` lets you filter out rows of a dataset that meet a certain condition
 - it takes two arguments: the dataset and the condition
 
-```{r}
-nrow(mpg)
-filter(mpg, hwy <= 25)
+```{r, message=F}
+filter(gtex_data, Blood >= 12)
 ```
 
 Exercise
@@ -73,27 +80,27 @@ Exercise
 - What is the result of running this code?
 
 ```{r}
-nrow(mpg)
+nrow(gtex_data)
 ```
 
 ```{r, eval=F}
-filter(mpg, hwy <= 25)
-filter(mpg, cyl <= 4)
-nrow(mpg)
+filter(gtex_data, NTissues <= 2)
+filter(gtex_data, Heart <= -5)
+nrow(gtex_data)
 ```
 
 - remember, functions usually do not change their arguments!
 
 ```{r}
-low_mileage = filter(mpg, hwy <= 25)
-low_mileage_few_cyl = filter(low_mileage, cyl <= 4)
-nrow(low_mileage_few_cyl)
+low_expression_blood = filter(gtex_data, Blood <= -5)
+low_expression_blood_heart = filter(low_expression_blood, Heart <= -5)
+nrow(low_expression_blood_heart)
 ```
 
 Combining constraints in filter
 ========================================================
 ```{r}
-filter(mpg, hwy <= 25, year>2000)
+filter(gtex_data, Blood <= -5, Heart <= -5)
 ```
 - This filters by the **conjunction** of the two constraints---both must be satisfied.
 - Constraints appear as second (and third...) arguments, separated by commas.
@@ -102,7 +109,7 @@ filter(mpg, hwy <= 25, year>2000)
 Filtering out all rows
 =========================================================
 ```{r}
-filter(mpg, hwy > 60)
+filter(gtex_data, NTissues > 5)
 ```
 - If the constraint is too severe, then you will select **no** rows, and produce a zero row sized tibble.
 
@@ -146,7 +153,7 @@ is.na(x)
 Logical conjunctions
 =========================================================
 ```{r}
-filter(mpg, hwy > 30 | hwy < 20)
+filter(gtex_data, Lung > 6 | Liver < -6)
 ```
 - `|` stands for OR, `&` is AND
 - as we have seen, separating conditions by a comma is the same as using `&` inside `filter()`
@@ -155,55 +162,55 @@ filter(mpg, hwy > 30 | hwy < 20)
 Logical conjunctions
 =========================================================
 ```{r}
-filter(mpg, !(hwy > 30 | hwy < 20))
+filter(gtex_data, !(Blood < 6 | Lung < 6))
 ```
 - `!` is NOT, which negates the logical condition
 
 Logical conjunctions
 =========================================================
 ```{r}
-filter(mpg, cyl %in% c(6,8)) # equivalent to filter(mtc, cyl==6 | cyl==8)
+filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissues==1 | NTissues==2)
 ```
 - `%in%` returns true for all elements of the thing on the left that are also elements of the thing on the right
 
-Exercise: Audis
+Exercise: High expression
 ==========================================================
 type: prompt
 incremental: true
 
-- How many Audis are there in this dataset?
+- How many individuals have high expression (Z > 3) for CTAG2 in both blood and lung?
 ```{r}
-nrow(filter(mpg, manufacturer=="audi"))
+nrow(filter(gtex_data, Gene=="CTAG2", Blood > 3, Lung > 3))
 ```
 
-Exercise: old cars
+Exercise: Low expression
 ==========================================================
 type: prompt
 incremental: true
 
-- create a dataset of all the cars from before the year 2000
+- create a dataset of all individual-gene pairs with low expression (Z < -3) in blood and heart tissues
 ```{r}
-filter(mpg, year<2000)
+filter(gtex_data, Blood < -3, Heart < -3)
 ```
 
-Exercise: old Audis
+Exercise: High expression in all tissues
 ==========================================================
 type: prompt
 incremental: true
 
-- create a dataset of all the Audis from before the year 2000
+- create a dataset of all individual-gene pairs with high expression (Z > 3) in all four tissues
 ```{r}
-filter(mpg, manufacturer=="audi", year<2000)
+filter(gtex_data, Blood > 3, Heart > 3, Lung > 3, Liver > 3)
 ```
 
-Exercise: old Audis and Jeeps
+Exercise: High and low expression events
 ==========================================================
 type: prompt
 incremental: true
 
-- create a dataset of all the Audis and Jeeps from before the year 2000
+- create a dataset of all high and low expression instances (Z > 3 or < -3) in any tissue (`?abs` may be helpful)
 ```{r}
-filter(mpg, manufacturer=="audi" | manufacturer=="jeep", year<2000)
+filter(gtex_data, abs(Blood) > 3 | abs(Heart) > 3 | abs(Lung) > 3 | abs(Liver) > 3)
 ```
 
 Exercise: getting rid of NAs
@@ -211,36 +218,23 @@ Exercise: getting rid of NAs
 type: prompt
 incremental: true
 
-- filter any rows where `x` is `NA` out of this dataset:
-```{r}
-df = tibble(
-  x = c(1,2,3,NA,5,6),
-  y = c(11, 12, 13, 14, 15,16)
-)
-```
-
-- Your answer should be:
-```{r, echo=F}
-filter(df, !is.na(x))
-```
-
-***
+- filter any rows where `Heart` is `NA` out of the GTEx data
 
 ```{r}
-filter(df, !is.na(x))
+filter(gtex_data, !is.na(Heart))
 ```
 
 Filtering by row number
 ==========================================================
 ```{r}
-filter(mpg, row_number()<=3)
+filter(gtex_data, row_number()<=3)
 ```
 - use `row_number()` to get specific rows. This is more useful once you have sorted the data in a particular order, which we will soon see how to do.
 
 Sampling rows
 ==========================================================
 ```{r}
-sample_n(mtc, 5)
+sample_n(gtex_data, 5)
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -255,37 +249,37 @@ Arrange rows with arrange()
 - `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
 - again, the first argument is the data frame and the other arguments tell the function what to do with it
 ```{r}
-arrange(mpg, hwy)
+arrange(gtex_data, Blood)
 ```
 
 Arrange can sort by more than one column
 ===========================================================
 - This is useful if there is a tie in sorting by the first column.
 ```{r}
-arrange(mpg, hwy, displ)
+arrange(gtex_data, NTissues, Blood)
 ```
 
 
 Use the desc function to sort by descending values
 ===========================================================
 ```{r}
-arrange(mpg, desc(hwy))
+arrange(gtex_data, desc(Blood))
 ```
 
-Exercise: top 5 mpg cars
+Exercise: top 5 high expression instances
 ===========================================================
 type:prompt
 incremental:true
 
-Use `arrange()` and `filter()` to get the data for the 5 cars with the highest highway MPG (`hwy`)
+Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
-filter(arrange(mpg, desc(hwy)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 or
 ```{r}
-cars_by_mpg = arrange(mpg, desc(hwy)) # using a temporary variable
-filter(cars_by_mpg, row_number()<=5)
+gtex_by_blood = arrange(gtex_data, desc(Blood)) # using a temporary variable
+filter(gtex_by_blood, row_number()<=5)
 ```
 
 Select columns with select()
@@ -295,7 +289,7 @@ type:section
 Select columns with select()
 =========================================================
 ```{r}
-select(mpg, hwy, cyl, manufacturer)
+select(gtex_data, Gene, Ind, Blood)
 ```
 - The select function will return a subset of the tibble, using only the requested columns in the order specified.
 
@@ -303,23 +297,23 @@ Select columns with select()
 =========================================================
 - `select()` can also be used with handy helpers like `starts_with()` and `contains()`
 ```{r}
-select(mpg, starts_with("m"))
+select(gtex_data, starts_with("L"))
 ```
 - Use `?select` to see all the possibilities
 
 ***
 
 ```{r}
-select(mpg, contains("l"))
+select(gtex_data, contains("N"))
 ```
-- The quotes around the letter `"l"` make it a string. If we did not do this, `R` would think it was looking for a variable called `m` and not just the plain letter.
-- We don't have to quote the names of columns (like `hp`) because the `tidyverse` functions know that we are working within the dataframe and thus treat the column names like they are variables in their own right
+- The quotes around the letter `"N"` make it a string. If we did not do this, `R` would think it was looking for a variable called `N` and not just the plain letter.
+- We don't have to quote the names of columns (like `Ind`) because the `tidyverse` functions know that we are working within the dataframe and thus treat the column names like they are variables in their own right
 
 select() subsets columns by name
 =========================================================
 - `select()` can also be used to select everything **except for** certain columns
 ```{r}
-select(mpg, -contains("l"), -hwy)
+select(gtex_data, -starts_with("L"), -Ind)
 ```
 
 select() subsets columns by name
@@ -327,27 +321,32 @@ select() subsets columns by name
 - or even to select only columns that match a certain condition
 
 ```{r}
-select(mpg, where(is.integer))
+select(gtex_data, where(is.numeric))
 ```
 
 pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
 ```{r}
-select(mpg, hwy)
-pull(mpg, hwy)
+select(gtex_data, Gene)
+```
+
+***
+
+```{r}
+pull(gtex_data, Gene)
 ```
 
 rename()
 =========================================================
 - `select()` can be used to rename variables, but it drops all variables not selected
 ```{r}
-select(mpg, hwy_milage = hwy)
+select(gtex_data, number_tissues = NTissues)
 ```
 ***
 - `rename()` is better suited for this because it keeps all the columns
 ```{r}
-rename(mpg, hwy_milage = hwy)
+rename(gtex_data, number_tissues = NTissues)
 ```
 
 Exercise: select and filter
@@ -355,15 +354,15 @@ Exercise: select and filter
 incremental:true
 type:prompt
 
-- create a one-column dataframe of the highway fuel efficiencies (`hwy`) of all of the compact cars (`class`) in the `mpg` dataset.
+- create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
 
 ```{r}
-select(filter(mpg, class == "compact"), hwy)
+select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
 ```
 
 - what is wrong with this?
 ```{r, eval=F}
-filter(select(mpg, hwy), class == "compact")
+filter(select(gtex_data, Heart), Gene == "WDR34")
 ```
 
 Exercise: select text columns
@@ -371,12 +370,12 @@ Exercise: select text columns
 incremental:true
 type:prompt
 
-- use select to subset the `mpg` dataframe to just those columns that contain text data. 
+- use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
 - Can you do this programmatically without specifying the names of each of the desired columns? 
-- What base R function will help you determine if a column is textual or not?
+- What base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
 
 ```{r}
-select(mpg, where(is.character))
+select(gtex_data, where(is.character))
 ```
 
 
@@ -387,10 +386,9 @@ type:section
 Add new variables with mutate()
 ================================================================
 ```{r}
-mpg_vars_subset = select(mpg, hwy, displ)
-mutate(mtc_vars_subset, hw_gallons_per_mile = 1/hwy)
+mutate(gtex_data, abs_blood = abs(Blood))
 ```
-- This uses `mutate()` to add a new column to which is the reciprocal of `hwy`.
+- This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
 - The thing on the left of the `=` is a new name that you make up which you would like the new column to be called
 - The expresssion on the right of the `=` defines what will go into the new column
 -`mutate()` can create multiple columns at the same time and use multiple columns to define a single new one
@@ -398,12 +396,13 @@ mutate(mtc_vars_subset, hw_gallons_per_mile = 1/hwy)
 mutate() can create multiple new columns at once
 ================================================================
 ```{r, tidy=F}
-mutate(mpg_vars_subset, # the newlines make it more readable
-      hw_gallons_per_mile = 1/hwy,
-      mpg_displ_ratio = hwy/displ
+mutate(gtex_data, # the newlines make it more readable
+      abs_blood = abs(Blood),
+      abs_heart = abs(Heart),
+      blood_heart_dif = abs_blood - abs_heart
 )
 ```
-- note that we have also used two columns simultaneously (`hwy` and `displ`) to create a new column)
+- note that we have also used two columns simultaneously (`Blood` and `Heart`) to create a new column)
 
 mutate() for data type conversion
 ===
@@ -485,10 +484,10 @@ Exercise: mutate()
 type:prompt
 incremental:true
 
-`hwy` is the highway mileage and `cty` is the city mileage for each car in this dataset. Assuming I usually drive twice as many miles in the city as I do on the highway, can you compute my average mileage with each of these cars?
+I want to identify genes that have large average expression changes across blood and liver. Can you compute the average of blood and liver expression changes across all gene-individual pairs? Compute the average manually (i.e. don't use the mean function).
 
 ```{r}
-mutate(mpg, avg_mpg = (2*cty + hwy)/3)
+mutate(gtex_data, avg_blood_liver = (Blood+Liver)/2)
 ```
 
 Exercise: mutate() and ggplot
@@ -496,18 +495,20 @@ Exercise: mutate() and ggplot
 type:prompt
 incremental:true
 
-In the first lecture we identified that sports cars (`class=="2seater"`) were outliers in the plot of displacement vs. highway mileage. Use `mutate()` as part of your answer to produce a plot where just the sports cars are a different color than the other cars:
+Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
 ```{r, echo=F, fig.width=10}
-sports = mutate(mpg, sports_car = class=="2seater")
-ggplot(sports) +
-  geom_point(aes(x=displ, y=hwy, color=sports_car))
+gene_data = filter(gtex_data, Gene == 'MYL1')
+blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
+ggplot(blood_outliers) +
+  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
 ```
 
-```{r, eval=F, tidy=F}
-sports = mutate(mpg, sports_car = class=="2seater")
-ggplot(sports) +
-  geom_point(aes(x=displ, y=hwy, color=sports_car))
+```{r, eval=F, fig.width=10}
+gene_data = filter(gtex_data, Gene == 'MYL1')
+blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
+ggplot(blood_outliers) +
+  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
 ```
 
 Exercise: putting it together
@@ -515,14 +516,14 @@ Exercise: putting it together
 type:prompt
 incremental:true
 
-I'm considering buying a car. I know Toyotas and Subarus are reliable so I'd like for the car to be either a Toyota or Subaru. Besides that the only thing I really care about is overall fuel efficiency. I usually drive twice as many miles in the city as I do on the highway. Can you produce me a rank-ordered list of the top 10 cars that I should consider, from best to worst? I'd just like the make, model, transmission, year, and overall fuel efficiency.
+I am interested in identifying individuals that have a large difference in gene expression change for any gene between lung tissue and blood tissue, with higher expression in lung. Can you produce a list of the top 10 individual-gene pairs by the difference of their expression change in lung compared to blood? Only consider individual-gene pairs measured in all four tissues. I'd just like the gene, individual, lung expression, blood expression, and lung-blood difference information in the output.
 
 ```{r}
-toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-sorted = arrange(with_avg_mpg, desc(avg_mpg))
+gtex_data_no_change = filter(gtex_data, NTissues == 4)
+gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
+sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
 top_10 = filter(sorted, row_number()<=10)
-select(top_10, manufacturer, model, trans, year, avg_mpg)
+select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
 
@@ -537,11 +538,11 @@ incremental:true
 - in our last exercise, we used a number of different function applications to arrive at our answer.
 
 ```{r, eval=F, tidy=F}
-toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-sorted = arrange(with_avg_mpg, desc(avg_mpg))
+gtex_data_no_change = filter(gtex_data, NTissues == 4)
+gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
+sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
 top_10 = filter(sorted, row_number()<=10)
-select(top_10, manufacturer, model, trans, year, avg_mpg)
+select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
 - we used temporary variables to keep our code clean. Compare to the same code using nested calls:
@@ -552,11 +553,11 @@ select(
     arrange(
       mutate(
         filter(
-          mpg, manufacturer=='toyota' | manufacturer=='subaru'),
-        avg_mpg = (2*cty + hwy)/3),
-      desc(avg_mpg)),
+          gtex_data, NTissues == 4),
+        lung_blood_dif = Lung - Blood),
+      desc(lung_blood_dif)),
     row_number()<=10),
-  manufacturer, model, trans, year, avg_mpg
+  Gene, Ind, Lung, Blood, lung_blood_dif
 )
 ```
 
@@ -568,22 +569,22 @@ The pipe operator
 - tidyverse solves these problems with the pipe operator `%>%`
 
 ```{r, eval=F, tidy=F}
-mpg %>%
-  filter(manufacturer=='toyota' | manufacturer=='subaru') %>%
-  mutate(avg_mpg = (2*cty + hwy)/3) %>%
-  arrange(desc(avg_mpg)) %>%
+gtex_data %>%
+  filter(NTissues == 4) %>%
+  mutate(lung_blood_dif = Lung - Blood) %>%
+  arrange(desc(lung_blood_dif)) %>%
   filter(row_number()<=10) %>%
-  select(manufacturer, model, trans, year, avg_mpg)
+  select(Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
 - how does this compare with our code before? What do you notice?
 
 ```{r, eval=F, tidy=F}
-toyotas_and_subarus = filter(mpg, manufacturer=='toyota' | manufacturer=='subaru')
-with_avg_mpg = mutate(toyotas_and_subarus, avg_mpg = (2*cty + hwy)/3)
-sorted = arrange(with_avg_mpg, desc(avg_mpg))
+gtex_data_no_change = filter(gtex_data, NTissues == 4)
+gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
+sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
 top_10 = filter(sorted, row_number()<=10)
-select(top_10, manufacturer, model, trans, year, avg_mpg)
+select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
 Pipe details
@@ -614,6 +615,7 @@ Piping to another position
 ===
 - The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
 ```{r}
+library(slider)
 mean %>%
   slide_vec(1:10, ., .before=2)
 ```
@@ -628,22 +630,22 @@ incremental: true
 - Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
 
 ```{r, eval=F, tidy=F}
-outliers = filter(mpg, displ > 5, hwy > 21)
-outliers = mutate(outliers, sports_car = class=="2seater")
+gene_data = filter(gtex_data, Gene == 'MYBL2')
+outliers = mutate(gene_data, blood_outlier = abs(Blood) > 2)
 ggplot(outliers) +
-  geom_bar(aes(x=sports_car)) +
-  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
-  ggtitle("How many of the outliers are sports cars?")
+  geom_bar(aes(x=blood_outlier)) +
+  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
+  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
 ```
 
 ```{r, eval=F, tidy=F}
-mpg %>%
-  filter(displ > 5, hwy > 21) %>%
-  mutate(outliers, sports_car = class=="2seater") %>%
+gtex_data %>%
+  filter(Gene == 'MYBL2') %>%
+  mutate(blood_outlier = abs(Blood) > 2) %>%
 ggplot() +
-  geom_bar(aes(x=sports_car)) +
-  scale_x_discrete("Class", labels=c("Other", "Sports Car")) +
-  ggtitle("How many of the outliers are sports cars?")
+  geom_bar(aes(x=blood_outlier)) +
+  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
+  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
 ```
 
 Grouped summaries with summarise()
@@ -653,9 +655,9 @@ type:section
 Grouped summaries with summarise()
 ================================================================
 ```{r}
-summarize(mpg, hwy_avg=mean(hwy))
+summarize(gtex_data, tissue_avg=mean(NTissues))
 ```
-- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `hwy_avg` that contains the mean of the `hwy` column
+- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `tissue_avg` that contains the mean of the `NTissues` column
 - as with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
 - `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
 - Summaries are more useful when you apply them to subgoups of the data, which we will soon see how to do.
@@ -664,11 +666,11 @@ Grouped summaries with summarise()
 ================================================================
 - note that you can also pass in multiple conditions that operate on multiple columns at the same time
 ```{r, tidy=F}
-mpg %>% 
+gtex_data %>% 
 summarize( # newlines not necessary, again just increase clarity
-  hwy_avg = mean(hwy),
-  hwy_2x_max = max(2*hwy),
-  displ_hwy_ratio_min = min(displ/hwy)
+  tissue_avg = mean(NTissues),
+  blood_max = max(Blood, na.rm=T),
+  blood_lung_dif_min = min(Blood - Lung, na.rm=T)
 )
 ```
 
@@ -676,9 +678,9 @@ Grouped summaries with summarise()
 ==================================================================
 - Summaries are more useful when you apply them to subgoups of the data
 ```{r, tidy=F, message=F}
-mpg %>% 
-  group_by(manufacturer) %>%
-  summarize(hwy_avg = mean(hwy))
+gtex_data %>% 
+  group_by(Gene) %>%
+  summarize(max_blood = max(Blood))
 ```
 
 ***
@@ -692,9 +694,9 @@ Multiple columns can be used to group the data simultaneously
 ===================================================================
 
 ```{r, tidy=F, message=F}
-mpg %>% 
-  group_by(manufacturer, year) %>%
-  summarize(hwy_avg = mean(hwy))
+gtex_data %>% 
+  group_by(Gene,Ind) %>%
+  summarize(max_blood = max(Blood))
 ```
 
 - the result has the summary value for each unique combination of the grouping variables
@@ -703,40 +705,42 @@ Computing the number of rows in each group
 =====================================================================
 - The `n()` function counts the number of rows in each group:
 ```{r, tidy=F, message=F}
-mpg %>% 
-  group_by(manufacturer) %>%
+gtex_data %>% 
+  filter(!is.na(Blood)) %>%
+  group_by(Gene) %>%
   summarize(how_many = n())
 ```
 - You can also use `count()`, which is just a shorthand for the same thing
 ```{r, tidy=F, message=F, eval=F}
-mpg %>% 
-  group_by(manufacturer) %>%
+gtex_data %>% 
+  filter(!is.na(Blood)) %>%
+  group_by(Gene) %>%
   count()
 ```
 
-***
-
+Computing the number of distinct elements in a column, per group
+=====================================================================
 - `n_distinct()` counts the number of unique elements in a column
 ```{r, tidy=F, message=F}
-mpg %>% 
-  group_by(manufacturer) %>%
-  summarize(n_models = n_distinct(model))
+gtex_data %>% 
+  group_by(Ind) %>%
+  summarize(n_genes = n_distinct(Gene))
 ```
 
 
-Exercise: mileage range per model
+Exercise: top expression per tissue
 =====================================================================
 type:prompt
 incremental:true
 
-- What is the highest highway gas mileage attained by each model of car in the `mpg` dataset?
+- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex_data` dataset?
 - What about the lowest?
 ```{r, tidy=F, message=F}
-mpg %>% 
-  group_by(model) %>%
+gtex_data %>% 
+  group_by(Gene) %>%
   summarize(
-    max_hwy = max(hwy),
-    min_hwy = min(hwy)
+    max_liver = max(Liver, na.rm=T),
+    min_liver = min(Liver, na.rm=T)
   )
 ```
 
@@ -748,24 +752,26 @@ incremental:true
 Recreate this plot:
 
 ```{r, echo=F, message=F, fig.width=11, fig.height=13}
-mpg %>% 
-  group_by(cyl, class) %>%
-  summarize(mean_hwy = mean(hwy)) %>%
+gtex_data %>% 
+  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
+  group_by(Gene, NTissues) %>%
+  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=class, x=mean_hwy)) + 
-  facet_grid(cyl ~ ., labeller = label_both)
+  geom_point(aes(y=Gene, x=max_heart)) + 
+  facet_grid(NTissues ~ ., labeller = label_both)
 ```
 
 
 ***
 
 ```{r, eval=F, tidy=F}
-mpg %>% 
-  group_by(cyl, class) %>%
-  summarize(mean_hwy = mean(hwy)) %>%
+gtex_data %>% 
+  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
+  group_by(Gene, NTissues) %>%
+  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=class, x=mean_hwy)) + 
-  facet_grid(cyl ~ ., labeller = label_both)
+  geom_point(aes(y=Gene, x=max_heart)) + 
+  facet_grid(NTissues ~ ., labeller = label_both)
 ```
 
 Grouped mutates and filters
@@ -778,24 +784,23 @@ Filtering grouped data
 - `filter()` is aware of grouping. When used on a grouped dataset, it applies the filtering condition separately in each group
 
 ```{r, tidy=F}
-mpg %>% 
-  group_by(class) %>%
-  filter(hwy == max(hwy))
+gtex_data %>% 
+  group_by(Gene) %>%
+  filter(NTissues == max(NTissues))
 ```
 
 - Why do we get back multiple rows per `class`?
 - This is an extremely convenient idiom for finding the rows that minimize or maximize a condition
 
-Exercise: 2008 doubly best-in-class
+Exercise: Max expression change in blood and lung
 ===
 
-What are the 2008 cars that have both the best highway *and* city mileage among other cars in their class?
+Which are the individual pairs that have both the max blood expression change *and* max lung expression change among all individuals with measurements for the same gene?
 
 ```{r, tidy=F}
-mpg %>% 
-  filter(year == 2008) %>%
-  group_by(class) %>%
-  filter(hwy == max(hwy), cty==max(cty))
+gtex_data %>% 
+  group_by(Gene) %>%
+  filter(Blood == max(Blood), Lung==max(Lung))
 ```
 
 Mutating grouped data
@@ -804,10 +809,10 @@ Mutating grouped data
 - `mutate()` is aware of grouping. When used on a grouped dataset, it applies the mutation separately in each group
 
 ```{r, tidy=F, message=F}
-mpg %>%
-  group_by(manufacturer) %>%
-  mutate(hwy_diff_from_mfg_avg = hwy - mean(hwy)) %>%
-  select(model, year, cyl, trans, hwy_diff_from_mfg_avg)
+gtex_data %>%
+  group_by(Gene) %>%
+  mutate(blood_diff_from_min = Blood - min(Blood)) %>%
+  select(Gene, Ind, Blood, blood_diff_from_min)
 ```
 
 - As always, mutate does not change the number of rows in the dataset
