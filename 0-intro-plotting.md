@@ -115,15 +115,11 @@ $$x = \frac{-b + \sqrt{b^2 -4ac}}{2a}$$
 Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate $x$ given $a=3, b=14, c=-5$.
 
 
-```r
-(-14 + sqrt(14^2 - 4 * 3 * (-5)))/(2 * 3)
-[1] 0.3333333
-```
 
 What did you learn? What did you notice?
-- Parentheses are used to encapsulate the *arguments* to a function like `sqrt()`
-- Operators like `\`, `*`, and `^` are useful for math
-- Parentheses can also be used to establish order of operations
+<!-- - Parentheses are used to encapsulate the *arguments* to a function like `sqrt()` -->
+<!-- - Operators like `\`, `*`, and `^` are useful for math -->
+<!-- - Parentheses can also be used to establish order of operations -->
 
 Packages
 ===
@@ -189,7 +185,7 @@ Getting your data in R
 
 
 ```r
-genes = read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/lupusGenes.csv")
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -295,12 +291,7 @@ Investigating a relationship
 type: prompt
 incremental: true
 
-Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset)
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = phenotype, y = IFI44))
-```
+Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
 
 ![plot of chunk unnamed-chunk-16](0-intro-plotting-figure/unnamed-chunk-16-1.png)
 
@@ -404,19 +395,6 @@ Can you recreate this plot?
 
 
 ![plot of chunk unnamed-chunk-26](0-intro-plotting-figure/unnamed-chunk-26-1.png)
-***
-
-```r
-ggplot(genes) + 
-  geom_point(
-    aes(
-      x = RSAD2, 
-      y = IFI44,
-      color = phenotype,
-      size = EIF3L
-    )
-  ) 
-```
 
 Exercise
 ===
@@ -430,8 +408,6 @@ What will this do? Why?
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
-***
-![plot of chunk unnamed-chunk-29](0-intro-plotting-figure/unnamed-chunk-29-1.png)
 
 Facets
 ===
@@ -445,7 +421,7 @@ ggplot(genes) +
   facet_wrap(~ phenotype, nrow = 2)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" />
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
@@ -459,7 +435,7 @@ ggplot(genes) +
   facet_grid(phenotype ~ gender)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -475,8 +451,6 @@ ggplot(genes) +
   facet_grid(ancestry ~ .)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
-
 
 Geoms
 ===
@@ -487,7 +461,7 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
@@ -498,7 +472,7 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -512,7 +486,7 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -524,7 +498,7 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -536,7 +510,7 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
   geom_point()
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -548,7 +522,7 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-38-1.png" title="plot of chunk unnamed-chunk-38" alt="plot of chunk unnamed-chunk-38" style="display: block; margin: auto;" />
+<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -562,18 +536,10 @@ ggplot(genes) +
   ...
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-39-1.png" title="plot of chunk unnamed-chunk-39" alt="plot of chunk unnamed-chunk-39" style="display: block; margin: auto;" />
-
-***
+<img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
-
-
-```r
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
-```
 
 Learning More
 ===

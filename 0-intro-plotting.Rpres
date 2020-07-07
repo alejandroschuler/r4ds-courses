@@ -115,14 +115,14 @@ $$x = \frac{-b + \sqrt{b^2 -4ac}}{2a}$$
 
 Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate $x$ given $a=3, b=14, c=-5$.
 
-```{r}
+```{r, echo=F, eval=F}
 (-14 + sqrt(14^2 - 4*3*(-5)))/(2*3)
 ```
 
 What did you learn? What did you notice?
-- Parentheses are used to encapsulate the *arguments* to a function like `sqrt()`
-- Operators like `\`, `*`, and `^` are useful for math
-- Parentheses can also be used to establish order of operations
+<!-- - Parentheses are used to encapsulate the *arguments* to a function like `sqrt()` -->
+<!-- - Operators like `\`, `*`, and `^` are useful for math -->
+<!-- - Parentheses can also be used to establish order of operations -->
 
 Packages
 ===
@@ -253,8 +253,9 @@ Investigating a relationship
 type: prompt
 incremental: true
 
-Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset)
-```{r, tidy=F}
+Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
+
+```{r, tidy=F, echo=F}
 ggplot(genes) + 
   geom_point(aes(x = phenotype, y = IFI44))
 ```
@@ -395,18 +396,6 @@ ggplot(genes) +
     )
   ) 
 ```
-***
-```{r, tidy=F, eval=F}
-ggplot(genes) + 
-  geom_point(
-    aes(
-      x = RSAD2, 
-      y = IFI44,
-      color = phenotype,
-      size = EIF3L
-    )
-  ) 
-```
 
 Exercise
 ===
@@ -416,11 +405,6 @@ type: prompt
 What will this do? Why?
 
 ```{r, tidy=F, eval=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
-```
-***
-```{r, tidy=F, echo=F}
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
@@ -454,7 +438,7 @@ incremental: true
 
 Run this code and comment on what role `.` plays:
 
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+```{r, tidy=F, eval=F, fig.height = 8, fig.width = 14, fig.align = "center"}
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) +
   facet_grid(ancestry ~ .)
@@ -532,15 +516,8 @@ ggplot(genes) +
   geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 
-***
-
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
-
-```{r, eval=F, tidy=F, message=F}
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
-```
 
 Learning More
 ===
