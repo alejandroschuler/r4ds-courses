@@ -56,7 +56,8 @@ Together these properties make it easy to chain together multiple simple steps t
 
 GTEx data
 ===
-**Nicole- please add some description here**
+This is a subset of the Genotype Tissue Expression (GTEx) dataset, which includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+
 ```{r, message=F}
 gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt') # includes normalized expression data for GTEx individuals across four tissues
 nrow(gtex_data)
