@@ -109,11 +109,11 @@ Quadratic Equation
 type: prompt
 incremental: true
 
-One of the solutions to a polynomial equation $ax^2 + bx + c = 0$ is given by
+Solutions to a polynomial equation ax^2 + bx + c = 0 are given by
 
-$$x = \frac{-b + \sqrt{b^2 -4ac}}{2a}$$
+![](https://cdn.kastatic.org/googleusercontent/nI2riiPBcl9hZ22KKdYZGFmsVNhcKLiuwPly9l1tU5BMaqcOs9bfPKRyoGAFgK-PNpc-c7x_tNuskGdzawvy_Pza)
 
-Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate $x$ given $a=3, b=14, c=-5$.
+Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate x given a=3, b=14, c=-5.
 
 ```{r, echo=F, eval=F}
 (-14 + sqrt(14^2 - 4*3*(-5)))/(2*3)
