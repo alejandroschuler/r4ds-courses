@@ -4,7 +4,7 @@
 
 ### 1. Start a new project in RStudio using the file menu
 
-![](images/1.png)
+<img src="images/1.png" width="200"/>
 
 ### 2. Select “version control”
 
