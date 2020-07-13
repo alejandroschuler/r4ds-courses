@@ -1,6 +1,14 @@
-## Download and Install Git: `https://git-scm.com/downloads`
+## Download and Install Git: 
+
+### 1. Follow the instructions for your system at [https://git-scm.com/downloads](https://git-scm.com/downloads)
 
 ## Enable Git in RStudio
+
+### 1. Go to Global Options (from the Tools menu)
+### 2. Click Git/SVN
+### 3. Click Enable version control interface for RStudio projects
+
+## Download the course materials
 
 ### 1. Start a new project in RStudio using the file menu
 
