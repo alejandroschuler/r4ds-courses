@@ -174,7 +174,7 @@ By the end of the course, you will be able to:
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020). Download the `.html` files for the "finished" product or the `.Rpres` files to see how the sausage is made.
+Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020/lectures). Download the `.html` files for the "finished" product or the `.Rpres` files to see how the sausage is made.
 
 # Motivation
 
