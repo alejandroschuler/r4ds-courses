@@ -1,5 +1,5 @@
 *-figure
-*.png
+lectures/*.png
 *_files
 .Rproj.user
 .DS_Store
