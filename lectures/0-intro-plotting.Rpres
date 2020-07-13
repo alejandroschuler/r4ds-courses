@@ -142,7 +142,7 @@ Packages
 
 ```{r}
 # I have a file called "lupusGenes.csv" in a folder called data 
-genes = read_csv("data/LupusGenes.csv")
+genes = read_csv("../data/LupusGenes.csv")
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -154,7 +154,7 @@ library(tidyverse)
 ```
 
 ```{r, eval=F}
-genes = read_csv("data/LupusGenes.csv")
+genes = read_csv("../data/LupusGenes.csv")
 ```
 
 - Now there is no error message
@@ -164,7 +164,7 @@ Packages
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
 ```{r, eval=F}
-poly = read_csv("data/poly.csv") # reading another csv file
+poly = read_csv("../data/poly.csv") # reading another csv file
 ```
 
 

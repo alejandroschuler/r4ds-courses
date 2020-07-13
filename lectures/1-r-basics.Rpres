@@ -57,7 +57,7 @@ Assignment
 - To do complex computations, we need to be able to give
 names to things.
 ```{r, eval=F}
-mpg = read_csv('data/mpg.csv')
+mpg = read_csv('../data/mpg.csv')
 ```
 - This code *assigns* the result of running `read_csv('data/mpg.csv')` to the name `mpg`
 - You can do this with any values and/or functions
