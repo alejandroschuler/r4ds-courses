@@ -1,4 +1,4 @@
-Data Transformation
+Basic Tabular Data Manipulation	
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham, updated to include GTEx sample data by Nicole Ferraro
 date: 2019, updated July 2020
@@ -419,66 +419,6 @@ mutate(df, number_plus_1 = number + 1)
 mutate(df, number = as.numeric(number))
 ```
 - if you save the result into a column that already exists, it will be overwritten
-
-<!-- mutate() for computing offsets -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- lead(c(1,2,3)) -->
-<!-- lag(c(1,2,3)) -->
-<!-- ``` -->
-
-<!-- ```{r, tidy=F} -->
-<!-- scores = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   score = c(72, 87, 94, 99) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(scores, daily_improvement = score - lag(score)) -->
-<!-- ``` -->
-
-<!-- mutate() for cumulative functions -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- cumsum(c(1,2,3)) -->
-<!-- ``` -->
-<!-- - `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions -->
-
-<!-- ```{r, tidy=F} -->
-<!-- profits = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   profit = c(12, 40, 19, 13) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(profits, profit_to_date = cumsum(profit)) -->
-<!-- ``` -->
-
-<!-- mutate() for rolling functions -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- library("slider") -->
-<!-- slide_vec(c(1,2,3,4), mean, .before=1) -->
-<!-- ``` -->
-<!-- - `slide_vec` applies a function using a sliding window across a vector (sometimes called "rolling" functions) -->
-
-<!-- ```{r, tidy=F} -->
-<!-- profits = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   profit = c(12, 40, 19, 13) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(profits, avg_2_day_profit = slide_vec(profit, mean, .before=1)) -->
-<!-- ``` -->
-
-<!-- - More on this in the section on functional programming! -->
 
 Exercise: mutate()
 ===

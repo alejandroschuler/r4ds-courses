@@ -29,9 +29,9 @@ incremental: true
 - `lead()` and `lag()` return either forward- or backward-shifted versions of their input vectors
 
 ```r
-lead(c(1, 2, 3))
+lead(c(1,2,3))
 [1]  2  3 NA
-lag(c(1, 2, 3))
+lag(c(1,2,3))
 [1] NA  1  2
 ```
 
@@ -84,8 +84,8 @@ Rolling functions
 
 ```r
 library("slider")
-numbers = c(9, 6, 8, 4, 7, 3, 8, 4, 2, 1, 3, 2)
-slide_vec(numbers, sum, .after = 3, .step = 2)
+numbers = c(9,6,8,4,7,3,8,4,2,1,3,2)
+slide_vec(numbers, sum, .after=3, .step=2)
  [1] 27 NA 22 NA 22 NA 15 NA  8 NA  5 NA
 ```
 
@@ -129,7 +129,7 @@ incremental: true
 - For example, `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions
 
 ```r
-cumsum(c(1, 2, 3))
+cumsum(c(1,2,3))
 [1] 1 3 6
 ```
 
@@ -201,9 +201,9 @@ type:prompt
 
 
 ```r
-# install.packages('devtools')
+# install.packages("devtools")
 library("devtools")
-# install_github('Ram-N/weatherData')
+# install_github("Ram-N/weatherData")
 library(weatherData)
 library(lubridate)
 data(SFO2013)
@@ -251,10 +251,10 @@ df %>%
     mean_b = mean(c)
   )
 # A tibble: 2 x 3
-      g mean_a  mean_b
-  <int>  <dbl>   <dbl>
-1     0  0.216 -0.815 
-2     1  0.117  0.0888
+      g mean_a mean_b
+  <int>  <dbl>  <dbl>
+1     0 0.0545 -0.122
+2     1 0.539  -0.318
 ```
 
 
@@ -276,10 +276,10 @@ df %>%
     median_c = median(c)
   )
 # A tibble: 2 x 6
-      g mean_a  mean_b median_a median_b median_c
-  <int>  <dbl>   <dbl>    <dbl>    <dbl>    <dbl>
-1     0  0.216 -0.815     0.285    0.837  -1.12  
-2     1  0.117  0.0888    0.117   -0.682   0.0888
+      g mean_a mean_b median_a median_b median_c
+  <int>  <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
+1     0 0.0545 -0.122  -0.0919   -1.18     0.295
+2     1 0.539  -0.318   0.882    -0.461   -0.385
 ```
 
 Columnwise operations
@@ -292,10 +292,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b,c), mean))
 # A tibble: 2 x 4
-      g     a      b       c
-  <int> <dbl>  <dbl>   <dbl>
-1     0 0.216  0.702 -0.815 
-2     1 0.117 -0.682  0.0888
+      g      a      b      c
+  <int>  <dbl>  <dbl>  <dbl>
+1     0 0.0545 -1.20  -0.122
+2     1 0.539  -0.590 -0.318
 ```
 
 - The first argument to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -315,10 +315,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b), fns))
 # A tibble: 2 x 5
-      g a_avg a_max  b_avg b_max
-  <int> <dbl> <dbl>  <dbl> <dbl>
-1     0 0.216 1.47   0.702 1.84 
-2     1 0.117 0.118 -0.682 0.138
+      g  a_avg a_max  b_avg b_max
+  <int>  <dbl> <dbl>  <dbl> <dbl>
+1     0 0.0545 1.37  -1.20  0.401
+2     1 0.539  0.929 -0.590 0.440
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -344,10 +344,10 @@ df %>%
   group_by(g) %>%
   summarize(across(where(is.numeric), mean))
 # A tibble: 2 x 3
-      g      a     b
-  <int>  <dbl> <dbl>
-1     0 -0.767 0.724
-2     1 -0.718 0.757
+      g      a      b
+  <int>  <dbl>  <dbl>
+1     0  0.766 -0.921
+2     1 -0.201  0.401
 ```
 
 Columnwise mutate
@@ -371,16 +371,16 @@ df %>%
 # A tibble: 10 x 4
          a       b      c     g
      <dbl>   <dbl>  <dbl> <int>
- 1  0.878  -0.805  -0.820     0
- 2 -0.155   1.50   -0.722     0
- 3  0.930  -0.0962  0.502     1
- 4  1.40    0.825   0.512     0
- 5  0.747   0.0787 -0.211     0
- 6  0.831  -0.639  -1.13      0
- 7 -0.647   0.249   0.323     0
- 8  0.196   1.09   -1.88      1
- 9  0.0718  1.51    0.636     1
-10 -0.133  -1.52   -0.218     1
+ 1  0.867  -0.741   0.468     1
+ 2 -1.96   -0.919  -0.981     0
+ 3  0.277   0.0592  0.445     1
+ 4  0.232  -1.54    0.419     1
+ 5 -0.0284 -0.332   0.146     0
+ 6 -0.453  -0.577  -1.28      1
+ 7  0.166   0.773  -0.722     0
+ 8 -0.785  -1.50    0.238     0
+ 9  0.339  -0.593  -0.734     1
+10 -0.466   0.858  -0.514     1
 ```
 
 Columnwise mutate
@@ -398,16 +398,16 @@ df %>%
 # A tibble: 10 x 6
          a       b c                      g a_offset b_offset
      <dbl>   <dbl> <chr>              <int>    <dbl>    <dbl>
- 1  0.878  -0.805  -0.820265337678531     0  NA        NA    
- 2 -0.155   1.50   -0.721511732343777     0  -1.03      2.31 
- 3  0.930  -0.0962 0.501822169202019      1   1.08     -1.60 
- 4  1.40    0.825  0.512415348015902      0   0.466     0.921
- 5  0.747   0.0787 -0.211089934442458     0  -0.649    -0.746
- 6  0.831  -0.639  -1.12973162033812      0   0.0841   -0.718
- 7 -0.647   0.249  0.322591420158754      0  -1.48      0.888
- 8  0.196   1.09   -1.87600695770898      1   0.843     0.841
- 9  0.0718  1.51   0.636446932322054      1  -0.125     0.417
-10 -0.133  -1.52   -0.217709985526627     1  -0.205    -3.02 
+ 1  0.867  -0.741  0.467970933315865      1  NA        NA    
+ 2 -1.96   -0.919  -0.981425985252316     0  -2.83     -0.178
+ 3  0.277   0.0592 0.444527554283186      1   2.24      0.978
+ 4  0.232  -1.54   0.418513237720704      1  -0.0451   -1.60 
+ 5 -0.0284 -0.332  0.145985251936118      0  -0.260     1.21 
+ 6 -0.453  -0.577  -1.28080038050111      1  -0.425    -0.245
+ 7  0.166   0.773  -0.722086315245271     0   0.620     1.35 
+ 8 -0.785  -1.50   0.237989895627336      0  -0.952    -2.27 
+ 9  0.339  -0.593  -0.733821129939353     1   1.12      0.908
+10 -0.466   0.858  -0.513880717930165     1  -0.805     1.45 
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -436,7 +436,7 @@ Messy data
 
 
 ```r
-head(relig_income, 2)
+head(relig_income,2)
 # A tibble: 2 x 11
   religion `<$10k` `$10-20k` `$20-30k` `$30-40k` `$40-50k` `$50-75k` `$75-100k`
   <chr>      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>      <dbl>
@@ -451,13 +451,13 @@ head(relig_income, 2)
 
 
 
-![plot of chunk unnamed-chunk-29](adv-tabular-data-figure/unnamed-chunk-29-1.png)
+![plot of chunk unnamed-chunk-29](3-adv-tabular-data-figure/unnamed-chunk-29-1.png)
 
 Messy data
 ===
 
 ```r
-head(relig_income, 3)
+head(relig_income,3)
 # A tibble: 3 x 11
   religion `<$10k` `$10-20k` `$20-30k` `$30-40k` `$40-50k` `$50-75k` `$75-100k`
   <chr>      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>      <dbl>
@@ -507,7 +507,7 @@ ggplot() +
   geom_bar(aes(x=income, y=count, fill=religion), stat='identity')
 ```
 
-![plot of chunk unnamed-chunk-32](adv-tabular-data-figure/unnamed-chunk-32-1.png)
+![plot of chunk unnamed-chunk-32](3-adv-tabular-data-figure/unnamed-chunk-32-1.png)
 
 Tidying data with pivot_longer()
 ===
@@ -536,12 +536,12 @@ type:prompt
 
 
 ```r
-gtex = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt")
+gtex = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
 ```
 
 Use the GTEX data to reproduce the following plot:
 
-![plot of chunk unnamed-chunk-35](adv-tabular-data-figure/unnamed-chunk-35-1.png)
+![plot of chunk unnamed-chunk-35](3-adv-tabular-data-figure/unnamed-chunk-35-1.png)
 
 The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
@@ -553,10 +553,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          8.07        12.6 
-2     2          8.74         8.28
-3     3          6.72        11.4 
-4     4         12.1          9.02
+1     1         11.0          10.3
+2     2         13.6          13.8
+3     3         11.9          13.0
+4     4          8.48         12.4
 ```
 
 
@@ -567,10 +567,10 @@ wide_mice %>%
 # A tibble: 4 x 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1       4.55 
-2     2      -0.457
-3     3       4.63 
-4     4      -3.04 
+1     1      -0.628
+2     2       0.229
+3     3       1.10 
+4     4       3.92 
 ```
 
 ***
@@ -580,14 +580,14 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.07
-2     1 after   12.6 
-3     2 before   8.74
-4     2 after    8.28
-5     3 before   6.72
-6     3 after   11.4 
-7     4 before  12.1 
-8     4 after    9.02
+1     1 before  11.0 
+2     1 after   10.3 
+3     2 before  13.6 
+4     2 after   13.8 
+5     3 before  11.9 
+6     3 after   13.0 
+7     4 before   8.48
+8     4 after   12.4 
 ```
 
 
@@ -601,10 +601,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1       4.55 
-2     2      -0.457
-3     3       4.63 
-4     4      -3.04 
+1     1      -0.628
+2     2       0.229
+3     3       1.10 
+4     4       3.92 
 ```
 
 Pivoting wider
@@ -619,14 +619,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.07
-2     1 after   12.6 
-3     2 before   8.74
-4     2 after    8.28
-5     3 before   6.72
-6     3 after   11.4 
-7     4 before  12.1 
-8     4 after    9.02
+1     1 before  11.0 
+2     1 after   10.3 
+3     2 before  13.6 
+4     2 after   13.8 
+5     3 before  11.9 
+6     3 after   13.0 
+7     4 before   8.48
+8     4 after   12.4 
 ```
 
 ***
@@ -641,10 +641,10 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1   8.07 12.6 
-2     2   8.74  8.28
-3     3   6.72 11.4 
-4     4  12.1   9.02
+1     1  11.0   10.3
+2     2  13.6   13.8
+3     3  11.9   13.0
+4     4   8.48  12.4
 ```
 
 Names prefix
@@ -656,14 +656,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.07
-2     1 after   12.6 
-3     2 before   8.74
-4     2 after    8.28
-5     3 before   6.72
-6     3 after   11.4 
-7     4 before  12.1 
-8     4 after    9.02
+1     1 before  11.0 
+2     1 after   10.3 
+3     2 before  13.6 
+4     2 after   13.8 
+5     3 before  11.9 
+6     3 after   13.0 
+7     4 before   8.48
+8     4 after   12.4 
 ```
 
 ***
@@ -681,8 +681,8 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          8.07        12.6 
-2     2          8.74         8.28
+1     1          11.0         10.3
+2     2          13.6         13.8
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -779,3 +779,295 @@ anscombe %>%
 - We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
 - See the online [docs and vignettes](https://tidyr.tidyverse.org/articles/pivot.html) for more info
 
+Combining multiple tables with joins
+===
+type:section
+
+```r
+# install.packages("nycflights13")
+library(nycflights13)
+```
+
+
+Relational data
+=====================================================================
+class: small-code
+
+- Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
+
+
+```r
+head(flights)
+# A tibble: 6 x 19
+   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+  <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+1  2013     1     1      517            515         2      830            819
+2  2013     1     1      533            529         4      850            830
+3  2013     1     1      542            540         2      923            850
+4  2013     1     1      544            545        -1     1004           1022
+5  2013     1     1      554            600        -6      812            837
+6  2013     1     1      554            558        -4      740            728
+# … with 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+#   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+#   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+head(airports)
+# A tibble: 6 x 8
+  faa   name                          lat   lon   alt    tz dst   tzone         
+  <chr> <chr>                       <dbl> <dbl> <dbl> <dbl> <chr> <chr>         
+1 04G   Lansdowne Airport            41.1 -80.6  1044    -5 A     America/New_Y…
+2 06A   Moton Field Municipal Airp…  32.5 -85.7   264    -6 A     America/Chica…
+3 06C   Schaumburg Regional          42.0 -88.1   801    -6 A     America/Chica…
+4 06N   Randall Airport              41.4 -74.4   523    -5 A     America/New_Y…
+5 09J   Jekyll Island Airport        31.1 -81.4    11    -5 A     America/New_Y…
+6 0A9   Elizabethton Municipal Air…  36.4 -82.2  1593    -5 A     America/New_Y…
+```
+
+***
+
+- for instance, in these data, we have one table that describes flights, one table that describes airports, one that describes planes, and one that describes the weather. 
+
+
+```r
+head(planes)
+# A tibble: 6 x 9
+  tailnum  year type           manufacturer   model  engines seats speed engine 
+  <chr>   <int> <chr>          <chr>          <chr>    <int> <int> <int> <chr>  
+1 N10156   2004 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
+2 N102UW   1998 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+3 N103US   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+4 N104UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+5 N10575   2002 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
+6 N105UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+```
+
+```r
+head(weather)
+# A tibble: 6 x 15
+  origin  year month   day  hour  temp  dewp humid wind_dir wind_speed wind_gust
+  <chr>  <int> <int> <int> <int> <dbl> <dbl> <dbl>    <dbl>      <dbl>     <dbl>
+1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4         NA
+2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06        NA
+3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5         NA
+4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7         NA
+5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7         NA
+6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5         NA
+# … with 4 more variables: precip <dbl>, pressure <dbl>, visib <dbl>,
+#   time_hour <dttm>
+```
+
+Relational data
+===
+
+- These data are not independent of each other. A plane that is described in `planes` may be referenced as taking a flight in `flights` between two airports that are described in `airports`.
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png">
+</div>
+
+- `flights` connects to `planes` via a single variable, `tailnum`.
+- `flights` connects to `airlines` through the `carrier` variable.
+- `flights` connects to `airports` in two ways: via the `origin` and `dest` variables.
+- `flights` connects to `weather` via `origin` (the location), and `year`, `month`, `day` and `hour` (the time).
+
+An example join
+===
+- Imagine we want to add the full airline name to some columns from `flights`.
+- We can accomplish that with a **join**:
+
+```r
+flights %>%
+  select(tailnum, origin, dest, carrier) %>%
+  inner_join(airlines, by="carrier")
+# A tibble: 336,776 x 5
+   tailnum origin dest  carrier name                    
+   <chr>   <chr>  <chr> <chr>   <chr>                   
+ 1 N14228  EWR    IAH   UA      United Air Lines Inc.   
+ 2 N24211  LGA    IAH   UA      United Air Lines Inc.   
+ 3 N619AA  JFK    MIA   AA      American Airlines Inc.  
+ 4 N804JB  JFK    BQN   B6      JetBlue Airways         
+ 5 N668DN  LGA    ATL   DL      Delta Air Lines Inc.    
+ 6 N39463  EWR    ORD   UA      United Air Lines Inc.   
+ 7 N516JB  EWR    FLL   B6      JetBlue Airways         
+ 8 N829AS  LGA    IAD   EV      ExpressJet Airlines Inc.
+ 9 N593JB  JFK    MCO   B6      JetBlue Airways         
+10 N3ALAA  LGA    ORD   AA      American Airlines Inc.  
+# … with 336,766 more rows
+```
+
+Joins
+===
+
+```r
+x = tibble(
+  key = c(1,2,3),
+  val_x = c("x1","x2","x3")
+)
+y = tibble(
+  key = c(1,2,4),
+  val_y = c("y1","y2","y3")
+)
+```
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/108c0749d084c03103f8e1e8276c20e06357b124/5f113/diagrams/join-setup.png">
+</div>
+
+***
+
+
+```r
+inner_join(x, y, by="key")
+# A tibble: 2 x 3
+    key val_x val_y
+  <dbl> <chr> <chr>
+1     1 x1    y1   
+2     2 x2    y2   
+```
+- An inner join matches pairs of observations when their "keys" are equal
+- the column that is joined on is specified as a "key" with the argument `by="column"`
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/3abea0b730526c3f053a3838953c35a0ccbe8980/7f29b/diagrams/join-inner.png">
+</div>
+
+Duplicate keys
+===
+
+```r
+x <- tibble(
+  key = c(1,2,2,3),
+  val_x = c("x1","x2","x3","x4")
+)
+y <- tibble(
+  key = c(1,2,2,4),
+  val_y = c("y1","y2","y3","y4")
+)
+```
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/d37530bbf7749f48c02684013ae72b2996b07e25/37510/diagrams/join-many-to-many.png">
+</div>
+
+***
+
+
+```r
+inner_join(x, y, by="key")
+# A tibble: 5 x 3
+    key val_x val_y
+  <dbl> <chr> <chr>
+1     1 x1    y1   
+2     2 x2    y2   
+3     2 x2    y3   
+4     2 x3    y2   
+5     2 x3    y3   
+```
+
+When keys are duplicated, multiple rows can match multiple rows, so each possible combination is produced
+
+Specifying the keys
+===
+
+```r
+inner_join(airports, flights, by="origin")
+Error: Join columns must be present in data.
+x Problem with `origin`.
+```
+- Why does this fail?
+
+Specifying the keys
+===
+- When keys have different names in different dataframes, the syntax to join is:
+
+```r
+inner_join(airports, flights, by=c("faa"="origin"))
+# A tibble: 336,776 x 26
+   faa   name    lat   lon   alt    tz dst   tzone  year month   day dep_time
+   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <chr> <chr> <int> <int> <int>    <int>
+ 1 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      517
+ 2 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      554
+ 3 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      555
+ 4 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      558
+ 5 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      559
+ 6 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      601
+ 7 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      606
+ 8 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      607
+ 9 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      608
+10 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      615
+# … with 336,766 more rows, and 14 more variables: sched_dep_time <int>,
+#   dep_delay <dbl>, arr_time <int>, sched_arr_time <int>, arr_delay <dbl>,
+#   carrier <chr>, flight <int>, tailnum <chr>, dest <chr>, air_time <dbl>,
+#   distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+Exercise: finding planes
+===
+Use joins to find the distinct models of airplane that fly into Seattle Tacoma Intl.
+
+
+Other joins
+===
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/9c12ca9e12ed26a7c5d2aa08e36d2ac4fb593f1e/79980/diagrams/join-outer.png">
+</div>
+
+***
+
+- A left join keeps all observations in `x`.
+- A right join keeps all observations in `y`.
+- A full join keeps all observations in `x` and `y`.
+
+<div align="center">
+<img src="https://d33wubrfki0l68.cloudfront.net/aeab386461820b029b7e7606ccff1286f623bae1/ef0d4/diagrams/join-venn.png">
+</div>
+
+- Left join should be your default
+  - it looks up additional information in other tables
+  - preserves all rows in the table you're most interested in
+
+Joining on multiple columns
+===
+- It is often desirable to find matches along more than one column
+
+```r
+flights %>%
+  select(tailnum, year:day, hour, origin) %>%
+  left_join(weather, by=c("year", "month", "day", "hour", "origin")) %>%
+  head(3)
+# A tibble: 3 x 16
+  tailnum  year month   day  hour origin  temp  dewp humid wind_dir wind_speed
+  <chr>   <int> <int> <int> <dbl> <chr>  <dbl> <dbl> <dbl>    <dbl>      <dbl>
+1 N14228   2013     1     1     5 EWR     39.0  28.0  64.4      260       12.7
+2 N24211   2013     1     1     5 LGA     39.9  25.0  54.8      250       15.0
+3 N619AA   2013     1     1     5 JFK     39.0  27.0  61.6      260       15.0
+# … with 5 more variables: wind_gust <dbl>, precip <dbl>, pressure <dbl>,
+#   visib <dbl>, time_hour <dttm>
+```
+- This is also possible if the columns have different names
+
+```r
+flights %>%
+  select(tailnum, year:day, hour, origin) %>%
+  rename(departure = origin) %>%
+  left_join(weather, by=c("year", "month", "day", "hour", "departure"="origin"))
+```
+
+Join problems
+===
+- Joins can be a source of subtle errors in your code
+- check for `NA`s in variables you are going to join on
+- make sure rows aren't being dropped if you don't intend to drop rows
+  - checking the number of rows before and after the join is not sufficient. If you have an inner join with duplicate keys in both tables, you might get unlucky as the number of dropped rows might exactly equal the number of duplicated rows
+- `anti_join()` and `semi_join()` are useful tools (filtering joins) to diagnose problems
+  - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
+  - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
+
+Exercise: nonexistent planes
+====
+type: prompt
+
+It appears some of the `tailnum`s in `flights` do not appear in `planes`. Is there something those flights have in common that might help us diagnose the issue? See if you can find some other variable that correlates or somehow explains this missingness. Use any tools you like.

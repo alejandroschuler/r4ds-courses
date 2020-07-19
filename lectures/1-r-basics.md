@@ -49,7 +49,7 @@ Assignment
 names to things.
 
 ```r
-mpg = read_csv("data/mpg.csv")
+mpg = read_csv("../data/mpg.csv")
 ```
 - This code *assigns* the result of running `read_csv('data/mpg.csv')` to the name `mpg`
 - You can do this with any values and/or functions
@@ -171,15 +171,6 @@ incremental: true
 - Use them to compute the year of your birth and save that as a variable
 - Print the value of that variable
 
-
-```r
-my_age_end_of_year = 30
-this_year = 2020
-my_birth_year = this_year - my_age_end_of_year
-my_birth_year
-[1] 1990
-```
-
 Functions
 ========================================================
 type: section
@@ -232,7 +223,7 @@ ggplot(genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-17](1-r-basics-figure/unnamed-chunk-17-1.png)
+![plot of chunk unnamed-chunk-16](1-r-basics-figure/unnamed-chunk-16-1.png)
 
 ***
 
@@ -246,7 +237,14 @@ ggplot(data=genes) +
   geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
-![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-17](1-r-basics-figure/unnamed-chunk-17-1.png)
+
+Default Arguments
+===
+
+Why?
+========================================================
+- what are the benefits/drawbacks of using positional vs. named arguments?
 
 Exercise
 ========================================================
@@ -263,9 +261,7 @@ Warning: Ignoring unknown aesthetics: y_axis, x_axis
 Error in FUN(X[[i]], ...): object 'EIF3L' not found
 ```
 
-![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
-
-- If you use names, they have to be spelled correctly
+![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
 
 Exercise
 ========================================================
@@ -274,7 +270,7 @@ type: prompt
 
 I'm trying to generate this plot:
 
-![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
 
 ***
 
@@ -286,11 +282,9 @@ ggplot(data=genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-21](1-r-basics-figure/unnamed-chunk-21-1.png)
+![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
 
 What am I doing wrong?
-
-- If you use positional arguments, they have to be in the right order
 
 Finding the names of a function's arguments
 ========================================================
@@ -443,17 +437,6 @@ x = c(7, 3, 1, 9)
 ```
 - Subtract the mean of `x` from `x`, and then `sum` the result.
 
-
-```r
-x = c(7, 3, 1, 9)
-mean(x)
-[1] 5
-x - mean(x)
-[1]  2 -2 -4  4
-sum(x - mean(x))  # answer in one expression
-[1] 0
-```
-
 Exercise: a vector of variables
 ===
 type: prompt
@@ -468,19 +451,6 @@ x = c(a, b)
 
 a = 3
 print(x)
-```
-
-***
-
-
-```r
-a = 1
-b = 2
-x = c(a, b)
-
-a = 3
-print(x)
-[1] 1 2
 ```
 
 Data Frames
@@ -627,7 +597,7 @@ C = 3
 In the rest of the script, do the following:
 
 - generate an evenly-spaced sequence of 100 values between -5 and 5 (find an R function that does this). Call this `x`
-- generate the corresponding y-values `y` by computing the formula $y = Ax^2 + Bx + C$
+- generate the corresponding y-values `y` by computing the formula y = Ax^2 + Bx + C
 - create a data frame with `x` and `y` as columns
 - use ggplot to create a line plot of `x` vs `y`
 
@@ -635,14 +605,6 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 ***
 
-Your result should be:
+Your result should look like:
 
-![plot of chunk unnamed-chunk-48](1-r-basics-figure/unnamed-chunk-48-1.png)
-
-
-```r
-x = seq(-5, 5, length.out = 100)
-y = A * x^2 + B * x + C
-df = tibble(x = x, y = y)
-ggplot(df) + geom_line(aes(x, y))
-```
+![plot of chunk unnamed-chunk-45](1-r-basics-figure/unnamed-chunk-45-1.png)

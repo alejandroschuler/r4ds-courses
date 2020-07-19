@@ -166,13 +166,6 @@ incremental: true
 - Use them to compute the year of your birth and save that as a variable
 - Print the value of that variable
 
-```{r}
-my_age_end_of_year = 30
-this_year = 2020
-my_birth_year = this_year - my_age_end_of_year
-my_birth_year
-```
-
 Functions
 ========================================================
 type: section
@@ -228,6 +221,13 @@ ggplot(data=genes) +
   geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
+Default Arguments
+===
+
+Why?
+========================================================
+- what are the benefits/drawbacks of using positional vs. named arguments?
+
 Exercise
 ========================================================
 incremental: true
@@ -239,8 +239,6 @@ Why does this code generate errors?
 ggplot(the_data=genes) + 
   geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
 ```
-
-- If you use names, they have to be spelled correctly
 
 Exercise
 ========================================================
@@ -264,8 +262,6 @@ ggplot(data=genes) +
 ```
 
 What am I doing wrong?
-
-- If you use positional arguments, they have to be in the right order
 
 Finding the names of a function's arguments
 ========================================================
@@ -392,13 +388,6 @@ x = c(7, 3, 1, 9)
 ```
 - Subtract the mean of `x` from `x`, and then `sum` the result.
 
-```{r}
-x = c(7, 3, 1, 9)
-mean(x)
-x - mean(x)
-sum(x - mean(x)) # answer in one expression
-```
-
 Exercise: a vector of variables
 ===
 type: prompt
@@ -406,17 +395,6 @@ incremental: true
 
 - Predict the output of the following code:
 ```{r, eval=F}
-a = 1
-b = 2
-x = c(a,b)
-
-a = 3
-print(x)
-```
-
-***
-
-```{r}
 a = 1
 b = 2
 x = c(a,b)
@@ -536,7 +514,7 @@ C = 3
 In the rest of the script, do the following:
 
 - generate an evenly-spaced sequence of 100 values between -5 and 5 (find an R function that does this). Call this `x`
-- generate the corresponding y-values `y` by computing the formula $y = Ax^2 + Bx + C$
+- generate the corresponding y-values `y` by computing the formula y = Ax^2 + Bx + C
 - create a data frame with `x` and `y` as columns
 - use ggplot to create a line plot of `x` vs `y`
 
@@ -544,7 +522,7 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 ***
 
-Your result should be:
+Your result should look like:
 
 ```{r, echo=F}
 x = seq(-5, 5, length.out=100)
@@ -553,9 +531,12 @@ df = tibble(x=x, y=y)
 ggplot(df) + geom_line(aes(x,y))
 ```
 
-```{r, eval=F}
-x = seq(-5, 5, length.out=100)
-y = A*x^2 + B*x + C
-df = tibble(x=x, y=y)
-ggplot(df) + geom_line(aes(x,y))
-```
+RStudio Pro-tip: multicursors
+===
+
+- RStudio's script pane supports multi-cursors! Hold `alt` and drag your mouse up and down 
+- You can also set a keyboard shortcut for `quick add next`
+- These features make it much easier to rename variables, etc.
+- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
+- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
+
