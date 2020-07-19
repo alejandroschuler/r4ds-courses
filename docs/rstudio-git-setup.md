@@ -22,7 +22,7 @@
 
 <img src="images/3.png" width="400"/>
 
-### 4. Use `github.com/alejandroschuler/r4ds-courses` as the URL. Name the directory whatever you want and create it as a subdirectory of whatever folder you want (e.g. Desktop, My Documents, etc.).
+### 4. Use `https://github.com/alejandroschuler/r4ds-courses` as the URL. Name the directory whatever you want and create it as a subdirectory of whatever folder you want (e.g. Desktop, My Documents, etc.).
 
 <img src="images/4.png" width="400"/>
 
