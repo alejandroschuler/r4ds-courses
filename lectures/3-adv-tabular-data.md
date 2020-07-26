@@ -22,6 +22,7 @@ Window transformations
 ===
 type: section
 
+
 Offsets
 ===
 incremental: true
@@ -35,26 +36,45 @@ lag(c(1,2,3))
 [1] NA  1  2
 ```
 
-- This is most useful to compute offsets
+- This is most useful to compute offsets, which we often do when looking at time series. 
+
+Offsets Example
+====
+incremental: true
+
+- Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
+
 
 ```r
-scores = tibble(
-  day = c(1,2,3,4),
-  score = c(72, 87, 94, 99)
+gtex_samples_by_month = read_csv("../data/gtex_samples_time.csv")
+Parsed with column specification:
+cols(
+  month = col_double(),
+  year = col_double(),
+  n = col_double()
 )
+head(gtex_samples_by_month, 2)
+# A tibble: 2 x 3
+  month  year     n
+  <dbl> <dbl> <dbl>
+1     5  2011    57
+2     6  2011   240
 ```
 
 
+
 ```r
-scores %>%
-  mutate(daily_improvement = score - lag(score))
-# A tibble: 4 x 3
-    day score daily_improvement
-  <dbl> <dbl>             <dbl>
-1     1    72                NA
-2     2    87                15
-3     3    94                 7
-4     4    99                 5
+gtex_samples_by_month %>% 
+  mutate(increase_in_samples=n-lag(n)) %>%
+  head(5)
+# A tibble: 5 x 4
+  month  year     n increase_in_samples
+  <dbl> <dbl> <dbl>               <dbl>
+1     5  2011    57                  NA
+2     6  2011   240                 183
+3     7  2011   286                  46
+4     8  2011   292                   6
+5     9  2011   267                 -25
 ```
 
 Exercise: multiple offsets
@@ -63,14 +83,21 @@ type: prompt
 
 
 ```r
-scores = tibble(
-  week = c(1,1,2,2,3,3,4,4),
-  weekday = c("M","F","M","F","M","F","M","F"),
-  score = c(72, 71, 80, 87, 94, 82, 99, 98)
-)
+gtex_samples_by_month_small <- gtex_samples_by_month %>% 
+  filter(month %in% c(3,6,9,12))
+head(gtex_samples_by_month_small, 6)
+# A tibble: 6 x 3
+  month  year     n
+  <dbl> <dbl> <dbl>
+1     6  2011   240
+2     9  2011   267
+3    12  2011   261
+4     3  2012   332
+5     6  2012   134
+6     9  2012   200
 ```
-Let's say you want to compute the improvement in scores within weekdays from one week to the next
-(i.e. comparing week 1 Monday to week 2 Monday and week 1 Friday to week 2 Friday)
+Let's say you want to compute the change in number of samples within months from one year to the next. We've shortened the data to only include four months each year (March, June, September, and December) to simplify this.
+(i.e. comparing January 2015 to January 2016 and February 2015 to February 2016)
 
 1. Figure out a way to do this using `lead()` or `lag()` in a single `mutate()` statement (hint: check the documentation).
 2. Figure out a different way to do this with `group_by()` instead. Which seems more natural or robust to you? Why?
@@ -84,6 +111,7 @@ Rolling functions
 
 ```r
 library("slider")
+Warning: package 'slider' was built under R version 3.6.2
 numbers = c(9,6,8,4,7,3,8,4,2,1,3,2)
 slide_vec(numbers, sum, .after=3, .step=2)
  [1] 27 NA 22 NA 22 NA 15 NA  8 NA  5 NA
@@ -92,33 +120,24 @@ slide_vec(numbers, sum, .after=3, .step=2)
 - the `.after` argument specifies how many elements after the "index" element are included in the rolling window
 - `.step` specifies how to move from one index element to the next
 
-***
-
-![](https://www.oreilly.com/library/view/introduction-to-apache/9781491977132/assets/itaf_0406.png)
-
-Rolling functions
-===
-
-```r
-profits = tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, 19, 13)
-)
-```
 
 - `.before` is the backward-looking equivalent of `.after`
 
 
+***
+
+![](https://www.oreilly.com/library/view/introduction-to-apache/9781491977132/assets/itaf_0406.png)
+
+
 ```r
-profits %>%
-  mutate(avg_2_day_profit = slide_vec(profit, mean, .before=1))
-# A tibble: 4 x 3
-    day profit avg_2_day_profit
-  <dbl>  <dbl>            <dbl>
-1     1     12             12  
-2     2     40             26  
-3     3     19             29.5
-4     4     13             16  
+gtex_samples_by_month %>%
+  mutate(avg_samples_2_month= slide_vec(n, mean, .before=1)) %>%
+  head(2)
+# A tibble: 2 x 4
+  month  year     n avg_samples_2_month
+  <dbl> <dbl> <dbl>               <dbl>
+1     5  2011    57                 57 
+2     6  2011   240                148.
 ```
 
 Cumulative functions
@@ -134,24 +153,24 @@ cumsum(c(1,2,3))
 ```
 
 
-```r
-profits = tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, 19, 13)
-)
-```
-
 
 ```r
-profits %>%
-  mutate(best_day_to_date = cumsum(profit))
-# A tibble: 4 x 3
-    day profit best_day_to_date
-  <dbl>  <dbl>            <dbl>
-1     1     12               12
-2     2     40               52
-3     3     19               71
-4     4     13               84
+gtex_samples_by_month %>%
+  mutate(num_samples_to_date=cumsum(n))
+# A tibble: 68 x 4
+   month  year     n num_samples_to_date
+   <dbl> <dbl> <dbl>               <dbl>
+ 1     5  2011    57                  57
+ 2     6  2011   240                 297
+ 3     7  2011   286                 583
+ 4     8  2011   292                 875
+ 5     9  2011   267                1142
+ 6    10  2011   324                1466
+ 7    11  2011   476                1942
+ 8    12  2011   261                2203
+ 9     1  2012   489                2692
+10     2  2012   267                2959
+# … with 58 more rows
 ```
 
 Turning any function into a cumulative function
@@ -163,15 +182,22 @@ Turning any function into a cumulative function
 ```r
 library(slider) # imports slide_vec() function
 
-profits %>%
-  mutate(profit_to_date = slide_vec(profit, sum, .before=Inf))
-# A tibble: 4 x 3
-    day profit profit_to_date
-  <dbl>  <dbl>          <dbl>
-1     1     12             12
-2     2     40             52
-3     3     19             71
-4     4     13             84
+gtex_samples_by_month %>%
+  mutate(samples_to_date = slide_vec(n, sum, .before=Inf))
+# A tibble: 68 x 4
+   month  year     n samples_to_date
+   <dbl> <dbl> <dbl>           <dbl>
+ 1     5  2011    57              57
+ 2     6  2011   240             297
+ 3     7  2011   286             583
+ 4     8  2011   292             875
+ 5     9  2011   267            1142
+ 6    10  2011   324            1466
+ 7    11  2011   476            1942
+ 8    12  2011   261            2203
+ 9     1  2012   489            2692
+10     2  2012   267            2959
+# … with 58 more rows
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -181,46 +207,53 @@ Turning any function into a cumulative function
 - If the function you want to transform takes additional arguments, you can give those to `slide_vec` and it will pass them through for you
 
 ```r
-tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, NA, 13)
-) %>%
-  mutate(profit_to_date = slide_vec(profit, mean, .before=Inf, na.rm=T))
-# A tibble: 4 x 3
-    day profit profit_to_date
-  <dbl>  <dbl>          <dbl>
-1     1     12           12  
-2     2     40           26  
-3     3     NA           26  
-4     4     13           21.7
+gtex_samples_by_month %>%
+  mutate(avg_samples_by_month = slide_vec(n, mean, .before=Inf, na.rm=T))
+# A tibble: 68 x 4
+   month  year     n avg_samples_by_month
+   <dbl> <dbl> <dbl>                <dbl>
+ 1     5  2011    57                  57 
+ 2     6  2011   240                 148.
+ 3     7  2011   286                 194.
+ 4     8  2011   292                 219.
+ 5     9  2011   267                 228.
+ 6    10  2011   324                 244.
+ 7    11  2011   476                 277.
+ 8    12  2011   261                 275.
+ 9     1  2012   489                 299.
+10     2  2012   267                 296.
+# … with 58 more rows
 ```
 
-Exercise: maximum temperature to-date
+Exercise: total number of samples in the last twelve months
 ===
 type:prompt
 
 
 ```r
-# install.packages("devtools")
-library("devtools")
-# install_github("Ram-N/weatherData")
-library(weatherData)
-library(lubridate)
-data(SFO2013)
+library(lubridate) # this helps us with dates
 ```
 
 
 ```r
-sfo = SFO2013 %>%
-  transmute( # mutate, but drops all other columns
-    time = ymd_hms(Time), 
-    temp = Temperature
-  ) %>%
-  group_by(day = date(time)) %>%
-  summarize(max_temp = max(temp))
+gtex_samples_by_month
+# A tibble: 68 x 3
+   month  year     n
+   <dbl> <dbl> <dbl>
+ 1     5  2011    57
+ 2     6  2011   240
+ 3     7  2011   286
+ 4     8  2011   292
+ 5     9  2011   267
+ 6    10  2011   324
+ 7    11  2011   476
+ 8    12  2011   261
+ 9     1  2012   489
+10     2  2012   267
+# … with 58 more rows
 ```
 
-Starting with this `sfo` dataframe that I've prepared for you, add a column that has the maximum temperature in the past 30 days relative to the day indicated in that row
+Starting with this `gtex_samples_by_month` dataframe you, add a column that has the total number of samples in the last twelve months relative to the row we are on.
 
 Column-wise operations
 ===
@@ -251,10 +284,10 @@ df %>%
     mean_b = mean(c)
   )
 # A tibble: 2 x 3
-      g mean_a mean_b
-  <int>  <dbl>  <dbl>
-1     0 0.0545 -0.122
-2     1 0.539  -0.318
+      g  mean_a mean_b
+  <int>   <dbl>  <dbl>
+1     0 -0.0346  0.989
+2     1  0.157  -0.344
 ```
 
 
@@ -276,10 +309,10 @@ df %>%
     median_c = median(c)
   )
 # A tibble: 2 x 6
-      g mean_a mean_b median_a median_b median_c
-  <int>  <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
-1     0 0.0545 -0.122  -0.0919   -1.18     0.295
-2     1 0.539  -0.318   0.882    -0.461   -0.385
+      g  mean_a mean_b median_a median_b median_c
+  <int>   <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
+1     0 -0.0346  0.989   -0.353   -0.589    1.05 
+2     1  0.157  -0.344    0.752    0.480    0.196
 ```
 
 Columnwise operations
@@ -292,10 +325,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b,c), mean))
 # A tibble: 2 x 4
-      g      a      b      c
-  <int>  <dbl>  <dbl>  <dbl>
-1     0 0.0545 -1.20  -0.122
-2     1 0.539  -0.590 -0.318
+      g       a      b      c
+  <int>   <dbl>  <dbl>  <dbl>
+1     0 -0.0346 -0.693  0.989
+2     1  0.157   0.422 -0.344
 ```
 
 - The first argument to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -315,10 +348,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b), fns))
 # A tibble: 2 x 5
-      g  a_avg a_max  b_avg b_max
-  <int>  <dbl> <dbl>  <dbl> <dbl>
-1     0 0.0545 1.37  -1.20  0.401
-2     1 0.539  0.929 -0.590 0.440
+      g   a_avg a_max  b_avg b_max
+  <int>   <dbl> <dbl>  <dbl> <dbl>
+1     0 -0.0346 0.804 -0.693 0.653
+2     1  0.157  1.04   0.422 1.43 
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -346,8 +379,8 @@ df %>%
 # A tibble: 2 x 3
       g      a      b
   <int>  <dbl>  <dbl>
-1     0  0.766 -0.921
-2     1 -0.201  0.401
+1     0 -0.209 0.0982
+2     1  0.371 0.298 
 ```
 
 Columnwise mutate
@@ -369,18 +402,18 @@ df = tibble(
 df %>%
   mutate(across(where(is.character), as.numeric))
 # A tibble: 10 x 4
-         a       b      c     g
-     <dbl>   <dbl>  <dbl> <int>
- 1  0.867  -0.741   0.468     1
- 2 -1.96   -0.919  -0.981     0
- 3  0.277   0.0592  0.445     1
- 4  0.232  -1.54    0.419     1
- 5 -0.0284 -0.332   0.146     0
- 6 -0.453  -0.577  -1.28      1
- 7  0.166   0.773  -0.722     0
- 8 -0.785  -1.50    0.238     0
- 9  0.339  -0.593  -0.734     1
-10 -0.466   0.858  -0.514     1
+        a      b       c     g
+    <dbl>  <dbl>   <dbl> <int>
+ 1 -0.474 -0.313  0.862      0
+ 2 -0.991  0.818 -1.15       1
+ 3  1.04   0.915 -0.915      0
+ 4 -2.42  -1.35  -0.0390     1
+ 5 -2.00   1.22  -0.605      1
+ 6  0.474  0.541 -0.196      1
+ 7 -0.411 -0.293 -0.645      0
+ 8 -1.33  -1.11  -0.412      1
+ 9  0.625 -0.349  0.847      0
+10  0.856  0.448 -0.473      0
 ```
 
 Columnwise mutate
@@ -396,18 +429,18 @@ df %>%
     .names = '{col}_offset'   # how to name the outputs
   ))
 # A tibble: 10 x 6
-         a       b c                      g a_offset b_offset
-     <dbl>   <dbl> <chr>              <int>    <dbl>    <dbl>
- 1  0.867  -0.741  0.467970933315865      1  NA        NA    
- 2 -1.96   -0.919  -0.981425985252316     0  -2.83     -0.178
- 3  0.277   0.0592 0.444527554283186      1   2.24      0.978
- 4  0.232  -1.54   0.418513237720704      1  -0.0451   -1.60 
- 5 -0.0284 -0.332  0.145985251936118      0  -0.260     1.21 
- 6 -0.453  -0.577  -1.28080038050111      1  -0.425    -0.245
- 7  0.166   0.773  -0.722086315245271     0   0.620     1.35 
- 8 -0.785  -1.50   0.237989895627336      0  -0.952    -2.27 
- 9  0.339  -0.593  -0.733821129939353     1   1.12      0.908
-10 -0.466   0.858  -0.513880717930165     1  -0.805     1.45 
+        a      b c                       g a_offset b_offset
+    <dbl>  <dbl> <chr>               <int>    <dbl>    <dbl>
+ 1 -0.474 -0.313 0.86151861991013        0   NA      NA     
+ 2 -0.991  0.818 -1.14829968373762       1   -0.517   1.13  
+ 3  1.04   0.915 -0.914764901894385      0    2.03    0.0972
+ 4 -2.42  -1.35  -0.0390254347792885     1   -3.45   -2.26  
+ 5 -2.00   1.22  -0.604650466669515      1    0.415   2.57  
+ 6  0.474  0.541 -0.196107533430993      1    2.47   -0.681 
+ 7 -0.411 -0.293 -0.645207295046847      0   -0.885  -0.834 
+ 8 -1.33  -1.11  -0.411996342566479      1   -0.920  -0.821 
+ 9  0.625 -0.349 0.84732366230794        0    1.96    0.765 
+10  0.856  0.448 -0.472889598739368      0    0.231   0.797 
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -416,14 +449,21 @@ Exercise: Filtering out or replacing NAs
 ===
 type: prompt
 
+Let's go back to the GTEx expression data we've been looking at:
 
 ```r
-# install.packages('nycflights13')
-library(nycflights13)
-# glimpse(flights)
+gtex = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+head(gtex, 4)
+# A tibble: 4 x 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
+4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4
 ```
 
-1. Replacing NAs with some other value is a very common operation so it gets its own function: `replace_na()`. Use this function to replace all `NA`s present in any numeric column of the flights dataset with `0`s
+1. Replacing NAs with some other value is a very common operation so it gets its own function: `replace_na()`. Use this function to replace all `NA`s present in any numeric column with `0`s
 2. Instead of replacing these values, we may want to filter them all out instead. Starting with the original data, use `filter()` and `across()` to remove all rows from the data that have any `NA`s in any column. Recall that `is.na()` checks which elements in a vector are `NA`.
 
 Tidy data: rearranging a data frame
@@ -436,38 +476,36 @@ Messy data
 
 
 ```r
-head(relig_income,2)
-# A tibble: 2 x 11
-  religion `<$10k` `$10-20k` `$20-30k` `$30-40k` `$40-50k` `$50-75k` `$75-100k`
-  <chr>      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>      <dbl>
-1 Agnostic      27        34        60        81        76       137        122
-2 Atheist       12        27        37        52        35        70         73
-# … with 3 more variables: `$100-150k` <dbl>, `>150k` <dbl>, `Don't
-#   know/refused` <dbl>
+gtex_time_tissue_data <- read_csv("../data/gtex_time_tissue.csv")
+head(gtex_time_tissue_data, 3)
+# A tibble: 3 x 8
+  tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
+  <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+1 Adipose Tissue    100    150    389    336    144    204      4
+2 Adrenal Gland      31     41     84     67     21     31      0
+3 Bladder             2     18      0      1      0      0      0
 ```
 
-- the values in the table represent how many survey respondents were of each religion and income bracket.
+- the values in the table represent how many samples of that tissue were collected during that year.
 - How could I use ggplot to make this plot? It's hard!
 
 
 
-![plot of chunk unnamed-chunk-29](3-adv-tabular-data-figure/unnamed-chunk-29-1.png)
+![plot of chunk unnamed-chunk-27](3-adv-tabular-data-figure/unnamed-chunk-27-1.png)
 
 Messy data
 ===
 
 ```r
-head(relig_income,3)
-# A tibble: 3 x 11
-  religion `<$10k` `$10-20k` `$20-30k` `$30-40k` `$40-50k` `$50-75k` `$75-100k`
-  <chr>      <dbl>     <dbl>     <dbl>     <dbl>     <dbl>     <dbl>      <dbl>
-1 Agnostic      27        34        60        81        76       137        122
-2 Atheist       12        27        37        52        35        70         73
-3 Buddhist      27        21        30        34        33        58         62
-# … with 3 more variables: `$100-150k` <dbl>, `>150k` <dbl>, `Don't
-#   know/refused` <dbl>
+head(gtex_time_tissue_data, 3)
+# A tibble: 3 x 8
+  tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
+  <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+1 Adipose Tissue    100    150    389    336    144    204      4
+2 Adrenal Gland      31     41     84     67     21     31      0
+3 Bladder             2     18      0      1      0      0      0
 ```
-- One of the problems with the way these data are formatted is that the income level, which is a property of a particular population, is stuck into the names of the columns. 
+- One of the problems with the way these data are formatted is that the year collected, which is a property of the samples, is stuck into the names of the columns. 
 - Because of this, it's also not obvious what the numbers in the table mean (although we know they are counts)
 
 Tidy data
@@ -476,14 +514,14 @@ Tidy data
 
 ```
 # A tibble: 6 x 3
-  religion income  count
-  <chr>    <chr>   <dbl>
-1 Agnostic <$10k      27
-2 Agnostic $10-20k    34
-3 Agnostic $20-30k    60
-4 Agnostic $30-40k    81
-5 Agnostic $40-50k    76
-6 Agnostic $50-75k   137
+  tissue         year  count
+  <chr>          <chr> <dbl>
+1 Adipose Tissue 2011    100
+2 Adipose Tissue 2012    150
+3 Adipose Tissue 2013    389
+4 Adipose Tissue 2014    336
+5 Adipose Tissue 2015    144
+6 Adipose Tissue 2016    204
 ```
 
 This data is *tidy*. Tidy data follows three precepts:
@@ -492,7 +530,7 @@ This data is *tidy*. Tidy data follows three precepts:
 2. each "observation" has its own row
 3. each type of observational unit has its own data frame
 
-In our example, each the **observations** are different **populations**, each of which has an associated _religion_, _income_, and _count_. These are the _variables_ that are measured about the population. 
+In our example, each the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
 
 Tidy data
 ===
@@ -501,13 +539,13 @@ Tidy data is easy to work with.
 
 
 ```r
-tidy %>%
-    filter(religion %in% c("Muslim", "Jewish", "Hindu", "Buddhist", "Catholic", "Atheist", "Mainline Prot")) %>%
+tidy %>% 
+  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) %>%
 ggplot() +
-  geom_bar(aes(x=income, y=count, fill=religion), stat='identity')
+  geom_bar(aes(x=year, y=count, fill=tissue), stat='identity')
 ```
 
-![plot of chunk unnamed-chunk-32](3-adv-tabular-data-figure/unnamed-chunk-32-1.png)
+![plot of chunk unnamed-chunk-30](3-adv-tabular-data-figure/unnamed-chunk-30-1.png)
 
 Tidying data with pivot_longer()
 ===
@@ -515,15 +553,14 @@ Tidying data with pivot_longer()
 - `tidyr::pivot_longer()` is the function you will most often want to use to tidy your data
 
 ```r
-relig_income %>%
-  pivot_longer(-religion, names_to="income", values_to="count") %>%
-  head(3)
-# A tibble: 3 x 3
-  religion income  count
-  <chr>    <chr>   <dbl>
-1 Agnostic <$10k      27
-2 Agnostic $10-20k    34
-3 Agnostic $20-30k    60
+gtex_time_tissue_data %>%
+  pivot_longer(-tissue, names_to="year", values_to="count") %>%
+  head(2)
+# A tibble: 2 x 3
+  tissue         year  count
+  <chr>          <chr> <dbl>
+1 Adipose Tissue 2011    100
+2 Adipose Tissue 2012    150
 ```
 
 - the three important arguments are: a) a selection of columns, b) the name of the new key column, and c) the name of the new value column
@@ -536,12 +573,18 @@ type:prompt
 
 
 ```r
-gtex = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+head(gtex, 3)
+# A tibble: 3 x 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
 ```
 
 Use the GTEX data to reproduce the following plot:
 
-![plot of chunk unnamed-chunk-35](3-adv-tabular-data-figure/unnamed-chunk-35-1.png)
+![plot of chunk unnamed-chunk-33](3-adv-tabular-data-figure/unnamed-chunk-33-1.png)
 
 The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
@@ -553,10 +596,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1         11.0          10.3
-2     2         13.6          13.8
-3     3         11.9          13.0
-4     4          8.48         12.4
+1     1         13.1         11.3 
+2     2         10.5          7.80
+3     3          7.70        11.1 
+4     4         11.8         12.3 
 ```
 
 
@@ -567,10 +610,10 @@ wide_mice %>%
 # A tibble: 4 x 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.628
-2     2       0.229
-3     3       1.10 
-4     4       3.92 
+1     1      -1.81 
+2     2      -2.71 
+3     3       3.36 
+4     4       0.485
 ```
 
 ***
@@ -580,14 +623,14 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.0 
-2     1 after   10.3 
-3     2 before  13.6 
-4     2 after   13.8 
-5     3 before  11.9 
-6     3 after   13.0 
-7     4 before   8.48
-8     4 after   12.4 
+1     1 before  13.1 
+2     1 after   11.3 
+3     2 before  10.5 
+4     2 after    7.80
+5     3 before   7.70
+6     3 after   11.1 
+7     4 before  11.8 
+8     4 after   12.3 
 ```
 
 
@@ -601,10 +644,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.628
-2     2       0.229
-3     3       1.10 
-4     4       3.92 
+1     1      -1.81 
+2     2      -2.71 
+3     3       3.36 
+4     4       0.485
 ```
 
 Pivoting wider
@@ -619,14 +662,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.0 
-2     1 after   10.3 
-3     2 before  13.6 
-4     2 after   13.8 
-5     3 before  11.9 
-6     3 after   13.0 
-7     4 before   8.48
-8     4 after   12.4 
+1     1 before  13.1 
+2     1 after   11.3 
+3     2 before  10.5 
+4     2 after    7.80
+5     3 before   7.70
+6     3 after   11.1 
+7     4 before  11.8 
+8     4 after   12.3 
 ```
 
 ***
@@ -641,10 +684,10 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1  11.0   10.3
-2     2  13.6   13.8
-3     3  11.9   13.0
-4     4   8.48  12.4
+1     1  13.1  11.3 
+2     2  10.5   7.80
+3     3   7.70 11.1 
+4     4  11.8  12.3 
 ```
 
 Names prefix
@@ -656,14 +699,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.0 
-2     1 after   10.3 
-3     2 before  13.6 
-4     2 after   13.8 
-5     3 before  11.9 
-6     3 after   13.0 
-7     4 before   8.48
-8     4 after   12.4 
+1     1 before  13.1 
+2     1 after   11.3 
+3     2 before  10.5 
+4     2 after    7.80
+5     3 before   7.70
+6     3 after   11.1 
+7     4 before  11.8 
+8     4 after   12.3 
 ```
 
 ***
@@ -681,8 +724,8 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          11.0         10.3
-2     2          13.6         13.8
+1     1          13.1        11.3 
+2     2          10.5         7.80
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -726,26 +769,24 @@ Have a look at the following data. How do you think we might want to make it loo
 
 
 ```r
-data(anscombe)
-anscombe
-   x1 x2 x3 x4    y1   y2    y3    y4
-1  10 10 10  8  8.04 9.14  7.46  6.58
-2   8  8  8  8  6.95 8.14  6.77  5.76
-3  13 13 13  8  7.58 8.74 12.74  7.71
-4   9  9  9  8  8.81 8.77  7.11  8.84
-5  11 11 11  8  8.33 9.26  7.81  8.47
-6  14 14 14  8  9.96 8.10  8.84  7.04
-7   6  6  6  8  7.24 6.13  6.08  5.25
-8   4  4  4 19  4.26 3.10  5.39 12.50
-9  12 12 12  8 10.84 9.13  8.15  5.56
-10  7  7  7  8  4.82 7.26  6.42  7.91
-11  5  5  5  8  5.68 4.74  5.73  6.89
+gtex_samples_time_chunk <- read_csv("../data/gtex_samples_tiss_time_chunk.csv")
+head(gtex_samples_time_chunk)
+# A tibble: 6 x 9
+  tissue `Sept-2015` `Sept-2016` `Oct-2015` `Oct-2016` `Nov-2015` `Nov-2016`
+  <chr>        <dbl>       <dbl>      <dbl>      <dbl>      <dbl>      <dbl>
+1 Adipo…           6          48          8         36         29         26
+2 Adren…           4           5          1          5          3          6
+3 Blood            6           0         16          0         89          0
+4 Blood…          15          37         12         37         18         23
+5 Brain           77           7         15         26        112         68
+6 Breast           9          19          7         20          5          8
+# … with 2 more variables: `Dec-2016` <dbl>, `Dec-2015` <dbl>
 ```
 
 The problem here is that the column names contain two pieces of data:
 
-1. the coordinate (`x` or `y`)
-2. some group that it came from (`1`, `2`, `3`, or `4`)
+1. the year 
+2. the month it came from
 
 Our use of `pivot_longer` has so far been to extract a single piece of information from the column name
 
@@ -755,25 +796,25 @@ Multi-pivoting
 
 
 ```r
-anscombe %>%
-  pivot_longer(everything(),
-    names_pattern = "(.)(.)", # a "regular expression"- we'll learn about these later
-    names_to = c(".value", "group")
-  ) 
-# A tibble: 44 x 3
-   group     x     y
-   <chr> <dbl> <dbl>
- 1 1        10  8.04
- 2 2        10  9.14
- 3 3        10  7.46
- 4 4         8  6.58
- 5 1         8  6.95
- 6 2         8  8.14
- 7 3         8  6.77
- 8 4         8  5.76
- 9 1        13  7.58
-10 2        13  8.74
-# … with 34 more rows
+gtex_samples_time_chunk %>%
+ pivot_longer(cols=contains("-201"), # selects columns that contain this
+             names_pattern = "(\\D+)-(\\d+)", # a "regular expression"- we'll learn about these later
+             names_to = c(".value", "year")
+)
+# A tibble: 54 x 6
+   tissue         year   Sept   Oct   Nov   Dec
+   <chr>          <chr> <dbl> <dbl> <dbl> <dbl>
+ 1 Adipose Tissue 2015      6     8    29     0
+ 2 Adipose Tissue 2016     48    36    26    19
+ 3 Adrenal Gland  2015      4     1     3     0
+ 4 Adrenal Gland  2016      5     5     6     2
+ 5 Blood          2015      6    16    89    46
+ 6 Blood          2016      0     0     0     0
+ 7 Blood Vessel   2015     15    12    18     0
+ 8 Blood Vessel   2016     37    37    23    15
+ 9 Brain          2015     77    15   112     0
+10 Brain          2016      7    26    68    23
+# … with 44 more rows
 ```
 
 - We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
@@ -783,118 +824,75 @@ Combining multiple tables with joins
 ===
 type:section
 
-```r
-# install.packages("nycflights13")
-library(nycflights13)
-```
-
 
 Relational data
 =====================================================================
 class: small-code
+incremental: true
 
 - Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
+- When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
+- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
 
 
 ```r
-head(flights)
-# A tibble: 6 x 19
-   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-  <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
-1  2013     1     1      517            515         2      830            819
-2  2013     1     1      533            529         4      850            830
-3  2013     1     1      542            540         2      923            850
-4  2013     1     1      544            545        -1     1004           1022
-5  2013     1     1      554            600        -6      812            837
-6  2013     1     1      554            558        -4      740            728
-# … with 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
-#   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
-#   hour <dbl>, minute <dbl>, time_hour <dttm>
+gtex_sample_data = read_csv("../data/gtex_sample_metadata.csv")
+head(gtex_sample_data,2)
+# A tibble: 1 x 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>  <lgl>    
+1 GTEX-1117F 0003-SM-58Q7G BP-38516 B1        Blood  NA       
 ```
 
 ```r
-head(airports)
-# A tibble: 6 x 8
-  faa   name                          lat   lon   alt    tz dst   tzone         
-  <chr> <chr>                       <dbl> <dbl> <dbl> <dbl> <chr> <chr>         
-1 04G   Lansdowne Airport            41.1 -80.6  1044    -5 A     America/New_Y…
-2 06A   Moton Field Municipal Airp…  32.5 -85.7   264    -6 A     America/Chica…
-3 06C   Schaumburg Regional          42.0 -88.1   801    -6 A     America/Chica…
-4 06N   Randall Airport              41.4 -74.4   523    -5 A     America/New_Y…
-5 09J   Jekyll Island Airport        31.1 -81.4    11    -5 A     America/New_Y…
-6 0A9   Elizabethton Municipal Air…  36.4 -82.2  1593    -5 A     America/New_Y…
-```
-
-***
-
-- for instance, in these data, we have one table that describes flights, one table that describes airports, one that describes planes, and one that describes the weather. 
-
-
-```r
-head(planes)
-# A tibble: 6 x 9
-  tailnum  year type           manufacturer   model  engines seats speed engine 
-  <chr>   <int> <chr>          <chr>          <chr>    <int> <int> <int> <chr>  
-1 N10156   2004 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
-2 N102UW   1998 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
-3 N103US   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
-4 N104UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
-5 N10575   2002 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
-6 N105UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+gtex_subject_data = read_csv("../data/gtex_subject_metadata.csv")
+head(gtex_subject_data,2)
+# A tibble: 2 x 4
+  subject_id sex    age   death           
+  <chr>      <chr>  <chr> <chr>           
+1 GTEX-1117F female 60-69 terminal illness
+2 GTEX-111CU male   50-59 ventilator      
 ```
 
 ```r
-head(weather)
-# A tibble: 6 x 15
-  origin  year month   day  hour  temp  dewp humid wind_dir wind_speed wind_gust
-  <chr>  <int> <int> <int> <int> <dbl> <dbl> <dbl>    <dbl>      <dbl>     <dbl>
-1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4         NA
-2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06        NA
-3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5         NA
-4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7         NA
-5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7         NA
-6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5         NA
-# … with 4 more variables: precip <dbl>, pressure <dbl>, visib <dbl>,
-#   time_hour <dttm>
+gtex_batch_data = read_csv("../data/gtex_batch_metadata.csv")
+head(gtex_batch_data,2)
+# A tibble: 2 x 3
+  batch_id batch_type                                         batch_date
+  <chr>    <chr>                                              <chr>     
+1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 05/02/2013
+2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 08/14/2013
 ```
+
+- We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
 Relational data
 ===
 
-- These data are not independent of each other. A plane that is described in `planes` may be referenced as taking a flight in `flights` between two airports that are described in `airports`.
+- These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for indexing the expression data. 
 
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png">
-</div>
 
-- `flights` connects to `planes` via a single variable, `tailnum`.
-- `flights` connects to `airlines` through the `carrier` variable.
-- `flights` connects to `airports` in two ways: via the `origin` and `dest` variables.
-- `flights` connects to `weather` via `origin` (the location), and `year`, `month`, `day` and `hour` (the time).
+```r
+#//TODO add image, expand description below!
+```
+
+
+- `subject` connects to `sample` via a single variable, `subject_id`.
+- `sample` connects to `batch` through the `batch_id` variable.
+
 
 An example join
 ===
-- Imagine we want to add the full airline name to some columns from `flights`.
+- Imagine we want to add subject add to the sample data
 - We can accomplish that with a **join**:
 
 ```r
-flights %>%
-  select(tailnum, origin, dest, carrier) %>%
-  inner_join(airlines, by="carrier")
-# A tibble: 336,776 x 5
-   tailnum origin dest  carrier name                    
-   <chr>   <chr>  <chr> <chr>   <chr>                   
- 1 N14228  EWR    IAH   UA      United Air Lines Inc.   
- 2 N24211  LGA    IAH   UA      United Air Lines Inc.   
- 3 N619AA  JFK    MIA   AA      American Airlines Inc.  
- 4 N804JB  JFK    BQN   B6      JetBlue Airways         
- 5 N668DN  LGA    ATL   DL      Delta Air Lines Inc.    
- 6 N39463  EWR    ORD   UA      United Air Lines Inc.   
- 7 N516JB  EWR    FLL   B6      JetBlue Airways         
- 8 N829AS  LGA    IAD   EV      ExpressJet Airlines Inc.
- 9 N593JB  JFK    MCO   B6      JetBlue Airways         
-10 N3ALAA  LGA    ORD   AA      American Airlines Inc.  
-# … with 336,766 more rows
+gtex_sample_data %>% 
+  inner_join(gtex_subject_data, by="subject_id")
+# A tibble: 1 x 9
+  subject_id sample_id  batch_id center_id tissue rin_score sex    age   death  
+  <chr>      <chr>      <chr>    <chr>     <chr>  <lgl>     <chr>  <chr> <chr>  
+1 GTEX-1117F 0003-SM-5… BP-38516 B1        Blood  NA        female 60-69 termin…
 ```
 
 Joins
@@ -972,9 +970,9 @@ Specifying the keys
 ===
 
 ```r
-inner_join(airports, flights, by="origin")
+gtex_sample_data %>% inner_join(gtex_subject_data, by="center_id")
 Error: Join columns must be present in data.
-x Problem with `origin`.
+x Problem with `center_id`.
 ```
 - Why does this fail?
 
@@ -983,30 +981,39 @@ Specifying the keys
 - When keys have different names in different dataframes, the syntax to join is:
 
 ```r
-inner_join(airports, flights, by=c("faa"="origin"))
-# A tibble: 336,776 x 26
-   faa   name    lat   lon   alt    tz dst   tzone  year month   day dep_time
-   <chr> <chr> <dbl> <dbl> <dbl> <dbl> <chr> <chr> <int> <int> <int>    <int>
- 1 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      517
- 2 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      554
- 3 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      555
- 4 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      558
- 5 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      559
- 6 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      601
- 7 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      606
- 8 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      607
- 9 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      608
-10 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1      615
-# … with 336,766 more rows, and 14 more variables: sched_dep_time <int>,
-#   dep_delay <dbl>, arr_time <int>, sched_arr_time <int>, arr_delay <dbl>,
-#   carrier <chr>, flight <int>, tailnum <chr>, dest <chr>, air_time <dbl>,
-#   distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
+inner_join(gtex, gtex_subject_data, by=c("Ind"="subject_id"))
+# A tibble: 389,922 x 10
+   Gene  Ind      Blood Heart   Lung Liver NTissues sex    age   death          
+   <chr> <chr>    <dbl> <dbl>  <dbl> <dbl>    <dbl> <chr>  <chr> <chr>          
+ 1 A2ML1 GTEX-11… -0.14 -1.08 NA     -0.66        3 male   50-59 ventilator     
+ 2 A2ML1 GTEX-11… -0.5   0.53  0.76  -0.1         4 female 60-69 sudden but nat…
+ 3 A2ML1 GTEX-11… -0.08 -0.4  -0.26  -0.13        4 male   50-59 sudden but nat…
+ 4 A2ML1 GTEX-11… -0.37  0.11 -0.42  -0.61        4 male   60-69 sudden but nat…
+ 5 A2ML1 GTEX-11…  0.3  -1.11  0.59  -0.12        4 male   20-29 ventilator     
+ 6 A2ML1 GTEX-11…  0.02 -0.47  0.290 -0.66        4 male   60-69 sudden but nat…
+ 7 A2ML1 GTEX-11… -1.07 -0.41  0.67   0.06        4 male   30-39 accident       
+ 8 A2ML1 GTEX-11… -0.27 -0.51  0.13  -0.75        4 female 50-59 sudden but nat…
+ 9 A2ML1 GTEX-12… -0.3   0.53  0.1   -0.48        4 male   60-69 sudden but nat…
+10 A2ML1 GTEX-12… -0.11  0.24  0.96   0.72        4 male   60-69 illness        
+# … with 389,912 more rows
 ```
 
-Exercise: finding planes
+Exercise: finding expression of specific samples
 ===
-Use joins to find the distinct models of airplane that fly into Seattle Tacoma Intl.
+Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year. 
 
+```r
+batch_data_year <- gtex_batch_data %>% 
+  mutate(batch_date=lubridate::mdy(batch_date)) %>%
+  mutate(year=lubridate::year(batch_date)) 
+
+head(batch_data_year, 2)
+# A tibble: 2 x 4
+  batch_id batch_type                                         batch_date  year
+  <chr>    <chr>                                              <date>     <dbl>
+1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 2013-05-02  2013
+2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 2013-08-14  2013
+```
 
 Other joins
 ===
@@ -1031,29 +1038,36 @@ Other joins
 
 Joining on multiple columns
 ===
-- It is often desirable to find matches along more than one column
+- It is often desirable to find matches along more than one column, such as month and year in this example
 
 ```r
-flights %>%
-  select(tailnum, year:day, hour, origin) %>%
-  left_join(weather, by=c("year", "month", "day", "hour", "origin")) %>%
-  head(3)
-# A tibble: 3 x 16
-  tailnum  year month   day  hour origin  temp  dewp humid wind_dir wind_speed
-  <chr>   <int> <int> <int> <dbl> <chr>  <dbl> <dbl> <dbl>    <dbl>      <dbl>
-1 N14228   2013     1     1     5 EWR     39.0  28.0  64.4      260       12.7
-2 N24211   2013     1     1     5 LGA     39.9  25.0  54.8      250       15.0
-3 N619AA   2013     1     1     5 JFK     39.0  27.0  61.6      260       15.0
-# … with 5 more variables: wind_gust <dbl>, precip <dbl>, pressure <dbl>,
-#   visib <dbl>, time_hour <dttm>
+gtex_tissue_month = read_csv("../data/gtex_tissue_month_year.csv") %>%
+  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
+head(gtex_tissue_month,2)
+# A tibble: 2 x 4
+  tissue month  year tiss_samples
+  <chr>  <dbl> <dbl>        <dbl>
+1 Blood      1  2012          138
+2 Blood      1  2013           53
+gtex_tissue_month %>% inner_join(
+  gtex_samples_by_month, by=c("month", "year") ) %>%
+  head(2)
+# A tibble: 2 x 5
+  tissue month  year tiss_samples     n
+  <chr>  <dbl> <dbl>        <dbl> <dbl>
+1 Blood      1  2012          138   489
+2 Blood      1  2013           53   122
 ```
 - This is also possible if the columns have different names
 
 ```r
-flights %>%
-  select(tailnum, year:day, hour, origin) %>%
-  rename(departure = origin) %>%
-  left_join(weather, by=c("year", "month", "day", "hour", "departure"="origin"))
+gtex_long = gtex %>% 
+  pivot_longer(cols=c("Blood","Heart", "Lung","Liver"), 
+               names_to="tissue", values_to="zscore") 
+
+gtex_data_long %>% inner_join(gtex_sample_data, 
+                              by=c("tissue", "Ind"="subject_id")) %>%
+  head(2)
 ```
 
 Join problems
@@ -1066,8 +1080,13 @@ Join problems
   - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
   - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
 
-Exercise: nonexistent planes
+Exercise: missing gene values
 ====
 type: prompt
+
+
+```r
+#//TODO fill in
+```
 
 It appears some of the `tailnum`s in `flights` do not appear in `planes`. Is there something those flights have in common that might help us diagnose the issue? See if you can find some other variable that correlates or somehow explains this missingness. Use any tools you like.
