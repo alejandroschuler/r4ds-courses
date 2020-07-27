@@ -48,7 +48,8 @@ incremental: true
 - Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy=F}
-gtex_samples_by_month = read_csv("../data/gtex_samples_time.csv")
+setwd("../")
+gtex_samples_by_month = read_csv("data/gtex_metadata/gtex_samples_time.csv")
 head(gtex_samples_by_month, 2)
 ```
 
@@ -64,7 +65,7 @@ Exercise: multiple offsets
 type: prompt
 
 ```{r, tidy=F}
-gtex_samples_by_month_small <- gtex_samples_by_month %>% 
+gtex_samples_by_month_small = gtex_samples_by_month %>% 
   filter(month %in% c(3,6,9,12))
 head(gtex_samples_by_month_small, 6)
 
@@ -292,8 +293,8 @@ type: prompt
 
 Let's go back to the GTEx expression data we've been looking at:
 ```{r, message=F, warning=F}
-gtex = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
-head(gtex, 4)
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+head(gtex_data, 4)
 ```
 
 1. Replacing NAs with some other value is a very common operation so it gets its own function: `replace_na()`. Use this function to replace all `NA`s present in any numeric column with `0`s
@@ -308,7 +309,8 @@ Messy data
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
 ```{r, message=FALSE}
-gtex_time_tissue_data <- read_csv("../data/gtex_time_tissue.csv")
+setwd("../")
+gtex_time_tissue_data = read_csv("data/gtex_metadata/gtex_time_tissue.csv")
 head(gtex_time_tissue_data, 3)
 ```
 
@@ -388,13 +390,13 @@ Exercise: cleaning GTEX
 type:prompt
 
 ```{r, message=F, warning=F}
-head(gtex, 3)
+head(gtex_data, 3)
 ```
 
 Use the GTEX data to reproduce the following plot:
 
 ```{r, echo=F, warning=F, fig.width=20, fig.height=6}
-gtex %>%
+gtex_data %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -506,7 +508,7 @@ Use the GTEX data to make the following table:
 
 ```{r, echo=F, message=F}
 print("Number of missing tissues:")
-gtex %>%
+gtex_data %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -527,7 +529,8 @@ incremental: true
 Have a look at the following data. How do you think we might want to make it look?
 
 ```{r, tidy=F, message=FALSE}
-gtex_samples_time_chunk <- read_csv("../data/gtex_samples_tiss_time_chunk.csv")
+setwd("../")
+gtex_samples_time_chunk = read_csv("data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
 head(gtex_samples_time_chunk)
 ```
 
@@ -569,15 +572,18 @@ incremental: true
 - For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
 
 ```{r, message=FALSE}
-gtex_sample_data = read_csv("../data/gtex_sample_metadata.csv")
+setwd("../")
+gtex_sample_data = read_csv("data/gtex_metadata/gtex_sample_metadata.csv")
 head(gtex_sample_data,2)
 ```
 ```{r, message=FALSE}
-gtex_subject_data = read_csv("../data/gtex_subject_metadata.csv")
+setwd("../")
+gtex_subject_data = read_csv("data/gtex_metadata/gtex_subject_metadata.csv")
 head(gtex_subject_data,2)
 ```
 ```{r, message=FALSE}
-gtex_batch_data = read_csv("../data/gtex_batch_metadata.csv")
+setwd("../")
+gtex_batch_data = read_csv("data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
 ```
 
@@ -588,10 +594,7 @@ Relational data
 
 - These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for indexing the expression data. 
 
-```{r} 
-#//TODO add image, expand description below!
-```
-
+["relational_data.png"]
 
 - `subject` connects to `sample` via a single variable, `subject_id`.
 - `sample` connects to `batch` through the `batch_id` variable.
@@ -639,11 +642,11 @@ inner_join(x, y, by="key")
 Duplicate keys
 ===
 ```{r}
-x <- tibble(
+x = tibble(
   key = c(1,2,2,3),
   val_x = c("x1","x2","x3","x4")
 )
-y <- tibble(
+y = tibble(
   key = c(1,2,2,4),
   val_y = c("y1","y2","y3","y4")
 )
@@ -672,14 +675,14 @@ Specifying the keys
 ===
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
-inner_join(gtex, gtex_subject_data, by=c("Ind"="subject_id"))
+inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id"))
 ```
 
 Exercise: finding expression of specific samples
 ===
 Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year. 
 ```{r}
-batch_data_year <- gtex_batch_data %>% 
+batch_data_year = gtex_batch_data %>% 
   mutate(batch_date=lubridate::mdy(batch_date)) %>%
   mutate(year=lubridate::year(batch_date)) 
 
@@ -711,7 +714,8 @@ Joining on multiple columns
 ===
 - It is often desirable to find matches along more than one column, such as month and year in this example
 ```{r, message=FALSE}
-gtex_tissue_month = read_csv("../data/gtex_tissue_month_year.csv") %>%
+setwd("../")
+gtex_tissue_month = read_csv("data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
 gtex_tissue_month %>% inner_join(
@@ -720,7 +724,7 @@ gtex_tissue_month %>% inner_join(
 ```
 - This is also possible if the columns have different names
 ```{r, eval=F}
-gtex_long = gtex %>% 
+gtex_long = gtex_data %>% 
   pivot_longer(cols=c("Blood","Heart", "Lung","Liver"), 
                names_to="tissue", values_to="zscore") 
 
@@ -739,12 +743,9 @@ Join problems
   - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
   - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
 
-Exercise: missing gene values
+Exercise: Looking for variables related to data missingness
 ====
 type: prompt
 
-```{r}
-#//TODO fill in
-```
+It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex_data` to look at the relationship between missing gene values and other variables in the data. 
 
-It appears some of the `tailnum`s in `flights` do not appear in `planes`. Is there something those flights have in common that might help us diagnose the issue? See if you can find some other variable that correlates or somehow explains this missingness. Use any tools you like.
