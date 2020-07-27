@@ -48,8 +48,7 @@ incremental: true
 - Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy=F}
-setwd("../")
-gtex_samples_by_month = read_csv("data/gtex_metadata/gtex_samples_time.csv")
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
 head(gtex_samples_by_month, 2)
 ```
 
@@ -309,8 +308,7 @@ Messy data
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
 ```{r, message=FALSE}
-setwd("../")
-gtex_time_tissue_data = read_csv("data/gtex_metadata/gtex_time_tissue.csv")
+gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
 head(gtex_time_tissue_data, 3)
 ```
 
@@ -529,8 +527,7 @@ incremental: true
 Have a look at the following data. How do you think we might want to make it look?
 
 ```{r, tidy=F, message=FALSE}
-setwd("../")
-gtex_samples_time_chunk = read_csv("data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
+gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
 head(gtex_samples_time_chunk)
 ```
 
@@ -572,18 +569,15 @@ incremental: true
 - For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
 
 ```{r, message=FALSE}
-setwd("../")
-gtex_sample_data = read_csv("data/gtex_metadata/gtex_sample_metadata.csv")
+gtex_sample_data = read_csv("https://raw.githubusercontent.com/erflynn/advance-2020/r4ds-courses/data/gtex_metadata/gtex_sample_metadata.csv")
 head(gtex_sample_data,2)
 ```
 ```{r, message=FALSE}
-setwd("../")
-gtex_subject_data = read_csv("data/gtex_metadata/gtex_subject_metadata.csv")
+gtex_subject_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
 head(gtex_subject_data,2)
 ```
 ```{r, message=FALSE}
-setwd("../")
-gtex_batch_data = read_csv("data/gtex_metadata/gtex_batch_metadata.csv")
+gtex_batch_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
 ```
 
@@ -592,9 +586,12 @@ head(gtex_batch_data,2)
 Relational data
 ===
 
-- These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for indexing the expression data. 
+- These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for accessing expression data.
 
-["relational_data.png"]
+<div align="center">
+<img src="https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/relational_data.png", height=500>
+</div>
+
 
 - `subject` connects to `sample` via a single variable, `subject_id`.
 - `sample` connects to `batch` through the `batch_id` variable.
@@ -714,8 +711,7 @@ Joining on multiple columns
 ===
 - It is often desirable to find matches along more than one column, such as month and year in this example
 ```{r, message=FALSE}
-setwd("../")
-gtex_tissue_month = read_csv("data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
 gtex_tissue_month %>% inner_join(
