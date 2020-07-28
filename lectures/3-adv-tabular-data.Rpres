@@ -28,6 +28,7 @@ Window transformations
 ===
 type: section
 
+
 Offsets
 ===
 incremental: true
@@ -38,17 +39,24 @@ lead(c(1,2,3))
 lag(c(1,2,3))
 ```
 
-- This is most useful to compute offsets
-```{r, tidy=F}
-scores = tibble(
-  day = c(1,2,3,4),
-  score = c(72, 87, 94, 99)
-)
-```
+- This is most useful to compute offsets, which we often do when looking at time series. 
+
+Offsets Example
+====
+incremental: true
+
+- Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy=F}
-scores %>%
-  mutate(daily_improvement = score - lag(score))
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
+head(gtex_samples_by_month, 2)
+```
+
+
+```{r, tidy=F}
+gtex_samples_by_month %>% 
+  mutate(increase_in_samples=n-lag(n)) %>%
+  head(5)
 ```
 
 Exercise: multiple offsets
@@ -56,14 +64,13 @@ Exercise: multiple offsets
 type: prompt
 
 ```{r, tidy=F}
-scores = tibble(
-  week = c(1,1,2,2,3,3,4,4),
-  weekday = c("M","F","M","F","M","F","M","F"),
-  score = c(72, 71, 80, 87, 94, 82, 99, 98)
-)
+gtex_samples_by_month_small = gtex_samples_by_month %>% 
+  filter(month %in% c(3,6,9,12))
+head(gtex_samples_by_month_small, 6)
+
 ```
-Let's say you want to compute the improvement in scores within weekdays from one week to the next
-(i.e. comparing week 1 Monday to week 2 Monday and week 1 Friday to week 2 Friday)
+Let's say you want to compute the change in number of samples within months from one year to the next. We've shortened the data to only include four months each year (March, June, September, and December) to simplify this.
+(i.e. comparing January 2015 to January 2016 and February 2015 to February 2016)
 
 1. Figure out a way to do this using `lead()` or `lag()` in a single `mutate()` statement (hint: check the documentation).
 2. Figure out a different way to do this with `group_by()` instead. Which seems more natural or robust to you? Why?
@@ -83,24 +90,19 @@ slide_vec(numbers, sum, .after=3, .step=2)
 - the `.after` argument specifies how many elements after the "index" element are included in the rolling window
 - `.step` specifies how to move from one index element to the next
 
+
+- `.before` is the backward-looking equivalent of `.after`
+
+
 ***
 
 ![](https://www.oreilly.com/library/view/introduction-to-apache/9781491977132/assets/itaf_0406.png)
 
-Rolling functions
-===
 ```{r, tidy=F}
-profits = tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, 19, 13)
-)
-```
+gtex_samples_by_month %>%
+  mutate(avg_samples_2_month= slide_vec(n, mean, .before=1)) %>%
+  head(2)
 
-- `.before` is the backward-looking equivalent of `.after`
-
-```{r, tidy=F}
-profits %>%
-  mutate(avg_2_day_profit = slide_vec(profit, mean, .before=1))
 ```
 
 Cumulative functions
@@ -113,16 +115,10 @@ incremental: true
 cumsum(c(1,2,3))
 ```
 
-```{r, tidy=F}
-profits = tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, 19, 13)
-)
-```
 
 ```{r, tidy=F}
-profits %>%
-  mutate(best_day_to_date = cumsum(profit))
+gtex_samples_by_month %>%
+  mutate(num_samples_to_date=cumsum(n))
 ```
 
 Turning any function into a cumulative function
@@ -133,8 +129,8 @@ Turning any function into a cumulative function
 ```{r, tidy=F}
 library(slider) # imports slide_vec() function
 
-profits %>%
-  mutate(profit_to_date = slide_vec(profit, sum, .before=Inf))
+gtex_samples_by_month %>%
+  mutate(samples_to_date = slide_vec(n, sum, .before=Inf))
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -143,37 +139,23 @@ Turning any function into a cumulative function
 ===
 - If the function you want to transform takes additional arguments, you can give those to `slide_vec` and it will pass them through for you
 ```{r, tidy=F}
-tibble(
-  day = c(1,2,3,4),
-  profit = c(12, 40, NA, 13)
-) %>%
-  mutate(profit_to_date = slide_vec(profit, mean, .before=Inf, na.rm=T))
+gtex_samples_by_month %>%
+  mutate(avg_samples_by_month = slide_vec(n, mean, .before=Inf, na.rm=T))
 ```
 
-Exercise: maximum temperature to-date
+Exercise: total number of samples in the last twelve months
 ===
 type:prompt
 
 ```{r, warning=F, message=F}
-# install.packages("devtools")
-library("devtools")
-# install_github("Ram-N/weatherData")
-library(weatherData)
-library(lubridate)
-data(SFO2013)
+library(lubridate) # this helps us with dates
 ```
 
 ```{r, tidy=F, message=F}
-sfo = SFO2013 %>%
-  transmute( # mutate, but drops all other columns
-    time = ymd_hms(Time), 
-    temp = Temperature
-  ) %>%
-  group_by(day = date(time)) %>%
-  summarize(max_temp = max(temp))
+gtex_samples_by_month
 ```
 
-Starting with this `sfo` dataframe that I've prepared for you, add a column that has the maximum temperature in the past 30 days relative to the day indicated in that row
+Starting with this `gtex_samples_by_month` dataframe you, add a column that has the total number of samples in the last twelve months relative to the row we are on.
 
 Column-wise operations
 ===
@@ -308,13 +290,13 @@ Exercise: Filtering out or replacing NAs
 ===
 type: prompt
 
+Let's go back to the GTEx expression data we've been looking at:
 ```{r, message=F, warning=F}
-# install.packages('nycflights13')
-library(nycflights13)
-# glimpse(flights)
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+head(gtex_data, 4)
 ```
 
-1. Replacing NAs with some other value is a very common operation so it gets its own function: `replace_na()`. Use this function to replace all `NA`s present in any numeric column of the flights dataset with `0`s
+1. Replacing NAs with some other value is a very common operation so it gets its own function: `replace_na()`. Use this function to replace all `NA`s present in any numeric column with `0`s
 2. Instead of replacing these values, we may want to filter them all out instead. Starting with the original data, use `filter()` and `across()` to remove all rows from the data that have any `NA`s in any column. Recall that `is.na()` checks which elements in a vector are `NA`.
 
 Tidy data: rearranging a data frame
@@ -325,58 +307,45 @@ Messy data
 ============================================================
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
-```{r}
-head(relig_income,2)
+```{r, message=FALSE}
+gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
+head(gtex_time_tissue_data, 3)
 ```
 
-- the values in the table represent how many survey respondents were of each religion and income bracket.
+- the values in the table represent how many samples of that tissue were collected during that year.
 - How could I use ggplot to make this plot? It's hard!
 
 ```{r, echo=F, warning=F}
-library(stringr)
-library(ggridges)
-
-clean = relig_income %>%
-  pivot_longer(-religion, names_to="income", values_to="count") %>%
-  mutate(income = ifelse(income=="Don't know/refused", NA, income)) %>%
-  mutate(
-    income_lower = str_extract(income, '(>150k)|(^\\$[0-9]+)'),
-    income_upper = str_extract(income, '(<\\$10k)|([\\-][0-9]+)'),
-  ) %>%
-  mutate(across(
-    starts_with('income_'), 
-    ~as.numeric(str_extract(.,'[0-9]+'))
-  )) %>%
-  mutate(
-    income_lower = if_else(!is.na(income_upper) & is.na(income_lower), -Inf, income_lower),
-    income_upper = if_else(!is.na(income_lower) & is.na(income_upper), Inf, income_upper)
-  ) %>%
-  mutate(income = fct_reorder(income, income_lower)) %>%
-  group_by(religion) %>%
-  mutate(freq = count/sum(count))
+clean=gtex_time_tissue_data %>%
+  select(-`2017`) %>%
+  pivot_longer(cols=`2011`:`2016`, names_to="year", values_to="n") %>%
+  group_by(tissue) %>%
+  mutate(freq = n/sum(n)) %>%
+  ungroup() %>%
+  rename(count=n)
 ```
 
 ```{r, echo=F, warning=F, fig.width=20, fig.height=5}
-clean %>%
-  filter(religion %in% c("Muslim", "Jewish", "Hindu", "Buddhist", "Catholic", "Atheist", "Mainline Prot")) %>%
+clean %>% 
+  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) %>%
 ggplot() +
-  geom_bar(aes(x=income, y=count, fill=religion), stat='identity')
+  geom_bar(aes(x=year, y=count, fill=tissue), stat='identity')
 ```
 
 Messy data
 ===
 ```{r}
-head(relig_income,3)
+head(gtex_time_tissue_data, 3)
 ```
-- One of the problems with the way these data are formatted is that the income level, which is a property of a particular population, is stuck into the names of the columns. 
+- One of the problems with the way these data are formatted is that the year collected, which is a property of the samples, is stuck into the names of the columns. 
 - Because of this, it's also not obvious what the numbers in the table mean (although we know they are counts)
 
 Tidy data
 ===
 - Here's a better way to organize the data:
 ```{r, echo=F}
-tidy = relig_income %>%
-  pivot_longer(-religion, names_to="income", values_to="count") 
+tidy = gtex_time_tissue_data %>%
+  pivot_longer(-tissue, names_to="year", values_to="count") 
 head(tidy)
 ```
 
@@ -386,7 +355,7 @@ This data is *tidy*. Tidy data follows three precepts:
 2. each "observation" has its own row
 3. each type of observational unit has its own data frame
 
-In our example, each the **observations** are different **populations**, each of which has an associated _religion_, _income_, and _count_. These are the _variables_ that are measured about the population. 
+In our example, each the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
 
 Tidy data
 ===
@@ -394,10 +363,10 @@ Tidy data
 Tidy data is easy to work with.
 
 ```{r, tidy=F, warning=F, fig.width=20, fig.height=5}
-tidy %>%
-    filter(religion %in% c("Muslim", "Jewish", "Hindu", "Buddhist", "Catholic", "Atheist", "Mainline Prot")) %>%
+tidy %>% 
+  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) %>%
 ggplot() +
-  geom_bar(aes(x=income, y=count, fill=religion), stat='identity')
+  geom_bar(aes(x=year, y=count, fill=tissue), stat='identity')
 ```
 
 Tidying data with pivot_longer()
@@ -405,9 +374,9 @@ Tidying data with pivot_longer()
 
 - `tidyr::pivot_longer()` is the function you will most often want to use to tidy your data
 ```{r, tidy=F}
-relig_income %>%
-  pivot_longer(-religion, names_to="income", values_to="count") %>%
-  head(3)
+gtex_time_tissue_data %>%
+  pivot_longer(-tissue, names_to="year", values_to="count") %>%
+  head(2)
 ```
 
 - the three important arguments are: a) a selection of columns, b) the name of the new key column, and c) the name of the new value column
@@ -419,13 +388,13 @@ Exercise: cleaning GTEX
 type:prompt
 
 ```{r, message=F, warning=F}
-gtex = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+head(gtex_data, 3)
 ```
 
 Use the GTEX data to reproduce the following plot:
 
-```{r, echo=F, warning=F, fig.width=20}
-gtex %>%
+```{r, echo=F, warning=F, fig.width=20, fig.height=6}
+gtex_data %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -537,7 +506,7 @@ Use the GTEX data to make the following table:
 
 ```{r, echo=F, message=F}
 print("Number of missing tissues:")
-gtex %>%
+gtex_data %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -557,15 +526,15 @@ incremental: true
 
 Have a look at the following data. How do you think we might want to make it look?
 
-```{r, tidy=F}
-data(anscombe)
-anscombe
+```{r, tidy=F, message=FALSE}
+gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
+head(gtex_samples_time_chunk)
 ```
 
 The problem here is that the column names contain two pieces of data:
 
-1. the coordinate (`x` or `y`)
-2. some group that it came from (`1`, `2`, `3`, or `4`)
+1. the year 
+2. the month it came from
 
 Our use of `pivot_longer` has so far been to extract a single piece of information from the column name
 
@@ -574,11 +543,12 @@ Multi-pivoting
 - Turns out this problem can be tackled too:
 
 ```{r, tidy=F}
-anscombe %>%
-  pivot_longer(everything(),
-    names_pattern = "(.)(.)", # a "regular expression"- we'll learn about these later
-    names_to = c(".value", "group")
-  ) 
+gtex_samples_time_chunk %>%
+ pivot_longer(cols=contains("-201"), # selects columns that contain this
+             names_pattern = "(\\D+)-(\\d+)", # a "regular expression"- we'll learn about these later
+             names_to = c(".value", "year")
+)
+
 ```
 
 - We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
@@ -587,58 +557,54 @@ anscombe %>%
 Combining multiple tables with joins
 ===
 type:section
-```{r}
-# install.packages("nycflights13")
-library(nycflights13)
-```
 
 
 Relational data
 =====================================================================
 class: small-code
+incremental: true
 
 - Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
+- When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
+- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
 
-```{r}
-head(flights)
+```{r, message=FALSE}
+gtex_sample_data = read_csv("https://raw.githubusercontent.com/erflynn/advance-2020/r4ds-courses/data/gtex_metadata/gtex_sample_metadata.csv")
+head(gtex_sample_data,2)
 ```
-```{r}
-head(airports)
+```{r, message=FALSE}
+gtex_subject_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
+head(gtex_subject_data,2)
+```
+```{r, message=FALSE}
+gtex_batch_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
+head(gtex_batch_data,2)
 ```
 
-***
-
-- for instance, in these data, we have one table that describes flights, one table that describes airports, one that describes planes, and one that describes the weather. 
-
-```{r}
-head(planes)
-```
-```{r}
-head(weather)
-```
+- We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
 Relational data
 ===
 
-- These data are not independent of each other. A plane that is described in `planes` may be referenced as taking a flight in `flights` between two airports that are described in `airports`.
+- These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for accessing expression data.
 
 <div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png">
+<img src="https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/relational_data.png", height=500>
 </div>
 
-- `flights` connects to `planes` via a single variable, `tailnum`.
-- `flights` connects to `airlines` through the `carrier` variable.
-- `flights` connects to `airports` in two ways: via the `origin` and `dest` variables.
-- `flights` connects to `weather` via `origin` (the location), and `year`, `month`, `day` and `hour` (the time).
+
+- `subject` connects to `sample` via a single variable, `subject_id`.
+- `sample` connects to `batch` through the `batch_id` variable.
+
 
 An example join
 ===
-- Imagine we want to add the full airline name to some columns from `flights`.
+- Imagine we want to add subject add to the sample data
 - We can accomplish that with a **join**:
 ```{r, tidy=F}
-flights %>%
-  select(tailnum, origin, dest, carrier) %>%
-  inner_join(airlines, by="carrier")
+gtex_sample_data %>% 
+  inner_join(gtex_subject_data, by="subject_id")
+
 ```
 
 Joins
@@ -673,11 +639,11 @@ inner_join(x, y, by="key")
 Duplicate keys
 ===
 ```{r}
-x <- tibble(
+x = tibble(
   key = c(1,2,2,3),
   val_x = c("x1","x2","x3","x4")
 )
-y <- tibble(
+y = tibble(
   key = c(1,2,2,4),
   val_y = c("y1","y2","y3","y4")
 )
@@ -698,7 +664,7 @@ When keys are duplicated, multiple rows can match multiple rows, so each possibl
 Specifying the keys
 ===
 ```{r}
-inner_join(airports, flights, by="origin")
+gtex_sample_data %>% inner_join(gtex_subject_data, by="center_id")
 ```
 - Why does this fail?
 
@@ -706,13 +672,19 @@ Specifying the keys
 ===
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
-inner_join(airports, flights, by=c("faa"="origin"))
+inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id"))
 ```
 
-Exercise: finding planes
+Exercise: finding expression of specific samples
 ===
-Use joins to find the distinct models of airplane that fly into Seattle Tacoma Intl.
+Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year. 
+```{r}
+batch_data_year = gtex_batch_data %>% 
+  mutate(batch_date=lubridate::mdy(batch_date)) %>%
+  mutate(year=lubridate::year(batch_date)) 
 
+head(batch_data_year, 2)
+```
 
 Other joins
 ===
@@ -737,19 +709,24 @@ Other joins
 
 Joining on multiple columns
 ===
-- It is often desirable to find matches along more than one column
-```{r}
-flights %>%
-  select(tailnum, year:day, hour, origin) %>%
-  left_join(weather, by=c("year", "month", "day", "hour", "origin")) %>%
-  head(3)
+- It is often desirable to find matches along more than one column, such as month and year in this example
+```{r, message=FALSE}
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
+head(gtex_tissue_month,2)
+gtex_tissue_month %>% inner_join(
+  gtex_samples_by_month, by=c("month", "year") ) %>%
+  head(2)
 ```
 - This is also possible if the columns have different names
 ```{r, eval=F}
-flights %>%
-  select(tailnum, year:day, hour, origin) %>%
-  rename(departure = origin) %>%
-  left_join(weather, by=c("year", "month", "day", "hour", "departure"="origin"))
+gtex_long = gtex_data %>% 
+  pivot_longer(cols=c("Blood","Heart", "Lung","Liver"), 
+               names_to="tissue", values_to="zscore") 
+
+gtex_data_long %>% inner_join(gtex_sample_data, 
+                              by=c("tissue", "Ind"="subject_id")) %>%
+  head(2)
 ```
 
 Join problems
@@ -762,8 +739,9 @@ Join problems
   - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
   - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
 
-Exercise: nonexistent planes
+Exercise: Looking for variables related to data missingness
 ====
 type: prompt
 
-It appears some of the `tailnum`s in `flights` do not appear in `planes`. Is there something those flights have in common that might help us diagnose the issue? See if you can find some other variable that correlates or somehow explains this missingness. Use any tools you like.
+It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex_data` to look at the relationship between missing gene values and other variables in the data. 
+
