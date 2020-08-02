@@ -874,8 +874,10 @@ flights_dt = flights_fixed %>%
       year, month, day, sched_arr_time_hour, sched_dep_time_minute)
   ) %>% 
   select(ends_with("time"), origin, dest, ends_with("delay"))
-head(flights_dt)
+head(flights_dt,3)
 ```
+
+- *Is there an easy way to automate the repetition here?*
 
 Plotting with dates
 ===
