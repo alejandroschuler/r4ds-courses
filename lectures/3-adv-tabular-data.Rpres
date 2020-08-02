@@ -48,7 +48,7 @@ incremental: true
 - Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy=F}
-gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
 head(gtex_samples_by_month, 2)
 ```
 
@@ -70,11 +70,11 @@ head(gtex_samples_by_month_small, 6)
 
 ```
 Let's say you want to compute the change in number of samples within months from one year to the next. We've shortened the data to only include four months each year (March, June, September, and December) to simplify this.
-(i.e. comparing January 2015 to January 2016 and February 2015 to February 2016)
+(i.e. comparing March 2015 to March 2016 and June 2015 to June 2016)
 
 1. Figure out a way to do this using `lead()` or `lag()` in a single `mutate()` statement (hint: check the documentation).
 2. Figure out a different way to do this with `group_by()` instead. Which seems more natural or robust to you? Why?
-3. In both solutions you end up with some `NA`s since the "week 0" scores are unknown. If we wanted to assume that the week 0 scores would be the same as the week 1 scores, how might we modify our code to reflect that in order to make sure we don't get `NA`s in the result?
+3. In both solutions you end up with some `NA`s since the March 2011 counts are unknown. If we wanted to assume that the March 2011 would be the same as the June 2011, how might we modify our code to reflect that in order to make sure we don't get `NA`s in the result?
 
 Rolling functions
 ===
@@ -308,7 +308,7 @@ Messy data
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
 ```{r, message=FALSE}
-gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
+gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
 head(gtex_time_tissue_data, 3)
 ```
 
@@ -355,7 +355,7 @@ This data is *tidy*. Tidy data follows three precepts:
 2. each "observation" has its own row
 3. each type of observational unit has its own data frame
 
-In our example, each the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
+In our example, each of the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
 
 Tidy data
 ===
@@ -527,7 +527,7 @@ incremental: true
 Have a look at the following data. How do you think we might want to make it look?
 
 ```{r, tidy=F, message=FALSE}
-gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
+gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
 head(gtex_samples_time_chunk)
 ```
 
@@ -569,15 +569,15 @@ incremental: true
 - For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
 
 ```{r, message=FALSE}
-gtex_sample_data = read_csv("https://raw.githubusercontent.com/erflynn/advance-2020/r4ds-courses/data/gtex_metadata/gtex_sample_metadata.csv")
+gtex_sample_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_metadata.csv")
 head(gtex_sample_data,2)
 ```
 ```{r, message=FALSE}
-gtex_subject_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
+gtex_subject_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
 head(gtex_subject_data,2)
 ```
 ```{r, message=FALSE}
-gtex_batch_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
+gtex_batch_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
 ```
 
@@ -589,7 +589,7 @@ Relational data
 - These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for accessing expression data.
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/relational_data.png", height=500>
+<img src="https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/relational_data.png", height=500>
 </div>
 
 
@@ -711,7 +711,7 @@ Joining on multiple columns
 ===
 - It is often desirable to find matches along more than one column, such as month and year in this example
 ```{r, message=FALSE}
-gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
 gtex_tissue_month %>% inner_join(
