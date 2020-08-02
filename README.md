@@ -27,8 +27,8 @@ This course is not graded, nor are there any assignments or homework. The lectur
 No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has only recently gained traction.
 
 You will need to install R (and RStudio) to follow along with the material, or have access to a machine that has that software installed.
-[Follow this link](https://cran.cnr.berkeley.edu/) and click on the appropriate options for your operating system to install R, 
-then do the same to [install RStudio](https://www.rstudio.com/products/rstudio/download/#download).
+[Follow this link](https://cran.rstudio.com/) and click on the appropriate options for your operating system to install R, 
+then do the same to [install RStudio](https://rstudio.com/products/rstudio/download/#download).
 
 ### Learning Goals
 By the end of the course, you will be able to:
@@ -174,7 +174,7 @@ By the end of the course, you will be able to:
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020). Download the `.html` files for the "finished" product or the `.Rpres` files to see how the sausage is made.
+Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020/lectures). Download the `.html` files for the "finished" product or the `.Rpres` files to see how the sausage is made.
 
 # Motivation
 
