@@ -824,67 +824,96 @@ Creating dates from components
 ===
 - Sometimes the dates and times you get are split up (usually in columns)
 ```{r}
-flights %>% 
-  select(year, month, day, hour, minute)
+gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
+gtex_dates %>% 
+  select(contains("iso")) %>%
+  head(5) # look at relevant columns
 ```
 
 Creating dates from components
 ===
 - You can join them into dates or datetimes with `make_date()` or `make_datetime()`
+
+This data frame contains experimental date and time information for GTEx experiments; however, it's in a messy format so we're going to clean it up. This includes the dates of rna isolation ("iso") and expression ("expr") for each sample and the  start/end time for sample going into pax gene fixative ("pax"). Here, the RNA isolation and epxression dates are separated across three columns, we can put this together
 ```{r}
-flights %>% 
-  select(year, month, day, hour, minute) %>% 
-  mutate(departure = make_datetime(year, month, day, hour, minute))
+gtex_dates_clean1 = gtex_dates %>% 
+  mutate(iso_date = make_date(iso_year, iso_month, iso_day),
+         expr_date = make_date(expr_year, expr_month, expr_day))
+gtex_dates_clean1 %>% 
+  select(contains("iso") | contains("expr")) %>%
+  head(3)
+
+# make sure to remove the extra columns we don't need anymore
+# but do this after you've double checked you did it right!
+gtex_dates_clean2 = gtex_dates_clean1 %>% 
+  select(-contains("month"), -contains("year"), -contains("day"))
 ```
 
 Creating dates from components
 ===
-- lets do this for all of the times in the `flights` data frame
+Information about when a sample went into PAXgene fixative and was taken out is in the pax columns, divided into both dates and times.
 ```{r}
-flights %>% 
-  head() %>% 
-  pull(arr_time)
+gtex_dates_clean2 %>% 
+  select(contains("pax")) %>%
+  tail(2)
+gtex_dates_clean2 %>% 
+  tail() %>% 
+  pull(pax_start_time)
 ```
-- note that `arr_time`, `sched_arr_time`, `dep_time`, and `sched_dep_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
-```{r}
-hhmm_to_hr_min = list(
-  "hour" = ~str_sub(., 1,-3) %>% as.numeric(),
-  "minute"= ~str_sub(., -2, -1) %>% as.numeric()
-)
-
-flights_fixed = flights %>%
-  mutate(across(ends_with("_time"), hhmm_to_hr_min))
+- note that `pax_start_time` and `pax_end_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
+```{r, tidy=TRUE}
+gtex_dates_clean3 = gtex_dates_clean2 %>%
+  mutate(pax_start_hr = str_sub(pax_start_time, 1, -3) %>% as.numeric(),
+         pax_start_min = str_sub(pax_start_time, -2, -1) %>% as.numeric(),
+         pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(),
+         pax_end_min = str_sub(pax_end_time, -2, -1) %>% as.numeric())
+gtex_dates_clean3 %>% 
+  select(contains("pax")) %>%
+  tail(2)
+# remove extra columns again
+gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time")) 
 ```
 - Why does `str_sub()` work even though the thing being passed to it is numeric?
 
 Creating dates from components
 ===
-- Now we can aggregate all of these columns into nice `dttm`s
+- Now we can aggregate the columns with PAX timing information into `dttm`s. Here we use the functions `year()`, `month()`, and `day()` to extract this information from the dates (we'll discuss this more in a few slides).
+```{r}
+gtex_dates_clean5 = gtex_dates_clean4 %>% 
+  mutate(
+    pax_start_dt = make_datetime(year(pax_start_date), month(pax_start_date), 
+                                 day(pax_start_date), pax_start_hr, pax_start_min),
+    pax_end_dt = make_datetime(year(pax_start_date), month(pax_end_date), 
+                               day(pax_end_date), pax_end_hr, pax_end_min)
+  )
+gtex_dates_clean5 %>% 
+  select(contains("pax")) %>% 
+  head(3)
+
+# remove columns we just used
+gtex_dates_clean6 <- gtex_dates_clean5 %>% 
+  select(-pax_start_date, -pax_end_date, -contains("hr"), -contains("min"))
+```
+
+Cleaned date data
+====
+Take a look at both the data frame we started with and the one we have cleaned.
+Which do you prefer? Which is clearer?
 
 ```{r}
-flights_dt = flights_fixed %>% 
-  mutate(
-    dep_time = make_datetime(
-      year, month, day, dep_time_hour, dep_time_minute),
-    arr_time = make_datetime(
-      year, month, day, arr_time_hour, arr_time_minute),
-    sched_dep_time = make_datetime(
-      year, month, day, sched_dep_time_hour, sched_dep_time_minute),
-    sched_arr_time = make_datetime(
-      year, month, day, sched_arr_time_hour, sched_dep_time_minute)
-  ) %>% 
-  select(ends_with("time"), origin, dest, ends_with("delay"))
-head(flights_dt)
+head(gtex_dates) 
+head(gtex_dates_clean6)
 ```
 
 Plotting with dates
 ===
-- ggplot2 understands `ddtm`s
+- ggplot2 understands `dates` and `ddtm`s
 ```{r}
-flights_dt %>% 
-  filter(ymd(20130101) < dep_time & dep_time < ymd(20130102)) %>% # get data from jan 1 2013
-ggplot(aes(dep_time)) + # plot how many flights were leaving at each time of day
-  geom_freqpoly(binwidth = 600) # 600 s = 10 minutes
+# get the dates samples were isolated from just 2014
+gtex_dates_clean6 %>% 
+  filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
+ggplot(aes(iso_date)) + 
+  geom_freqpoly(binwidth=10) # bin by every 10 days (if we had dttm, the unit is seconds)
 ```
 
 Accessing dttm elements
@@ -892,26 +921,11 @@ Accessing dttm elements
 - You can pull out individual parts of the date with the accessor functions `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year), `wday()` (day of the week), `hour()`, `minute()`, and `second()`
 
 ```{r}
-flights_dt %>% 
-  mutate(wday = wday(dep_time, label = TRUE)) %>% 
+# look at the dates RNA isolation was perfomed. what do you notice?
+gtex_dates_clean6 %>%  
+  mutate(wday = wday(iso_date, label = TRUE)) %>% 
   ggplot(aes(x = wday)) +
     geom_bar()
-```
-
-Accessing dttm elements
-===
-- You can pull out individual parts of the date with the accessor functions `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year), `wday()` (day of the week), `hour()`, `minute()`, and `second()`
-
-```{r message=FALSE}
-flights_dt %>% 
-  filter(!is.na(dep_time)) %>%
-  mutate(minute = minute(dep_time)) %>% 
-  group_by(minute) %>% 
-  summarise(
-    avg_delay = mean(arr_delay, na.rm = TRUE),
-    n = n()) %>% 
-ggplot(aes(minute, avg_delay)) +
-  geom_line()
 ```
 
 Date-time arithmetic
@@ -987,25 +1001,58 @@ one_pm + days(1) # it knows that one "day" on this day is actually 23 hours, not
 
 Example using periods
 ===
-- some flights appear to arrive before they depart!
+- Let's calculate the length of time samples were in PaxGene fixative and look at how it differs when we look at it as a Duration and a Period. What do you prefer?
 ```{r}
-flights_dt %>% 
-  filter(arr_time < dep_time)  %>% 
-  head()
+gtex_dates_clean6 %>% 
+  mutate(pax_time=pax_end_dt-pax_start_dt)  %>% 
+  mutate(pax_time_d=as.duration(pax_time),
+         pax_time_p=as.period(pax_time)) %>%
+  select(contains("pax")) %>%
+  tail(2)
 ```
-- These are overnight
-- We used the same date information for both the departure and the arrival times, but these flights arrived on the following day. 
+
+You take a look at the data and realize some of the difftimes are negative. What is going on here?
+```{r}
+gtex_dates_clean6 %>% 
+  mutate(pax_time=pax_end_dt-pax_start_dt) %>%
+  filter(pax_time < 0)
+```
+
+Plotting difftimes
+===
+We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
+```{r}
+gtex_dates_clean6 %>% # look at the rest of the data
+  mutate(pax_time=pax_end_dt-pax_start_dt) %>%
+  filter(pax_time > 0) %>%
+  ggplot(aes(x=pax_time))+
+  geom_histogram()
+```
+
 
 Example using periods
 ===
-- We can fix this by adding days(1) to the arrival time of each overnight flight.
+To fix this we add a year to some of the ones with negative times. Which of these work and why?
 ```{r}
-flights_dt <- flights_dt %>% 
-  mutate(
-    overnight = arr_time < dep_time,
-    arr_time = arr_time + days(overnight), # will add 1 day if flight is overnight
-    sched_arr_time = sched_arr_time + days(overnight)
-  )
+gtex_dates_clean6 %>%
+  select(contains("pax")) %>%
+  select(contains("pax")) %>%
+  mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
+  mutate(neg_pax=(pax_time < 0)) %>%
+  mutate(pax_time_adj=pax_time+years(neg_pax)) %>%
+  filter(neg_pax) 
+gtex_dates_clean6 %>% 
+  select(contains("pax")) %>%
+  mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
+  mutate(neg_pax=(pax_time < 0)) %>%
+  mutate(pax_end_dt_adj=pax_end_dt+years(neg_pax)) %>%
+  filter(neg_pax)
+gtex_dates_clean6 %>% 
+  select(contains("pax")) %>%
+  mutate(pax_time_p=as.period(pax_end_dt-pax_start_dt))  %>% 
+  mutate(neg_pax=(pax_time_p < 0)) %>%
+  mutate(pax_time_adj=pax_time_p+years(neg_pax)) %>%
+  filter(neg_pax) 
 ```
 
 Intervals 
@@ -1017,8 +1064,8 @@ mdy("July 4 1776") %--% today()
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 ```{r}
-flights_dt %>% 
-  filter(dep_time %within% (mdy("feb 15 2013") %--% mdy("feb 25 2013"))) %>% 
+gtex_dates_clean6 %>% 
+  filter(iso_date %within% (mdy("feb 15 2013") %--% mdy("feb 14 2014"))) %>% 
   head()
 ```
 
