@@ -200,12 +200,12 @@ Matrices
 
 ```r
 > my_example_matrix
-            [,1]       [,2]       [,3]       [,4]       [,5]
-[1,] -0.34165215  0.0777937  1.5359511 -1.1436811  0.2422800
-[2,]  1.41366526 -0.6612924 -0.9094730  1.8495959  1.7109440
-[3,] -1.24872578  1.4543918  2.7968149 -0.8355057 -0.9212979
-[4,] -0.56336043  0.1043292 -0.2415368 -0.5159278  0.6739276
-[5,]  0.07938115  1.2123115  0.7921458  0.5029306  2.5832109
+           [,1]        [,2]        [,3]        [,4]         [,5]
+[1,]  1.7992587  0.87696964 -0.16547605  0.82450847 -0.008846803
+[2,] -0.3115247  0.88231369 -1.40596585 -0.08131579 -0.429493642
+[3,]  1.0974733 -0.09619306  0.34533365 -0.18048539  0.631634556
+[4,]  0.7740430  0.96231687 -0.60446688  0.33340063  1.238723090
+[5,] -0.4400155 -2.01568867 -0.03540871 -1.21640635 -0.136606301
 ```
 
 - All the usual vector rules apply- in particular, all entries of the matrix must be of the same type
@@ -234,7 +234,7 @@ type: prompt
 ```r
 > # install.packages(nycflights13)
 > library(nycflights13)
-Warning: package 'nycflights13' was built under R version 4.0.2
+Warning: package 'nycflights13' was built under R version 3.5.2
 > (flights = as_tibble(flights))
 # A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
@@ -345,27 +345,27 @@ Similar syntax is used for 2D entities
 
 ```r
 > my_example_matrix[1:3, c(2,2)]
-           [,1]       [,2]
-[1,]  0.0777937  0.0777937
-[2,] -0.6612924 -0.6612924
-[3,]  1.4543918  1.4543918
+            [,1]        [,2]
+[1,]  0.87696964  0.87696964
+[2,]  0.88231369  0.88231369
+[3,] -0.09619306 -0.09619306
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
 > my_example_matrix[1:3,]
-           [,1]       [,2]      [,3]       [,4]       [,5]
-[1,] -0.3416522  0.0777937  1.535951 -1.1436811  0.2422800
-[2,]  1.4136653 -0.6612924 -0.909473  1.8495959  1.7109440
-[3,] -1.2487258  1.4543918  2.796815 -0.8355057 -0.9212979
+           [,1]        [,2]       [,3]        [,4]         [,5]
+[1,]  1.7992587  0.87696964 -0.1654760  0.82450847 -0.008846803
+[2,] -0.3115247  0.88231369 -1.4059658 -0.08131579 -0.429493642
+[3,]  1.0974733 -0.09619306  0.3453337 -0.18048539  0.631634556
 > my_example_matrix[,c(T,T,F,F,T)]
-            [,1]       [,2]       [,3]
-[1,] -0.34165215  0.0777937  0.2422800
-[2,]  1.41366526 -0.6612924  1.7109440
-[3,] -1.24872578  1.4543918 -0.9212979
-[4,] -0.56336043  0.1043292  0.6739276
-[5,]  0.07938115  1.2123115  2.5832109
+           [,1]        [,2]         [,3]
+[1,]  1.7992587  0.87696964 -0.008846803
+[2,] -0.3115247  0.88231369 -0.429493642
+[3,]  1.0974733 -0.09619306  0.631634556
+[4,]  0.7740430  0.96231687  1.238723090
+[5,] -0.4400155 -2.01568867 -0.136606301
 ```
 
 Indexing for data frames
@@ -433,22 +433,22 @@ Comparing tidyverse vs. vector indexing
 +   filter(x>0) %>%
 +   select(x,y)
 # A tibble: 3 x 2
-      x       y
-  <dbl>   <dbl>
-1   0.3  0.0774
-2   0.1 -0.483 
-3  12   -2.02  
+      x      y
+  <dbl>  <dbl>
+1   0.3  0.448
+2   0.1 -1.07 
+3  12    1.10 
 ```
 **Vector indexing**
 
 ```r
 > df[df$x>0, c(1,2)] # df$x takes the column x from the data frame df (details later)
 # A tibble: 3 x 2
-      x       y
-  <dbl>   <dbl>
-1   0.3  0.0774
-2   0.1 -0.483 
-3  12   -2.02  
+      x      y
+  <dbl>  <dbl>
+1   0.3  0.448
+2   0.1 -1.07 
+3  12    1.10 
 ```
 - What are the advantages/disadvantages of each?
 
@@ -640,13 +640,17 @@ Exercise: find rows according to string match
 type: prompt
 
 ```r
-> tibble(
-+   word = words, # words is an example string vector loaded by stringr
-+   i = seq_along(word) # seq_along(x) is the same as 1:length(x)
-+ )
+> drugData <- read.csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
+> print(drugData[3,])
+  uniqueID drugName               condition                        review
+3   159672  Bactrim Urinary Tract Infection "Quick reduction of symptoms"
+  rating      date usefulCount
+3      9 29-Sep-17           3
 ```
-- Make this data fram for yourself
-- Write code that returns all rows with words that contain `"tr"`
+- Dataset from polling patients that have been taking all sorts of prescription drugs
+- Contains columns for: `drugName`, `condition`, `rating`, `date` and `usefulCount` (how many people found the review useful)
+- As well as a very messy column, `review` that contains the patient's free-text review of the drug
+- Write code that returns all rows where someone's review mentions `"vomiting"`
 
 Counting the number of matches
 ===
@@ -660,21 +664,25 @@ Counting the number of matches
 - it pairs naturally with `mutate()`
 
 ```r
-> tibble(
-+     word = words, 
-+     i = seq_along(word) ) %>%
-+   mutate(count_e = str_count(word, "e")) %>%
-+   arrange(desc(count_e)) %>%
+> drugData %>%
++   mutate(count_mention_vomiting = str_count(review, "vomiting")) %>%
++   arrange(desc(count_mention_vomiting)) %>%
++   select(drugName, condition, count_mention_vomiting) %>%
 +   head()
-# A tibble: 6 x 3
-  word           i count_e
-  <chr>      <int>   <int>
-1 experience   292       4
-2 believe       86       3
-3 between       90       3
-4 degree       221       3
-5 difference   229       3
-6 eleven       265       3
+                          drugName                    condition
+1                       Trintellix                   Depression
+2 Ethinyl estradiol / etonogestrel                Birth Control
+3                      Ondansetron              Nausea/Vomiting
+4                       Sertraline Obsessive Compulsive Disorde
+5                      Oseltamivir                    Influenza
+6                     Moxifloxacin                    Pneumonia
+  count_mention_vomiting
+1                      5
+2                      2
+3                      2
+4                      2
+5                      2
+6                      2
 ```
 
 Replacing parts of a string
@@ -683,14 +691,14 @@ Replacing parts of a string
 - `str_replace_all()` lets you do this
 
 ```r
-> str_replace_all(x, "a", "-")
-[1] "-pple"  "b-n-n-" "pe-r"  
+> str_replace_all(drugData$date, "-", "/") %>% head()
+[1] "28/Feb/12" "17/May/09" "29/Sep/17" "5/Mar/17"  "22/Oct/15" "3/Jul/14" 
 ```
 - use `""` as the replacement string to delete the part of the string that matches
 
 ```r
-> str_replace_all(x, "a", "-")
-[1] "-pple"  "b-n-n-" "pe-r"  
+> str_replace_all(drugData$date, "-", "") %>% head()
+[1] "28Feb12" "17May09" "29Sep17" "5Mar17"  "22Oct15" "3Jul14" 
 ```
 <!-- - you can also replace multiple strings at a time using a named vector -->
 <!-- ```{r} -->
@@ -704,21 +712,31 @@ Splitting up a string
 - `str_split()` splits a string into multiple strings
 
 ```r
-> str_split("hello, how are you today?", " ")
+> str_split(drugData$date[1], "-")
 [[1]]
-[1] "hello," "how"    "are"    "you"    "today?"
+[1] "28"  "Feb" "12" 
 ```
 - it returns a list, which is like a vector that can contain other vectors or arbitrary length as elements (more on this later). This allows it to operate on multiple strings at once without mashing the results together
 
 ```r
-> greeting = c("hello, how are you today?", 
-+              "I'm fine, thank you")
-> str_split(greeting, " ")
+> str_split(drugData$date, "-") %>% head()
 [[1]]
-[1] "hello," "how"    "are"    "you"    "today?"
+[1] "28"  "Feb" "12" 
 
 [[2]]
-[1] "I'm"   "fine," "thank" "you"  
+[1] "17"  "May" "09" 
+
+[[3]]
+[1] "29"  "Sep" "17" 
+
+[[4]]
+[1] "5"   "Mar" "17" 
+
+[[5]]
+[1] "22"  "Oct" "15" 
+
+[[6]]
+[1] "3"   "Jul" "14" 
 ```
 - we'll learn more about how to operate on lists in the functional programming lecture
 
@@ -841,13 +859,17 @@ Look-arounds
 ===
 - Sometimes you want to check if a string matches a pattern and then only return part of that pattern.
 - For example, if you're looking for history of disease, you may want the disease, but not the term "history of"
+- `unique()`: returns all unique values from vector
 
 ```r
-> notes = c("... patient has history of MI ...",
-+           "... family history of diabetes ...",
-+           "... patient has nausea ... ")
-> str_extract(notes, "(?<=history of )[a-zA-Z]+(?= )")
-[1] "MI"       "diabetes" NA        
+> unique(str_extract(drugData$review, "(?<=history of )[a-zA-Z]+(?= )"))
+ [1] NA                "health"          "narcotic"        "anxiety"        
+ [5] "depression"      "motion"          "an"              "diabetes"       
+ [9] "major"           "pre"             "heart"           "cluster"        
+[13] "social"          "blood"           "pulmonary"       "early"          
+[17] "frequent"        "drug"            "problems"        "my"             
+[21] "cramps"          "cardiac"         "antidepressants" "Heart"          
+[25] "bipolar"         "stomach"        
 ```
 - `(?=...)`: positive look-ahead assertion. Matches if ... matches at the current input.
 - `(?!...)`: negative look-ahead assertion. Matches if ... does not match at the current input.
@@ -975,7 +997,6 @@ Ordering factor levels
 +     age = mean(age, na.rm = TRUE),
 +     tvhours = mean(tvhours, na.rm = TRUE),
 +     n = n())
-`summarise()` ungrouping output (override with `.groups` argument)
 > ggplot(relig_tv, aes(tvhours, relig)) + 
 +   geom_point()
 ```
@@ -1083,9 +1104,9 @@ Date and time objects in R
 > library(lubridate) # install.package("lubridate")
 
 Attaching package: 'lubridate'
-The following objects are masked from 'package:base':
+The following object is masked from 'package:base':
 
-    date, intersect, setdiff, union
+    date
 ```
 - The data types that we will work with are `date` and `dttm` (date-time, also unhelpfully called POSIXct elsewhere in R).
 
@@ -1095,7 +1116,7 @@ The following objects are masked from 'package:base':
 # A tibble: 1 x 2
   date_time           date      
   <dttm>              <date>    
-1 2020-08-02 12:35:08 2020-08-02
+1 2020-08-02 16:52:18 2020-08-02
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1133,126 +1154,164 @@ Creating dates from components
 - Sometimes the dates and times you get are split up (usually in columns)
 
 ```r
-> flights %>% 
-+   select(year, month, day, hour, minute)
-# A tibble: 336,776 x 5
-    year month   day  hour minute
-   <int> <int> <int> <dbl>  <dbl>
- 1  2013     1     1     5     15
- 2  2013     1     1     5     29
- 3  2013     1     1     5     40
- 4  2013     1     1     5     45
- 5  2013     1     1     6      0
- 6  2013     1     1     5     58
- 7  2013     1     1     6      0
- 8  2013     1     1     6      0
- 9  2013     1     1     6      0
-10  2013     1     1     6      0
-# … with 336,766 more rows
+> gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
+Parsed with column specification:
+cols(
+  subject_id = col_character(),
+  tissue = col_character(),
+  expr_month = col_double(),
+  expr_day = col_double(),
+  expr_year = col_double(),
+  iso_month = col_double(),
+  iso_day = col_double(),
+  iso_year = col_double(),
+  pax_start_date = col_date(format = ""),
+  pax_end_date = col_date(format = ""),
+  pax_start_time = col_character(),
+  pax_end_time = col_character()
+)
+> gtex_dates %>% 
++   select(contains("iso")) %>%
++   head(5) # look at relevant columns
+# A tibble: 5 x 3
+  iso_month iso_day iso_year
+      <dbl>   <dbl>    <dbl>
+1         5      21     2013
+2        10       8     2013
+3        10       8     2013
+4        10       8     2013
+5        10      11     2013
 ```
 
 Creating dates from components
 ===
 - You can join them into dates or datetimes with `make_date()` or `make_datetime()`
 
+This data frame contains experimental date and time information for GTEx experiments; however, it's in a messy format so we're going to clean it up. This includes the dates of rna isolation ("iso") and expression ("expr") for each sample and the  start/end time for sample going into pax gene fixative ("pax"). Here, the RNA isolation and epxression dates are separated across three columns, we can put this together
+
 ```r
-> flights %>% 
-+   select(year, month, day, hour, minute) %>% 
-+   mutate(departure = make_datetime(year, month, day, hour, minute))
-# A tibble: 336,776 x 6
-    year month   day  hour minute departure          
-   <int> <int> <int> <dbl>  <dbl> <dttm>             
- 1  2013     1     1     5     15 2013-01-01 05:15:00
- 2  2013     1     1     5     29 2013-01-01 05:29:00
- 3  2013     1     1     5     40 2013-01-01 05:40:00
- 4  2013     1     1     5     45 2013-01-01 05:45:00
- 5  2013     1     1     6      0 2013-01-01 06:00:00
- 6  2013     1     1     5     58 2013-01-01 05:58:00
- 7  2013     1     1     6      0 2013-01-01 06:00:00
- 8  2013     1     1     6      0 2013-01-01 06:00:00
- 9  2013     1     1     6      0 2013-01-01 06:00:00
-10  2013     1     1     6      0 2013-01-01 06:00:00
-# … with 336,766 more rows
+> gtex_dates_clean1 = gtex_dates %>% 
++   mutate(iso_date = make_date(iso_year, iso_month, iso_day),
++          expr_date = make_date(expr_year, expr_month, expr_day))
+> gtex_dates_clean1 %>% 
++   select(contains("iso") | contains("expr")) %>%
++   head(3)
+Error: `contains("iso") | contains("expr")` must evaluate to column positions or names, not a logical vector
+> 
+> # make sure to remove the extra columns we don't need anymore
+> # but do this after you've double checked you did it right!
+> gtex_dates_clean2 = gtex_dates_clean1 %>% 
++   select(-contains("month"), -contains("year"), -contains("day"))
 ```
 
 Creating dates from components
 ===
-- lets do this for all of the times in the `flights` data frame
+Information about when a sample went into PAXgene fixative and was taken out is in the pax columns, divided into both dates and times.
 
 ```r
-> flights %>% 
-+   head() %>% 
-+   pull(arr_time)
-[1]  830  850  923 1004  812  740
+> gtex_dates_clean2 %>% 
++   select(contains("pax")) %>%
++   tail(2)
+# A tibble: 2 x 4
+  pax_start_date pax_end_date pax_start_time pax_end_time
+  <date>         <date>       <chr>          <chr>       
+1 2013-03-19     2013-03-19   1247           2008        
+2 2012-10-03     2012-10-04   2205           0524        
+> gtex_dates_clean2 %>% 
++   tail() %>% 
++   pull(pax_start_time)
+[1] "0252" "1308" "2029" "0710" "1247" "2205"
 ```
-- note that `arr_time`, `sched_arr_time`, `dep_time`, and `sched_dep_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
+- note that `pax_start_time` and `pax_end_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
 
 ```r
-> hhmm_to_hr_min = list(
-+   "hour" = ~str_sub(., 1,-3) %>% as.numeric(),
-+   "minute"= ~str_sub(., -2, -1) %>% as.numeric()
-+ )
-> 
-> flights_fixed = flights %>%
-+   mutate(across(ends_with("_time"), hhmm_to_hr_min))
+> gtex_dates_clean3 = gtex_dates_clean2 %>% mutate(pax_start_hr = str_sub(pax_start_time, 
++     1, -3) %>% as.numeric(), pax_start_min = str_sub(pax_start_time, -2, -1) %>% 
++     as.numeric(), pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(), pax_end_min = str_sub(pax_end_time, 
++     -2, -1) %>% as.numeric())
+> gtex_dates_clean3 %>% select(contains("pax")) %>% tail(2)
+# A tibble: 2 x 8
+  pax_start_date pax_end_date pax_start_time pax_end_time pax_start_hr
+  <date>         <date>       <chr>          <chr>               <dbl>
+1 2013-03-19     2013-03-19   1247           2008                   12
+2 2012-10-03     2012-10-04   2205           0524                   22
+# … with 3 more variables: pax_start_min <dbl>, pax_end_hr <dbl>,
+#   pax_end_min <dbl>
+> # remove extra columns again
+> gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time"))
 ```
 - Why does `str_sub()` work even though the thing being passed to it is numeric?
 
 Creating dates from components
 ===
-- Now we can aggregate all of these columns into nice `dttm`s
+- Now we can aggregate the columns with PAX timing information into `dttm`s. Here we use the functions `year()`, `month()`, and `day()` to extract this information from the dates (we'll discuss this more in a few slides).
+
+```r
+> gtex_dates_clean5 = gtex_dates_clean4 %>% 
++   mutate(
++     pax_start_dt = make_datetime(year(pax_start_date), month(pax_start_date), 
++                                  day(pax_start_date), pax_start_hr, pax_start_min),
++     pax_end_dt = make_datetime(year(pax_start_date), month(pax_end_date), 
++                                day(pax_end_date), pax_end_hr, pax_end_min)
++   )
+> gtex_dates_clean5 %>% 
++   select(contains("pax")) %>% 
++   head(3)
+# A tibble: 3 x 8
+  pax_start_date pax_end_date pax_start_hr pax_start_min pax_end_hr pax_end_min
+  <date>         <date>              <dbl>         <dbl>      <dbl>       <dbl>
+1 2012-10-15     NA                     NA            NA         NA          NA
+2 2013-06-27     2013-06-28             22            32         14          23
+3 2013-01-28     2013-01-28              5            32         21          22
+# … with 2 more variables: pax_start_dt <dttm>, pax_end_dt <dttm>
+> 
+> # remove columns we just used
+> gtex_dates_clean6 <- gtex_dates_clean5 %>% 
++   select(-pax_start_date, -pax_end_date, -contains("hr"), -contains("min"))
+```
+
+Cleaned date data
+====
+Take a look at both the data frame we started with and the one we have cleaned.
+Which do you prefer? Which is clearer?
 
 
 ```r
-> flights_dt = flights_fixed %>% 
-+   mutate(
-+     dep_time = make_datetime(
-+       year, month, day, dep_time_hour, dep_time_minute),
-+     arr_time = make_datetime(
-+       year, month, day, arr_time_hour, arr_time_minute),
-+     sched_dep_time = make_datetime(
-+       year, month, day, sched_dep_time_hour, sched_dep_time_minute),
-+     sched_arr_time = make_datetime(
-+       year, month, day, sched_arr_time_hour, sched_dep_time_minute)
-+   ) %>% 
-+   select(ends_with("time"), origin, dest, ends_with("delay"))
-> head(flights_dt)
-# A tibble: 6 x 9
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-01-01 05:17:00 2013-01-01 05:15:00 2013-01-01 08:30:00
-2 2013-01-01 05:33:00 2013-01-01 05:29:00 2013-01-01 08:50:00
-3 2013-01-01 05:42:00 2013-01-01 05:40:00 2013-01-01 09:23:00
-4 2013-01-01 05:44:00 2013-01-01 05:45:00 2013-01-01 10:04:00
-5 2013-01-01 05:54:00 2013-01-01 06:00:00 2013-01-01 08:12:00
-6 2013-01-01 05:54:00 2013-01-01 05:58:00 2013-01-01 07:40:00
-# … with 6 more variables: sched_arr_time <dttm>, air_time <dbl>, origin <chr>,
-#   dest <chr>, dep_delay <dbl>, arr_delay <dbl>
+> head(gtex_dates) 
+# A tibble: 6 x 12
+  subject_id tissue expr_month expr_day expr_year iso_month iso_day iso_year
+  <chr>      <chr>       <dbl>    <dbl>     <dbl>     <dbl>   <dbl>    <dbl>
+1 GTEX-11DXZ Blood           1       15      2014         5      21     2013
+2 GTEX-11DXZ Liver           2        9      2014        10       8     2013
+3 GTEX-11DXZ Adren…          2        9      2014        10       8     2013
+4 GTEX-11DXZ Heart           2        9      2014        10       8     2013
+5 GTEX-11DXZ Blood…          1       23      2014        10      11     2013
+6 GTEX-11DXZ Lung            3       22      2014         9      25     2013
+# … with 4 more variables: pax_start_date <date>, pax_end_date <date>,
+#   pax_start_time <chr>, pax_end_time <chr>
+> head(gtex_dates_clean6)
+# A tibble: 6 x 6
+  subject_id tissue iso_date   expr_date  pax_start_dt       
+  <chr>      <chr>  <date>     <date>     <dttm>             
+1 GTEX-11DXZ Blood  2013-05-21 2014-01-15 NA                 
+2 GTEX-11DXZ Liver  2013-10-08 2014-02-09 2013-06-27 22:32:00
+3 GTEX-11DXZ Adren… 2013-10-08 2014-02-09 2013-01-28 05:32:00
+4 GTEX-11DXZ Heart  2013-10-08 2014-02-09 2013-07-01 12:33:00
+5 GTEX-11DXZ Blood… 2013-10-11 2014-01-23 2013-02-14 01:52:00
+6 GTEX-11DXZ Lung   2013-09-25 2014-03-22 2012-10-31 06:31:00
+# … with 1 more variable: pax_end_dt <dttm>
 ```
 
 Plotting with dates
 ===
-- ggplot2 understands `ddtm`s
+- ggplot2 understands `dates` and `ddtm`s
 
 ```r
-> flights_dt %>% 
-+   filter(ymd(20130101) < dep_time & dep_time < ymd(20130102)) %>% # get data from jan 1 2013
-+ ggplot(aes(dep_time)) + # plot how many flights were leaving at each time of day
-+   geom_freqpoly(binwidth = 600) # 600 s = 10 minutes
-```
-
-![plot of chunk unnamed-chunk-94](4-datatypes-io-figure/unnamed-chunk-94-1.png)
-
-Accessing dttm elements
-===
-- You can pull out individual parts of the date with the accessor functions `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year), `wday()` (day of the week), `hour()`, `minute()`, and `second()`
-
-
-```r
-> flights_dt %>% 
-+   mutate(wday = wday(dep_time, label = TRUE)) %>% 
-+   ggplot(aes(x = wday)) +
-+     geom_bar()
+> # get the dates samples were isolated from just 2014
+> gtex_dates_clean6 %>% 
++   filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
++ ggplot(aes(iso_date)) + 
++   geom_freqpoly(binwidth=10) # bin by every 10 days (if we had dttm, the unit is seconds)
 ```
 
 ![plot of chunk unnamed-chunk-95](4-datatypes-io-figure/unnamed-chunk-95-1.png)
@@ -1263,15 +1322,11 @@ Accessing dttm elements
 
 
 ```r
-> flights_dt %>% 
-+   filter(!is.na(dep_time)) %>%
-+   mutate(minute = minute(dep_time)) %>% 
-+   group_by(minute) %>% 
-+   summarise(
-+     avg_delay = mean(arr_delay, na.rm = TRUE),
-+     n = n()) %>% 
-+ ggplot(aes(minute, avg_delay)) +
-+   geom_line()
+> # look at the dates RNA isolation was perfomed. what do you notice?
+> gtex_dates_clean6 %>%  
++   mutate(wday = wday(iso_date, label = TRUE)) %>% 
++   ggplot(aes(x = wday)) +
++     geom_bar()
 ```
 
 ![plot of chunk unnamed-chunk-96](4-datatypes-io-figure/unnamed-chunk-96-1.png)
@@ -1315,7 +1370,7 @@ Duration arithmetic
 
 ```r
 > 2 * (as.duration(usa_age) + dyears(1) + dweeks(12) + dhours(15))
-[1] "15482512800s (~490.61 years)"
+[1] "15482469600s (~490.61 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
@@ -1353,7 +1408,7 @@ Period arithmetic
 
 ```r
 > 2 * (dyears(1) + dweeks(12) + dhours(15))
-[1] "77738400s (~2.46 years)"
+[1] "77695200s (~2.46 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
@@ -1374,38 +1429,91 @@ Period arithmetic
 
 Example using periods
 ===
-- some flights appear to arrive before they depart!
+- Let's calculate the length of time samples were in PaxGene fixative and look at how it differs when we look at it as a Duration and a Period. What do you prefer?
 
 ```r
-> flights_dt %>% 
-+   filter(arr_time < dep_time)  %>% 
-+   head()
-# A tibble: 6 x 9
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-01-01 21:02:00 2013-01-01 21:08:00 2013-01-01 01:46:00
-2 2013-01-01 21:40:00 2013-01-01 21:35:00 2013-01-01 02:10:00
-3 2013-01-01 22:17:00 2013-01-01 22:29:00 2013-01-01 02:49:00
-4 2013-01-01 22:17:00 2013-01-01 21:30:00 2013-01-01 01:40:00
-5 2013-01-01 22:29:00 2013-01-01 21:59:00 2013-01-01 01:49:00
-6 2013-01-01 23:26:00 2013-01-01 21:30:00 2013-01-01 01:31:00
-# … with 6 more variables: sched_arr_time <dttm>, air_time <dbl>, origin <chr>,
-#   dest <chr>, dep_delay <dbl>, arr_delay <dbl>
+> gtex_dates_clean6 %>% 
++   mutate(pax_time=pax_end_dt-pax_start_dt)  %>% 
++   mutate(pax_time_d=as.duration(pax_time),
++          pax_time_p=as.period(pax_time)) %>%
++   select(contains("pax")) %>%
++   tail(2)
+# A tibble: 2 x 5
+  pax_start_dt        pax_end_dt          pax_time pax_time_d          
+  <dttm>              <dttm>              <drtn>   <Duration>          
+1 2013-03-19 12:47:00 2013-03-19 20:08:00 7.35000… 26460s (~7.35 hours)
+2 2012-10-03 22:05:00 2012-10-04 05:24:00 7.31666… 26340s (~7.32 hours)
+# … with 1 more variable: pax_time_p <Period>
 ```
-- These are overnight
-- We used the same date information for both the departure and the arrival times, but these flights arrived on the following day. 
+
+You take a look at the data and realize some of the difftimes are negative. What is going on here?
+
+```r
+> gtex_dates_clean6 %>% 
++   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
++   filter(pax_time < 0)
+# A tibble: 2 x 7
+  subject_id tissue iso_date   expr_date  pax_start_dt       
+  <chr>      <chr>  <date>     <date>     <dttm>             
+1 GTEX-18A7A Stoma… 2014-06-11 2015-03-22 2013-12-31 07:38:00
+2 GTEX-1JMLX Testis 2015-10-06 2015-11-22 2014-12-31 12:39:00
+# … with 2 more variables: pax_end_dt <dttm>, pax_time <drtn>
+```
+
+Plotting difftimes
+===
+We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
+
+```r
+> gtex_dates_clean6 %>% # look at the rest of the data
++   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
++   filter(pax_time > 0) %>%
++   ggplot(aes(x=pax_time))+
++   geom_histogram()
+Don't know how to automatically pick scale for object of type difftime. Defaulting to continuous.
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![plot of chunk unnamed-chunk-109](4-datatypes-io-figure/unnamed-chunk-109-1.png)
+
 
 Example using periods
 ===
-- We can fix this by adding days(1) to the arrival time of each overnight flight.
+To fix this we add a year to some of the ones with negative times. Which of these work and why?
 
 ```r
-> flights_dt <- flights_dt %>% 
-+   mutate(
-+     overnight = arr_time < dep_time,
-+     arr_time = arr_time + days(overnight), # will add 1 day if flight is overnight
-+     sched_arr_time = sched_arr_time + days(overnight)
-+   )
+> gtex_dates_clean6 %>%
++   select(contains("pax")) %>%
++   select(contains("pax")) %>%
++   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
++   mutate(neg_pax=(pax_time < 0)) %>%
++   mutate(pax_time_adj=pax_time+years(neg_pax)) %>%
++   filter(neg_pax) 
+Error in pax_time + years(neg_pax): Arithmetic operators undefined for 'difftime' and 'Period' classes:
+  convert one to numeric or a matching time-span class.
+> gtex_dates_clean6 %>% 
++   select(contains("pax")) %>%
++   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
++   mutate(neg_pax=(pax_time < 0)) %>%
++   mutate(pax_end_dt_adj=pax_end_dt+years(neg_pax)) %>%
++   filter(neg_pax)
+# A tibble: 2 x 5
+  pax_start_dt        pax_end_dt          pax_time   neg_pax pax_end_dt_adj     
+  <dttm>              <dttm>              <drtn>     <lgl>   <dttm>             
+1 2013-12-31 07:38:00 2013-01-01 02:53:00 -8740.75 … TRUE    2014-01-01 02:53:00
+2 2014-12-31 12:39:00 2014-01-01 02:03:00 -8746.60 … TRUE    2015-01-01 02:03:00
+> gtex_dates_clean6 %>% 
++   select(contains("pax")) %>%
++   mutate(pax_time_p=as.period(pax_end_dt-pax_start_dt))  %>% 
++   mutate(neg_pax=(pax_time_p < 0)) %>%
++   mutate(pax_time_adj=pax_time_p+years(neg_pax)) %>%
++   filter(neg_pax) 
+# A tibble: 2 x 5
+  pax_start_dt        pax_end_dt          pax_time_p         neg_pax
+  <dttm>              <dttm>              <Period>           <lgl>  
+1 2013-12-31 07:38:00 2013-01-01 02:53:00 -364d -4H -45M 0S  TRUE   
+2 2014-12-31 12:39:00 2014-01-01 02:03:00 -364d -10H -36M 0S TRUE   
+# … with 1 more variable: pax_time_adj <Period>
 ```
 
 Intervals 
@@ -1420,20 +1528,19 @@ Intervals
 - You can use %within% to see if a date or `dttm` falls in the interval
 
 ```r
-> flights_dt %>% 
-+   filter(dep_time %within% (mdy("feb 15 2013") %--% mdy("feb 25 2013"))) %>% 
+> gtex_dates_clean6 %>% 
++   filter(iso_date %within% (mdy("feb 15 2013") %--% mdy("feb 14 2014"))) %>% 
 +   head()
-# A tibble: 6 x 10
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-02-15 04:54:00 2013-02-15 05:00:00 2013-02-15 06:47:00
-2 2013-02-15 05:16:00 2013-02-15 05:15:00 2013-02-15 08:08:00
-3 2013-02-15 05:30:00 2013-02-15 05:30:00 2013-02-15 08:22:00
-4 2013-02-15 05:36:00 2013-02-15 05:45:00 2013-02-15 10:33:00
-5 2013-02-15 05:40:00 2013-02-15 05:40:00 2013-02-15 08:55:00
-6 2013-02-15 05:49:00 2013-02-15 06:00:00 2013-02-15 06:43:00
-# … with 7 more variables: sched_arr_time <dttm>, air_time <dbl>, origin <chr>,
-#   dest <chr>, dep_delay <dbl>, arr_delay <dbl>, overnight <lgl>
+# A tibble: 6 x 6
+  subject_id tissue iso_date   expr_date  pax_start_dt       
+  <chr>      <chr>  <date>     <date>     <dttm>             
+1 GTEX-11DXZ Blood  2013-05-21 2014-01-15 NA                 
+2 GTEX-11DXZ Liver  2013-10-08 2014-02-09 2013-06-27 22:32:00
+3 GTEX-11DXZ Adren… 2013-10-08 2014-02-09 2013-01-28 05:32:00
+4 GTEX-11DXZ Heart  2013-10-08 2014-02-09 2013-07-01 12:33:00
+5 GTEX-11DXZ Blood… 2013-10-11 2014-01-23 2013-02-14 01:52:00
+6 GTEX-11DXZ Lung   2013-09-25 2014-03-22 2012-10-31 06:31:00
+# … with 1 more variable: pax_end_dt <dttm>
 ```
 
 Exercise: first days of the month
@@ -1470,11 +1577,11 @@ cols(
 )
 Warning: 1000 parsing failures.
  row col           expected     actual                                                                                         file
-1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
+1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
+1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
+1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
+1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
+1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
 .... ... .................. .......... ............................................................................................
 See problems(...) for more details.
 ```

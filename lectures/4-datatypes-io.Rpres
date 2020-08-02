@@ -441,14 +441,14 @@ str_subset(x, "e") # compare to x[str_detect(x,"e")]
 Exercise: find rows according to string match
 ===
 type: prompt
-```{r, eval=F}
-tibble(
-  word = words, # words is an example string vector loaded by stringr
-  i = seq_along(word) # seq_along(x) is the same as 1:length(x)
-)
+```{r}
+drugData <- read.csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
+print(drugData[3,])
 ```
-- Make this data fram for yourself
-- Write code that returns all rows with words that contain `"tr"`
+- Dataset from polling patients that have been taking all sorts of prescription drugs
+- Contains columns for: `drugName`, `condition`, `rating`, `date` and `usefulCount` (how many people found the review useful)
+- As well as a very messy column, `review` that contains the patient's free-text review of the drug
+- Write code that returns all rows where someone's review mentions `"vomiting"`
 
 Counting the number of matches
 ===
@@ -459,11 +459,10 @@ str_count(x, "a")
 ```
 - it pairs naturally with `mutate()`
 ```{r}
-tibble(
-    word = words, 
-    i = seq_along(word) ) %>%
-  mutate(count_e = str_count(word, "e")) %>%
-  arrange(desc(count_e)) %>%
+drugData %>%
+  mutate(count_mention_vomiting = str_count(review, "vomiting")) %>%
+  arrange(desc(count_mention_vomiting)) %>%
+  select(drugName, condition, count_mention_vomiting) %>%
   head()
 ```
 
@@ -472,11 +471,11 @@ Replacing parts of a string
 - sometimes you want to remove something from a string or replace it with something else.
 - `str_replace_all()` lets you do this
 ```{r}
-str_replace_all(x, "a", "-")
+str_replace_all(drugData$date, "-", "/") %>% head()
 ```
 - use `""` as the replacement string to delete the part of the string that matches
 ```{r}
-str_replace_all(x, "a", "-")
+str_replace_all(drugData$date, "-", "") %>% head()
 ```
 <!-- - you can also replace multiple strings at a time using a named vector -->
 <!-- ```{r} -->
@@ -489,13 +488,11 @@ Splitting up a string
 ===
 - `str_split()` splits a string into multiple strings
 ```{r}
-str_split("hello, how are you today?", " ")
+str_split(drugData$date[1], "-")
 ```
 - it returns a list, which is like a vector that can contain other vectors or arbitrary length as elements (more on this later). This allows it to operate on multiple strings at once without mashing the results together
 ```{r}
-greeting = c("hello, how are you today?", 
-             "I'm fine, thank you")
-str_split(greeting, " ")
+str_split(drugData$date, "-") %>% head()
 ```
 - we'll learn more about how to operate on lists in the functional programming lecture
 
@@ -595,11 +592,9 @@ Look-arounds
 ===
 - Sometimes you want to check if a string matches a pattern and then only return part of that pattern.
 - For example, if you're looking for history of disease, you may want the disease, but not the term "history of"
-```{r}
-notes = c("... patient has history of MI ...",
-          "... family history of diabetes ...",
-          "... patient has nausea ... ")
-str_extract(notes, "(?<=history of )[a-zA-Z]+(?= )")
+- `unique()`: returns all unique values from vector
+```{r} 
+unique(str_extract(drugData$review, "(?<=history of )[a-zA-Z]+(?= )"))
 ```
 - `(?=...)`: positive look-ahead assertion. Matches if ... matches at the current input.
 - `(?!...)`: negative look-ahead assertion. Matches if ... does not match at the current input.
