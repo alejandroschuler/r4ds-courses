@@ -608,3 +608,13 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 Your result should look like:
 
 ![plot of chunk unnamed-chunk-45](1-r-basics-figure/unnamed-chunk-45-1.png)
+
+RStudio Pro-tip: multicursors
+===
+
+- RStudio's script pane supports multi-cursors! Hold `alt` and drag your mouse up and down 
+- You can also set a keyboard shortcut for `quick add next`
+- These features make it much easier to rename variables, etc.
+- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
+- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
+
