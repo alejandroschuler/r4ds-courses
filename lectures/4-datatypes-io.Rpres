@@ -10,7 +10,7 @@ height: 1050
 ## better font size for slides
 library(tidyverse)
 theme_set(theme_grey(base_size = 22))
-opts_chunk$set(collapse=TRUE,tidy=FALSE,prompt=TRUE,comment=NA,cache=FALSE)
+opts_chunk$set(collapse=TRUE,tidy=FALSE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
 
@@ -185,17 +185,16 @@ Exercise: coercing a data frame to matrix
 ========================================================
 type: prompt
 
-```{r}
-# install.packages(nycflights13)
-library(nycflights13)
-(flights = as_tibble(flights))
+```{r message=FALSE, warning=FALSE}
+gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
+head(gtex_data)
 ```
 
-Convert `flights` into a matrix and find out what type it is. Does this make sense?
+Convert this dataset into a matrix and find out what type it is. Does this make sense?
 
-Subsetting a vector
+Indexing a vector
 ========================================================
-- We can get parts of a vector out by subsetting it. This is like `filter()`ing a data frame, but it looks a little different with vectors. We use `[ ]` with an index vector inside the brackets
+- We can get parts of a vector out by indexing it. This is like `filter()`ing a data frame, but it looks a little different with vectors. We use `[ ]` with an index vector inside the brackets
 ```{r}
 x <- c(0.3, 0.1, -5, 12)
 ```
@@ -270,10 +269,6 @@ my_example_matrix[,c(T,T,F,F,T)]
 
 Indexing for data frames
 ===
-```{r}
-gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt") 
-```
-
 - Data frames can be indexed like matrices:
 ```{r}
 gtex_data[1:5, c(2,3)]
@@ -442,8 +437,8 @@ Exercise: find rows according to string match
 ===
 type: prompt
 ```{r}
-drugData <- read.csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
-print(drugData[3,])
+drugs <- read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
+head(drugs)
 ```
 - Dataset from polling patients that have been taking all sorts of prescription drugs
 - Contains columns for: `drugName`, `condition`, `rating`, `date` and `usefulCount` (how many people found the review useful)
@@ -459,23 +454,27 @@ str_count(x, "a")
 ```
 - it pairs naturally with `mutate()`
 ```{r}
-drugData %>%
-  mutate(count_mention_vomiting = str_count(review, "vomiting")) %>%
-  arrange(desc(count_mention_vomiting)) %>%
-  select(drugName, condition, count_mention_vomiting) %>%
+drugs %>%
+  mutate(n_vomiting = str_count(review, "vomiting")) %>%
+  arrange(desc(n_vomiting)) %>%
+  select(drugName, condition, n_vomiting) %>%
   head()
 ```
 
 Replacing parts of a string
 ===
 - sometimes you want to remove something from a string or replace it with something else.
+```{r}
+drugs$date %>% head()
+```
+
 - `str_replace_all()` lets you do this
 ```{r}
-str_replace_all(drugData$date, "-", "/") %>% head()
+str_replace_all(drugs$date, "-", "/") %>% head()
 ```
 - use `""` as the replacement string to delete the part of the string that matches
 ```{r}
-str_replace_all(drugData$date, "-", "") %>% head()
+str_replace_all(drugs$date, "-", "") %>% head()
 ```
 <!-- - you can also replace multiple strings at a time using a named vector -->
 <!-- ```{r} -->
@@ -488,11 +487,11 @@ Splitting up a string
 ===
 - `str_split()` splits a string into multiple strings
 ```{r}
-str_split(drugData$date[1], "-")
+str_split(drugs$date[1], "-")
 ```
 - it returns a list, which is like a vector that can contain other vectors or arbitrary length as elements (more on this later). This allows it to operate on multiple strings at once without mashing the results together
 ```{r}
-str_split(drugData$date, "-") %>% head()
+str_split(drugs$date, "-") %>% head()
 ```
 - we'll learn more about how to operate on lists in the functional programming lecture
 
@@ -581,20 +580,13 @@ emails = c("karina@stanford.edu", "nathalie@gmail.com", "carlos@kp.org")
 str_extract(emails, "@.*")
 ```
 
-Exercise: domain names
-===
-```{r}
-emails = c("karina@stanford.edu", "nathalie@gmail.com", "carlos@kp.org")
-```
-Get the first part of the domain name out of these email addresses (for instance `kp` from `carlos@kp.org`)
-
 Look-arounds
 ===
 - Sometimes you want to check if a string matches a pattern and then only return part of that pattern.
 - For example, if you're looking for history of disease, you may want the disease, but not the term "history of"
 - `unique()`: returns all unique values from vector
 ```{r} 
-unique(str_extract(drugData$review, "(?<=history of )[a-zA-Z]+(?= )"))
+unique(str_extract(drugs$review, "(?<=history of )[a-zA-Z]+(?= )"))
 ```
 - `(?=...)`: positive look-ahead assertion. Matches if ... matches at the current input.
 - `(?!...)`: negative look-ahead assertion. Matches if ... does not match at the current input.
@@ -784,7 +776,7 @@ Date and time objects in R
 ===
 - Dates and times are not well captured as strings (since you can't do math with them) or as numbers (since date-time arithmetic is irregular), so they need their own data type
 - we'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(lubridate) # install.package("lubridate")
 ```
 - The data types that we will work with are `date` and `dttm` (date-time, also unhelpfully called POSIXct elsewhere in R).
@@ -818,7 +810,7 @@ ymd(x)
 Creating dates from components
 ===
 - Sometimes the dates and times you get are split up (usually in columns)
-```{r}
+```{r message=FALSE}
 gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
 gtex_dates %>% 
   select(contains("iso")) %>%
@@ -829,11 +821,11 @@ Creating dates from components
 ===
 - You can join them into dates or datetimes with `make_date()` or `make_datetime()`
 
-This data frame contains experimental date and time information for GTEx experiments; however, it's in a messy format so we're going to clean it up. This includes the dates of rna isolation ("iso") and expression ("expr") for each sample and the  start/end time for sample going into pax gene fixative ("pax"). Here, the RNA isolation and epxression dates are separated across three columns, we can put this together
+This data frame contains experimental date and time information for GTEx experiments; however, it's in a messy format so we're going to clean it up. This includes the dates of rna isolation ("iso") and expression ("expr") for each sample and the  start/end time for sample going into pax gene fixative ("pax"). Here, the RNA isolation and expression dates are separated across three columns, we can put this together
 ```{r}
 gtex_dates_clean1 = gtex_dates %>% 
   mutate(iso_date = make_date(iso_year, iso_month, iso_day),
-         expr_date = make_date(expr_year, expr_month, expr_day))
+         expr_date = make_date(expr_year, expr_month, expr_day)) 
 gtex_dates_clean1 %>% 
   select(contains("iso") | contains("expr")) %>%
   head(3)
@@ -851,24 +843,18 @@ Information about when a sample went into PAXgene fixative and was taken out is 
 gtex_dates_clean2 %>% 
   select(contains("pax")) %>%
   tail(2)
-gtex_dates_clean2 %>% 
-  tail() %>% 
-  pull(pax_start_time)
 ```
 - note that `pax_start_time` and `pax_end_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
-```{r, tidy=TRUE}
+```{r, tidy=F}
 gtex_dates_clean3 = gtex_dates_clean2 %>%
   mutate(pax_start_hr = str_sub(pax_start_time, 1, -3) %>% as.numeric(),
          pax_start_min = str_sub(pax_start_time, -2, -1) %>% as.numeric(),
          pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(),
          pax_end_min = str_sub(pax_end_time, -2, -1) %>% as.numeric())
-gtex_dates_clean3 %>% 
-  select(contains("pax")) %>%
-  tail(2)
+gtex_dates_clean %>% select(contains("pax")) %>% tail(2)
 # remove extra columns again
 gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time")) 
 ```
-- Why does `str_sub()` work even though the thing being passed to it is numeric?
 
 Creating dates from components
 ===
@@ -876,10 +862,12 @@ Creating dates from components
 ```{r}
 gtex_dates_clean5 = gtex_dates_clean4 %>% 
   mutate(
-    pax_start_dt = make_datetime(year(pax_start_date), month(pax_start_date), 
-                                 day(pax_start_date), pax_start_hr, pax_start_min),
-    pax_end_dt = make_datetime(year(pax_start_date), month(pax_end_date), 
-                               day(pax_end_date), pax_end_hr, pax_end_min)
+    pax_start_dt = make_datetime(
+      year(pax_start_date), month(pax_start_date), day(pax_start_date),
+      pax_start_hr, pax_start_min),
+    pax_end_dt = make_datetime(
+      year(pax_start_date), month(pax_end_date), day(pax_end_date), 
+      pax_end_hr, pax_end_min)
   )
 gtex_dates_clean5 %>% 
   select(contains("pax")) %>% 
@@ -899,8 +887,6 @@ Which do you prefer? Which is clearer?
 head(gtex_dates) 
 head(gtex_dates_clean6)
 ```
-
-- *Is there an easy way to automate the repetition here?*
 
 Plotting with dates
 ===
@@ -1012,7 +998,8 @@ You take a look at the data and realize some of the difftimes are negative. What
 ```{r}
 gtex_dates_clean6 %>% 
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
-  filter(pax_time < 0)
+  filter(pax_time < 0) %>%
+  select(pax_start_dt, pax_end_dt, pax_time)
 ```
 
 Plotting difftimes
@@ -1029,21 +1016,26 @@ gtex_dates_clean6 %>% # look at the rest of the data
 
 Example using periods
 ===
+type: prompt
+
 To fix this we add a year to some of the ones with negative times. Which of these work and why?
-```{r}
+```{r, eval=F}
 gtex_dates_clean6 %>%
-  select(contains("pax")) %>%
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
   mutate(pax_time_adj=pax_time+years(neg_pax)) %>%
   filter(neg_pax) 
+```
+```{r, eval=F}
 gtex_dates_clean6 %>% 
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
   mutate(pax_end_dt_adj=pax_end_dt+years(neg_pax)) %>%
   filter(neg_pax)
+```
+```{r, eval=F}
 gtex_dates_clean6 %>% 
   select(contains("pax")) %>%
   mutate(pax_time_p=as.period(pax_end_dt-pax_start_dt))  %>% 
@@ -1068,10 +1060,8 @@ gtex_dates_clean6 %>%
 
 Exercise: first days of the month
 ===
-Create a vector of dates giving the first day of every month in 2015. Create a vector of dates giving the first day of every month in the current year.
+type:prompt
 
-Answer: first days of the month
-===
 Create a vector of dates giving the first day of every month in 2015. Create a vector of dates giving the first day of every month in the current year.
 
 lubridate cheat sheet
