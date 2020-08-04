@@ -48,14 +48,14 @@ incremental: true
 - Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy=F}
-gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
 head(gtex_samples_by_month, 2)
 ```
 
 
 ```{r, tidy=F}
 gtex_samples_by_month %>% 
-  mutate(increase_in_samples=n-lag(n)) %>%
+  mutate(increase_in_samples=num_samples-lag(num_samples)) %>%
   head(5)
 ```
 
@@ -100,7 +100,7 @@ slide_vec(numbers, sum, .after=3, .step=2)
 
 ```{r, tidy=F}
 gtex_samples_by_month %>%
-  mutate(avg_samples_2_month= slide_vec(n, mean, .before=1)) %>%
+  mutate(avg_samples_2_month= slide_vec(num_samples, mean, .before=1)) %>%
   head(2)
 
 ```
@@ -118,7 +118,7 @@ cumsum(c(1,2,3))
 
 ```{r, tidy=F}
 gtex_samples_by_month %>%
-  mutate(num_samples_to_date=cumsum(n))
+  mutate(num_samples_to_date=cumsum(num_samples))
 ```
 
 Turning any function into a cumulative function
@@ -130,7 +130,7 @@ Turning any function into a cumulative function
 library(slider) # imports slide_vec() function
 
 gtex_samples_by_month %>%
-  mutate(samples_to_date = slide_vec(n, sum, .before=Inf))
+  mutate(samples_to_date = slide_vec(num_samples, sum, .before=Inf))
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -140,7 +140,7 @@ Turning any function into a cumulative function
 - If the function you want to transform takes additional arguments, you can give those to `slide_vec` and it will pass them through for you
 ```{r, tidy=F}
 gtex_samples_by_month %>%
-  mutate(avg_samples_by_month = slide_vec(n, mean, .before=Inf, na.rm=T))
+  mutate(avg_samples_by_month = slide_vec(num_samples, mean, .before=Inf, na.rm=T))
 ```
 
 Exercise: total number of samples in the last twelve months
@@ -592,6 +592,7 @@ head(gtex_batch_data,2)
 
 We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
+
 Relational data
 ===
 
@@ -606,9 +607,28 @@ Relational data
 - `sample` connects to `batch` through the `batch_id` variable.
 
 
+Relational + tidy data
+===
+incremental: true
+For the expression data, we have been using the `gtex_data` expression data frame:
+```{r, message=FALSE}
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+gtex_data %>% head(2)
+```
+
+The expression data on the previous slide is formatted slightly differently:
+```{r, message=FALSE}
+gtex_expression = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_expression.csv")
+gtex_expression %>% head(2) # note: sample_id replaces Ind + tissue
+```
+What makes this data tidy when the other is not? (You'll notice that a `pivot` helped convert between the two.)
+```{r}
+gtex_data %>% pivot_longer(Blood:Liver, names_to="tissue", values_to="zscore") %>% head(2)
+```
+
 An example join
 ===
-- Imagine we want to add subject add to the sample data
+- Imagine we want to add subject information to the sample data
 - We can accomplish that with a **join**:
 ```{r, tidy=F}
 gtex_sample_data %>% 
@@ -681,12 +701,17 @@ Specifying the keys
 ===
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
-inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id"))
+head(gtex_data,2)
+head(gtex_subject_data,2)
+
+inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id")) %>% head(5)
 ```
+Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subject_data`).
+
 
 Exercise: finding expression of specific samples
 ===
-Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year. 
+Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year (we'll go over how this worked in the next lecture). 
 ```{r}
 batch_data_year = gtex_batch_data %>% 
   mutate(batch_date=lubridate::mdy(batch_date)) %>%
@@ -694,6 +719,8 @@ batch_data_year = gtex_batch_data %>%
 
 head(batch_data_year, 2)
 ```
+
+Note that you'll have to join to other data frames the `sample` data frame to put this together.
 
 Other joins
 ===
@@ -718,24 +745,35 @@ Other joins
 
 Joining on multiple columns
 ===
-- It is often desirable to find matches along more than one column, such as month and year in this example
+- It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
 ```{r, message=FALSE}
-gtex_tissue_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
-gtex_tissue_month %>% inner_join(
-  gtex_samples_by_month, by=c("month", "year") ) %>%
-  head(2)
+
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv") %>%
+  rename(total_num_samples=num_samples)
+head(gtex_samples_by_month, 2)
+
+gtex_tissue_month %>% 
+  inner_join(gtex_samples_by_month, by=c("month", "year") ) %>%
+  head(5)
 ```
-- This is also possible if the columns have different names
-```{r, eval=F}
-gtex_long = gtex_data %>% 
+
+Joining on multiple columns
+===
+
+This is also possible if the columns have different names:
+```{r}
+gtex_data_long = gtex_data %>% 
   pivot_longer(cols=c("Blood","Heart", "Lung","Liver"), 
                names_to="tissue", values_to="zscore") 
+gtex_data_long %>% head(2)
 
-gtex_data_long %>% inner_join(gtex_sample_data, 
-                              by=c("tissue", "Ind"="subject_id")) %>%
-  head(2)
+gtex_sample_data %>% head(2)
+
+
+gtex_data_long %>% inner_join(gtex_sample_data, by=c("tissue", "Ind"="subject_id")) %>%  head(5)
 ```
 
 Join problems
