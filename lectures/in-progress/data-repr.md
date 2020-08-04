@@ -51,14 +51,18 @@ As usual, let's load the tidyverse before proceeding
 
 ```r
 > library(tidyverse)
-── Attaching packages ──────────────────────────────── tidyverse 1.2.1.9000 ──
-✔ tibble  2.0.1       ✔ dplyr   0.8.0.1
-✔ tidyr   0.8.2       ✔ stringr 1.4.0  
-✔ readr   1.3.1       ✔ forcats 0.3.0  
-✔ purrr   0.3.0       
-── Conflicts ──────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
+── Attaching packages ────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+✓ tibble  3.0.3     ✓ dplyr   1.0.0
+✓ tidyr   1.1.0     ✓ stringr 1.4.0
+✓ readr   1.3.1     ✓ forcats 0.5.0
+✓ purrr   0.3.4     
+Warning: package 'tibble' was built under R version 3.6.2
+Warning: package 'tidyr' was built under R version 3.6.2
+Warning: package 'purrr' was built under R version 3.6.2
+Warning: package 'dplyr' was built under R version 3.6.2
+── Conflicts ───────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
 ```
 
 Vector basics
@@ -84,11 +88,9 @@ Why care about vectors?
 
 ```r
 > orange <- as_tibble(Orange)
-> orange %>%
-+   mutate(age_yrs = age/365) %>%
-+   mutate(approx_age_yr = round(age_yrs)) %>%
-+   group_by(approx_age_yr) %>%
-+   summarize(mean_circ = mean(circumference))
+> orange %>% mutate(age_yrs = age/365) %>% mutate(approx_age_yr = round(age_yrs)) %>% 
++     group_by(approx_age_yr) %>% summarize(mean_circ = mean(circumference))
+`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 5 x 2
   approx_age_yr mean_circ
           <dbl>     <dbl>
@@ -107,8 +109,8 @@ Vector basics
 - As we have already seen, vectors can be created with the `c()` function:
 
 ```r
-> shoesize <- c(9, 12, 6, 10, 10, 16, 8, 4) # integer vector
-> people <- c("Vinnie", "Patricia", "Gabriel") # character (string) vector
+> shoesize <- c(9, 12, 6, 10, 10, 16, 8, 4)  # integer vector
+> people <- c("Vinnie", "Patricia", "Gabriel")  # character (string) vector
 ```
 - Elements of a vector can be named
 
@@ -147,7 +149,7 @@ Logical vectors
 ========================================================
 
 ```r
-> 1:10 %% 3 == 0
+> 1:10%%3 == 0
  [1] FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE
 > c(TRUE, TRUE, FALSE, NA)
 [1]  TRUE  TRUE FALSE    NA
@@ -176,8 +178,8 @@ Numeric vectors
 
 ```r
 > sqrt(1:10)
- [1] 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751
- [8] 2.828427 3.000000 3.162278
+ [1] 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751 2.828427
+ [9] 3.000000 3.162278
 ```
 - Numeric vectors can be any number or one of three special values: `Inf` (1/0), `NaN` (0/0), and `NA` (missing)
 - R uses scientific notation so `6.023e23` evaluates as `6.023 * 10^23` 
@@ -213,7 +215,7 @@ The perils of floating point
 > 2 == sqrt(2)^2
 [1] FALSE
 > ## is 1 equal to 1 plus some small number?
-> 1 == 1 + 0.00000000000000000000001
+> 1 == 1 + 1e-23
 [1] TRUE
 ```
 - It is exceptionally difficult to get a computer to manipulate
@@ -222,7 +224,7 @@ approximations to real numbers correctly.
 
 ```r
 > # .Machine$double.eps is the smallest number R can represent
-> near(sqrt(2) ^ 2, 2, tol = .Machine$double.eps^0.5)
+> near(sqrt(2)^2, 2, tol = .Machine$double.eps^0.5)
 [1] TRUE
 ```
 
@@ -291,7 +293,7 @@ How to test for NA
 > x <- c(1:5, NA)
 > x
 [1]  1  2  3  4  5 NA
-> x == NA                                 # this doesn't work!
+> x == NA  # this doesn't work!
 [1] NA NA NA NA NA NA
 > is.na(x)
 [1] FALSE FALSE FALSE FALSE FALSE  TRUE
@@ -307,40 +309,34 @@ Exercise: find the missing values
 ========================================================
 
 ```r
-> library(nycflights13) # install.packages(nycflights13)
+> library(nycflights13)  # install.packages(nycflights13)
 ```
 Count the number of missing values in the `arr_delay` column of the `flights` data frame. Use pipes (`%>%`).
 
 ```r
 > head(flights)
 # A tibble: 6 x 19
-   year month   day dep_time sched_dep_time dep_delay arr_time
-  <int> <int> <int>    <int>          <int>     <dbl>    <int>
-1  2013     1     1      517            515         2      830
-2  2013     1     1      533            529         4      850
-3  2013     1     1      542            540         2      923
-4  2013     1     1      544            545        -1     1004
-5  2013     1     1      554            600        -6      812
-6  2013     1     1      554            558        -4      740
-# … with 12 more variables: sched_arr_time <int>, arr_delay <dbl>,
-#   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
-#   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>,
-#   time_hour <dttm>
+   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+  <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+1  2013     1     1      517            515         2      830            819
+2  2013     1     1      533            529         4      850            830
+3  2013     1     1      542            540         2      923            850
+4  2013     1     1      544            545        -1     1004           1022
+5  2013     1     1      554            600        -6      812            837
+6  2013     1     1      554            558        -4      740            728
+# … with 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+#   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+#   hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 Answer: find the missing values
 ========================================================
 
 ```r
-> flights %>%
-+   pull(arr_delay) %>%
-+   is.na() %>%
-+   sum()
+> flights %>% pull(arr_delay) %>% is.na() %>% sum()
 [1] 9430
 > 
-> flights %>%
-+   mutate(arr_delay_NA = is.na(arr_delay)) %>%
-+   summarize(arr_delay_NA_count = sum(arr_delay_NA))
+> flights %>% mutate(arr_delay_NA = is.na(arr_delay)) %>% summarize(arr_delay_NA_count = sum(arr_delay_NA))
 # A tibble: 1 x 1
   arr_delay_NA_count
                <int>
@@ -363,9 +359,9 @@ Type coercion
 > shoe_gt_8 = shoesize > 8
 > typeof(shoe_gt_8)
 [1] "logical"
-> sum(shoe_gt_8) # under the hood, sum(as.numeric(shoe_gt_8))
+> sum(shoe_gt_8)  # under the hood, sum(as.numeric(shoe_gt_8))
 [1] 5
-> mean(shoe_gt_8) # under the hood, mean(as.numeric(shoe_gt_8))
+> mean(shoe_gt_8)  # under the hood, mean(as.numeric(shoe_gt_8))
 [1] 0.625
 ```
 
@@ -400,9 +396,9 @@ Use these to see if something is a vector or of the desired type. They all retur
 - is_vector()
 
 ```r
-> is_double(0.14) # neat
+> is_double(0.14)  # neat
 [1] TRUE
-> typeof(TRUE) == "logical" # not neat
+> typeof(TRUE) == "logical"  # not neat
 [1] TRUE
 ```
 - these functions are imported by `tidyverse`. Base R has its own equivalents but they are not well designed and sometimes produce surprising results. 
@@ -414,12 +410,12 @@ Matrices
 
 ```r
 > my_example_matrix
-           [,1]       [,2]       [,3]       [,4]       [,5]
-[1,] -0.1705276  2.0346228  1.2582609 -0.4339435 -0.6185047
-[2,]  0.1674869  0.2377977 -0.4842643 -0.3902494 -0.6700841
-[3,]  0.7105252 -0.9722003 -1.6917808  1.5833169 -0.9401041
-[4,]  0.2674724  1.0969980  1.9126580  1.5018373 -0.3843736
-[5,]  0.4126720  1.1492229  0.8527023  2.5953698 -0.5729117
+           [,1]       [,2]         [,3]       [,4]       [,5]
+[1,] -3.4141826  0.6799488 -0.056324595  0.6629517 -1.1858752
+[2,]  0.1073439 -1.5445552 -0.007490734 -0.9062309  1.7838482
+[3,]  0.2946021  1.0319880 -1.238350617 -0.4251414  0.3246974
+[4,]  0.9550544  1.6401434 -0.846256634 -0.6590278  2.2694197
+[5,] -0.6663278  0.3844584 -0.421286952 -0.6398544 -0.4488830
 ```
 
 - All the usual vector rules apply- in particular, all entries of the matrix must be of the same type
@@ -448,22 +444,21 @@ Exercise: coercing a data frame to matrix
 > library(nycflights13)
 > (flights = as_tibble(flights))
 # A tibble: 336,776 x 19
-    year month   day dep_time sched_dep_time dep_delay arr_time
-   <int> <int> <int>    <int>          <int>     <dbl>    <int>
- 1  2013     1     1      517            515         2      830
- 2  2013     1     1      533            529         4      850
- 3  2013     1     1      542            540         2      923
- 4  2013     1     1      544            545        -1     1004
- 5  2013     1     1      554            600        -6      812
- 6  2013     1     1      554            558        -4      740
- 7  2013     1     1      555            600        -5      913
- 8  2013     1     1      557            600        -3      709
- 9  2013     1     1      557            600        -3      838
-10  2013     1     1      558            600        -2      753
-# … with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
-#   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>,
-#   origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-#   minute <dbl>, time_hour <dttm>
+    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+   <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+ 1  2013     1     1      517            515         2      830            819
+ 2  2013     1     1      533            529         4      850            830
+ 3  2013     1     1      542            540         2      923            850
+ 4  2013     1     1      544            545        -1     1004           1022
+ 5  2013     1     1      554            600        -6      812            837
+ 6  2013     1     1      554            558        -4      740            728
+ 7  2013     1     1      555            600        -5      913            854
+ 8  2013     1     1      557            600        -3      709            723
+ 9  2013     1     1      557            600        -3      838            846
+10  2013     1     1      558            600        -2      753            745
+# … with 336,766 more rows, and 11 more variables: arr_delay <dbl>,
+#   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
+#   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 Convert `flights` into a matrix and find out what type it is. Does this make sense?
@@ -482,20 +477,20 @@ Subsetting a vector
 - We can get parts of a vector out by subsetting it. This is like `filter()`ing a data frame, but it looks a little different with vectors. We use `[ ]` with an index vector inside the brackets
 
 ```r
-> x <- c("first"=0.3, "second"=0.1, "third"=-5, "other"=12)
+> x <- c(first = 0.3, second = 0.1, third = -5, other = 12)
 ```
 There are a few ways to subset a vector:
 - with a numeric index vector of integers
 
 ```r
-> x[c(1,3)]
+> x[c(1, 3)]
 first third 
   0.3  -5.0 
 ```
 - with a logical index vector (of the same length)
 
 ```r
-> x[c(T,F,T,T)] # T is short for TRUE, F is short for FALSE
+> x[c(T, F, T, T)]  # T is short for TRUE, F is short for FALSE
 first third other 
   0.3  -5.0  12.0 
 ```
@@ -514,7 +509,7 @@ Indexing with integers
 > x
  first second  third  other 
    0.3    0.1   -5.0   12.0 
-> x[1] # same as x[c(1)] since 1 is already a vector (of length 1)
+> x[1]  # same as x[c(1)] since 1 is already a vector (of length 1)
 first 
   0.3 
 > x[2:4]
@@ -523,7 +518,7 @@ second  third  other
 > x[c(3, 1)]
 third first 
  -5.0   0.3 
-> x[c(1,1,1,1,1,1,4)]
+> x[c(1, 1, 1, 1, 1, 1, 4)]
 first first first first first first other 
   0.3   0.3   0.3   0.3   0.3   0.3  12.0 
 ```
@@ -583,59 +578,57 @@ Indexing 2D objects
 Similar syntax is used for 2D entities
 
 ```r
-> my_example_matrix[1:3, c(2,2)]
+> my_example_matrix[1:3, c(2, 2)]
            [,1]       [,2]
-[1,]  2.0346228  2.0346228
-[2,]  0.2377977  0.2377977
-[3,] -0.9722003 -0.9722003
+[1,]  0.6799488  0.6799488
+[2,] -1.5445552 -1.5445552
+[3,]  1.0319880  1.0319880
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
-> my_example_matrix[1:3,]
-           [,1]       [,2]       [,3]       [,4]       [,5]
-[1,] -0.1705276  2.0346228  1.2582609 -0.4339435 -0.6185047
-[2,]  0.1674869  0.2377977 -0.4842643 -0.3902494 -0.6700841
-[3,]  0.7105252 -0.9722003 -1.6917808  1.5833169 -0.9401041
-> my_example_matrix[,c(T,T,F,F,T)]
+> my_example_matrix[1:3, ]
+           [,1]       [,2]         [,3]       [,4]       [,5]
+[1,] -3.4141826  0.6799488 -0.056324595  0.6629517 -1.1858752
+[2,]  0.1073439 -1.5445552 -0.007490734 -0.9062309  1.7838482
+[3,]  0.2946021  1.0319880 -1.238350617 -0.4251414  0.3246974
+> my_example_matrix[, c(T, T, F, F, T)]
            [,1]       [,2]       [,3]
-[1,] -0.1705276  2.0346228 -0.6185047
-[2,]  0.1674869  0.2377977 -0.6700841
-[3,]  0.7105252 -0.9722003 -0.9401041
-[4,]  0.2674724  1.0969980 -0.3843736
-[5,]  0.4126720  1.1492229 -0.5729117
+[1,] -3.4141826  0.6799488 -1.1858752
+[2,]  0.1073439 -1.5445552  1.7838482
+[3,]  0.2946021  1.0319880  0.3246974
+[4,]  0.9550544  1.6401434  2.2694197
+[5,] -0.6663278  0.3844584 -0.4488830
 ```
 
 Comparing tidyverse vs. vector indexing
 ====================================
 
 ```r
-> df <- tibble(x=x, y=rnorm(4), z=rnorm(4))
+> df <- tibble(x = x, y = rnorm(4), z = rnorm(4))
 ```
 **Tidyverse**
 
 ```r
-> df %>% 
-+   filter(x>0) %>%
-+   select(x,y)
+> df %>% filter(x > 0) %>% select(x, y)
 # A tibble: 3 x 2
       x      y
   <dbl>  <dbl>
-1   0.3 -0.848
-2   0.1  0.363
-3  12    0.206
+1   0.3  0.289
+2   0.1 -0.952
+3  12   -0.172
 ```
 **Vector indexing**
 
 ```r
-> df[df$x>0, c(1,2)] # df$x takes the column x from the data frame df (details later)
+> df[df$x > 0, c(1, 2)]  # df$x takes the column x from the data frame df (details later)
 # A tibble: 3 x 2
       x      y
   <dbl>  <dbl>
-1   0.3 -0.848
-2   0.1  0.363
-3  12    0.206
+1   0.3  0.289
+2   0.1 -0.952
+3  12   -0.172
 ```
 - What are the advantages/disadvantages of each?
 
@@ -657,14 +650,12 @@ Tidyverse vs. vector indexing
 **Tidyverse**
 
 ```r
-> df %>% 
->   filter(x>0) %>%
->   select(x,y)
+> df %>% filter(x > 0) %>% select(x, y)
 ```
 **Vector indexing**
 
 ```r
-> df[df$x>0, c(1,2)] 
+> df[df$x > 0, c(1, 2)]
 ```
 
 Working with strings
@@ -675,7 +666,8 @@ String basics
 ========================================================
 
 ```r
-> c("1234", "sum(c(1,2,3,4))", "Alejandro", "a long string with weird characters!@#$!%>?", "NA", NA) 
+> c("1234", "sum(c(1,2,3,4))", "Alejandro", "a long string with weird characters!@#$!%>?", 
++     "NA", NA)
 [1] "1234"                                       
 [2] "sum(c(1,2,3,4))"                            
 [3] "Alejandro"                                  
@@ -742,7 +734,7 @@ Combining strings
 ```r
 > str_c("prefix-", c("a", "b", "c"), "-suffix")
 [1] "prefix-a-suffix" "prefix-b-suffix" "prefix-c-suffix"
-> str_c(c("1", "2", "3"), c("a", "b", "c"), sep="-")
+> str_c(c("1", "2", "3"), c("a", "b", "c"), sep = "-")
 [1] "1-a" "2-b" "3-c"
 ```
 - and with a single vector, if you set the `collapse` argument
@@ -750,7 +742,7 @@ Combining strings
 ```r
 > name = "Alejandro"
 > x = c("Good afternoon,", name, "how are you?")
-> str_c(x, collapse=" ")
+> str_c(x, collapse = " ")
 [1] "Good afternoon, Alejandro how are you?"
 ```
 
@@ -760,9 +752,9 @@ Subsetting
 - these can be negative numbers to count from the end of the string backwards
 
 ```r
-> str_sub("Hello world", start=1, end=5)
+> str_sub("Hello world", start = 1, end = 5)
 [1] "Hello"
-> str_sub("Hello world", start=-5, end=-1)
+> str_sub("Hello world", start = -5, end = -1)
 [1] "world"
 ```
 - Also works on vectors
@@ -786,7 +778,7 @@ Searching in strings
 - `str_subset()` returns the strings in the vector that match the query
 
 ```r
-> str_subset(x, "e") # compare to x[str_detect(x,"e")]
+> str_subset(x, "e")  # compare to x[str_detect(x,'e')]
 [1] "apple" "pear" 
 ```
 
@@ -839,12 +831,8 @@ Counting the number of matches
 - it pairs naturally with `mutate()`
 
 ```r
-> tibble(
-+     word = words, 
-+     i = seq_along(word) ) %>%
-+   mutate(count_e = str_count(word, "e")) %>%
-+   arrange(desc(count_e)) %>%
-+   head()
+> tibble(word = words, i = seq_along(word)) %>% mutate(count_e = str_count(word, "e")) %>% 
++     arrange(desc(count_e)) %>% head()
 # A tibble: 6 x 3
   word           i count_e
   <chr>      <int>   <int>
@@ -875,7 +863,7 @@ Replacing parts of a string
 
 ```r
 > x <- c("1 house", "2 cars", "3 people")
-> replacement_dictionary = c("1" = "one", "2" = "two", "3" = "three")
+> replacement_dictionary = c(`1` = "one", `2` = "two", `3` = "three")
 > str_replace_all(x, replacement_dictionary)
 [1] "one house"    "two cars"     "three people"
 ```
@@ -892,8 +880,7 @@ Splitting up a string
 - it returns a list, which is like a vector that can contain other vectors or arbitrary length as elements (more on this later). This allows it to operate on multiple strings at once without mashing the results together
 
 ```r
-> greeting = c("hello, how are you today?", 
-+              "I'm fine, thank you")
+> greeting = c("hello, how are you today?", "I'm fine, thank you")
 > str_split(greeting, " ")
 [[1]]
 [1] "hello," "how"    "are"    "you"    "today?"
@@ -1034,9 +1021,7 @@ Exercise: domain names
 Get the first domain names out of these email addresses (for instance `kp` from `carlos@kp.org`)
 
 ```r
-> emails %>%
-+   str_extract("@.*\\.") %>%
-+   str_sub(2,-2)
+> emails %>% str_extract("@.*\\.") %>% str_sub(2, -2)
 [1] "stanford" "gmail"    "kp"      
 ```
 
@@ -1046,9 +1031,8 @@ Look-arounds
 - For example, if you're looking for history of disease, you may want the disease, but not the term "history of"
 
 ```r
-> notes = c("... patient has history of MI ...",
-+           "... family history of diabetes ...",
-+           "... patient has nausea ... ")
+> notes = c("... patient has history of MI ...", "... family history of diabetes ...", 
++     "... patient has nausea ... ")
 > str_extract(notes, "(?<=history of )[a-zA-Z]+(?= )")
 [1] "MI"       "diabetes" NA        
 ```
@@ -1095,10 +1079,8 @@ Factor basics
 - you can make a factor by hand with `factor()`
 
 ```r
-> month_levels <- c(
-+   "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-+   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-+ )
+> month_levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
++     "Oct", "Nov", "Dec")
 > factor(months_vec, levels = month_levels)
 [1] Dec Apr Jan Mar
 Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
@@ -1108,10 +1090,8 @@ Factor levels
 ===
 
 ```r
-> month_levels <- c(
-+   "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-+   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-+ )
+> month_levels <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
++     "Oct", "Nov", "Dec")
 > factor(months_vec, levels = month_levels)
 [1] Dec Apr Jan Mar
 Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
@@ -1128,8 +1108,7 @@ Levels: Apr Dec Jan Mar
 - you can set the order of the levels to be by the order in which they appear in the vector using `fct_inorder()`
 
 ```r
-> factor(months_vec) %>%
-+   fct_inorder()
+> factor(months_vec) %>% fct_inorder()
 [1] Dec Apr Jan Mar
 Levels: Dec Apr Jan Mar
 ```
@@ -1142,26 +1121,24 @@ Example: gss_cat
 ```r
 > gss_cat
 # A tibble: 21,483 x 9
-    year marital     age race  rincome   partyid    relig   denom   tvhours
-   <int> <fct>     <int> <fct> <fct>     <fct>      <fct>   <fct>     <int>
- 1  2000 Never ma…    26 White $8000 to… Ind,near … Protes… Southe…      12
- 2  2000 Divorced     48 White $8000 to… Not str r… Protes… Baptis…      NA
- 3  2000 Widowed      67 White Not appl… Independe… Protes… No den…       2
- 4  2000 Never ma…    39 White Not appl… Ind,near … Orthod… Not ap…       4
- 5  2000 Divorced     25 White Not appl… Not str d… None    Not ap…       1
- 6  2000 Married      25 White $20000 -… Strong de… Protes… Southe…      NA
- 7  2000 Never ma…    36 White $25000 o… Not str r… Christ… Not ap…       3
- 8  2000 Divorced     44 White $7000 to… Ind,near … Protes… Luther…      NA
- 9  2000 Married      44 White $25000 o… Not str d… Protes… Other         0
-10  2000 Married      47 White $25000 o… Strong re… Protes… Southe…       3
+    year marital     age race  rincome    partyid     relig     denom    tvhours
+   <int> <fct>     <int> <fct> <fct>      <fct>       <fct>     <fct>      <int>
+ 1  2000 Never ma…    26 White $8000 to … Ind,near r… Protesta… Souther…      12
+ 2  2000 Divorced     48 White $8000 to … Not str re… Protesta… Baptist…      NA
+ 3  2000 Widowed      67 White Not appli… Independent Protesta… No deno…       2
+ 4  2000 Never ma…    39 White Not appli… Ind,near r… Orthodox… Not app…       4
+ 5  2000 Divorced     25 White Not appli… Not str de… None      Not app…       1
+ 6  2000 Married      25 White $20000 - … Strong dem… Protesta… Souther…      NA
+ 7  2000 Never ma…    36 White $25000 or… Not str re… Christian Not app…       3
+ 8  2000 Divorced     44 White $7000 to … Ind,near d… Protesta… Luthera…      NA
+ 9  2000 Married      44 White $25000 or… Not str de… Protesta… Other          0
+10  2000 Married      47 White $25000 or… Strong rep… Protesta… Souther…       3
 # … with 21,473 more rows
 ```
 
 
 ```r
-> gss_cat %>%
-+   pull(marital) %>%
-+   levels()
+> gss_cat %>% pull(marital) %>% levels()
 [1] "No answer"     "Never married" "Separated"     "Divorced"     
 [5] "Widowed"       "Married"      
 ```
@@ -1172,14 +1149,10 @@ Ordering factor levels
 - For example, imagine you want to explore the average number of hours spent watching TV per day across religions
 
 ```r
-> relig_tv = gss_cat %>%
-+   group_by(relig) %>%
-+   summarise(
-+     age = mean(age, na.rm = TRUE),
-+     tvhours = mean(tvhours, na.rm = TRUE),
-+     n = n())
-> ggplot(relig_tv, aes(tvhours, relig)) + 
-+   geom_point()
+> relig_tv = gss_cat %>% group_by(relig) %>% summarise(age = mean(age, na.rm = TRUE), 
++     tvhours = mean(tvhours, na.rm = TRUE), n = n())
+`summarise()` ungrouping output (override with `.groups` argument)
+> ggplot(relig_tv, aes(tvhours, relig)) + geom_point()
 ```
 
 ![plot of chunk unnamed-chunk-91](data-repr-figure/unnamed-chunk-91-1.png)
@@ -1189,10 +1162,8 @@ Ordering factor levels
 - It would be better if the religions in this plot were ordered according to the number of TV hours
 
 ```r
-> relig_tv %>%
-+   mutate(relig = fct_reorder(relig, tvhours)) %>%
-+ ggplot(aes(tvhours, relig)) + 
-+   geom_point()
+> relig_tv %>% mutate(relig = fct_reorder(relig, tvhours)) %>% ggplot(aes(tvhours, 
++     relig)) + geom_point()
 ```
 
 ![plot of chunk unnamed-chunk-92](data-repr-figure/unnamed-chunk-92-1.png)
@@ -1204,12 +1175,8 @@ Ordering factor levels
 - `fct_rev()` reverses the order
 
 ```r
-> gss_cat %>%
-+   mutate(marital = marital %>% 
-+         fct_infreq() %>% 
-+         fct_rev()) %>%
-+ ggplot(aes(marital)) +
-+   geom_bar()
+> gss_cat %>% mutate(marital = marital %>% fct_infreq() %>% fct_rev()) %>% ggplot(aes(marital)) + 
++     geom_bar()
 ```
 
 ![plot of chunk unnamed-chunk-93](data-repr-figure/unnamed-chunk-93-1.png)
@@ -1218,10 +1185,8 @@ Recoding factor levels
 ===
 
 ```r
-> gss_cat %>% 
-+   group_by(partyid) %>%
-+   summarize(count=n()) %>%
-+   arrange(desc(count))
+> gss_cat %>% group_by(partyid) %>% summarize(count = n()) %>% arrange(desc(count))
+`summarise()` ungrouping output (override with `.groups` argument)
 # A tibble: 10 x 2
    partyid            count
    <fct>              <int>
@@ -1243,22 +1208,14 @@ Recoding factor levels
 ===
 
 ```r
-> gss_cat %>%
-+   mutate(partyid = fct_recode(partyid,
-+     "Republican, strong"    = "Strong republican",
-+     "Republican, weak"      = "Not str republican",
-+     "Independent, near rep" = "Ind,near rep",
-+     "Independent, near dem" = "Ind,near dem",
-+     "Democrat, weak"        = "Not str democrat",
-+     "Democrat, strong"      = "Strong democrat"
-+   )) %>%
-+   pull(partyid) %>%
-+   levels()
- [1] "No answer"             "Don't know"           
- [3] "Other party"           "Republican, strong"   
- [5] "Republican, weak"      "Independent, near rep"
- [7] "Independent"           "Independent, near dem"
- [9] "Democrat, weak"        "Democrat, strong"     
+> gss_cat %>% mutate(partyid = fct_recode(partyid, `Republican, strong` = "Strong republican", 
++     `Republican, weak` = "Not str republican", `Independent, near rep` = "Ind,near rep", 
++     `Independent, near dem` = "Ind,near dem", `Democrat, weak` = "Not str democrat", 
++     `Democrat, strong` = "Strong democrat")) %>% pull(partyid) %>% levels()
+ [1] "No answer"             "Don't know"            "Other party"          
+ [4] "Republican, strong"    "Republican, weak"      "Independent, near rep"
+ [7] "Independent"           "Independent, near dem" "Democrat, weak"       
+[10] "Democrat, strong"     
 ```
 - Levels that you don't mention are left alone
 - You can code multiple old levels to one new level (also see `?fct_collapse`)
@@ -1272,22 +1229,14 @@ Answer: plotting factors over time
 How have the proportions of people identifying as Democrat, Republican, and Independent changed over time? Make a plot to explore. `fct_collapse()` and `geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate parties with their familiar colors.
 
 ```r
-> plot_data = gss_cat %>%
-+   mutate(partyid = fct_collapse(partyid,
-+     Democrat = c("Not str democrat", "Strong democrat"),
-+     Republican = c("Not str republican", "Strong republican"),
-+     Independent = c("Independent", "Ind,near rep", "Ind,near dem"),
-+     Other = c("Other party", "Don't know", "No answer"))) %>%
-+   group_by(partyid, year) %>%
-+   summarize(count = n()) %>%
-+   mutate(proportion = count/sum(count)) 
+> plot_data = gss_cat %>% mutate(partyid = fct_collapse(partyid, Democrat = c("Not str democrat", 
++     "Strong democrat"), Republican = c("Not str republican", "Strong republican"), 
++     Independent = c("Independent", "Ind,near rep", "Ind,near dem"), Other = c("Other party", 
++         "Don't know", "No answer"))) %>% group_by(partyid, year) %>% summarize(count = n()) %>% 
++     mutate(proportion = count/sum(count))
+`summarise()` regrouping output by 'partyid' (override with `.groups` argument)
 > 
-> party_colors = c(
-+   "Democrat" = "blue",
-+   "Republican" = "red",
-+   "Independent" = "purple",
-+   "Other" = "grey"
-+ )
+> party_colors = c(Democrat = "blue", Republican = "red", Independent = "purple", Other = "grey")
 ```
 
 Answer: plotting factors over time
@@ -1295,10 +1244,8 @@ Answer: plotting factors over time
 How have the proportions of people identifying as Democrat, Republican, and Independent changed over time? Make a plot to explore. `geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate parties with their familiar colors.
 
 ```r
-> plot_data %>%
-+ ggplot(aes(x=year, y=proportion, fill=partyid)) + 
-+   geom_bar(position = "fill", stat = "identity") + 
-+   scale_fill_manual(values = party_colors)
+> plot_data %>% ggplot(aes(x = year, y = proportion, fill = partyid)) + geom_bar(position = "fill", 
++     stat = "identity") + scale_fill_manual(values = party_colors)
 ```
 
 ![plot of chunk unnamed-chunk-97](data-repr-figure/unnamed-chunk-97-1.png)
@@ -1313,12 +1260,13 @@ Date and time objects in R
 - we'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type
 
 ```r
-> library(lubridate) # install.package("lubridate")
+> library(lubridate)  # install.package('lubridate')
+Warning: package 'lubridate' was built under R version 3.6.2
 
 Attaching package: 'lubridate'
-The following object is masked from 'package:base':
+The following objects are masked from 'package:base':
 
-    date
+    date, intersect, setdiff, union
 ```
 - The data types that we will work with are `date` and `dttm` (date-time, also unhelpfully called POSIXct elsewhere in R).
 
@@ -1328,7 +1276,7 @@ The following object is masked from 'package:base':
 # A tibble: 1 x 2
   date_time           date      
   <dttm>              <date>    
-1 2019-02-16 15:13:27 2019-02-16
+1 2020-08-01 13:17:56 2020-08-01
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1337,8 +1285,7 @@ Creating dates from a string (or number)
 - Dates:
 
 ```r
-> c(ymd("2017-01-31"), mdy("January 31st, 2017"),
-+   dmy("31-Jan-2017"), ymd(20170131))
+> c(ymd("2017-01-31"), mdy("January 31st, 2017"), dmy("31-Jan-2017"), ymd(20170131))
 [1] "2017-01-31" "2017-01-31" "2017-01-31" "2017-01-31"
 ```
 - Date-times
@@ -1353,8 +1300,8 @@ Creating dates from a string (or number)
 - these also all work on vectors, even if they fromatted heterogenously 
 
 ```r
-> x <- c(20090101, "2009-01-02", "2009 01 03", "2009-1-4",
-+        "2009-1, 5", "Created on 2009 1 6", "200901 !!! 07")
+> x <- c(20090101, "2009-01-02", "2009 01 03", "2009-1-4", "2009-1, 5", "Created on 2009 1 6", 
++     "200901 !!! 07")
 > ymd(x)
 [1] "2009-01-01" "2009-01-02" "2009-01-03" "2009-01-04" "2009-01-05"
 [6] "2009-01-06" "2009-01-07"
@@ -1366,118 +1313,101 @@ Creating dates from components
 - Sometimes the dates and times you get are split up (usually in columns)
 
 ```r
-> flights %>% 
-+   select(year, month, day, hour, minute)
-# A tibble: 336,776 x 5
-    year month   day  hour minute
-   <int> <int> <int> <dbl>  <dbl>
- 1  2013     1     1     5     15
- 2  2013     1     1     5     29
- 3  2013     1     1     5     40
- 4  2013     1     1     5     45
- 5  2013     1     1     6      0
- 6  2013     1     1     5     58
- 7  2013     1     1     6      0
- 8  2013     1     1     6      0
- 9  2013     1     1     6      0
-10  2013     1     1     6      0
-# … with 336,766 more rows
+> gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
+Error in open.connection(con, "rb"): HTTP error 404.
+> gtex_dates %>% select(contains("iso")) %>% head(5)  # look at relevant columns
+Error in eval(lhs, parent, parent): object 'gtex_dates' not found
 ```
 
 Creating dates from components
 ===
 - You can join them into dates or datetimes with `make_date()` or `make_datetime()`
 
+This data frame contains experimental date and time information for GTEx experiments; however, it's in a messy format so we're going to clean it up. This includes the dates of rna isolation ("iso") and expression ("expr") for each sample and the  start/end time for sample going into pax gene fixative ("pax"). Here, the RNA isolation and epxression dates are separated across three columns, we can put this together
+
 ```r
-> flights %>% 
-+   select(year, month, day, hour, minute) %>% 
-+   mutate(departure = make_datetime(year, month, day, hour, minute))
-# A tibble: 336,776 x 6
-    year month   day  hour minute departure          
-   <int> <int> <int> <dbl>  <dbl> <dttm>             
- 1  2013     1     1     5     15 2013-01-01 05:15:00
- 2  2013     1     1     5     29 2013-01-01 05:29:00
- 3  2013     1     1     5     40 2013-01-01 05:40:00
- 4  2013     1     1     5     45 2013-01-01 05:45:00
- 5  2013     1     1     6      0 2013-01-01 06:00:00
- 6  2013     1     1     5     58 2013-01-01 05:58:00
- 7  2013     1     1     6      0 2013-01-01 06:00:00
- 8  2013     1     1     6      0 2013-01-01 06:00:00
- 9  2013     1     1     6      0 2013-01-01 06:00:00
-10  2013     1     1     6      0 2013-01-01 06:00:00
-# … with 336,766 more rows
+> gtex_dates_clean1 = gtex_dates %>% mutate(iso_date = make_date(iso_year, iso_month, 
++     iso_day), expr_date = make_date(expr_year, expr_month, expr_day))
+Error in eval(lhs, parent, parent): object 'gtex_dates' not found
+> gtex_dates_clean1 %>% select(contains("iso") | contains("expr")) %>% head(3)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean1' not found
+> 
+> # make sure to remove the extra columns we don't need anymore but do this after
+> # you've double checked you did it right!
+> gtex_dates_clean2 = gtex_dates_clean1 %>% select(-contains("month"), -contains("year"), 
++     -contains("day"))
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean1' not found
 ```
+
+
 
 Creating dates from components
 ===
-- lets do this for all of the times in the `flights` data frame
+Information about when a sample went into PAXgene fixative and was taken out is in the pax columns, divided into both dates and times.
 
 ```r
-> flights %>% 
-+   head() %>% 
-+   pull(arr_time)
-[1]  830  850  923 1004  812  740
+> gtex_dates_clean2 %>% select(contains("pax")) %>% tail(2)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean2' not found
+> gtex_dates_clean2 %>% tail() %>% pull(pax_start_time)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean2' not found
 ```
-- note that `arr_time`, `sched_arr_time`, `dep_time`, and `sched_dep_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
+- note that `pax_start_time` and `pax_end_time` are numeric and in an HHMM format! We have to fix that first (why is this bad?) 
 
 ```r
-> flights_fixed = flights %>%
-+   mutate(arr_time_hour = str_sub(arr_time, 1, -3) %>% as.numeric(),
-+          arr_time_min = str_sub(arr_time, -2, -1) %>% as.numeric(),
-+          sched_arr_time_hour = str_sub(sched_arr_time, 1, -3) %>% as.numeric(),
-+          sched_arr_time_min = str_sub(sched_arr_time, -2, -1) %>% as.numeric(),
-+          dep_time_hour = str_sub(dep_time, 1, -3) %>% as.numeric(),
-+          dep_time_min = str_sub(dep_time, -2, -1) %>% as.numeric(),
-+          sched_dep_time_hour = str_sub(sched_dep_time, 1, -3) %>% as.numeric(),
-+          sched_dep_time_min = str_sub(sched_dep_time, -2, -1) %>% as.numeric())
+> gtex_dates_clean3 = gtex_dates_clean2 %>% mutate(pax_start_hr = str_sub(pax_start_time, 
++     1, -3) %>% as.numeric(), pax_start_min = str_sub(pax_start_time, -2, -1) %>% 
++     as.numeric(), pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(), pax_end_min = str_sub(pax_end_time, 
++     -2, -1) %>% as.numeric())
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean2' not found
+> gtex_dates_clean3 %>% select(contains("pax")) %>% tail(2)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean3' not found
+> # remove extra columns again
+> gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time"))
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean3' not found
 ```
 - Why does `str_sub()` work even though the thing being passed to it is numeric?
-- This is a lot of typing and copy-paste. Later we will see how to write our own functions that make this less work and reduce the potential for typos
 
 Creating dates from components
 ===
-- Now we can aggregate all of these columns into nice `dttm`s
+- Now we can aggregate the columns with PAX timing information into `dttm`s. Here we use the functions `year()`, `month()`, and `day()` to extract this information from the dates (we'll discuss this more in a few slides).
 
 ```r
-> flights_dt = flights_fixed %>% 
-+   # filter(!is.na(dep_time), !is.na(arr_time)) %>% 
-+   mutate(
-+     dep_time = make_datetime(year, month, day, 
-+                              dep_time_hour, dep_time_min),
-+     arr_time = make_datetime(year, month, day, 
-+                              arr_time_hour, arr_time_min),
-+     sched_dep_time = make_datetime(year, month, day, 
-+                                    sched_dep_time_hour, sched_dep_time_min),
-+     sched_arr_time = make_datetime(year, month, day, 
-+                                    sched_arr_time_hour, sched_dep_time_min)
-+   ) %>% 
-+   select(ends_with("time"), origin, dest, ends_with("delay"))
-> head(flights_dt)
-# A tibble: 6 x 9
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-01-01 05:17:00 2013-01-01 05:15:00 2013-01-01 08:30:00
-2 2013-01-01 05:33:00 2013-01-01 05:29:00 2013-01-01 08:50:00
-3 2013-01-01 05:42:00 2013-01-01 05:40:00 2013-01-01 09:23:00
-4 2013-01-01 05:44:00 2013-01-01 05:45:00 2013-01-01 10:04:00
-5 2013-01-01 05:54:00 2013-01-01 06:00:00 2013-01-01 08:12:00
-6 2013-01-01 05:54:00 2013-01-01 05:58:00 2013-01-01 07:40:00
-# … with 6 more variables: sched_arr_time <dttm>, air_time <dbl>,
-#   origin <chr>, dest <chr>, dep_delay <dbl>, arr_delay <dbl>
+> gtex_dates_clean5 = gtex_dates_clean4 %>% mutate(pax_start_dt = make_datetime(year(pax_start_date), 
++     month(pax_start_date), day(pax_start_date), pax_start_hr, pax_start_min), pax_end_dt = make_datetime(year(pax_start_date), 
++     month(pax_end_date), day(pax_end_date), pax_end_hr, pax_end_min))
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean4' not found
+> gtex_dates_clean5 %>% select(contains("pax")) %>% head(3)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean5' not found
+> 
+> # remove columns we just used
+> gtex_dates_clean6 <- gtex_dates_clean5 %>% select(-pax_start_date, -pax_end_date, 
++     -contains("hr"), -contains("min"))
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean5' not found
+```
+
+Cleaned date data
+====
+Take a look at both the data frame we started with and the one we have cleaned.
+Which do you prefer? Which is clearer?
+
+
+```r
+> head(gtex_dates)
+Error in head(gtex_dates): object 'gtex_dates' not found
+> head(gtex_dates_clean6)
+Error in head(gtex_dates_clean6): object 'gtex_dates_clean6' not found
 ```
 
 Plotting with dates
 ===
-- ggplot2 understands `ddtm`s
+- ggplot2 understands `dates` and `ddtm`s
 
 ```r
-> flights_dt %>% 
-+   filter(ymd(20130101) < dep_time & dep_time < ymd(20130102)) %>% # get data from jan 1 2013
-+ ggplot(aes(dep_time)) + # plot how many flights were leaving at each time of day
-+   geom_freqpoly(binwidth = 600) # 600 s = 10 minutes
+> # get the dates samples were isolated from just 2014
+> gtex_dates_clean6 %>% filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
++     ggplot(aes(iso_date)) + geom_freqpoly(binwidth = 10)  # bin by every 10 days (if we had dttm, the unit is seconds)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
 ```
-
-![plot of chunk unnamed-chunk-108](data-repr-figure/unnamed-chunk-108-1.png)
 
 Accessing dttm elements
 ===
@@ -1485,32 +1415,12 @@ Accessing dttm elements
 
 
 ```r
-> flights_dt %>% 
-+   mutate(wday = wday(dep_time, label = TRUE)) %>% 
-+   ggplot(aes(x = wday)) +
+> # look at the dates RNA isolation was perfomed. what do you notice?
+> gtex_dates_clean6 %>% mutate(wday = wday(iso_date, label = TRUE)) %>% ggplot(aes(x = wday)) + 
 +     geom_bar()
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
 ```
 
-![plot of chunk unnamed-chunk-109](data-repr-figure/unnamed-chunk-109-1.png)
-
-Accessing dttm elements
-===
-- You can pull out individual parts of the date with the accessor functions `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year), `wday()` (day of the week), `hour()`, `minute()`, and `second()`
-
-
-```r
-> flights_dt %>% 
-+   filter(!is.na(dep_time)) %>%
-+   mutate(minute = minute(dep_time)) %>% 
-+   group_by(minute) %>% 
-+   summarise(
-+     avg_delay = mean(arr_delay, na.rm = TRUE),
-+     n = n()) %>% 
-+ ggplot(aes(minute, avg_delay)) +
-+   geom_line()
-```
-
-![plot of chunk unnamed-chunk-110](data-repr-figure/unnamed-chunk-110-1.png)
 
 Date-time arithmetic
 ===
@@ -1526,14 +1436,14 @@ Durations
 ```r
 > usa_age <- today() - ymd(17760704)
 > usa_age
-Time difference of 88615 days
+Time difference of 89147 days
 ```
 - Subtracting `dttm`s in R gives something called a `difftime`, which ambiguously represents differences in weeks, days, hours, or seconds. A `duration` always uses seconds so it is preferable.
 - You can conver to a duration with `as.duration()`
 
 ```r
 > as.duration(usa_age)
-[1] "7656336000s (~242.61 years)"
+[1] "7702300800s (~244.07 years)"
 ```
 - `dseconds()`, `dminutes()`, `dhours()`, `ddays()`, `dweeks()`, and `dyears()` make durations of the given length of time and are vectorized
 
@@ -1551,12 +1461,12 @@ Duration arithmetic
 
 ```r
 > 2 * (as.duration(usa_age) + dyears(1) + dweeks(12) + dhours(15))
-[1] "15390367200s (~487.69 years)"
+[1] "15482340000s (~490.61 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
 ```r
-> today() - as.duration(usa_age) # should give July 4 1776
+> today() - as.duration(usa_age)  # should give July 4 1776
 [1] "1776-07-04"
 ```
 
@@ -1566,7 +1476,7 @@ Duration arithmetic
 > one_pm <- ymd_hms("2016-03-12 13:00:00", tz = "America/New_York")
 > one_pm
 [1] "2016-03-12 13:00:00 EST"
-> one_pm + ddays(1) # not 1 PM anymore?!
+> one_pm + ddays(1)  # not 1 PM anymore?!
 [1] "2016-03-13 14:00:00 EDT"
 ```
 
@@ -1579,8 +1489,7 @@ Periods
 > days(194)
 [1] "194d 0H 0M 0S"
 > weeks(5:9)
-[1] "35d 0H 0M 0S" "42d 0H 0M 0S" "49d 0H 0M 0S" "56d 0H 0M 0S"
-[5] "63d 0H 0M 0S"
+[1] "35d 0H 0M 0S" "42d 0H 0M 0S" "49d 0H 0M 0S" "56d 0H 0M 0S" "63d 0H 0M 0S"
 ```
 - Question: Why is there `months()` but no `dmonths()`?
 
@@ -1590,12 +1499,12 @@ Period arithmetic
 
 ```r
 > 2 * (dyears(1) + dweeks(12) + dhours(15))
-[1] "77695200s (~2.46 years)"
+[1] "77738400s (~2.46 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
 ```r
-> today() - as.period(usa_age) # should give July 4 1776
+> today() - as.period(usa_age)  # should give July 4 1776
 [1] "1776-07-04"
 ```
 
@@ -1605,44 +1514,59 @@ Period arithmetic
 > one_pm <- ymd_hms("2016-03-12 13:00:00", tz = "America/New_York")
 > one_pm
 [1] "2016-03-12 13:00:00 EST"
-> one_pm + days(1) # it knows that one "day" on this day is actually 23 hours, not 24
+> one_pm + days(1)  # it knows that one 'day' on this day is actually 23 hours, not 24
 [1] "2016-03-13 13:00:00 EDT"
 ```
 
 Example using periods
 ===
-- some flights appear to arrive before they depart!
+- Let's calculate the length of time samples were in PaxGene fixative and look at how it differs when we look at it as a Duration and a Period. What do you prefer?
 
 ```r
-> flights_dt %>% 
-+   filter(arr_time < dep_time)  %>% 
-+   head()
-# A tibble: 6 x 9
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-01-01 21:02:00 2013-01-01 21:08:00 2013-01-01 01:46:00
-2 2013-01-01 21:40:00 2013-01-01 21:35:00 2013-01-01 02:10:00
-3 2013-01-01 22:17:00 2013-01-01 22:29:00 2013-01-01 02:49:00
-4 2013-01-01 22:17:00 2013-01-01 21:30:00 2013-01-01 01:40:00
-5 2013-01-01 22:29:00 2013-01-01 21:59:00 2013-01-01 01:49:00
-6 2013-01-01 23:26:00 2013-01-01 21:30:00 2013-01-01 01:31:00
-# … with 6 more variables: sched_arr_time <dttm>, air_time <dbl>,
-#   origin <chr>, dest <chr>, dep_delay <dbl>, arr_delay <dbl>
+> gtex_dates_clean6 %>% mutate(pax_time = pax_end_dt - pax_start_dt) %>% mutate(pax_time_d = as.duration(pax_time), 
++     pax_time_p = as.period(pax_time)) %>% select(contains("pax")) %>% tail(2)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
 ```
-- These are overnight
-- We used the same date information for both the departure and the arrival times, but these flights arrived on the following day. 
+
+You take a look at the data and realize some of the difftimes are negative. What is going on here?
+
+```r
+> gtex_dates_clean6 %>% mutate(pax_time = pax_end_dt - pax_start_dt) %>% filter(pax_time < 
++     0)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
+```
+
+Plotting difftimes
+===
+We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
+
+```r
+> gtex_dates_clean6 %>% # look at the rest of the data
++   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
++   filter(pax_time > 0) %>%
++   ggplot(aes(x=pax_time))+
++   geom_histogram()
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
+```
+
 
 Example using periods
 ===
-- We can fix this by adding days(1) to the arrival time of each overnight flight.
+To fix this we add a year to some of the ones with negative times. Which of these work and why?
 
 ```r
-> flights_dt <- flights_dt %>% 
-+   mutate(
-+     overnight = arr_time < dep_time,
-+     arr_time = arr_time + days(overnight), # will add 1 day if flight is overnight
-+     sched_arr_time = sched_arr_time + days(overnight)
-+   )
+> gtex_dates_clean6 %>% select(contains("pax")) %>% select(contains("pax")) %>% mutate(pax_time = (pax_end_dt - 
++     pax_start_dt)) %>% mutate(neg_pax = (pax_time < 0)) %>% mutate(pax_time_adj = pax_time + 
++     years(neg_pax)) %>% filter(neg_pax)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
+> gtex_dates_clean6 %>% select(contains("pax")) %>% mutate(pax_time = (pax_end_dt - 
++     pax_start_dt)) %>% mutate(neg_pax = (pax_time < 0)) %>% mutate(pax_end_dt_adj = pax_end_dt + 
++     years(neg_pax)) %>% filter(neg_pax)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
+> gtex_dates_clean6 %>% select(contains("pax")) %>% mutate(pax_time_p = as.period(pax_end_dt - 
++     pax_start_dt)) %>% mutate(neg_pax = (pax_time_p < 0)) %>% mutate(pax_time_adj = pax_time_p + 
++     years(neg_pax)) %>% filter(neg_pax)
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
 ```
 
 Intervals 
@@ -1652,26 +1576,14 @@ Intervals
 
 ```r
 > mdy("July 4 1776") %--% today()
-[1] 1776-07-04 UTC--2019-02-16 UTC
+[1] 1776-07-04 UTC--2020-08-01 UTC
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 
 ```r
-> flights_dt %>% 
-+   filter(dep_time %within% (mdy("feb 15 2013") %--% mdy("feb 25 2013"))) %>% 
-+   head()
-# A tibble: 6 x 10
-  dep_time            sched_dep_time      arr_time           
-  <dttm>              <dttm>              <dttm>             
-1 2013-02-15 04:54:00 2013-02-15 05:00:00 2013-02-15 06:47:00
-2 2013-02-15 05:16:00 2013-02-15 05:15:00 2013-02-15 08:08:00
-3 2013-02-15 05:30:00 2013-02-15 05:30:00 2013-02-15 08:22:00
-4 2013-02-15 05:36:00 2013-02-15 05:45:00 2013-02-15 10:33:00
-5 2013-02-15 05:40:00 2013-02-15 05:40:00 2013-02-15 08:55:00
-6 2013-02-15 05:49:00 2013-02-15 06:00:00 2013-02-15 06:43:00
-# … with 7 more variables: sched_arr_time <dttm>, air_time <dbl>,
-#   origin <chr>, dest <chr>, dep_delay <dbl>, arr_delay <dbl>,
-#   overnight <lgl>
+> gtex_dates_clean6 %>% filter(iso_date %within% (mdy("feb 15 2013") %--% mdy("feb 14 2014"))) %>% 
++     head()
+Error in eval(lhs, parent, parent): object 'gtex_dates_clean6' not found
 ```
 
 Exercise: first days of the month
@@ -1689,21 +1601,18 @@ Create a vector of dates giving the first day of every month in 2015. Create a v
  [6] "2015-01-07" "2015-01-08" "2015-01-09" "2015-01-10" "2015-01-11"
 [11] "2015-01-12" "2015-01-13"
 > make_date(year(today()), 1, 1) + month(1:12)
- [1] "2019-01-02" "2019-01-03" "2019-01-04" "2019-01-05" "2019-01-06"
- [6] "2019-01-07" "2019-01-08" "2019-01-09" "2019-01-10" "2019-01-11"
-[11] "2019-01-12" "2019-01-13"
+ [1] "2020-01-02" "2020-01-03" "2020-01-04" "2020-01-05" "2020-01-06"
+ [6] "2020-01-07" "2020-01-08" "2020-01-09" "2020-01-10" "2020-01-11"
+[11] "2020-01-12" "2020-01-13"
 ```
 
 Fancy:
 
 ```r
-> today () %>%
-+   year() %>%
-+   make_date(1,1) + 
-+   month(1:12)
- [1] "2019-01-02" "2019-01-03" "2019-01-04" "2019-01-05" "2019-01-06"
- [6] "2019-01-07" "2019-01-08" "2019-01-09" "2019-01-10" "2019-01-11"
-[11] "2019-01-12" "2019-01-13"
+> today() %>% year() %>% make_date(1, 1) + month(1:12)
+ [1] "2020-01-02" "2020-01-03" "2020-01-04" "2020-01-05" "2020-01-06"
+ [6] "2020-01-07" "2020-01-08" "2020-01-09" "2020-01-10" "2020-01-11"
+[11] "2020-01-12" "2020-01-13"
 ```
 
 lubridate cheat sheet
@@ -1732,11 +1641,11 @@ cols(
 )
 Warning: 1000 parsing failures.
  row col           expected     actual                                                                                         file
-1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
-1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
-1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
-1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
-1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/readr/extdata/challenge.csv'
+1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
 .... ... .................. .......... ............................................................................................
 See problems(...) for more details.
 ```
@@ -1748,18 +1657,18 @@ Diagnosing intake errors
 ```r
 > problems(challenge)
 # A tibble: 1,000 x 5
-     row col   expected      actual   file                                 
-   <int> <chr> <chr>         <chr>    <chr>                                
- 1  1001 y     1/0/T/F/TRUE… 2015-01… '/Library/Frameworks/R.framework/Ver…
- 2  1002 y     1/0/T/F/TRUE… 2018-05… '/Library/Frameworks/R.framework/Ver…
- 3  1003 y     1/0/T/F/TRUE… 2015-09… '/Library/Frameworks/R.framework/Ver…
- 4  1004 y     1/0/T/F/TRUE… 2012-11… '/Library/Frameworks/R.framework/Ver…
- 5  1005 y     1/0/T/F/TRUE… 2020-01… '/Library/Frameworks/R.framework/Ver…
- 6  1006 y     1/0/T/F/TRUE… 2016-04… '/Library/Frameworks/R.framework/Ver…
- 7  1007 y     1/0/T/F/TRUE… 2011-05… '/Library/Frameworks/R.framework/Ver…
- 8  1008 y     1/0/T/F/TRUE… 2020-07… '/Library/Frameworks/R.framework/Ver…
- 9  1009 y     1/0/T/F/TRUE… 2011-04… '/Library/Frameworks/R.framework/Ver…
-10  1010 y     1/0/T/F/TRUE… 2010-05… '/Library/Frameworks/R.framework/Ver…
+     row col   expected       actual   file                                     
+   <int> <chr> <chr>          <chr>    <chr>                                    
+ 1  1001 y     1/0/T/F/TRUE/… 2015-01… '/Library/Frameworks/R.framework/Version…
+ 2  1002 y     1/0/T/F/TRUE/… 2018-05… '/Library/Frameworks/R.framework/Version…
+ 3  1003 y     1/0/T/F/TRUE/… 2015-09… '/Library/Frameworks/R.framework/Version…
+ 4  1004 y     1/0/T/F/TRUE/… 2012-11… '/Library/Frameworks/R.framework/Version…
+ 5  1005 y     1/0/T/F/TRUE/… 2020-01… '/Library/Frameworks/R.framework/Version…
+ 6  1006 y     1/0/T/F/TRUE/… 2016-04… '/Library/Frameworks/R.framework/Version…
+ 7  1007 y     1/0/T/F/TRUE/… 2011-05… '/Library/Frameworks/R.framework/Version…
+ 8  1008 y     1/0/T/F/TRUE/… 2020-07… '/Library/Frameworks/R.framework/Version…
+ 9  1009 y     1/0/T/F/TRUE/… 2011-04… '/Library/Frameworks/R.framework/Version…
+10  1010 y     1/0/T/F/TRUE/… 2010-05… '/Library/Frameworks/R.framework/Version…
 # … with 990 more rows
 ```
 - This tells us that `read_csv()` was expecting the `y` column to be logical, but when we look at what was actually in the file at rows 1001+, there are what appear to be dates!
@@ -1772,10 +1681,7 @@ Specifying data types
 - In general, you may already know what types the columns should be, so you can provide those to `read_csv()`. 
 
 ```r
-> challenge = read_csv(file,
-+    col_types = cols(
-+      y = col_date()
-+    ))
+> challenge = read_csv(file, col_types = cols(y = col_date()))
 > head(challenge)
 # A tibble: 6 x 2
       x y         
@@ -1798,10 +1704,7 @@ Specifying data types
 - You can specify it using the `format` argument.
 
 ```r
-> challenge = read_csv(file,
-+    col_types = cols(
-+      y = col_date(format="%Y-%m-%d")
-+    ))
+> challenge = read_csv(file, col_types = cols(y = col_date(format = "%Y-%m-%d")))
 > tail(challenge)
 # A tibble: 6 x 2
       x y         
@@ -1826,19 +1729,14 @@ Specifying data types
 - Factors can also be read in with a high level of control
 
 ```r
-> df = readr_example("mtcars.csv")  %>%
-+ read_csv(col_types = cols(
-+   cyl = col_factor(levels=c("4", "6", "8"))
-+ ))
+> df = readr_example("mtcars.csv") %>% read_csv(col_types = cols(cyl = col_factor(levels = c("4", 
++     "6", "8"))))
 ```
 - This will let you catch unexpected factor levels and set the proper order up-front! 
 - To allow all levels, don't use the `levels` argument
 
 ```r
-> df = readr_example("mtcars.csv")  %>%
-+ read_csv(col_types = cols(
-+   cyl = col_factor()
-+ ))
+> df = readr_example("mtcars.csv") %>% read_csv(col_types = cols(cyl = col_factor()))
 ```
 
 Non-csv flat files
@@ -1861,13 +1759,13 @@ Non-csv flat files
 - Both can be read in using `read_delim()`
 
 ```r
-> read_delim("1,2,3\n4,5,6", delim=",", col_names = c("x","y","z"))
+> read_delim("1,2,3\n4,5,6", delim = ",", col_names = c("x", "y", "z"))
 # A tibble: 2 x 3
       x     y     z
   <dbl> <dbl> <dbl>
 1     1     2     3
 2     4     5     6
-> read_delim("1\t2\t3\n4\t5\t6", delim="\t", col_names = c("x","y","z"))
+> read_delim("1\t2\t3\n4\t5\t6", delim = "\t", col_names = c("x", "y", "z"))
 # A tibble: 2 x 3
       x     y     z
   <dbl> <dbl> <dbl>
@@ -1904,10 +1802,7 @@ What will happen if I run this code?
 
 ```r
 > file = readr_example("challenge.csv")
-> challenge = read_csv(file,
->    col_types = cols(
->      y = col_date()
->    ))
+> challenge = read_csv(file, col_types = cols(y = col_date()))
 > write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
 > challenge2 = read_csv("/Users/c242587/Desktop/challenge.csv")
 ```
@@ -1918,26 +1813,13 @@ What will happen if I run this code?
 
 ```r
 > file = readr_example("challenge.csv")
-> challenge = read_csv(file,
-+    col_types = cols(
-+      y = col_date()
-+    ))
+> challenge = read_csv(file, col_types = cols(y = col_date()))
 > write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
+Warning in open.connection(path, "wb"): cannot open file '/Users/c242587/
+Desktop/challenge.csv': No such file or directory
+Error in open.connection(path, "wb"): cannot open the connection
 > challenge2 = read_csv("/Users/c242587/Desktop/challenge.csv")
-Parsed with column specification:
-cols(
-  x = col_double(),
-  y = col_logical()
-)
-Warning: 1000 parsing failures.
- row col           expected     actual                                   file
-1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Users/c242587/Desktop/challenge.csv'
-1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Users/c242587/Desktop/challenge.csv'
-1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Users/c242587/Desktop/challenge.csv'
-1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Users/c242587/Desktop/challenge.csv'
-1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Users/c242587/Desktop/challenge.csv'
-.... ... .................. .......... ......................................
-See problems(...) for more details.
+Error: '/Users/c242587/Desktop/challenge.csv' does not exist.
 ```
 
 readr cheat sheet

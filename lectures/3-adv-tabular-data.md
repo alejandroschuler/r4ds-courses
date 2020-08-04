@@ -46,7 +46,7 @@ incremental: true
 
 
 ```r
-gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
 Parsed with column specification:
 cols(
   month = col_double(),
@@ -97,11 +97,11 @@ head(gtex_samples_by_month_small, 6)
 6     9  2012   115
 ```
 Let's say you want to compute the change in number of samples within months from one year to the next. We've shortened the data to only include four months each year (March, June, September, and December) to simplify this.
-(i.e. comparing January 2015 to January 2016 and February 2015 to February 2016)
+(i.e. comparing March 2015 to March 2016 and June 2015 to June 2016)
 
 1. Figure out a way to do this using `lead()` or `lag()` in a single `mutate()` statement (hint: check the documentation).
 2. Figure out a different way to do this with `group_by()` instead. Which seems more natural or robust to you? Why?
-3. In both solutions you end up with some `NA`s since the "week 0" scores are unknown. If we wanted to assume that the week 0 scores would be the same as the week 1 scores, how might we modify our code to reflect that in order to make sure we don't get `NA`s in the result?
+3. In both solutions you end up with some `NA`s since the March 2011 counts are unknown. If we wanted to assume that the March 2011 would be the same as the June 2011, how might we modify our code to reflect that in order to make sure we don't get `NA`s in the result?
 
 Rolling functions
 ===
@@ -475,7 +475,7 @@ Messy data
 
 
 ```r
-gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
+gtex_time_tissue_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_time_tissue.csv")
 head(gtex_time_tissue_data, 3)
 # A tibble: 3 x 8
   tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
@@ -529,7 +529,7 @@ This data is *tidy*. Tidy data follows three precepts:
 2. each "observation" has its own row
 3. each type of observational unit has its own data frame
 
-In our example, each the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
+In our example, each of the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
 
 Tidy data
 ===
@@ -768,7 +768,7 @@ Have a look at the following data. How do you think we might want to make it loo
 
 
 ```r
-gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
+gtex_samples_time_chunk = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv")
 head(gtex_samples_time_chunk)
 # A tibble: 6 x 9
   tissue `Sept-2015` `Sept-2016` `Oct-2015` `Oct-2016` `Nov-2015` `Nov-2016`
@@ -835,14 +835,17 @@ incremental: true
 
 
 ```r
-gtex_sample_data = read_csv("https://raw.githubusercontent.com/erflynn/advance-2020/r4ds-courses/data/gtex_metadata/gtex_sample_metadata.csv")
-Error in open.connection(con, "rb"): HTTP error 404.
+gtex_sample_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_metadata.csv")
 head(gtex_sample_data,2)
-Error in head(gtex_sample_data, 2): object 'gtex_sample_data' not found
+# A tibble: 2 x 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
+1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
+2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 ```
 
 ```r
-gtex_subject_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
+gtex_subject_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
 head(gtex_subject_data,2)
 # A tibble: 2 x 4
   subject_id sex    age   death                    
@@ -852,7 +855,7 @@ head(gtex_subject_data,2)
 ```
 
 ```r
-gtex_batch_data = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
+gtex_batch_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
 # A tibble: 2 x 3
   batch_id batch_type                                         batch_date
@@ -869,7 +872,7 @@ Relational data
 - These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for accessing expression data.
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/relational_data.png", height=500>
+<img src="https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/relational_data.png", height=500>
 </div>
 
 
@@ -885,7 +888,20 @@ An example join
 ```r
 gtex_sample_data %>% 
   inner_join(gtex_subject_data, by="subject_id")
-Error in eval(lhs, parent, parent): object 'gtex_sample_data' not found
+# A tibble: 312 x 9
+   subject_id sample_id  batch_id center_id tissue rin_score sex   age   death  
+   <chr>      <chr>      <chr>    <chr>     <chr>      <dbl> <chr> <chr> <chr>  
+ 1 GTEX-11DXZ 0003-SM-5… BP-39216 B1        Blood       NA   male  50-59 ventil…
+ 2 GTEX-11DXZ 0126-SM-5… BP-44460 B1        Liver        7.9 male  50-59 ventil…
+ 3 GTEX-11DXZ 0326-SM-5… BP-44460 B1        Heart        8.3 male  50-59 ventil…
+ 4 GTEX-11DXZ 0726-SM-5… BP-43956 B1        Lung         7.8 male  50-59 ventil…
+ 5 GTEX-11GSP 0004-SM-5… BP-39412 B1        Blood       NA   fema… 60-69 sudden…
+ 6 GTEX-11GSP 0626-SM-5… BP-44902 B1        Liver        6.2 fema… 60-69 sudden…
+ 7 GTEX-11GSP 0726-SM-5… BP-44902 B1        Lung         6.9 fema… 60-69 sudden…
+ 8 GTEX-11GSP 1226-SM-5… BP-44902 B1        Heart        7.9 fema… 60-69 sudden…
+ 9 GTEX-11NUK 0004-SM-5… BP-39723 B1        Blood       NA   male  50-59 sudden…
+10 GTEX-11NUK 0826-SM-5… BP-43730 B1        Lung         7.4 male  50-59 sudden…
+# … with 302 more rows
 ```
 
 Joins
@@ -964,7 +980,8 @@ Specifying the keys
 
 ```r
 gtex_sample_data %>% inner_join(gtex_subject_data, by="center_id")
-Error in eval(lhs, parent, parent): object 'gtex_sample_data' not found
+Error: Join columns must be present in data.
+x Problem with `center_id`.
 ```
 - Why does this fail?
 
@@ -1033,7 +1050,7 @@ Joining on multiple columns
 - It is often desirable to find matches along more than one column, such as month and year in this example
 
 ```r
-gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
 # A tibble: 2 x 4

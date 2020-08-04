@@ -345,27 +345,27 @@ Similar syntax is used for 2D entities
 
 ```r
 > my_example_matrix[1:3, c(2,2)]
-           [,1]       [,2]
-[1,] -1.0750786 -1.0750786
-[2,]  0.3916191  0.3916191
-[3,]  0.6222324  0.6222324
+          [,1]      [,2]
+[1,] 1.5623736 1.5623736
+[2,] 0.5832127 0.5832127
+[3,] 0.1177200 0.1177200
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
 > my_example_matrix[1:3,]
-           [,1]       [,2]       [,3]      [,4]       [,5]
-[1,]  1.0541185 -1.0750786  0.4792430 2.4829729 0.81729530
-[2,]  0.3918474  0.3916191  1.1586313 0.7292805 0.39442496
-[3,] -1.0317130  0.6222324 -0.1958306 1.1767078 0.07831356
+           [,1]      [,2]      [,3]       [,4]      [,5]
+[1,] -0.5546843 1.5623736 0.2773087 -0.9569168 0.4189683
+[2,] -0.3481952 0.5832127 0.6460538  0.5865529 0.1396793
+[3,] -1.0545247 0.1177200 0.8608065 -0.4871895 0.3015122
 > my_example_matrix[,c(T,T,F,F,T)]
-           [,1]        [,2]        [,3]
-[1,]  1.0541185 -1.07507865  0.81729530
-[2,]  0.3918474  0.39161907  0.39442496
-[3,] -1.0317130  0.62223241  0.07831356
-[4,]  0.1729652  0.06721376 -0.85964844
-[5,]  0.7971803 -1.25148077  1.33629120
+           [,1]       [,2]       [,3]
+[1,] -0.5546843  1.5623736  0.4189683
+[2,] -0.3481952  0.5832127  0.1396793
+[3,] -1.0545247  0.1177200  0.3015122
+[4,]  0.5153169 -1.2256549 -0.3731311
+[5,]  1.3206635  0.7838138 -0.3413129
 ```
 
 Indexing for data frames
@@ -1116,7 +1116,7 @@ The following object is masked from 'package:base':
 # A tibble: 1 x 2
   date_time           date      
   <dttm>              <date>    
-1 2020-08-03 14:58:34 2020-08-03
+1 2020-08-02 12:50:59 2020-08-02
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1301,6 +1301,8 @@ Which do you prefer? Which is clearer?
 6 GTEX-11DXZ Lung   2013-09-25 2014-03-22 2012-10-31 06:31:00
 # … with 1 more variable: pax_end_dt <dttm>
 ```
+
+- *Is there an easy way to automate the repetition here?*
 
 Plotting with dates
 ===

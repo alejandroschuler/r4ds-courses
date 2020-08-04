@@ -900,6 +900,8 @@ head(gtex_dates)
 head(gtex_dates_clean6)
 ```
 
+- *Is there an easy way to automate the repetition here?*
+
 Plotting with dates
 ===
 - ggplot2 understands `dates` and `ddtm`s
