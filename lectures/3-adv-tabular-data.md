@@ -283,10 +283,11 @@ df %>%
     mean_b = mean(c)
   )
 # A tibble: 2 x 3
-      g mean_a mean_b
-  <int>  <dbl>  <dbl>
-1     0  0.392 -0.353
-2     1  0.745  0.216
+      g  mean_a mean_b
+  <int>   <dbl>  <dbl>
+1     0  0.307   0.149
+2     1 -0.0506  0.950
+
 ```
 
 
@@ -308,10 +309,11 @@ df %>%
     median_c = median(c)
   )
 # A tibble: 2 x 6
-      g mean_a mean_b median_a median_b median_c
-  <int>  <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
-1     0  0.392 -0.353    0.157   -0.827   -0.296
-2     1  0.745  0.216    0.604   -0.406    0.530
+      g  mean_a mean_b median_a median_b median_c
+  <int>   <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
+1     0  0.307   0.149    0.623   -0.745    0.188
+2     1 -0.0506  0.950    0.157    0.873    0.658
+
 ```
 
 Columnwise operations
@@ -324,10 +326,11 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b,c), mean))
 # A tibble: 2 x 4
-      g     a      b      c
-  <int> <dbl>  <dbl>  <dbl>
-1     0 0.392 -0.353 -0.353
-2     1 0.745 -0.486  0.216
+      g       a      b     c
+  <int>   <dbl>  <dbl> <dbl>
+1     0  0.307  -0.633 0.149
+2     1 -0.0506  0.950 0.950
+
 ```
 
 - The first argument to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -347,10 +350,11 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b), fns))
 # A tibble: 2 x 5
-      g a_avg a_max  b_avg b_max
-  <int> <dbl> <dbl>  <dbl> <dbl>
-1     0 0.392  1.39 -0.353 1.51 
-2     1 0.745  1.28 -0.486 0.985
+      g   a_avg a_max  b_avg b_max
+  <int>   <dbl> <dbl>  <dbl> <dbl>
+1     0  0.307  1.11  -0.633 0.384
+2     1 -0.0506 0.965  0.950 1.37 
+
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -376,10 +380,11 @@ df %>%
   group_by(g) %>%
   summarize(across(where(is.numeric), mean))
 # A tibble: 2 x 3
-      g       a      b
-  <int>   <dbl>  <dbl>
-1     0  0.0192 0.793 
-2     1 -0.0763 0.0676
+      g      a      b
+  <int>  <dbl>  <dbl>
+1     0 -0.287 0.0379
+2     1  0.185 0.0138
+
 ```
 
 Columnwise mutate
@@ -403,16 +408,17 @@ df %>%
 # A tibble: 10 x 4
         a      b      c     g
     <dbl>  <dbl>  <dbl> <int>
- 1 -0.707  0.338 -0.471     0
- 2 -0.141 -0.456 -0.351     0
- 3  0.628  0.294 -1.74      0
- 4 -0.336  0.343  0.302     0
- 5  0.777 -1.10   0.425     1
- 6 -1.22   1.92   0.282     1
- 7  0.888  1.23   1.62      0
- 8  0.287 -0.231  1.65      1
- 9 -1.32  -1.15  -1.41      1
-10 -0.689 -1.74   0.626     1
+ 1  0.245 -0.677 -1.29      1
+ 2  0.996  0.100  0.952     1
+ 3 -0.229  1.76  -0.844     1
+ 4  1.59  -1.87   0.898     1
+ 5 -1.27  -0.867  0.307     0
+ 6 -1.31  -0.308 -0.815     0
+ 7 -1.06   0.236 -0.237     1
+ 8 -0.813 -0.278 -0.553     0
+ 9 -2.99  -0.859 -0.502     1
+10 -0.431  1.22  -0.319     0
+
 ```
 
 Columnwise mutate
@@ -428,18 +434,20 @@ df %>%
     .names = '{col}_offset'   # how to name the outputs
   ))
 # A tibble: 10 x 6
-        a      b c                     g a_offset b_offset
-    <dbl>  <dbl> <chr>             <int>    <dbl>    <dbl>
- 1 -0.707  0.338 -0.47068158706793     0   NA      NA     
- 2 -0.141 -0.456 -0.3508617729605      0    0.566  -0.794 
- 3  0.628  0.294 -1.74070414221254     0    0.769   0.750 
- 4 -0.336  0.343 0.302038899808117     0   -0.964   0.0491
- 5  0.777 -1.10  0.424690792509255     1    1.11   -1.44  
- 6 -1.22   1.92  0.28225628991035      1   -2.00    3.02  
- 7  0.888  1.23  1.6219485253947       0    2.11   -0.692 
- 8  0.287 -0.231 1.64831920836023      1   -0.602  -1.46  
- 9 -1.32  -1.15  -1.40909006184396     1   -1.61   -0.921 
-10 -0.689 -1.74  0.626134235557155     1    0.629  -0.586 
+
+        a      b c                      g a_offset b_offset
+    <dbl>  <dbl> <chr>              <int>    <dbl>    <dbl>
+ 1  0.245 -0.677 -1.28677126699135      1  NA        NA    
+ 2  0.996  0.100 0.95173964809609       1   0.752     0.777
+ 3 -0.229  1.76  -0.843728137220975     1  -1.23      1.66 
+ 4  1.59  -1.87  0.897836800721194      1   1.82     -3.63 
+ 5 -1.27  -0.867 0.307355925264016      0  -2.86      0.999
+ 6 -1.31  -0.308 -0.81525410944242      0  -0.0393    0.560
+ 7 -1.06   0.236 -0.23669857674492      1   0.254     0.544
+ 8 -0.813 -0.278 -0.552648494624819     0   0.245    -0.514
+ 9 -2.99  -0.859 -0.502114074293674     1  -2.17     -0.581
+10 -0.431  1.22  -0.319208458875381     0   2.56      2.08 
+
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -595,10 +603,12 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1         10.8         10.7 
-2     2          9.13        12.0 
-3     3         10.1         10.2 
-4     4          8.78         8.78
+
+1     1         11.8         11.9 
+2     2          8.99        10.9 
+3     3         10.0          9.80
+4     4          9.07        10.2 
+
 ```
 
 
@@ -609,10 +619,11 @@ wide_mice %>%
 # A tibble: 4 x 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1    -0.0635 
-2     2     2.82   
-3     3     0.0932 
-4     4     0.00394
+1     1       0.153
+2     2       1.95 
+3     3      -0.203
+4     4       1.16 
+
 ```
 
 ***
@@ -622,14 +633,16 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.8 
-2     1 after   10.7 
-3     2 before   9.13
-4     2 after   12.0 
-5     3 before  10.1 
-6     3 after   10.2 
-7     4 before   8.78
-8     4 after    8.78
+
+1     1 before  11.8 
+2     1 after   11.9 
+3     2 before   8.99
+4     2 after   10.9 
+5     3 before  10.0 
+6     3 after    9.80
+7     4 before   9.07
+8     4 after   10.2 
+
 ```
 
 
@@ -643,10 +656,12 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1    -0.0635 
-2     2     2.82   
-3     3     0.0932 
-4     4     0.00394
+
+1     1       0.153
+2     2       1.95 
+3     3      -0.203
+4     4       1.16 
+
 ```
 
 Pivoting wider
@@ -661,14 +676,16 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.8 
-2     1 after   10.7 
-3     2 before   9.13
-4     2 after   12.0 
-5     3 before  10.1 
-6     3 after   10.2 
-7     4 before   8.78
-8     4 after    8.78
+
+1     1 before  11.8 
+2     1 after   11.9 
+3     2 before   8.99
+4     2 after   10.9 
+5     3 before  10.0 
+6     3 after    9.80
+7     4 before   9.07
+8     4 after   10.2 
+
 ```
 
 ***
@@ -683,10 +700,12 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1  10.8  10.7 
-2     2   9.13 12.0 
-3     3  10.1  10.2 
-4     4   8.78  8.78
+
+1     1  11.8  11.9 
+2     2   8.99 10.9 
+3     3  10.0   9.80
+4     4   9.07 10.2 
+
 ```
 
 Names prefix
@@ -698,14 +717,15 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.8 
-2     1 after   10.7 
-3     2 before   9.13
-4     2 after   12.0 
-5     3 before  10.1 
-6     3 after   10.2 
-7     4 before   8.78
-8     4 after    8.78
+1     1 before  11.8 
+2     1 after   11.9 
+3     2 before   8.99
+4     2 after   10.9 
+5     3 before  10.0 
+6     3 after    9.80
+7     4 before   9.07
+8     4 after   10.2 
+
 ```
 
 ***
@@ -723,8 +743,10 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1         10.8          10.7
-2     2          9.13         12.0
+
+1     1         11.8          11.9
+2     2          8.99         10.9
+
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -826,12 +848,12 @@ type:section
 
 Relational data
 =====================================================================
-class: small-code
 incremental: true
 
 - Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
 - When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
-- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
+- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix we've been working with. 
+
 
 
 ```r
@@ -843,6 +865,13 @@ head(gtex_sample_data,2)
 1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
 2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 ```
+- The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
+
+Relational data
+===
+incremental: true
+
+The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
 
 ```r
 gtex_subject_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
@@ -854,6 +883,8 @@ head(gtex_subject_data,2)
 2 GTEX-11GSP female 60-69 sudden but natural causes
 ```
 
+The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
+
 ```r
 gtex_batch_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
@@ -864,7 +895,7 @@ head(gtex_batch_data,2)
 2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 08/14/2013
 ```
 
-- We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
+We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
 Relational data
 ===
