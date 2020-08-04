@@ -111,7 +111,6 @@ Rolling functions
 
 ```r
 library("slider")
-Warning: package 'slider' was built under R version 3.6.2
 numbers = c(9,6,8,4,7,3,8,4,2,1,3,2)
 slide_vec(numbers, sum, .after=3, .step=2)
  [1] 27 NA 22 NA 22 NA 15 NA  8 NA  5 NA
@@ -288,6 +287,7 @@ df %>%
   <int>   <dbl>  <dbl>
 1     0  0.307   0.149
 2     1 -0.0506  0.950
+
 ```
 
 
@@ -313,6 +313,7 @@ df %>%
   <int>   <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
 1     0  0.307   0.149    0.623   -0.745    0.188
 2     1 -0.0506  0.950    0.157    0.873    0.658
+
 ```
 
 Columnwise operations
@@ -329,6 +330,7 @@ df %>%
   <int>   <dbl>  <dbl> <dbl>
 1     0  0.307  -0.633 0.149
 2     1 -0.0506  0.950 0.950
+
 ```
 
 - The first argument to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -352,6 +354,7 @@ df %>%
   <int>   <dbl> <dbl>  <dbl> <dbl>
 1     0  0.307  1.11  -0.633 0.384
 2     1 -0.0506 0.965  0.950 1.37 
+
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -381,6 +384,7 @@ df %>%
   <int>  <dbl>  <dbl>
 1     0 -0.287 0.0379
 2     1  0.185 0.0138
+
 ```
 
 Columnwise mutate
@@ -414,6 +418,7 @@ df %>%
  8 -0.813 -0.278 -0.553     0
  9 -2.99  -0.859 -0.502     1
 10 -0.431  1.22  -0.319     0
+
 ```
 
 Columnwise mutate
@@ -429,6 +434,7 @@ df %>%
     .names = '{col}_offset'   # how to name the outputs
   ))
 # A tibble: 10 x 6
+
         a      b c                      g a_offset b_offset
     <dbl>  <dbl> <chr>              <int>    <dbl>    <dbl>
  1  0.245 -0.677 -1.28677126699135      1  NA        NA    
@@ -441,6 +447,7 @@ df %>%
  8 -0.813 -0.278 -0.552648494624819     0   0.245    -0.514
  9 -2.99  -0.859 -0.502114074293674     1  -2.17     -0.581
 10 -0.431  1.22  -0.319208458875381     0   2.56      2.08 
+
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -596,10 +603,12 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
+
 1     1         11.8         11.9 
 2     2          8.99        10.9 
 3     3         10.0          9.80
 4     4          9.07        10.2 
+
 ```
 
 
@@ -614,6 +623,7 @@ wide_mice %>%
 2     2       1.95 
 3     3      -0.203
 4     4       1.16 
+
 ```
 
 ***
@@ -623,6 +633,7 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
+
 1     1 before  11.8 
 2     1 after   11.9 
 3     2 before   8.99
@@ -631,6 +642,7 @@ wide_mice %>%
 6     3 after    9.80
 7     4 before   9.07
 8     4 after   10.2 
+
 ```
 
 
@@ -644,10 +656,12 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
+
 1     1       0.153
 2     2       1.95 
 3     3      -0.203
 4     4       1.16 
+
 ```
 
 Pivoting wider
@@ -662,6 +676,7 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
+
 1     1 before  11.8 
 2     1 after   11.9 
 3     2 before   8.99
@@ -670,6 +685,7 @@ long_mice
 6     3 after    9.80
 7     4 before   9.07
 8     4 after   10.2 
+
 ```
 
 ***
@@ -684,10 +700,12 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
+
 1     1  11.8  11.9 
 2     2   8.99 10.9 
 3     3  10.0   9.80
 4     4   9.07 10.2 
+
 ```
 
 Names prefix
@@ -707,6 +725,7 @@ long_mice
 6     3 after    9.80
 7     4 before   9.07
 8     4 after   10.2 
+
 ```
 
 ***
@@ -724,8 +743,10 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
+
 1     1         11.8          11.9
 2     2          8.99         10.9
+
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:

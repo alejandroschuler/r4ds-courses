@@ -1,4 +1,4 @@
-Data Transformation
+Basic Tabular Data Manipulation	
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham, updated to include GTEx sample data by Nicole Ferraro
 date: 2019, updated July 2020
@@ -50,7 +50,8 @@ Together these properties make it easy to chain together multiple simple steps t
 
 GTEx data
 ===
-**Nicole- please add some description here**
+This is a subset of the Genotype Tissue Expression (GTEx) dataset, which includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+
 
 ```r
 gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
@@ -391,13 +392,13 @@ Sampling rows
 ```r
 sample_n(gtex_data, 5)
 # A tibble: 5 x 7
-  Gene    Ind         Blood Heart  Lung Liver NTissues
-  <chr>   <chr>       <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 TAF5L   GTEX-1212Z -0.580 -0.6  -1.27  0.33        4
-2 COL15A1 GTEX-1A8FM -0.03   0.02  0     0.4         4
-3 SPRN    GTEX-YEC4   0.36   0.04  0.82 -1.06        4
-4 ANKMY2  GTEX-13FTZ -0.25  -0.23  0.93 -1.03        4
-5 DIS3    GTEX-1GN73  0.42  -1.78  0.98  2.27        4
+  Gene          Ind        Blood Heart  Lung Liver NTissues
+  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 RP11-98F14.12 GTEX-1JMLX  0.28  0.93  0.32  0.5         4
+2 NOL8          GTEX-18A66 -0.11  1.63  0.77 -1.56        4
+3 ZNF707        GTEX-18A66 -0.76 -1.34 -0.43 -1.01        4
+4 TMEM43        GTEX-YEC4  -1.32  1.33  1.27  2.85        4
+5 IGHV1-3       GTEX-ZPU1   0.59 -1.18  0.45  0.26        4
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -34177,66 +34178,6 @@ mutate(df, number = as.numeric(number))
 3      3
 ```
 - if you save the result into a column that already exists, it will be overwritten
-
-<!-- mutate() for computing offsets -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- lead(c(1,2,3)) -->
-<!-- lag(c(1,2,3)) -->
-<!-- ``` -->
-
-<!-- ```{r, tidy=F} -->
-<!-- scores = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   score = c(72, 87, 94, 99) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(scores, daily_improvement = score - lag(score)) -->
-<!-- ``` -->
-
-<!-- mutate() for cumulative functions -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- cumsum(c(1,2,3)) -->
-<!-- ``` -->
-<!-- - `cumsum` takes the cumulative sum of a vector. See `?cumsum` for similar functions -->
-
-<!-- ```{r, tidy=F} -->
-<!-- profits = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   profit = c(12, 40, 19, 13) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(profits, profit_to_date = cumsum(profit)) -->
-<!-- ``` -->
-
-<!-- mutate() for rolling functions -->
-<!-- === -->
-<!-- incremental: true -->
-<!-- ```{r} -->
-<!-- library("slider") -->
-<!-- slide_vec(c(1,2,3,4), mean, .before=1) -->
-<!-- ``` -->
-<!-- - `slide_vec` applies a function using a sliding window across a vector (sometimes called "rolling" functions) -->
-
-<!-- ```{r, tidy=F} -->
-<!-- profits = tibble( -->
-<!--   day = c(1,2,3,4), -->
-<!--   profit = c(12, 40, 19, 13) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- mutate(profits, avg_2_day_profit = slide_vec(profit, mean, .before=1)) -->
-<!-- ``` -->
-
-<!-- - More on this in the section on functional programming! -->
 
 Exercise: mutate()
 ===
