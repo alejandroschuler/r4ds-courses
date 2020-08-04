@@ -561,27 +561,36 @@ type:section
 
 Relational data
 =====================================================================
-class: small-code
 incremental: true
 
 - Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
 - When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
-- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix. 
+- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix we've been working with. 
+
 
 ```{r, message=FALSE}
 gtex_sample_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_metadata.csv")
 head(gtex_sample_data,2)
 ```
+- The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
+
+Relational data
+===
+incremental: true
+
+The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
 ```{r, message=FALSE}
 gtex_subject_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_subject_metadata.csv")
 head(gtex_subject_data,2)
 ```
+
+The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
 ```{r, message=FALSE}
 gtex_batch_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_batch_metadata.csv")
 head(gtex_batch_data,2)
 ```
 
-- We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
+We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
 Relational data
 ===
