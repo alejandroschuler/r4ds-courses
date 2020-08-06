@@ -46,7 +46,7 @@ incremental: true
 
 
 ```r
-gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv")
 Parsed with column specification:
 cols(
   month = col_double(),
@@ -65,16 +65,11 @@ head(gtex_samples_by_month, 2)
 
 ```r
 gtex_samples_by_month %>% 
-  mutate(increase_in_samples=n-lag(n)) %>%
+  mutate(increase_in_samples=num_samples-lag(num_samples)) %>%
   head(5)
-# A tibble: 5 x 4
-  month  year     n increase_in_samples
-  <dbl> <dbl> <dbl>               <dbl>
-1     5  2011    20                  NA
-2     6  2011    44                  24
-3     7  2011    90                  46
-4     8  2011   132                  42
-5     9  2011   100                 -32
+Error: Problem with `mutate()` input `increase_in_samples`.
+x object 'num_samples' not found
+ℹ Input `increase_in_samples` is `num_samples - lag(num_samples)`.
 ```
 
 Exercise: multiple offsets
@@ -111,6 +106,7 @@ Rolling functions
 
 ```r
 library("slider")
+Warning: package 'slider' was built under R version 3.6.2
 numbers = c(9,6,8,4,7,3,8,4,2,1,3,2)
 slide_vec(numbers, sum, .after=3, .step=2)
  [1] 27 NA 22 NA 22 NA 15 NA  8 NA  5 NA
@@ -130,13 +126,11 @@ slide_vec(numbers, sum, .after=3, .step=2)
 
 ```r
 gtex_samples_by_month %>%
-  mutate(avg_samples_2_month= slide_vec(n, mean, .before=1)) %>%
+  mutate(avg_samples_2_month= slide_vec(num_samples, mean, .before=1)) %>%
   head(2)
-# A tibble: 2 x 4
-  month  year     n avg_samples_2_month
-  <dbl> <dbl> <dbl>               <dbl>
-1     5  2011    20                  20
-2     6  2011    44                  32
+Error: Problem with `mutate()` input `avg_samples_2_month`.
+x object 'num_samples' not found
+ℹ Input `avg_samples_2_month` is `slide_vec(num_samples, mean, .before = 1)`.
 ```
 
 Cumulative functions
@@ -155,21 +149,10 @@ cumsum(c(1,2,3))
 
 ```r
 gtex_samples_by_month %>%
-  mutate(num_samples_to_date=cumsum(n))
-# A tibble: 66 x 4
-   month  year     n num_samples_to_date
-   <dbl> <dbl> <dbl>               <dbl>
- 1     5  2011    20                  20
- 2     6  2011    44                  64
- 3     7  2011    90                 154
- 4     8  2011   132                 286
- 5     9  2011   100                 386
- 6    10  2011   110                 496
- 7    11  2011   203                 699
- 8    12  2011   111                 810
- 9     1  2012   208                1018
-10     2  2012    95                1113
-# … with 56 more rows
+  mutate(num_samples_to_date=cumsum(num_samples))
+Error: Problem with `mutate()` input `num_samples_to_date`.
+x object 'num_samples' not found
+ℹ Input `num_samples_to_date` is `cumsum(num_samples)`.
 ```
 
 Turning any function into a cumulative function
@@ -182,21 +165,10 @@ Turning any function into a cumulative function
 library(slider) # imports slide_vec() function
 
 gtex_samples_by_month %>%
-  mutate(samples_to_date = slide_vec(n, sum, .before=Inf))
-# A tibble: 66 x 4
-   month  year     n samples_to_date
-   <dbl> <dbl> <dbl>           <dbl>
- 1     5  2011    20              20
- 2     6  2011    44              64
- 3     7  2011    90             154
- 4     8  2011   132             286
- 5     9  2011   100             386
- 6    10  2011   110             496
- 7    11  2011   203             699
- 8    12  2011   111             810
- 9     1  2012   208            1018
-10     2  2012    95            1113
-# … with 56 more rows
+  mutate(samples_to_date = slide_vec(num_samples, sum, .before=Inf))
+Error: Problem with `mutate()` input `samples_to_date`.
+x object 'num_samples' not found
+ℹ Input `samples_to_date` is `slide_vec(num_samples, sum, .before = Inf)`.
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -207,21 +179,10 @@ Turning any function into a cumulative function
 
 ```r
 gtex_samples_by_month %>%
-  mutate(avg_samples_by_month = slide_vec(n, mean, .before=Inf, na.rm=T))
-# A tibble: 66 x 4
-   month  year     n avg_samples_by_month
-   <dbl> <dbl> <dbl>                <dbl>
- 1     5  2011    20                 20  
- 2     6  2011    44                 32  
- 3     7  2011    90                 51.3
- 4     8  2011   132                 71.5
- 5     9  2011   100                 77.2
- 6    10  2011   110                 82.7
- 7    11  2011   203                 99.9
- 8    12  2011   111                101. 
- 9     1  2012   208                113. 
-10     2  2012    95                111. 
-# … with 56 more rows
+  mutate(avg_samples_by_month = slide_vec(num_samples, mean, .before=Inf, na.rm=T))
+Error: Problem with `mutate()` input `avg_samples_by_month`.
+x object 'num_samples' not found
+ℹ Input `avg_samples_by_month` is `slide_vec(num_samples, mean, .before = Inf, na.rm = T)`.
 ```
 
 Exercise: total number of samples in the last twelve months
@@ -283,11 +244,10 @@ df %>%
     mean_b = mean(c)
   )
 # A tibble: 2 x 3
-      g  mean_a mean_b
-  <int>   <dbl>  <dbl>
-1     0  0.307   0.149
-2     1 -0.0506  0.950
-
+      g mean_a mean_b
+  <int>  <dbl>  <dbl>
+1     0  0.640 -0.384
+2     1  0.238 -0.587
 ```
 
 
@@ -309,11 +269,10 @@ df %>%
     median_c = median(c)
   )
 # A tibble: 2 x 6
-      g  mean_a mean_b median_a median_b median_c
-  <int>   <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
-1     0  0.307   0.149    0.623   -0.745    0.188
-2     1 -0.0506  0.950    0.157    0.873    0.658
-
+      g mean_a mean_b median_a median_b median_c
+  <int>  <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
+1     0  0.640 -0.384    0.640   -0.965   -0.384
+2     1  0.238 -0.587    0.101    0.356   -0.439
 ```
 
 Columnwise operations
@@ -326,11 +285,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b,c), mean))
 # A tibble: 2 x 4
-      g       a      b     c
-  <int>   <dbl>  <dbl> <dbl>
-1     0  0.307  -0.633 0.149
-2     1 -0.0506  0.950 0.950
-
+      g     a      b      c
+  <int> <dbl>  <dbl>  <dbl>
+1     0 0.640 -0.965 -0.384
+2     1 0.238  0.180 -0.587
 ```
 
 - The first argument to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -350,11 +308,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b), fns))
 # A tibble: 2 x 5
-      g   a_avg a_max  b_avg b_max
-  <int>   <dbl> <dbl>  <dbl> <dbl>
-1     0  0.307  1.11  -0.633 0.384
-2     1 -0.0506 0.965  0.950 1.37 
-
+      g a_avg a_max  b_avg  b_max
+  <int> <dbl> <dbl>  <dbl>  <dbl>
+1     0 0.640  1.27 -0.965 -0.523
+2     1 0.238  2.17  0.180  1.21 
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -380,11 +337,10 @@ df %>%
   group_by(g) %>%
   summarize(across(where(is.numeric), mean))
 # A tibble: 2 x 3
-      g      a      b
-  <int>  <dbl>  <dbl>
-1     0 -0.287 0.0379
-2     1  0.185 0.0138
-
+      g     a      b
+  <int> <dbl>  <dbl>
+1     0 0.527 -0.282
+2     1 0.442 -0.660
 ```
 
 Columnwise mutate
@@ -406,19 +362,18 @@ df = tibble(
 df %>%
   mutate(across(where(is.character), as.numeric))
 # A tibble: 10 x 4
-        a      b      c     g
-    <dbl>  <dbl>  <dbl> <int>
- 1  0.245 -0.677 -1.29      1
- 2  0.996  0.100  0.952     1
- 3 -0.229  1.76  -0.844     1
- 4  1.59  -1.87   0.898     1
- 5 -1.27  -0.867  0.307     0
- 6 -1.31  -0.308 -0.815     0
- 7 -1.06   0.236 -0.237     1
- 8 -0.813 -0.278 -0.553     0
- 9 -2.99  -0.859 -0.502     1
-10 -0.431  1.22  -0.319     0
-
+         a       b      c     g
+     <dbl>   <dbl>  <dbl> <int>
+ 1 -0.405  -0.0532 -0.413     0
+ 2  0.0572  1.13    1.08      1
+ 3 -1.03   -0.540   2.25      1
+ 4  0.480   1.73   -2.33      1
+ 5 -0.0386 -0.930   1.21      1
+ 6  0.432   0.144   1.79      1
+ 7  0.162   1.69   -1.31      0
+ 8  0.492   1.59   -0.139     0
+ 9  0.546   2.25   -1.60      1
+10  0.559   0.748  -0.368     1
 ```
 
 Columnwise mutate
@@ -434,20 +389,18 @@ df %>%
     .names = '{col}_offset'   # how to name the outputs
   ))
 # A tibble: 10 x 6
-
-        a      b c                      g a_offset b_offset
-    <dbl>  <dbl> <chr>              <int>    <dbl>    <dbl>
- 1  0.245 -0.677 -1.28677126699135      1  NA        NA    
- 2  0.996  0.100 0.95173964809609       1   0.752     0.777
- 3 -0.229  1.76  -0.843728137220975     1  -1.23      1.66 
- 4  1.59  -1.87  0.897836800721194      1   1.82     -3.63 
- 5 -1.27  -0.867 0.307355925264016      0  -2.86      0.999
- 6 -1.31  -0.308 -0.81525410944242      0  -0.0393    0.560
- 7 -1.06   0.236 -0.23669857674492      1   0.254     0.544
- 8 -0.813 -0.278 -0.552648494624819     0   0.245    -0.514
- 9 -2.99  -0.859 -0.502114074293674     1  -2.17     -0.581
-10 -0.431  1.22  -0.319208458875381     0   2.56      2.08 
-
+         a       b c                      g a_offset b_offset
+     <dbl>   <dbl> <chr>              <int>    <dbl>    <dbl>
+ 1 -0.405  -0.0532 -0.413003427708553     0  NA        NA    
+ 2  0.0572  1.13   1.07602668211383       1   0.462     1.18 
+ 3 -1.03   -0.540  2.24764379150188       1  -1.08     -1.67 
+ 4  0.480   1.73   -2.33212076755356      1   1.51      2.27 
+ 5 -0.0386 -0.930  1.21058840973017       1  -0.519    -2.66 
+ 6  0.432   0.144  1.78707496139124       1   0.471     1.07 
+ 7  0.162   1.69   -1.31007697712278      0  -0.269     1.55 
+ 8  0.492   1.59   -0.139100848490278     0   0.330    -0.106
+ 9  0.546   2.25   -1.60483706549225      1   0.0534    0.664
+10  0.559   0.748  -0.367707727863041     1   0.0127   -1.50 
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -603,12 +556,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-
-1     1         11.8         11.9 
-2     2          8.99        10.9 
-3     3         10.0          9.80
-4     4          9.07        10.2 
-
+1     1         11.1          9.54
+2     2          9.31         8.15
+3     3         12.2         12.7 
+4     4         10.6         10.4 
 ```
 
 
@@ -619,11 +570,10 @@ wide_mice %>%
 # A tibble: 4 x 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1       0.153
-2     2       1.95 
-3     3      -0.203
-4     4       1.16 
-
+1     1      -1.52 
+2     2      -1.16 
+3     3       0.440
+4     4      -0.262
 ```
 
 ***
@@ -633,16 +583,14 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-
-1     1 before  11.8 
-2     1 after   11.9 
-3     2 before   8.99
-4     2 after   10.9 
-5     3 before  10.0 
-6     3 after    9.80
-7     4 before   9.07
-8     4 after   10.2 
-
+1     1 before  11.1 
+2     1 after    9.54
+3     2 before   9.31
+4     2 after    8.15
+5     3 before  12.2 
+6     3 after   12.7 
+7     4 before  10.6 
+8     4 after   10.4 
 ```
 
 
@@ -656,12 +604,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-
-1     1       0.153
-2     2       1.95 
-3     3      -0.203
-4     4       1.16 
-
+1     1      -1.52 
+2     2      -1.16 
+3     3       0.440
+4     4      -0.262
 ```
 
 Pivoting wider
@@ -676,16 +622,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-
-1     1 before  11.8 
-2     1 after   11.9 
-3     2 before   8.99
-4     2 after   10.9 
-5     3 before  10.0 
-6     3 after    9.80
-7     4 before   9.07
-8     4 after   10.2 
-
+1     1 before  11.1 
+2     1 after    9.54
+3     2 before   9.31
+4     2 after    8.15
+5     3 before  12.2 
+6     3 after   12.7 
+7     4 before  10.6 
+8     4 after   10.4 
 ```
 
 ***
@@ -700,12 +644,10 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
-
-1     1  11.8  11.9 
-2     2   8.99 10.9 
-3     3  10.0   9.80
-4     4   9.07 10.2 
-
+1     1  11.1   9.54
+2     2   9.31  8.15
+3     3  12.2  12.7 
+4     4  10.6  10.4 
 ```
 
 Names prefix
@@ -717,15 +659,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.8 
-2     1 after   11.9 
-3     2 before   8.99
-4     2 after   10.9 
-5     3 before  10.0 
-6     3 after    9.80
-7     4 before   9.07
-8     4 after   10.2 
-
+1     1 before  11.1 
+2     1 after    9.54
+3     2 before   9.31
+4     2 after    8.15
+5     3 before  12.2 
+6     3 after   12.7 
+7     4 before  10.6 
+8     4 after   10.4 
 ```
 
 ***
@@ -743,10 +684,8 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-
-1     1         11.8          11.9
-2     2          8.99         10.9
-
+1     1         11.1          9.54
+2     2          9.31         8.15
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -897,6 +836,7 @@ head(gtex_batch_data,2)
 
 We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
 
+
 Relational data
 ===
 
@@ -911,9 +851,43 @@ Relational data
 - `sample` connects to `batch` through the `batch_id` variable.
 
 
+Relational + tidy data
+===
+incremental: true
+For the expression data, we have been using the `gtex_data` expression data frame:
+
+```r
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+gtex_data %>% head(2)
+# A tibble: 2 x 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+```
+
+The expression data on the previous slide is formatted slightly differently:
+
+```r
+gtex_expression = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_expression.csv")
+Error in open.connection(con, "rb"): HTTP error 404.
+gtex_expression %>% head(2) # note: sample_id replaces Ind + tissue
+Error in eval(lhs, parent, parent): object 'gtex_expression' not found
+```
+What makes this data tidy when the other is not? (You'll notice that a `pivot` helped convert between the two.)
+
+```r
+gtex_data %>% pivot_longer(Blood:Liver, names_to="tissue", values_to="zscore") %>% head(2)
+# A tibble: 2 x 5
+  Gene  Ind        NTissues tissue zscore
+  <chr> <chr>         <dbl> <chr>   <dbl>
+1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
+2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
+```
+
 An example join
 ===
-- Imagine we want to add subject add to the sample data
+- Imagine we want to add subject information to the sample data
 - We can accomplish that with a **join**:
 
 ```r
@@ -1021,26 +995,35 @@ Specifying the keys
 - When keys have different names in different dataframes, the syntax to join is:
 
 ```r
-inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id"))
-# A tibble: 389,922 x 10
-   Gene  Ind      Blood Heart   Lung Liver NTissues sex    age   death          
-   <chr> <chr>    <dbl> <dbl>  <dbl> <dbl>    <dbl> <chr>  <chr> <chr>          
- 1 A2ML1 GTEX-11… -0.14 -1.08 NA     -0.66        3 male   50-59 ventilator     
- 2 A2ML1 GTEX-11… -0.5   0.53  0.76  -0.1         4 female 60-69 sudden but nat…
- 3 A2ML1 GTEX-11… -0.08 -0.4  -0.26  -0.13        4 male   50-59 sudden but nat…
- 4 A2ML1 GTEX-11… -0.37  0.11 -0.42  -0.61        4 male   60-69 sudden but nat…
- 5 A2ML1 GTEX-11…  0.3  -1.11  0.59  -0.12        4 male   20-29 ventilator     
- 6 A2ML1 GTEX-11…  0.02 -0.47  0.290 -0.66        4 male   60-69 sudden but nat…
- 7 A2ML1 GTEX-11… -1.07 -0.41  0.67   0.06        4 male   30-39 accident       
- 8 A2ML1 GTEX-11… -0.27 -0.51  0.13  -0.75        4 female 50-59 sudden but nat…
- 9 A2ML1 GTEX-12… -0.3   0.53  0.1   -0.48        4 male   60-69 sudden but nat…
-10 A2ML1 GTEX-12… -0.11  0.24  0.96   0.72        4 male   60-69 illness        
-# … with 389,912 more rows
+head(gtex_data,2)
+# A tibble: 2 x 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+head(gtex_subject_data,2)
+# A tibble: 2 x 4
+  subject_id sex    age   death                    
+  <chr>      <chr>  <chr> <chr>                    
+1 GTEX-11DXZ male   50-59 ventilator               
+2 GTEX-11GSP female 60-69 sudden but natural causes
+
+inner_join(gtex_data, gtex_subject_data, by=c("Ind"="subject_id")) %>% head(5)
+# A tibble: 5 x 10
+  Gene  Ind       Blood Heart  Lung Liver NTissues sex   age   death            
+  <chr> <chr>     <dbl> <dbl> <dbl> <dbl>    <dbl> <chr> <chr> <chr>            
+1 A2ML1 GTEX-11D… -0.14 -1.08 NA    -0.66        3 male  50-59 ventilator       
+2 A2ML1 GTEX-11G… -0.5   0.53  0.76 -0.1         4 fema… 60-69 sudden but natur…
+3 A2ML1 GTEX-11N… -0.08 -0.4  -0.26 -0.13        4 male  50-59 sudden but natur…
+4 A2ML1 GTEX-11N… -0.37  0.11 -0.42 -0.61        4 male  60-69 sudden but natur…
+5 A2ML1 GTEX-11T…  0.3  -1.11  0.59 -0.12        4 male  20-29 ventilator       
 ```
+Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subject_data`).
+
 
 Exercise: finding expression of specific samples
 ===
-Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year. 
+Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year (we'll go over how this worked in the next lecture). 
 
 ```r
 batch_data_year = gtex_batch_data %>% 
@@ -1054,6 +1037,8 @@ head(batch_data_year, 2)
 1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 2013-05-02  2013
 2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 2013-08-14  2013
 ```
+
+Note that you'll have to join to other data frames the `sample` data frame to put this together.
 
 Other joins
 ===
@@ -1078,10 +1063,10 @@ Other joins
 
 Joining on multiple columns
 ===
-- It is often desirable to find matches along more than one column, such as month and year in this example
+- It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
 
 ```r
-gtex_tissue_month = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
+gtex_tissue_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_tissue_month_year.csv") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 head(gtex_tissue_month,2)
 # A tibble: 2 x 4
@@ -1089,25 +1074,64 @@ head(gtex_tissue_month,2)
   <chr>  <dbl> <dbl>        <dbl>
 1 Blood      1  2012           25
 2 Blood      1  2013           16
-gtex_tissue_month %>% inner_join(
-  gtex_samples_by_month, by=c("month", "year") ) %>%
-  head(2)
-# A tibble: 2 x 5
+
+gtex_samples_by_month = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_samples_time.csv") %>%
+  rename(total_num_samples=num_samples)
+Error: Can't rename columns that don't exist.
+[31mx[39m Column `num_samples` doesn't exist.
+head(gtex_samples_by_month, 2)
+# A tibble: 2 x 3
+  month  year     n
+  <dbl> <dbl> <dbl>
+1     5  2011    20
+2     6  2011    44
+
+gtex_tissue_month %>% 
+  inner_join(gtex_samples_by_month, by=c("month", "year") ) %>%
+  head(5)
+# A tibble: 5 x 5
   tissue month  year tiss_samples     n
   <chr>  <dbl> <dbl>        <dbl> <dbl>
 1 Blood      1  2012           25   208
 2 Blood      1  2013           16    64
+3 Blood      1  2014           26   662
+4 Blood      1  2015           39   263
+5 Blood      2  2012            9    95
 ```
-- This is also possible if the columns have different names
+
+Joining on multiple columns
+===
+
+This is also possible if the columns have different names:
 
 ```r
-gtex_long = gtex_data %>% 
+gtex_data_long = gtex_data %>% 
   pivot_longer(cols=c("Blood","Heart", "Lung","Liver"), 
                names_to="tissue", values_to="zscore") 
+gtex_data_long %>% head(2)
+# A tibble: 2 x 5
+  Gene  Ind        NTissues tissue zscore
+  <chr> <chr>         <dbl> <chr>   <dbl>
+1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
+2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
 
-gtex_data_long %>% inner_join(gtex_sample_data, 
-                              by=c("tissue", "Ind"="subject_id")) %>%
-  head(2)
+gtex_sample_data %>% head(2)
+# A tibble: 2 x 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
+1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
+2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
+
+
+gtex_data_long %>% inner_join(gtex_sample_data, by=c("tissue", "Ind"="subject_id")) %>%  head(5)
+# A tibble: 5 x 9
+  Gene  Ind      NTissues tissue zscore sample_id   batch_id center_id rin_score
+  <chr> <chr>       <dbl> <chr>   <dbl> <chr>       <chr>    <chr>         <dbl>
+1 A2ML1 GTEX-11…        3 Blood   -0.14 0003-SM-58… BP-39216 B1             NA  
+2 A2ML1 GTEX-11…        3 Heart   -1.08 0326-SM-5E… BP-44460 B1              8.3
+3 A2ML1 GTEX-11…        3 Lung    NA    0726-SM-5N… BP-43956 B1              7.8
+4 A2ML1 GTEX-11…        3 Liver   -0.66 0126-SM-5E… BP-44460 B1              7.9
+5 A2ML1 GTEX-11…        4 Blood   -0.5  0004-SM-58… BP-39412 B1             NA  
 ```
 
 Join problems
