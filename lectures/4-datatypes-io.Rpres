@@ -656,43 +656,45 @@ factor(months_vec) %>%
   fct_inorder()
 ```
 
-Example: gss_cat
+Example: Human Phenotype Ontology (HPO) dataset
 ===
-- This is an example data frame loaded by `forcats` that has many factor columns, which are identifiable by the `<fct>` tag
-- It’s a sample of data from the General Social Survey, which is a long-running US survey conducted by the independent research organization NORC at the University of Chicago.
+- This is an example data frame from the HPO resource (https://hpo.jax.org/app/) which uses structured IDs to describe patient phenotypes and map to associated genes. Also included are broad disease categories assigned to each gene based on several curated disease lists.
+- Using the `col_types` argument, we tell R to read in several columsn as factors, which are identifiable by the `<fct>` tag
+- This data frame contains information about several structured phenotypes (HPO_ID) which have associated descriptions (HPO_Name), related genes (Gene_Name), and broad disease categories associated with that gene (Gene_Disease)
 ```{r}
-gss_cat
+hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
+head(hpo_data)
 ```
 
 ```{r}
-gss_cat %>%
-  pull(marital) %>%
+hpo_data %>%
+  pull(HPO_Name) %>%
   levels()
 ```
 
 Ordering factor levels
 ===
 - It’s often useful to change the order of the factor levels in a visualisation
-- For example, imagine you want to explore the average number of hours spent watching TV per day across religions
+- For example, imagine you want to explore the number of genes associated with each phenotype
 ```{r}
-relig_tv = gss_cat %>%
-  group_by(relig) %>%
+num_genes = hpo_data %>%
+  group_by(HPO_ID) %>%
   summarise(
-    age = mean(age, na.rm = TRUE),
-    tvhours = mean(tvhours, na.rm = TRUE),
-    n = n())
-ggplot(relig_tv, aes(tvhours, relig)) + 
-  geom_point()
+    ngenes = n())
+ggplot(num_genes, aes(HPO_ID, ngenes)) + 
+  geom_point() + 
+  theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 
 Ordering factor levels
 ===
-- It would be better if the religions in this plot were ordered according to the number of TV hours
+- It would be better if the HPO IDs in this plot were ordered according to the number of associated genes
 ```{r message=FALSE}
-relig_tv %>%
-  mutate(relig = fct_reorder(relig, tvhours)) %>%
-ggplot(aes(tvhours, relig)) + 
-  geom_point()
+num_genes %>%
+  mutate(HPO_ID = fct_reorder(HPO_ID, ngenes)) %>%
+  ggplot() + 
+  geom_point(aes(HPO_ID, ngenes)) + 
+  theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 - `fct_reorder()` takes in a factor vector and a numeric vector that is used to sort the levels
 
@@ -701,38 +703,35 @@ Ordering factor levels
 - `fct_infreq()` orders by how often the levels appear in the factor vector
 - `fct_rev()` reverses the order
 ```{r}
-gss_cat %>%
-  mutate(marital = marital %>% 
+hpo_data %>%
+  mutate(Gene_Disease = Gene_Disease %>% 
         fct_infreq() %>% 
         fct_rev()) %>%
-ggplot(aes(marital)) +
+ggplot(aes(Gene_Disease)) +
   geom_bar()
 ```
 
 Recoding factor levels
 ===
 ```{r message=FALSE}
-gss_cat %>% 
-  group_by(partyid) %>%
+hpo_data %>% 
+  group_by(Gene_Disease) %>%
   summarize(count=n()) %>%
   arrange(desc(count))
 ```
-- These factor levels are terrible
+- These factor levels are vague
 - we can change them with `fct_recode()`
 
 Recoding factor levels
 ===
 ```{r}
-gss_cat %>%
-  mutate(partyid = fct_recode(partyid,
-    "Republican, strong"    = "Strong republican",
-    "Republican, weak"      = "Not str republican",
-    "Independent, near rep" = "Ind,near rep",
-    "Independent, near dem" = "Ind,near dem",
-    "Democrat, weak"        = "Not str democrat",
-    "Democrat, strong"      = "Strong democrat"
-  )) %>%
-  pull(partyid) %>%
+hpo_data %>%
+  mutate(Gene_Disease = fct_recode(Gene_Disease, 
+                                "Cardiology" = "Cardio",
+                                "Neurology" = "Neuro",
+                                "Hematology" = "Hema"
+                                )) %>%
+  pull(Gene_Disease) %>%
   levels()
 ```
 - Levels that you don't mention are left alone
@@ -742,31 +741,32 @@ Exercise: plotting factors over time
 ===
 type:prompt 
 
-How have the proportions of people identifying as Democrat, Republican, and Independent changed over time? Recreate the following plot from the `gss_cat` data:
+How does the proportion of disease associations (Cancer, Cardio, etc.) for the genes mapped to each given HPO ID vary across each phenotype (HPO_Name)? Recreate the following plot from the `hpo_data` data:
 
-```{r message=FALSE, echo=F}
-party_colors = c(
-  "Democrat" = "blue",
-  "Republican" = "red",
-  "Independent" = "purple",
-  "Other" = "grey"
+```{r message=FALSE, echo=F, fig.width = 15}
+type_colors = c(
+  "Cancer" = "lightblue",
+  "Cardiology_or_Hematology" = "darkred",
+  "Neurology" = "pink",
+  "None" = "grey"
 )
 
-gss_cat %>%
-  mutate(partyid = fct_collapse(partyid,
-    Democrat = c("Not str democrat", "Strong democrat"),
-    Republican = c("Not str republican", "Strong republican"),
-    Independent = c("Independent", "Ind,near rep", "Ind,near dem"),
-    Other = c("Other party", "Don't know", "No answer"))) %>%
-  group_by(partyid, year) %>%
+hpo_data %>%
+  mutate(Gene_Disease = fct_collapse(Gene_Disease,
+    Cancer = c("Cancer"),
+    Neurology = c("Neuro"),
+    None = c("None"),
+    Cardiology_or_Hematology = c("Cardio", "Hema"))) %>%
+  group_by(HPO_Name, Gene_Disease) %>%
   summarize(count = n()) %>%
   mutate(proportion = count/sum(count)) %>% 
-ggplot(aes(x=year, y=proportion, fill=partyid)) + 
+ggplot(aes(x=HPO_Name, y=proportion, fill=Gene_Disease)) + 
   geom_bar(position = "fill", stat = "identity") + 
-  scale_fill_manual(values = party_colors)
+  scale_fill_manual(values = type_colors) +
+  theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 
-`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate parties with their familiar colors.
+`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with colors.
 
 Dates and times
 === 
