@@ -659,28 +659,27 @@ factor(months_vec) %>%
 Example: Human Phenotype Ontology (HPO) dataset
 ===
 - This is an example data frame from the HPO resource (https://hpo.jax.org/app/) which uses structured IDs to describe patient phenotypes and map to associated genes. Also included are broad disease categories assigned to each gene based on several curated disease lists.
-- Using the `col_types` argument, we tell R to read in several columsn as factors, which are identifiable by the `<fct>` tag
+- Using the `col_types` argument, we tell R to read in several columns as factors, which are identifiable by the `<fct>` tag
 - This data frame contains information about several structured phenotypes (HPO_ID) which have associated descriptions (HPO_Name), related genes (Gene_Name), and broad disease categories associated with that gene (Gene_Disease)
 ```{r}
 hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
-head(hpo_data)
+head(hpo_data,2)
 ```
 
 ```{r}
 hpo_data %>%
   pull(HPO_Name) %>%
-  levels()
+  levels() 
 ```
 
 Ordering factor levels
 ===
-- It’s often useful to change the order of the factor levels in a visualisation
+- It’s often useful to change the order of the factor levels in a visualization
 - For example, imagine you want to explore the number of genes associated with each phenotype
-```{r}
+```{r, message=F}
 num_genes = hpo_data %>%
   group_by(HPO_ID) %>%
-  summarise(
-    ngenes = n())
+  summarise(ngenes = n())
 ggplot(num_genes, aes(HPO_ID, ngenes)) + 
   geom_point() + 
   theme(axis.text.x=element_text(hjust=1,angle=45))
@@ -692,7 +691,7 @@ Ordering factor levels
 ```{r message=FALSE}
 num_genes %>%
   mutate(HPO_ID = fct_reorder(HPO_ID, ngenes)) %>%
-  ggplot() + 
+ggplot() + 
   geom_point(aes(HPO_ID, ngenes)) + 
   theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
@@ -705,8 +704,8 @@ Ordering factor levels
 ```{r}
 hpo_data %>%
   mutate(Gene_Disease = Gene_Disease %>% 
-        fct_infreq() %>% 
-        fct_rev()) %>%
+    fct_infreq() %>% 
+    fct_rev()) %>%
 ggplot(aes(Gene_Disease)) +
   geom_bar()
 ```
@@ -726,11 +725,12 @@ Recoding factor levels
 ===
 ```{r}
 hpo_data %>%
-  mutate(Gene_Disease = fct_recode(Gene_Disease, 
-                                "Cardiology" = "Cardio",
-                                "Neurology" = "Neuro",
-                                "Hematology" = "Hema"
-                                )) %>%
+  mutate(Gene_Disease = fct_recode(
+    Gene_Disease, 
+    "Cardiology" = "Cardio",
+    "Neurology" = "Neuro",
+    "Hematology" = "Hema"
+  )) %>%
   pull(Gene_Disease) %>%
   levels()
 ```
@@ -766,7 +766,7 @@ ggplot(aes(x=HPO_Name, y=proportion, fill=Gene_Disease)) +
   theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 
-`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with colors.
+`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
 
 Dates and times
 === 
