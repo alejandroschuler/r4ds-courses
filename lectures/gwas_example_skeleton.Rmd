@@ -2,9 +2,6 @@ Plotting GWAS data
 ========================================================
 author: Emily Flynn
 date: 8/25/2020
-transition: none
-width: 1680
-height: 1050
 
 Learning objectives
 ========================================================
@@ -53,7 +50,7 @@ First, we're going to read in summary statistics for testosterone. For GWAS, the
 These files were generated using plink. 
 
 
-```r
+```{r}
 library('tidyverse')
 testosterone_m =read_tsv("https://www.dropbox.com/s/dtvuhymnsf2nyog/ukbb_testosterone_sumstats_males.txt?dl=1")
 testosterone_f =read_tsv("https://www.dropbox.com/s/3j1m02lxuezikb4/ukbb_testosterone_sumstats_females.txt?dl=1")
@@ -123,7 +120,7 @@ type: prompt
 
 Read in the data.Try using `summary()` - what do you notice about the data? What about missingness?
 
-```r
+```{r}
 library('tidyverse')
 testosterone_m = read_tsv("https://www.dropbox.com/s/dtvuhymnsf2nyog/ukbb_testosterone_sumstats_males.txt?dl=1")
 testosterone_f = read_tsv("https://www.dropbox.com/s/3j1m02lxuezikb4/ukbb_testosterone_sumstats_females.txt?dl=1")
@@ -143,13 +140,11 @@ type: section
 The standard way to visualize GWAS data is to create a Manhattan plot.
 The R package qqman helps us with this:
 
-```r
+```{r}
 #install.packages('qqman')
 library('qqman')
 manhattan(gwasResults) # example data
 ```
-
-![plot of chunk unnamed-chunk-7](gwas_example-figure/unnamed-chunk-7-1.png)
 
 
 Exercise - plotting our data with qqman
@@ -158,14 +153,14 @@ type: prompt
 
 Let's start with a smaller version of the testosterone dataset -- we'll come back to why in a second.
 
-```r
+```{r}
 testosterone_sm = testosterone_f %>% sample_n(10000)
 ```
 
 
 What modifications do you have to make to the data to be able to plot? In order to use qqman, we'll have to figure out how to get our data into the manhattan function. Try `?manhattan` and then also take a look at the example data -- how does it look different from our data? What are the labels and types of the important columns? 
 
-```r
+```{r}
 gwasResults %>% as_tibble() %>% head(2)
 ```
 
@@ -177,7 +172,7 @@ gwasResults %>% as_tibble() %>% head(2)
 2 rs2       1     2 0.937
 ```
 
-```r
+```{r}
 testosterone_sm %>% head(3)
 ```
 
@@ -199,7 +194,7 @@ Plotting large datasets
 
 We used `sample_n()` to select a small portion of the dataset because if you try to plot the entire data you'll notice it starts to hang.
 
-```r
+```{r}
 #manhattan(testosterone_cleaned)
 ```
 
@@ -224,14 +219,10 @@ Typically, when we downsample for visualization purposes, we want to downsample 
 
 
 
-
-
-
-```r
+```{r}
 manhattan(testosterone_downsampled)
 ```
 
-![plot of chunk unnamed-chunk-14](gwas_example-figure/unnamed-chunk-14-1.png)
 
 We can now plot in a reasonable time but the high y axis scale makes it hard to see. 
 
@@ -240,12 +231,9 @@ We can now plot in a reasonable time but the high y axis scale makes it hard to 
 To fix this, we want to truncate the data -- here it is truncated such that all $p < 10^{-30}$ are set to $p = 10^{-30}$. 
 
 
-
-```r
+```{r}
 manhattan(testosterone_truncated)
 ```
-
-![plot of chunk unnamed-chunk-15](gwas_example-figure/unnamed-chunk-15-1.png)
 
 Does this help? 
 
@@ -264,7 +252,7 @@ type: prompt
 
 3. Functions: While we could copy and paste to do the same thing for the male sumstats data, it's better to wrap it in a function. Write a function that takes summary stats and performs the pre-processing steps which just did to get it ready for a manhattan plot. Check that it produces the same output (within random sampling) on the female testosterone sumstats data, then apply to the male data.
 
-```r
+```{r}
 preprocess_gwas_for_manhattan = function(sum_stats){
   # 1. remove NAs
   # 2. fix column names
@@ -301,7 +289,7 @@ My adaptation is here https://github.com/rivas-lab/sex-div-analysis/blob/master/
 
 To simplify, we can just load the functions using `source()`. Source all the code located in a file, so make sure you know what you are running before using this command.
 
-```r
+```{r}
 source("https://raw.githubusercontent.com/rivas-lab/sex-div-analysis/master/src/07_figures/s5_make_miami_plot.R")
 ```
 The key functions here are: `prep_miami_dat()` and `make_miami_plot()`. 
@@ -312,17 +300,12 @@ Making a Miami plot
 Now let's use the data we just cleaned and these new functions to make a Miami plot:
 
 
-
-
-
-
-```r
+```{r}
 gwas_dat = prep_miami_dat(testosterone_f_clean, testosterone_m_clean)
 gwas_dat %>%
   make_miami_plot()
 ```
 
-![plot of chunk unnamed-chunk-20](gwas_example-figure/unnamed-chunk-20-1.png)
 
 
 Highlighting points
@@ -330,14 +313,13 @@ Highlighting points
 
 Let's make the significant variants stand out. The nice thing is that we have a ggplot object so we can just add to it. We can do this by adding points. An easy way to add these points is to add new data objects for these geoms.
 
-```r
+```{r}
 gwas_dat %>%
   make_miami_plot()+
    geom_point(data=gwas_dat %>% filter(log10P > 8), col="blue")+
    geom_point(data=gwas_dat %>% filter(log10P < -8), col="red")
 ```
 
-![plot of chunk unnamed-chunk-21](gwas_example-figure/unnamed-chunk-21-1.png)
 
 
 Adding labels
@@ -346,7 +328,7 @@ As part of my analysis of these data, we used a Bayesian Mixture Model to identi
 
 First, let's read in these data. They're part of the supplement for this paper (Table S10) and are located in three different sheets. We'll read directly from the google sheets, but think about how you'd read these data in if you downloaded the supplement for the paper. 
 
-```r
+```{r}
 #install.packages('googlesheets4') # tidyverse package for google sheets
 library('googlesheets4') # note: you can do fancy things if you pair with the googledrive package
 supplement_url = "https://docs.google.com/spreadsheets/d/1id9s8dqJYHgOiCk9VmdjHmBnVz1xo9kOg9ilwTWFLRY/edit#gid=325131881"
@@ -393,7 +375,6 @@ left: 60%
 ```
 
 3. Now use this to plot the points in a different color. Think about what you will use for the `data` argument.
-![plot of chunk unnamed-chunk-25](gwas_example-figure/unnamed-chunk-25-1.png)
 
 
 Adding labels for genes
@@ -402,7 +383,7 @@ You might be interested in looking at what genes are attached to the significant
 
 For a first pass, it can be helpful to sample only a subset of variants so that we don't get too crowded with labels.
 
-```r
+```{r}
 #install.packages('ggrepel')
 library(ggrepel)
 gwas_dat %>%
@@ -411,7 +392,6 @@ gwas_dat %>%
    geom_label_repel(data=gwas_w_fspec %>% sample_n(50), aes(label=GENE), size=2) 
 ```
 
-![plot of chunk unnamed-chunk-26](gwas_example-figure/unnamed-chunk-26-1.png)
 
 
 

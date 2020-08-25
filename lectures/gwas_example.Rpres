@@ -1,27 +1,50 @@
-GWAS Example
+Plotting GWAS data
 ========================================================
 author: Emily Flynn
-date: 8/24/2020
+date: 8/25/2020
 transition: none
 width: 1680
 height: 1050
 
 Learning objectives
 ========================================================
-- preprocess a large messy dataset
+- preprocess a large messy GWAS dataset
 - use an R package to make manhattan plots
-- use external code to make a miami plot
+- make a paper-ready miami plot
 
 
 Background
 ========================================================
-- UK Biobank
-- Sex differences
-- Sex differences in testosterone genetics
-- Genome-wide association study (GWAS)
+- UK Biobank is a repository with genetic and phenotypic data for 500,000 individuals
 
-https://www.biorxiv.org/content/10.1101/837021v1
+- We looked at whether sex differences in lab test levels were due to genetics
 
+- For most biomarkers we examined this was not the case, except for testosterone
+
+Background
+========================================================
+- UK Biobank is a repository with genetic and phenotypic data for 500,000 individuals
+
+- We looked at whether sex differences in lab test levels were due to genetics
+
+- For most biomarkers we examined this was not the case, except for testosterone
+
+<div align="center">
+<img src="https://www.dropbox.com/s/tsy4timfau48uo6/gen_cor_plot.png?raw=1", , height=600, width=1200>
+</div>
+
+Paper link: https://www.biorxiv.org/content/10.1101/837021v1
+
+
+Goal: plot GWAS data for testosterone
+=====================================================
+We're going to use GWAS data for testosterone to remake this plot from the paper. 
+
+The plot allows us to visualize genetic variants that have different associations with testosterone in males and females.
+
+<div align="center">
+<img src="https://www.dropbox.com/s/y4pyagpng1glv9y/mhplot_high_p2.png?raw=1", height=800, width=1000>
+</div>
 
 Dataset - GWAS summary statistics
 ========================================================
@@ -29,7 +52,6 @@ First, we're going to read in summary statistics for testosterone. For GWAS, the
 
 These files were generated using plink. 
 
-Try using `summary()` - what do you notice about the data? What about missingness?
 ```{r, message=FALSE}
 library('tidyverse')
 testosterone_m =read_tsv("https://www.dropbox.com/s/dtvuhymnsf2nyog/ukbb_testosterone_sumstats_males.txt?dl=1")
@@ -41,50 +63,90 @@ head(testosterone_f, 3)
 How does GWAS work?
 ========================================================
 
-The idea behind GWAS is that we're fitting a ton of models, one for each variant, in order to identify variants is associated with a trait of interest. At every location (except for most of the X and Y chromosomes), people have two  alleles. Here we use an additive model (given by "ADD"), where for each person at that particular location we have a 0, 1, 2 for the number of copies of the alternate allele. There are other models that consider recessive/dominant or multiplicative effects. By fitting the model across many individuals, we get a coefficient (or $beta$) for the variant. We also get a standard error for that $beta$. 
+We want to identify which genetic variants are associated with a trait of interest. To do this we fit a model for each variant (up to 3mil models!).
 
- $$ trait \~ beta*num\_copies\_alternate\_allele $$
+ $$ trait = beta*num\_copies\_alternate\_allele $$
+ 
+For a given variant, there is reference and alternate (or multiple alternate) alleles (in this case a "C" or an "T"). Each person has two alleles at this location and a specific value for a trait (e.g. testosterone level).
+```{r, echo=FALSE}
+example_var = testosterone_f %>% filter(P < 10**(-10) & `#CHROM`=="7") %>% select(-OBS_CT, -TEST, -T_STAT, -A1) %>% head(1)
+n = 5
+sample_data = tibble("person_id"=1:n,
+       "variant_id"=rep(example_var$ID, n),
+       "alleles"=c("CC", "CT",  "CT", "CC", "TT"),
+       "testosterone_level"=runif(n),
+       "num_alternate"=c(0, 1, 1, 0, 2)) 
+sample_data 
+```
 
-After fitting tons of these models (in theory as many as 3 million, one for each variant - in practice usually a factor below that), we then want to test whether the variants are associated with the trait, in this case testosterone. To do so, we test whether the coefficient $beta$ is significantly different than zero, and we get a p-value describing this. For very low p-values, we reject the null hypothesis that $beta$ is zero, or that the variant is not associated with the trait. Because we are doing so many tests, we use a very low threshold to call something "genome-wide significant" (the standard is  $p < 5 x 10^{-8}$).
+We fit the model on these data and the result is a summary statistic ($beta$, standard error) for that variant:
+```{r, echo=FALSE}
+example_var 
+```
 
-Looking at GWAS data
+Genome-wide significance
 ========================================================
 
+To test whether a variant is associated with a trait, we test whether the coefficient $beta$ is different than zero.  We get a p-value describing this.
+```{r, echo=FALSE}
+example_var 
+```
+
+- The null hypothesis is that $beta$ is zero, or that the variant is not associated with the trait.
+- For p-values below a certain threshold we reject the null hypothesis 
+
+- Because we are doing so many tests (up to 3mil!), we use a very low threshold to call something "genome-wide significant" (the standard is $p < 5 * 10^{-8}$).
+
+Try this: Look at Testosterone summary statistics
+========================================================
+type: prompt
+
+Read in the data.Try using `summary()` - what do you notice about the data? What about missingness?
+```{r, eval=FALSE}
+library('tidyverse')
+testosterone_m = read_tsv("https://www.dropbox.com/s/dtvuhymnsf2nyog/ukbb_testosterone_sumstats_males.txt?dl=1")
+testosterone_f = read_tsv("https://www.dropbox.com/s/3j1m02lxuezikb4/ukbb_testosterone_sumstats_females.txt?dl=1")
+```
+
 Use tidyverse to filter for the variants under the genome-wide significance threshold.
-What is the lowest p-value? What is the highest absolute coefficient (beta)?
+What is the lowest p-value? 
+What is the highest absolute coefficient (beta)?
 ```{r, echo=FALSE}
 # solution
 # testosterone_f %>% filter(P < (5*10^(-8))) %>% arrange(desc(abs(BETA))) %>% head(5)
 ```
 
 
-Plotting GWAS data with qqman
+
+Manhattan plots
 ========================================================
-left: 25%
+type: section
 
 The standard way to visualize GWAS data is to create a Manhattan plot.
-
+The R package qqman helps us with this:
 ```{r}
 #install.packages('qqman')
 library('qqman')
-manhattan(gwasResults)
+manhattan(gwasResults) # example data
 ```
 
-***
-
-In order to use qqman, we'll have to figure out how to get our data into the manhattan function. Try `?manhattan` and then also take a look at the GWAS results -- how does it look different from our data? What are the labels and types of the important columns? 
-```{r}
-gwasResults %>% as_tibble() %>% head(2)
-testosterone_f %>% head(3)
-```
 
 Exercise - plotting our data with qqman
 ========================================================
+type: prompt
 
-What modifications do you have to make to the data to be able to plot? Let's start with a smaller version of the testosterone dataset for females -- we'll come back to why in a second. Now work in groups to plot the data.
+Let's start with a smaller version of the testosterone dataset -- we'll come back to why in a second.
 ```{r}
 testosterone_sm = testosterone_f %>% sample_n(10000)
 ```
+
+
+What modifications do you have to make to the data to be able to plot? In order to use qqman, we'll have to figure out how to get our data into the manhattan function. Try `?manhattan` and then also take a look at the example data -- how does it look different from our data? What are the labels and types of the important columns? 
+```{r}
+gwasResults %>% as_tibble() %>% head(2)
+testosterone_sm %>% head(3)
+```
+
 
 ```{r,echo=FALSE}
 # answer key
@@ -102,30 +164,31 @@ testosterone_sm_cleaned = testosterone_cleaned %>% sample_n(10000)
 Plotting large datasets
 ========================================================
 
-We suggested starting with a smaller version of the dataset because if you try to plot the data - you'll notice it starts to hang.
+We used `sample_n()` to select a small portion of the dataset because if you try to plot the entire data you'll notice it starts to hang.
 ```{r}
 #manhattan(testosterone_cleaned)
 ```
 
-Use "Ctrl-C" or press the "STOP" button or try "Session" > "Interrupt R". These are all good ways to stop a command when it's taking too long.
+If you did this, use "Ctrl-C" or press the "STOP" button or try "Session" > "Interrupt R". These are all good ways to stop a command when it's taking too long.
 
-Why did this happen? Take a look at the number of rows in the example versus our dataset using `nrow()`. It's helpful to get an idea of how different the data are in size.
 
-We used `sample_n()` to select a smaller portion of the data to plot.
-```{r}
-manhattan(testosterone_sm_cleaned)
-```
-
-What are the variants with smallest pvalues in `t2_sm`? Does it match the full dataset?
-
-Downsampling for visualization
+Try this: Downsampling data
 ========================================================
+type: prompt
 
-Typically, when we downsample for visualization purposes, we want to downsample the data that we're less interested in - e.g. the variants that are not associated and have high p-values. For visualization purposes it looks like $p = 10^(-3)$ is a reasonable cutoff.
+1. Why did that hang? Take a look at the number of rows in the example versus our dataset using `nrow()`. It's helpful to get an idea of how different the data are in size.
 
-To do this, use tidyverse to divide the dataset into two parts based on p-value. Then use `sample_n()` to grab 10% of the high-pvalue variants. Put the data back together (hint: `bind_rows()`) and plot again with qqman. Does this work?
+2. What are the variants with smallest pvalues in `testosterone_sm`? Does it match the full dataset?
+
+
+Downsampling and truncating data for visualization
+========================================================
+incremental: true
+
+Typically, when we downsample for visualization purposes, we want to downsample the data that we're less interested in, e.g. the variants that are not associated. For visualization purposes let's use $p = 10^{-3}$ as a cutoff.
+
 ```{r, echo=FALSE}
-# answer key:
+# solution
 low_p = testosterone_cleaned %>%
   filter(P < (10**-3))
 high_p = testosterone_cleaned %>%
@@ -134,34 +197,44 @@ testosterone_downsampled = high_p %>% sample_n(floor(nrow(high_p)*0.1)) %>%
    bind_rows(low_p)
 ```
 
-Truncating the data for visualization
-========================================================
-You'll notice now that when you plot, you can do it in a reasonable time but the y axis scale now goes very high, which makes it hard to see. 
-
-```{r, echo=FALSE}
-manhattan(testosterone_downsampled)
-```
-
-***
-
-For visualization, it is common to truncate the data so it solves this, e.g. make all p-values < $10^(-30)$ equal to $10^-30$. Use a mutate to do this and visualize again. Does this help? Can you tell that we've downsampled the data?
 ```{r, echo=FALSE}
 # solution
 testosterone_truncated = testosterone_downsampled %>%
   mutate(P=ifelse(P<(10**(-30)),10**(-30), P ))
 ```
 
+
+```{r}
+manhattan(testosterone_downsampled)
+```
+
+We can now plot in a reasonable time but the high y axis scale makes it hard to see. 
+
+
+***
+To fix this, we want to truncate the data -- here it is truncated such that all $p < 10^{-30}$ are set to $p = 10^{-30}$. 
+
+
 ```{r}
 manhattan(testosterone_truncated)
 ```
 
-Functions
+Does this help? 
+
+Can you tell that we've downsampled the data?
+
+Exercise - Preprocessing the data for visualization
 ========================================================
-Now we want to do the same thing we just did with the testosterone GWAS summary statistics from males. 
+type: prompt
 
-We could copy and paste everything - but there is a better way!
+0. Go back to working with the full `testosterone_f` dataset (not the `testosterone_sm`) and repeat the preprocessing steps you did before to make it plot in qqman.
 
-Write a function that takes a table with summary stats and performs these pre-processing steps (dealing with column names, filtering NAs, converting to numeric, downsampling, etc) to get it ready for a manhattan plot. Check that it produces the same output (within random sampling) on the female testosterone sumstats data, then apply to the male data.
+1. Downsample: Divide the dataset into two parts based on p-value. Then use `sample_n()` to grab 10% of the high p-value variants (> $10^{-3}$). Put the data back together (hint: `bind_rows()`) and plot again with qqman. 
+
+2. Truncate: Use a mutate to make all p-values < $10^{-30}$ equal to $10^{-30}$ and replot.
+
+
+3. Functions: While we could copy and paste to do the same thing for the male sumstats data, it's better to wrap it in a function. Write a function that takes summary stats and performs the pre-processing steps which just did to get it ready for a manhattan plot. Check that it produces the same output (within random sampling) on the female testosterone sumstats data, then apply to the male data.
 ```{r}
 preprocess_gwas_for_manhattan = function(sum_stats){
   # 1. remove NAs
@@ -172,15 +245,23 @@ preprocess_gwas_for_manhattan = function(sum_stats){
 }
 ```
 
+
 Once you've processed the data, make both manhattan plots!
 
-Making the Manhattan plot fancier
-========================================================
-Take a look at the manhattan plot vignette and try a couple things: https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html. 
+Extra: If you're interested, you can also take a look at the manhattan plot vignette and try a couple things: https://cran.r-project.org/web/packages/qqman/vignettes/qqman.html. 
 
 Miami plot
 ========================================================
-A Miami plot is two Manhattan plots opposite each other. It allows for comparison of the datasets.
+type: section
+
+<div align="center">
+<img src="https://www.dropbox.com/s/y4pyagpng1glv9y/mhplot_high_p2.png?raw=1", height=800, width=1000>
+</div>
+
+
+Miami plot
+========================================================
+A Miami plot is two Manhattan plots opposite each other to allow for comparison of datasets.
 
 I initially googled "how to make a miami plot R" and tired a few solutions, but wound up wanting more control. So instead I googled "how to make a manhattan plot ggplot" and adapted the code for a Miami plot. 
 
@@ -198,11 +279,31 @@ The key functions here are: `prep_miami_dat()` and `make_miami_plot()`.
 Making a Miami plot
 ========================================================
 
-Now let's use the functions and cleaned data to make a Miami plot
+Now let's use the data we just cleaned and these new functions to make a Miami plot:
 
-```{r, ehco=FALSE}
-testosterone_f_clean <- testosterone_truncated
-testosterone_m_clean <- testosterone_truncated
+```{r, echo=FALSE}
+preprocess_gwas_for_manhattan = function(sum_stats){
+  sum_stats2 <- sum_stats %>% 
+    filter(!is.na(P)) %>%
+    rename("CHR"="#CHROM", "BP"="POS", "SNP"="ID") %>%
+    mutate(CHR=case_when(
+      CHR=="X" ~ 23,
+      CHR=="XY" ~ 24,
+      TRUE ~ as.numeric(CHR)
+    ))
+
+  low_p = sum_stats2 %>% filter(P < (10**-3))
+  high_p = sum_stats2 %>% filter(P >= (10**-3))
+  sum_stats3= high_p %>% sample_n(floor(nrow(high_p)*0.1)) %>% bind_rows(low_p)
+  
+  sum_stats3 %>%
+    mutate(P=ifelse(P<(10**(-30)),10**(-30), P ))
+}
+```
+
+```{r, echo=FALSE}
+testosterone_f_clean <- preprocess_gwas_for_manhattan(testosterone_f)
+testosterone_m_clean <- preprocess_gwas_for_manhattan(testosterone_m)
 
 ```
 
@@ -221,10 +322,8 @@ Let's make the significant variants stand out. The nice thing is that we have a 
 ```{r}
 gwas_dat %>%
   make_miami_plot()+
-   geom_point(data=gwas_dat %>% 
-                 filter(log10P > 8), col="blue")+
-   geom_point(data=gwas_dat %>% 
-                 filter(log10P < -8), col="red")
+   geom_point(data=gwas_dat %>% filter(log10P > 8), col="blue")+
+   geom_point(data=gwas_dat %>% filter(log10P < -8), col="red")
 ```
 
 
@@ -232,43 +331,45 @@ Adding labels
 ========================================================
 As part of my analysis of these data, we used a Bayesian Mixture Model to identify subsets of variants that showed shared and sex-specific effects. The details aren't important for this, let's just say that we want to highlight these variants in the plot.
 
-First, let's read in these data. They're part of the supplement for this paper (Table S10) and are located in three different sheets. We'll read directly from the google sheets, but think about how you'd read these data in if you downloaded the supplement from the paper page. 
+First, let's read in these data. They're part of the supplement for this paper (Table S10) and are located in three different sheets. We'll read directly from the google sheets, but think about how you'd read these data in if you downloaded the supplement for the paper. 
 ```{r}
-require('googlesheets4') # this is a tidyverse package for reading google sheets. It can do a lot more fancy stuff if you pair with the `googledrive` package, but we'll leave it at this for now. 
-
+#install.packages('googlesheets4') # tidyverse package for google sheets
+library('googlesheets4') # note: you can do fancy things if you pair with the googledrive package
 supplement_url = "https://docs.google.com/spreadsheets/d/1id9s8dqJYHgOiCk9VmdjHmBnVz1xo9kOg9ilwTWFLRY/edit#gid=325131881"
 f_spec = read_sheet(supplement_url, sheet=19)
-m_spec = read_sheet(supplement_url, sheet=20)
-shared = read_sheet(supplement_url, sheet=21)
-
+#m_spec = read_sheet(supplement_url, sheet=20)
+#shared = read_sheet(supplement_url, sheet=21)
 head(f_spec,4)
 ```
 
-Filter all pf these data so we're only looking at the Testosterone variants.
-```{r}
-f_spec_t = f_spec %>% filter(trait=="Testosterone")
-```
 
-Highlighting points -- part 2
+
+Try this: highlighting points
 ========================================================
+type: prompt
 left: 60%
 
-Then we're going to need to do a type of "join" with the "gwas_dat". First - what column are we joining by? You will have to use the `by=c("id1"="id2")` syntax. Second - what columns do we want in the output? Use a select and set it up so that this only adds two columns "Consequence" and "GENE" to the table.
+1. Read in and filter the f-specific variant data so we're only looking at the Testosterone variants.
+2. Use an `inner_join` to add this data to the "gwas_dat". First - what column are we joining by? You will have to use the `by=c("id1"="id2")` syntax. Second - what columns do we want in the output? Use a select and set it up so that this only adds two columns "Consequence" and "GENE" to the table. This is what the output should look like:
 
-```{r}
-f_spec_filt = gwas_dat %>% 
-  inner_join(f_spec_t %>% select(ID, GENE, Consequence), by=c("SNP"="ID"))
-head(f_spec_filt, 4)
+```{r, echo=FALSE}
+gwas_w_fspec = gwas_dat %>% 
+ inner_join(f_spec %>% 
+              filter(trait=="Testosterone") %>%
+              select(ID, GENE, Consequence), by=c("SNP"="ID"))
 ```
 
-*** 
-```{r}
+```{r, echo=FALSE}
+head(gwas_w_fspec, 3)
+```
+
+3. Now use this to plot the points in a different color. Think about what you will use for the `data` argument.
+```{r, echo=FALSE}
 gwas_dat %>%
   make_miami_plot()+
-   geom_point(data=f_spec_filt, col="blue")
+   geom_point(data=gwas_w_fspec, col="blue")
 ```
 
-Repeat this for each of the types of variants.
 
 Adding labels for genes
 =================
@@ -278,10 +379,10 @@ For a first pass, it can be helpful to sample only a subset of variants so that 
 ```{r}
 #install.packages('ggrepel')
 library(ggrepel)
-# gwas_dat %>%
-#   make_miami_plot()+
-#   geom_point(data=f_spec_filt, col="blue")+
-#   geom_label_repel(data=f_spec_filt %>% sample_n(50), aes(label=GENE), size=2) 
+gwas_dat %>%
+   make_miami_plot()+
+   geom_point(data=gwas_w_fspec, col="blue")+
+   geom_label_repel(data=gwas_w_fspec %>% sample_n(50), aes(label=GENE), size=2) 
 
 ```
 
@@ -289,19 +390,22 @@ library(ggrepel)
 
 Miami Plot Exercises 
 ==================================
+type: prompt
 
-1. Modify this code so that instead of sampling random genes, we are getting only the missense variants. You will use the `Consequence` field.
+0. Use the code on the previous slides to add labels and points for the male-specific variants. 
+
+1. Modify the code on the previous slide so that instead of sampling random genes, we are getting only the missense variants. You will use the `Consequence` field.
 
 2. Modify this again so that we only label the top 20 most significant variants.  
 
 3. Add in the m-spec and shared variants. Note - you may have to do something a little different to label variants these variants on either side of the axis. 
 
-```{r}
+```{r, echo=FALSE}
 # solution
 # gwas_dat %>%
 #   make_miami_plot()+
-#   geom_point(data=f_spec_filt, col="blue")+
-#   geom_label_repel(data=f_spec_filt %>% 
+#   geom_point(data=gwas_w_fspec, col="blue")+
+#   geom_label_repel(data=gwas_w_fspec %>% 
 #                      arrange(desc(log10P)) %>% head(30),
 #                    aes(label=GENE), size=2) 
 ```
