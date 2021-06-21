@@ -4,14 +4,15 @@
 | Person | Role | Contact |
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
-| Nicole Ferraro | TA | nferraro@stanford.edu |
 | Emily Flynn | TA | erflynn@stanford.edu |
-| Margaret Guo | TA | mguo123@stanford.edu | 
-| Larry Kalesinskas | TA | lkalesin@stanford.edu |
+| Margaret Antonio | TA | antmarge@stanford.edu |
+| Tim James Keyes | TA | tkeyes@stanford.edu |
+| Jacklyn Ha Luu | TA | jacklynl@stanford.edu |
 
-- Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020
-- Time: Tuesday/Thursday 12 PM - 1:30 PM PDT
-- Location: https://stanford.zoom.us/j/93589312185?pwd=OXQ0aWhHcGcxOE8rRE9sNXJoWFVyQT09 (9430520)
+- Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
+- Time: TBD
+- Location: TBD
+- Office Hours: by appointment with TAs
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
@@ -170,11 +171,17 @@ By the end of the course, you will be able to:
   </tbody>
 </table>
 
+### In-class Exercises
+Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into [Zoom breakout rooms](https://blog.zoom.us/using-zoom-breakout-rooms/) of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
+- **scribe** (1): The scribe will share their screen with the group and type out/execute the code required for the exercise. They will also contribute to the solution.
+- **presenter** (1): The presenter is in charge of presenting the group's work to the rest of the class once the breakout session has concluded. They should also contribute to the solution.
+- **contributor** (0+): Contributors are responsible for generating ideas and code for the exercise.
+
 ### Textbook
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020/lectures). Download the `.html` files for the "finished" product or the `.Rpres` files to see how the sausage is made.
+Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021/lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
