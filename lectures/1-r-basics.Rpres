@@ -200,7 +200,7 @@ Functions and variable assignment
 - Saving the result to a variable lets you use it later, like any other variable you define manually
 - Once a variable has been assigned (`y`), it keeps its value until updated, even if you change other variables (`x`) that went into the original assignment of that variable
 
-Arguments by position
+Arguments by position vs. name
 ========================================================
 - Arguments can be specified by position, with one supplied
 argument for each name in the function parameter list, and in the
@@ -221,8 +221,16 @@ ggplot(data=genes) +
   geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
-Default Arguments
+Optional arguments
 ===
+- Many R functions have arguments that you don't always have to specify. For example:
+```{r, tidy=F}
+file_name = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv"
+genes_10 = read_csv(file, n_max=10) # only read in 10 rows
+genes = read_csv(file) 
+```
+- `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
+- If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
 
 Why?
 ========================================================

@@ -34,7 +34,8 @@ genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-course
 - We've been using this data frame in code like
 
 ```r
-ggplot(genes) + geom_bar(aes(x = ancestry, fill = phenotype))
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
 ```
 - But what does this syntax really mean? Is it useful outside of making plots?
 
@@ -49,7 +50,7 @@ Assignment
 names to things.
 
 ```r
-mpg = read_csv("../data/mpg.csv")
+mpg = read_csv('../data/mpg.csv')
 ```
 - This code *assigns* the result of running `read_csv('data/mpg.csv')` to the name `mpg`
 - You can do this with any values and/or functions
@@ -67,7 +68,7 @@ Using the value of a variable
 ```r
 x
 [1] 10
-x/5
+x / 5
 [1] 2
 ```
 - When R sees the name of a variable, it uses the stored value of
@@ -127,7 +128,7 @@ Case matters for names in R
 
 ```r
 a = 1
-A  # this causes an error because A does not have a value
+A # this causes an error because A does not have a value
 ```
 ```
 Error: object 'A' not found
@@ -212,7 +213,7 @@ Functions and variable assignment
 - Saving the result to a variable lets you use it later, like any other variable you define manually
 - Once a variable has been assigned (`y`), it keeps its value until updated, even if you change other variables (`x`) that went into the original assignment of that variable
 
-Arguments by position
+Arguments by position vs. name
 ========================================================
 - Arguments can be specified by position, with one supplied
 argument for each name in the function parameter list, and in the
@@ -239,8 +240,19 @@ ggplot(data=genes) +
 
 ![plot of chunk unnamed-chunk-17](1-r-basics-figure/unnamed-chunk-17-1.png)
 
-Default Arguments
+Optional arguments
 ===
+- Many R functions have arguments that you don't always have to specify. For example:
+
+```r
+file_name = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv"
+genes_10 = read_csv(file, n_max=10) # only read in 10 rows
+Error in as.character(x): cannot coerce type 'closure' to vector of type 'character'
+genes = read_csv(file) 
+Error in as.character(x): cannot coerce type 'closure' to vector of type 'character'
+```
+- `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
+- If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
 
 Why?
 ========================================================
@@ -261,7 +273,7 @@ Warning: Ignoring unknown aesthetics: y_axis, x_axis
 Error in FUN(X[[i]], ...): object 'EIF3L' not found
 ```
 
-![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
 
 Exercise
 ========================================================
@@ -270,7 +282,7 @@ type: prompt
 
 I'm trying to generate this plot:
 
-![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
+![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
 
 ***
 
@@ -282,7 +294,7 @@ ggplot(data=genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-21](1-r-basics-figure/unnamed-chunk-21-1.png)
 
 What am I doing wrong?
 
@@ -342,7 +354,7 @@ Vectors
 - Vectors solve the problem
 
 ```r
-x = c(1, 2, 3)
+x = c(1,2,3)
 y = x + 1
 y
 [1] 2 3 4
@@ -373,7 +385,7 @@ Elementwise operations on a vector
 - This multiplies each element of `1:10` by the corresponding element of `1:10`, that is, it squares each element.
 
 ```r
-(1:10) * (1:10)
+(1:10)*(1:10)
  [1]   1   4   9  16  25  36  49  64  81 100
 ```
 - Equivalently, we could use exponentiation:
@@ -416,13 +428,13 @@ my_string = "hello"
 - when using data that is text in R, you have to refer to it using quotation marks (why?)
 
 ```r
-my_string = hello  # what does this code do?
+my_string = hello # what does this code do?
 ```
 - you can have a vector of strings, and functions can operate on these too:
 
 ```r
 words = c("hello", "how", "are", "you", "?")
-paste(words, collapse = " ")
+paste(words, collapse=" ")
 [1] "hello how are you ?"
 ```
 
@@ -447,7 +459,7 @@ incremental: true
 ```r
 a = 1
 b = 2
-x = c(a, b)
+x = c(a,b)
 
 a = 3
 print(x)
@@ -506,7 +518,7 @@ Rows: 4
 Columns: 2
 $ person <chr> "carlos", "nathalie", "christina", "alejandro"
 $ age    <dbl> 33, 48, 8, 29
-head(my_data, n = 2)
+head(my_data, n=2)
 # A tibble: 2 x 2
   person     age
   <chr>    <dbl>
@@ -524,7 +536,7 @@ NA
 - R has a special value that represents missing data- it's called `NA`
 
 ```r
-c(1, 2, NA, 4)
+c(1,2,NA,4)
 [1]  1  2 NA  4
 ```
 - NA can appear anywhere that R would expect some other kind of data
@@ -538,7 +550,7 @@ c(1, 2, NA, 4)
 - some functions have options to ignore the missing values in vectors:
 
 ```r
-mean(c(1, 2, NA, 4), na.rm = TRUE)
+mean(c(1,2,NA,4), na.rm=TRUE)
 [1] 2.333333
 ```
 
@@ -573,7 +585,7 @@ Adding comments
 
 ```r
 ## This is a comment
-1 + 2  # add some numbers
+1 + 2 # add some numbers
 [1] 3
 ```
 - Use a `#` to start a comment.
@@ -607,7 +619,7 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-45](1-r-basics-figure/unnamed-chunk-45-1.png)
+![plot of chunk unnamed-chunk-46](1-r-basics-figure/unnamed-chunk-46-1.png)
 
 RStudio Pro-tip: multicursors
 ===

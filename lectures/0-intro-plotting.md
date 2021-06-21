@@ -44,7 +44,7 @@ R for Data Science (R4DS): https://r4ds.had.co.nz
 ***
 
 Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
-Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2020
+Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
 
 Basics and Plotting
 ========================================================
@@ -87,9 +87,9 @@ A simple example in the console
 - These can be composed arbitrarily
 
 ```r
-log(1 + 3)
+log(1+3)
 [1] 1.386294
-paste("The answer is", log(1 + 3))
+paste("The answer is", log(1+3))
 [1] "The answer is 1.38629436111989"
 ```
 
@@ -129,8 +129,8 @@ Packages
 - To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
 
 ```r
-install.packages("tidyverse")  # go download the package called 'tidyverse'- only have to do this once
-library("tidyverse")  # load the package into the current R session - do this every time you use R and need functions from this package
+install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
+library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
 ```
 
 Packages
@@ -140,9 +140,9 @@ Packages
 
 
 ```r
-# I have a file called 'lupusGenes.csv' in a folder called data
-genes = read_csv("data/LupusGenes.csv")
-Error in read_csv("data/LupusGenes.csv"): could not find function "read_csv"
+# I have a file called "lupusGenes.csv" in a folder called data 
+genes = read_csv("../data/LupusGenes.csv")
+Error in read_csv("../data/LupusGenes.csv"): could not find function "read_csv"
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -154,7 +154,7 @@ library(tidyverse)
 
 
 ```r
-genes = read_csv("data/LupusGenes.csv")
+genes = read_csv("../data/LupusGenes.csv")
 ```
 
 - Now there is no error message
@@ -165,7 +165,7 @@ Packages
 - once the package is loaded it doesn't need to be loaded again before each function call
 
 ```r
-poly = read_csv("data/poly.csv")  # reading another csv file
+poly = read_csv("../data/poly.csv") # reading another csv file
 ```
 
 
@@ -202,18 +202,18 @@ Looking at data
 ```r
 genes
 # A tibble: 59 x 11
-   sampleid   age gender ancestry phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
-   <chr>    <dbl> <chr>  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
- 1 GSM3057…    70 F      Caucasi… SLE         18.6  4.28  18.0 182.    25.5
- 2 GSM3057…    78 F      Caucasi… SLE         20.3  3.02  21.1 157.    37.2
- 3 GSM3057…    64 F      Caucasi… SLE         21.4  4.00 488.  169.   792. 
- 4 GSM3057…    32 F      Asian    SLE         17.1  4.49  34.0 149.    60.7
- 5 GSM3057…    33 F      Caucasi… SLE         20.9  5.00  34.4 224.    60.8
- 6 GSM3057…    46 M      Maori    SLE         15.8  3.96 466.  111.  1382. 
- 7 GSM3057…    45 F      Asian    SLE         18.9  6.04 299.  157.   926. 
- 8 GSM3057…    67 M      Caucasi… SLE         27.6  4.77  21.8 265.    20.6
- 9 GSM3057…    33 F      Caucasi… SLE         15.4  3.88 700.   98.6 1652. 
-10 GSM3057…    28 F      Caucasi… SLE         19.9  7.21 278.  217.   972. 
+   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>      <dbl> <chr>  <chr>     <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
 # … with 49 more rows, and 1 more variable: VAPA <dbl>
 ```
 
@@ -232,18 +232,18 @@ The Dataset
 ```r
 genes
 # A tibble: 59 x 11
-   sampleid   age gender ancestry phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
-   <chr>    <dbl> <chr>  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
- 1 GSM3057…    70 F      Caucasi… SLE         18.6  4.28  18.0 182.    25.5
- 2 GSM3057…    78 F      Caucasi… SLE         20.3  3.02  21.1 157.    37.2
- 3 GSM3057…    64 F      Caucasi… SLE         21.4  4.00 488.  169.   792. 
- 4 GSM3057…    32 F      Asian    SLE         17.1  4.49  34.0 149.    60.7
- 5 GSM3057…    33 F      Caucasi… SLE         20.9  5.00  34.4 224.    60.8
- 6 GSM3057…    46 M      Maori    SLE         15.8  3.96 466.  111.  1382. 
- 7 GSM3057…    45 F      Asian    SLE         18.9  6.04 299.  157.   926. 
- 8 GSM3057…    67 M      Caucasi… SLE         27.6  4.77  21.8 265.    20.6
- 9 GSM3057…    33 F      Caucasi… SLE         15.4  3.88 700.   98.6 1652. 
-10 GSM3057…    28 F      Caucasi… SLE         19.9  7.21 278.  217.   972. 
+   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>      <dbl> <chr>  <chr>     <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
 # … with 49 more rows, and 1 more variable: VAPA <dbl>
 ```
 This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
