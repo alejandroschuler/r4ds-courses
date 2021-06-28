@@ -50,6 +50,7 @@ R for Data Science (R4DS): https://r4ds.had.co.nz
 ***
 
 Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+
 Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
 
 Basics and Plotting
@@ -183,7 +184,7 @@ Getting your data in R
 - Getting your data into R is easy. We already saw, for example:
 
 ```{r echo = T, results = 'hide', message=FALSE}
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -221,7 +222,7 @@ This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in b
 
 Investigating a relationship
 ===
-Let's say we're curious about the relationship between two genes RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
+Let's say we're curious about the relationship between two genes RSAD2 and IFI44.
 - Can we use R to make a plot of these two variables?
 
 ```{r, tidy=F, out.height="80%"}
@@ -262,7 +263,7 @@ ggplot(genes) +
 
 Investigating a relationship
 ===
-Let's say we're curious about the relationship between RSAD2 (the column `RSAD2`) and IFI44 (column `IFI44`).
+Let's say we're curious about the relationship between RSAD2 and IFI44.
 
 ```{r, tidy=F, echo=F}
 ggplot(genes) + 
