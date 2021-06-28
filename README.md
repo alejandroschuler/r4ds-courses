@@ -10,7 +10,7 @@
 | Jacklyn Ha Luu | TA | jacklynl@stanford.edu |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
-- Time: TBD
+- Time: 12-1:30 T/Th
 - Location: TBD
 - Office Hours: by appointment with TAs
 
