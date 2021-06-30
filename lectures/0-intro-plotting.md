@@ -142,8 +142,8 @@ Packages
 
 ```r
 # I have a file called 'lupusGenes.csv' in a folder called data
-genes = read_csv("../data/LupusGenes.csv")
-Error in read_csv("../data/LupusGenes.csv"): could not find function "read_csv"
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+Error in read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv"): could not find function "read_csv"
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -155,7 +155,7 @@ library(tidyverse)
 
 
 ```r
-genes = read_csv("../data/LupusGenes.csv")
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 ```
 
 - Now there is no error message
@@ -166,7 +166,7 @@ Packages
 - once the package is loaded it doesn't need to be loaded again before each function call
 
 ```r
-poly = read_csv("../data/poly.csv")  # reading another csv file
+poly = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/poly.csv")  # reading another csv file
 ```
 
 
