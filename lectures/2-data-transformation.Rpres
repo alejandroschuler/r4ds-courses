@@ -1,7 +1,7 @@
 Basic Tabular Data Manipulation	
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham, updated to include GTEx sample data by Nicole Ferraro
-date: 2019, updated July 2020
+date: 2019, updated July 2021
 transition: none
 width: 1680
 height: 1050
@@ -16,15 +16,41 @@ height: 1050
 ```{r include=FALSE}
 ## better font size for slides
 library(tidyverse)
-theme_set(theme_grey(base_size = 22))
+library(knitr)
+
+hook_output_default <- knitr::knit_hooks$get('output')
+
+truncate_to_lines <- function(x, n) {
+   if (!is.null(n)) {
+      x = unlist(stringr::str_split(x, '\n'))
+      if (length(x) > n) {
+         # truncate the output
+         x = c(head(x, n), '...\n')
+      }
+      x = paste(x, collapse = '\n') # paste first n lines together
+   }
+   x
+}
+
+# save the built-in output hook
+knitr::knit_hooks$set(output = function(x, options) {
+   max.lines <- options$max.lines
+   x <- truncate_to_lines(x, max.lines)
+
+   hook_output_default(x, options)
+})
+#theme_set(theme_grey(base_size = 22))
 opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
+
 <style>
 .small-code pre code {
   font-size: 0.5em;
 }
 </style>
+
+
 
 dplyr
 ========================================================
@@ -56,10 +82,20 @@ Together these properties make it easy to chain together multiple simple steps t
 
 GTEx data
 ===
-This is a subset of the Genotype Tissue Expression (GTEx) dataset, which includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+This is a subset of the Genotype Tissue Expression (GTEx) dataset
+
+- **The full dataset.** Includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. 
+- **The subsetted dataset.** We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. 
+- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
+- **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+
+
 
 ```{r, message=F}
-gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt') # includes normalized expression data for GTEx individuals across four tissues
+# Read subsetted data from online file
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+
+# Check number of rows
 nrow(gtex_data)
 ```
 
@@ -70,7 +106,7 @@ type: section
 Filter rows with filter()
 ========================================================
 - `filter()` lets you filter out rows of a dataset that meet a certain condition
-- it takes two arguments: the dataset and the condition
+- It takes two arguments: the dataset and the condition
 
 ```{r, message=F}
 filter(gtex_data, Blood >= 12)
@@ -90,7 +126,7 @@ filter(gtex_data, Heart <= -5)
 nrow(gtex_data)
 ```
 
-- remember, functions usually do not change their arguments!
+- Remember, functions usually do not change their arguments!
 
 ```{r}
 low_expression_blood = filter(gtex_data, Blood <= -5)
@@ -139,7 +175,7 @@ near(1 / 49 * 49, 1)
 
 Comparing to NA
 ===
-- The other "gotcha" is that `==` cannot be used to compare to `NA`:
+- The other "gotcha" is that  `==`  cannot be used to compare to `NA`:
 ```{r}
 x = NA
 x == NA
@@ -156,23 +192,32 @@ Logical conjunctions
 ```{r}
 filter(gtex_data, Lung > 6 | Liver < -6)
 ```
-- `|` stands for OR, `&` is AND
-- as we have seen, separating conditions by a comma is the same as using `&` inside `filter()`
-- these can be made into complex logical conditions
+- The pipe sign ` | ` stands for "OR" 
+- The ampersand sign ` & ` stands for "AND"
+- As we have seen, separating conditions by a comma is the same as using ` & ` inside `filter()`
+- Multiple conjunctions can describe complex logical conditions
 
 Logical conjunctions
 =========================================================
 ```{r}
 filter(gtex_data, !(Blood < 6 | Lung < 6))
 ```
-- `!` is NOT, which negates the logical condition
+- The exclamation point ` ! ` means "NOT", which negates the logical condition
 
 Logical conjunctions
 =========================================================
 ```{r}
 filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissues==1 | NTissues==2)
 ```
-- `%in%` returns true for all elements of the thing on the left that are also elements of the thing on the right
+- ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
+
+
+**Caution!** `in` (without the flanking percent signs) has a different meaning - it is used to iterate through a sequence rather than as a matching function. For example, to loop through and print all numbers from 1 to 10 we would do the following:
+
+```
+for(x in seq(1,10)){ print x }
+``` 
+
 
 Exercise: High expression
 ==========================================================
@@ -302,8 +347,8 @@ select(gtex_data, starts_with("L"))
 ```
 - Use `?select` to see all the possibilities
 
-***
-
+Select columns with select()
+=========================================================
 ```{r}
 select(gtex_data, contains("N"))
 ```
@@ -332,21 +377,20 @@ pull() is a friend of select()
 select(gtex_data, Gene)
 ```
 
-***
-
-```{r}
+```{r max.lines = 5}
 pull(gtex_data, Gene)
 ```
+
 
 rename()
 =========================================================
 - `select()` can be used to rename variables, but it drops all variables not selected
-```{r}
+```{r max.lines = 6}
 select(gtex_data, number_tissues = NTissues)
 ```
-***
+
 - `rename()` is better suited for this because it keeps all the columns
-```{r}
+```{r max.lines = 6}
 rename(gtex_data, number_tissues = NTissues)
 ```
 
@@ -355,14 +399,14 @@ Exercise: select and filter
 incremental:true
 type:prompt
 
-- create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
+- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
 
-```{r}
+```{r max.lines = 10}
 select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
 ```
 
 - what is wrong with this?
-```{r, eval=F}
+```{r, eval=F, max.lines = 10}
 filter(select(gtex_data, Heart), Gene == "WDR34")
 ```
 
@@ -371,9 +415,9 @@ Exercise: select text columns
 incremental:true
 type:prompt
 
-- use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
+- Use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
 - Can you do this programmatically without specifying the names of each of the desired columns? 
-- What base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
+- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
 
 ```{r}
 select(gtex_data, where(is.character))
@@ -403,7 +447,7 @@ mutate(gtex_data, # the newlines make it more readable
       blood_heart_dif = abs_blood - abs_heart
 )
 ```
-- note that we have also used two columns simultaneously (`Blood` and `Heart`) to create a new column)
+- Note that we have also used two columns simultaneously (`Blood` and `Heart`) to create a new column)
 
 mutate() for data type conversion
 ===
@@ -418,7 +462,7 @@ mutate(df, number_plus_1 = number + 1)
 ```{r}
 mutate(df, number = as.numeric(number))
 ```
-- if you save the result into a column that already exists, it will be overwritten
+- If you save the result into a column that already exists, it will be overwritten
 
 Exercise: mutate()
 ===
@@ -431,6 +475,7 @@ I want to identify genes that have large average expression changes across blood
 mutate(gtex_data, avg_blood_liver = (Blood+Liver)/2)
 ```
 
+
 Exercise: mutate() and ggplot
 ===
 type:prompt
@@ -438,14 +483,20 @@ incremental:true
 
 Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
-```{r, echo=F, fig.width=10}
+```{r, echo=F, fig.width=15}
 gene_data = filter(gtex_data, Gene == 'MYL1')
 blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
 ggplot(blood_outliers) +
-  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
+  geom_point(aes(x=Blood, y=Heart, color=blood_outlier),
+             size = 3) +
+  theme(axis.text = element_text(size = 15),
+        axis.title = element_text(size = 20),
+        legend.text = element_text(size = 20),
+        legend.title = element_text(size = 20))
 ```
 
-```{r, eval=F, fig.width=10}
+
+```{r, eval=F}
 gene_data = filter(gtex_data, Gene == 'MYL1')
 blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
 ggplot(blood_outliers) +
@@ -457,7 +508,11 @@ Exercise: putting it together
 type:prompt
 incremental:true
 
-I am interested in identifying individuals that have a large difference in gene expression change for any gene between lung tissue and blood tissue, with higher expression in lung. Can you produce a list of the top 10 individual-gene pairs by the difference of their expression change in lung compared to blood? Only consider individual-gene pairs measured in all four tissues. I'd just like the gene, individual, lung expression, blood expression, and lung-blood difference information in the output.
+I am interested in identifying individuals that have a large change in gene expression change for any gene between lung tissue and blood tissue, with higher expression in lung. 
+
+1. Produce a list of top 10 individual-gene pairs arranged by the expression change for lung compared to blood
+2. Only consider individual-gene pairs measured in all four tissues
+3. In the output, just show the gene, individual, lung expression, blood expression, and lung-blood differences
 
 ```{r}
 gtex_data_no_change = filter(gtex_data, NTissues == 4)
@@ -476,7 +531,7 @@ Why pipe?
 ===
 incremental:true
 
-- in our last exercise, we used a number of different function applications to arrive at our answer.
+- In our last exercise, we used a number of different function applications to arrive at our answer.
 
 ```{r, eval=F, tidy=F}
 gtex_data_no_change = filter(gtex_data, NTissues == 4)
@@ -486,7 +541,7 @@ top_10 = filter(sorted, row_number()<=10)
 select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
-- we used temporary variables to keep our code clean. Compare to the same code using nested calls:
+- We used temporary variables to keep our code clean. Compare to the same code using nested calls:
 
 ```{r, eval=F, tidy=F}
 select(
@@ -502,12 +557,12 @@ select(
 )
 ```
 
-- what makes either of these hard to read or understand?
+- What makes either of these hard to read or understand?
 
 The pipe operator
 ===
 
-- tidyverse solves these problems with the pipe operator `%>%`
+- Tidyverse solves these problems with the pipe operator `%>%`
 
 ```{r, eval=F, tidy=F}
 gtex_data %>%
@@ -518,7 +573,7 @@ gtex_data %>%
   select(Gene, Ind, Lung, Blood, lung_blood_dif)
 ```
 
-- how does this compare with our code before? What do you notice?
+- How does this compare with our code before? What do you notice?
 
 ```{r, eval=F, tidy=F}
 gtex_data_no_change = filter(gtex_data, NTissues == 4)
@@ -542,20 +597,32 @@ fun(df1, x)
 
 Pipe details
 =================================================================
-- The pipe works for all variables and functions, not just tidyverse functions
+- The pipe works for all variables and functions (not just tidyverse functions)
+
+Piping with an array
 ```{r}
 c(1,44,21,0,-4) %>%
     sum() # instead of sum(c(1,44,21,0,-4))
 ```
 
+Piping with a scalar
 ```{r}
 1 %>% `+`(1) # `+` is just a function that takes two arguments!
+```
+
+Piping with a data frame
+
+```{r}
+data.frame(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
+           age = c(10,54,21,99,96)) %>%
+    filter(age > 30) 
 ```
 
 Piping to another position
 ===
 - The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
 ```{r}
+# install.packages("slider")
 library(slider)
 mean %>%
   slide_vec(1:10, ., .before=2)
@@ -624,7 +691,6 @@ gtex_data %>%
   summarize(max_blood = max(Blood))
 ```
 
-***
 
 - `group_by()` is a helper function that "groups" the data according to the unique values in the column(s) it gets passed. 
 - Its output is a grouped data frame that looks the same as the original except for some additional metadata that subsequent functions can use
@@ -690,29 +756,34 @@ Exercise: summarize and plot
 type:prompt
 incremental:true
 
-Recreate this plot:
+Recreate this plot. 
 
-```{r, echo=F, message=F, fig.width=11, fig.height=13}
+```{r, echo=F, message=F, fig.width=15, fig.height=6}
+size_text = 30
 gtex_data %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
   group_by(Gene, NTissues) %>%
   summarize(max_heart = max(Heart ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=Gene, x=max_heart)) + 
-  facet_grid(NTissues ~ ., labeller = label_both)
+  geom_point(aes(y=Gene, x=max_heart), size = 8) + 
+  facet_grid(. ~ NTissues , labeller = label_both) +
+  theme(axis.text = element_text(size = size_text),
+        axis.title = element_text(size = size_text),
+        legend.text = element_text(size = size_text),
+        legend.title = element_text(size = size_text),
+        strip.text = element_text(size = size_text))
 ```
 
-
-***
 
 ```{r, eval=F, tidy=F}
 gtex_data %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
   group_by(Gene, NTissues) %>%
   summarize(max_heart = max(Heart ,na.rm=T)) %>% 
+  
 ggplot() +
   geom_point(aes(y=Gene, x=max_heart)) + 
-  facet_grid(NTissues ~ ., labeller = label_both)
+  facet_grid(. ~ NTissues , labeller = label_both)
 ```
 
 Grouped mutates and filters
