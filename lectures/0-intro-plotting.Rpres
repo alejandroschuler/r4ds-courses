@@ -1,15 +1,16 @@
 R for Data Science
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+date: 2021
 transition: none
 width: 1680
 height: 1050
 
 ```{r include=FALSE}
-## better font size for slides
 library(ggplot2)
-# theme_set(theme_grey(base_size = 22))
+theme_set(theme_grey(base_size = 34) )
+update_geom_defaults("point", list(size = 3.5))
+theme_update(legend.title=element_text(size=24))
 opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
@@ -108,7 +109,7 @@ gives you information about what the function does
 Quadratic Equation
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Solutions to a polynomial equation ax^2 + bx + c = 0 are given by
 
@@ -142,7 +143,7 @@ Packages
 - csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
 
 ```{r}
-# I have a file called "lupusGenes.csv" in a folder called data 
+# I have a file called "lupusGenes.csv" on github that we can read from the URL 
 genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 ```
 
@@ -252,7 +253,7 @@ ggplot(genes) +
 Investigating a relationship
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
 
@@ -290,7 +291,7 @@ ggplot(genes) +
 - What did we learn about the genes that we are interested in?
 
 ***
-```{r, tidy=F, echo=F, out.width="90%"}
+```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, 
                  y = IFI44,
@@ -310,18 +311,20 @@ ggplot(genes) +
     y = IFI44, 
     shape=phenotype
   )) 
+        
 ```
 
 
 ***
-```{r, tidy=F, echo=F, out.width="90%"}
+```{r, tidy=F, echo=F,  fig.width=10, fig.height=10}
 ggplot(genes) + 
   geom_point(aes(
     x = RSAD2, 
     y = IFI44, 
     shape=phenotype
   )) +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom",
+        legend.title=element_text(size=24))
 ```
 
 Aesthetics
@@ -340,14 +343,15 @@ ggplot(genes) +
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
 
 ***
-```{r, tidy=F, echo=F, out.width="90%"}
+```{r, tidy=F, echo=F,  fig.width=10, fig.height=10}
 ggplot(genes) + 
   geom_point(aes(
     x = RSAD2, 
     y = IFI44, 
     size=ancestry
   )) +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom",
+                legend.title=element_text(size=24))
 ```
 
 Aesthetics
@@ -367,7 +371,7 @@ ggplot(genes) +
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-```{r, tidy=F, echo=F, out.width="90%"}
+```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
 ggplot(genes) + 
   geom_point(
     aes(
@@ -375,18 +379,19 @@ ggplot(genes) +
       y = IFI44
     ),
     color = "blue"
-  ) 
+  ) +
+  theme(legend.title=element_text(size=24))
 ```
 
 Exercise
 ===
-incremental: true
+incremental: false
 type: prompt
 
 Can you recreate this plot?
 
 
-```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
+```{r, tidy=F, echo=F, fig.width=16, fig.height=10, fig.align="center"}
 ggplot(genes) + 
   geom_point(
     aes(
@@ -396,11 +401,12 @@ ggplot(genes) +
       size = EIF3L
     )
   ) 
+# increase legend and point size
 ```
 
 Exercise
 ===
-incremental: true
+incremental: false
 type: prompt
 
 What will this do? Why?
@@ -426,7 +432,7 @@ Facets
 ===
 - `facet_grid` is better for ordered categories, and can be used with two variables
 
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+```{r, tidy=F, fig.height = 14, fig.width = 14, fig.align = "center"}
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) + 
   facet_grid(phenotype ~ gender)
@@ -435,7 +441,7 @@ ggplot(genes) +
 Exercise
 ===
 type:prompt
-incremental: true
+incremental: false
 
 Run this code and comment on what role `.` plays:
 
@@ -503,7 +509,7 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
 Exercise
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Use google or other resources to figure out how to receate this plot in R:
 
@@ -512,7 +518,7 @@ ggplot(genes) +
   ...
 ```
 
-```{r, echo=F, tidy=F, fig.height = 8, fig.width = 10, fig.align = "center", message=F}
+```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
 ggplot(genes) + 
   geom_bar(aes(x = ancestry, fill = phenotype))
 ```
