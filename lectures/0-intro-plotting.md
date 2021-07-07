@@ -1,7 +1,7 @@
 R for Data Science
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+date: 2021
 transition: none
 width: 1680
 height: 1050
@@ -107,7 +107,7 @@ gives you information about what the function does
 Quadratic Equation
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Solutions to a polynomial equation ax^2 + bx + c = 0 are given by
 
@@ -141,7 +141,7 @@ Packages
 
 
 ```r
-# I have a file called 'lupusGenes.csv' in a folder called data
+# I have a file called 'lupusGenes.csv' on github that we can read from the URL
 genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 Error in read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv"): could not find function "read_csv"
 ```
@@ -290,7 +290,7 @@ ggplot(genes) +
 Investigating a relationship
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
 
@@ -322,7 +322,7 @@ ggplot(genes) +
 - What did we learn about the genes that we are interested in?
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-19-1.png" title="plot of chunk unnamed-chunk-19" alt="plot of chunk unnamed-chunk-19" width="90%" />
+![plot of chunk unnamed-chunk-19](0-intro-plotting-figure/unnamed-chunk-19-1.png)
 
 Aesthetics
 ===
@@ -337,11 +337,12 @@ ggplot(genes) +
     y = IFI44, 
     shape=phenotype
   )) 
+        
 ```
 
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" width="90%" />
+![plot of chunk unnamed-chunk-21](0-intro-plotting-figure/unnamed-chunk-21-1.png)
 
 Aesthetics
 ===
@@ -365,7 +366,7 @@ ggplot(genes) +
 Warning: Using size for a discrete variable is not advised.
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" width="90%" />
+![plot of chunk unnamed-chunk-23](0-intro-plotting-figure/unnamed-chunk-23-1.png)
 
 Aesthetics
 ===
@@ -385,21 +386,21 @@ ggplot(genes) +
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-<img src="0-intro-plotting-figure/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" width="90%" />
+![plot of chunk unnamed-chunk-25](0-intro-plotting-figure/unnamed-chunk-25-1.png)
 
 Exercise
 ===
-incremental: true
+incremental: false
 type: prompt
 
 Can you recreate this plot?
 
 
-![plot of chunk unnamed-chunk-26](0-intro-plotting-figure/unnamed-chunk-26-1.png)
+<img src="0-intro-plotting-figure/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
 
 Exercise
 ===
-incremental: true
+incremental: false
 type: prompt
 
 What will this do? Why?
@@ -441,7 +442,7 @@ ggplot(genes) +
 Exercise
 ===
 type:prompt
-incremental: true
+incremental: false
 
 Run this code and comment on what role `.` plays:
 
@@ -528,7 +529,7 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
 Exercise
 ===
 type: prompt
-incremental: true
+incremental: false
 
 Use google or other resources to figure out how to receate this plot in R:
 
