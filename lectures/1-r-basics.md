@@ -50,9 +50,9 @@ Assignment
 names to things.
 
 ```r
-mpg = read_csv('../data/mpg.csv')
+mpg = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/mpg.csv")
 ```
-- This code *assigns* the result of running `read_csv('data/mpg.csv')` to the name `mpg`
+- This code *assigns* the result of running `read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/mpg.csv")` to the name `mpg`
 - You can do this with any values and/or functions
 
 ```r
@@ -246,17 +246,15 @@ Optional arguments
 
 ```r
 file_name = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv"
-genes_10 = read_csv(file, n_max=10) # only read in 10 rows
-Error in as.character(x): cannot coerce type 'closure' to vector of type 'character'
-genes = read_csv(file) 
-Error in as.character(x): cannot coerce type 'closure' to vector of type 'character'
+genes_10 = read_csv(file_name, n_max=10) # only read in 10 rows
+genes = read_csv(file_name) 
 ```
 - `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
 - If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
 
 Why?
 ========================================================
-- what are the benefits/drawbacks of using positional vs. named arguments?
+- What are the benefits/drawbacks of using positional vs. named arguments?
 
 Exercise
 ========================================================
@@ -266,14 +264,12 @@ type: prompt
 Why does this code generate errors?
 
 
-```r
-ggplot(the_data=genes) + 
-  geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
+```
 Warning: Ignoring unknown aesthetics: y_axis, x_axis
 Error in FUN(X[[i]], ...): object 'EIF3L' not found
 ```
 
-![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
+![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
 
 Exercise
 ========================================================
@@ -282,7 +278,7 @@ type: prompt
 
 I'm trying to generate this plot:
 
-![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-19](1-r-basics-figure/unnamed-chunk-19-1.png)
 
 ***
 
@@ -294,7 +290,7 @@ ggplot(data=genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-21](1-r-basics-figure/unnamed-chunk-21-1.png)
+![plot of chunk unnamed-chunk-20](1-r-basics-figure/unnamed-chunk-20-1.png)
 
 What am I doing wrong?
 
@@ -619,7 +615,7 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-46](1-r-basics-figure/unnamed-chunk-46-1.png)
+![plot of chunk unnamed-chunk-45](1-r-basics-figure/unnamed-chunk-45-1.png)
 
 RStudio Pro-tip: multicursors
 ===
