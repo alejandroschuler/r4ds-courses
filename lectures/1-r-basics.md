@@ -164,6 +164,7 @@ for = 7 # this causes an error
 
 Exercise: birth year
 ===
+type: prompt
 
 - Make a variable that represents the age you will be at the end of this year
 - Make a variable that represents the current year
@@ -256,12 +257,14 @@ Why?
 
 Exercise
 ========================================================
-
+type: prompt
 
 Why does this code generate errors?
 
 
-```
+```r
+ggplot(the_data=genes) + 
+  geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
 Warning: Ignoring unknown aesthetics: y_axis, x_axis
 Error in FUN(X[[i]], ...): object 'EIF3L' not found
 ```
@@ -270,6 +273,7 @@ Error in FUN(X[[i]], ...): object 'EIF3L' not found
 
 Exercise
 ========================================================
+type: prompt
 
 I'm trying to generate this plot:
 
@@ -431,6 +435,7 @@ paste(words, collapse=" ")
 
 Exercise: subtract the mean
 ========================================================
+type: prompt
 
 
 ```r
@@ -581,7 +586,7 @@ line and is ignored by R.
 
 Exercise: Plotting a parabola
 ===
-
+type: prompt
 
 Write an R script that starts with:
 
