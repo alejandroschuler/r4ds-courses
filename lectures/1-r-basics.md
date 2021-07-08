@@ -164,8 +164,6 @@ for = 7 # this causes an error
 
 Exercise: birth year
 ===
-type: prompt
-incremental: true
 
 - Make a variable that represents the age you will be at the end of this year
 - Make a variable that represents the current year
@@ -258,8 +256,7 @@ Why?
 
 Exercise
 ========================================================
-incremental: true
-type: prompt
+
 
 Why does this code generate errors?
 
@@ -273,8 +270,6 @@ Error in FUN(X[[i]], ...): object 'EIF3L' not found
 
 Exercise
 ========================================================
-incremental: true
-type: prompt
 
 I'm trying to generate this plot:
 
@@ -436,8 +431,6 @@ paste(words, collapse=" ")
 
 Exercise: subtract the mean
 ========================================================
-incremental: true
-type: prompt 
 
 
 ```r
@@ -447,8 +440,6 @@ x = c(7, 3, 1, 9)
 
 Exercise: a vector of variables
 ===
-type: prompt
-incremental: true
 
 - Predict the output of the following code:
 
@@ -590,8 +581,7 @@ line and is ignored by R.
 
 Exercise: Plotting a parabola
 ===
-type: prompt
-incremental: true
+
 
 Write an R script that starts with:
 
