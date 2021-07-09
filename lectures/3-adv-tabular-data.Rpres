@@ -48,9 +48,7 @@ incremental: true
 - Let's look at some time series data about when GTEx samples were collected, and calculate the change over time
 
 ```{r, tidy = FALSE}
-gtex_samples_time_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/af6056f9a8d999a80fd787f89aa3483157d43681/data/gtex_metadata/gtex_samples_time.csv"
-
+gtex_samples_time_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/af6056f9a8d999a80fd787f89aa3483157d43681/data/gtex_metadata/gtex_samples_time.csv"
 gtex_samples_by_month = read_csv(file = gtex_samples_time_link, col_types = cols())
 
 gtex_samples_by_month %>%
@@ -60,15 +58,15 @@ gtex_samples_by_month %>%
 
 ```{r, tidy = FALSE}
 gtex_samples_by_month %>% 
-  mutate(increase_in_samples=num_samples-lag(num_samples)) %>%
-  head(5L)
+  mutate(increase_in_samples = total_num_samples - lag(total_num_samples)) %>%
+  head(3L)
 ```
 
 Exercise: multiple offsets
 ===
 type: prompt
 
-```{r, tidy=F}
+```{r, tidy = FALSE}
 gtex_samples_by_month %>% 
   filter(month %in% c(3, 6, 9, 12)) %>%
   head(n = 6L)
@@ -103,9 +101,10 @@ slide_vec(numbers, sum, .after = 3, .step = 2L)
 
 ![](https://www.oreilly.com/library/view/introduction-to-apache/9781491977132/assets/itaf_0406.png)
 
-```{r, tidy=F}
+```{r, tidy = FALSE}
 gtex_samples_by_month %>%
-  mutate(avg_samples_2_month = slide_vec(num_samples, mean, .before = 1L)) %>%
+  mutate(avg_samples_2_month = slide_vec(total_num_samples, mean, .before = 1L)) %>%
+  select(-year) %>% 
   head(2L)
 ```
 
@@ -120,9 +119,9 @@ cumsum(c(1, 2, 3))
 ```
 
 
-```{r, tidy=F}
+```{r, tidy = FALSE}
 gtex_samples_by_month %>%
-  mutate(num_samples_to_date = cumsum(num_samples))
+  mutate(num_samples_to_date = cumsum(total_num_samples))
 ```
 
 Turning any function into a cumulative function
@@ -130,11 +129,11 @@ Turning any function into a cumulative function
 
 - you can use `slider::slide_vec()` to turn any function that accepts a vector and returns a number into a cumulative function
 - Use `.before=Inf` to achieve this
-```{r, tidy=F}
+```{r, tidy = FALSE}
 library(slider) # imports slide_vec() function
 
 gtex_samples_by_month %>%
-  mutate(samples_to_date = slide_vec(num_samples, sum, .before = Inf))
+  mutate(samples_to_date = slide_vec(total_num_samples, sum, .before = Inf))
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -142,10 +141,10 @@ gtex_samples_by_month %>%
 Turning any function into a cumulative function
 ===
 - If the function you want to transform takes additional arguments, you can give those to `slide_vec` and it will pass them through for you
-```{r, tidy=F}
+```{r, tidy = FALSE}
 gtex_samples_by_month %>%
   mutate(
-    avg_samples_by_month = slide_vec(num_samples, mean, .before = Inf, na.rm = TRUE)
+    avg_samples_by_month = slide_vec(total_num_samples, mean, .before = Inf, na.rm = TRUE)
   )
 ```
 
@@ -153,11 +152,11 @@ Exercise: total number of samples in the last twelve months
 ===
 type:prompt
 
-```{r, warning=F, message=F}
+```{r, warning = FALSE, message = FALSE}
 library(lubridate) # this helps us with dates
 ```
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 gtex_samples_by_month
 ```
 
@@ -169,7 +168,7 @@ type: section
 
 Repeating operations on columns
 ===
-```{r, tidy=F}
+```{r, tidy = FALSE}
 df = tibble(
   a = rnorm(10),
   b = rnorm(10),
@@ -181,7 +180,7 @@ df = tibble(
 - Let's say we have these data and we want to take the mean of each column `a`, `b`, and `c` within the groups `g`. 
 - One way to do it is with a normal summarize:
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   group_by(g) %>%
   summarize(
@@ -197,7 +196,7 @@ df %>%
 - Copy-pasting code like this frequently creates errors and bugs that are hard to see
 - It's even worse if you want to do multiple summaries
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   group_by(g) %>%
   summarize(
@@ -214,7 +213,7 @@ Columnwise operations
 ===
 
 - The solution is to use `across()` in your summarize:
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   group_by(g) %>%
   summarize(across(.cols = c(a,b,c), .fns = mean))
@@ -227,7 +226,7 @@ df %>%
 
 - The **second argument** is the function you'd like to apply to each column. You can provide multiple functions by wrapping them in a "`list()`". Lists are like vectors but their elements can be of different types and each element has a name (more on that later)
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 fns = list(
   avg = mean, 
   max = max
@@ -242,7 +241,7 @@ df %>%
 
 Columnwise operations with where()
 ===
-```{r, tidy=F}
+```{r, tidy = FALSE}
 df = tibble(
   a = rnorm(10),
   b = rnorm(10),
@@ -254,7 +253,7 @@ df = tibble(
 - Sometimes its nice to apply a transformation to all columns of a given type or all columns that match some condition
 - `where()` is a handy function for that
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   group_by(g) %>%
   summarize(across(where(is.numeric), mean))
@@ -262,7 +261,7 @@ df %>%
 
 Columnwise mutate
 ===
-```{r, tidy=F}
+```{r, tidy = FALSE}
 df = tibble(
   a = rnorm(10),
   b = rnorm(10),
@@ -273,7 +272,7 @@ df = tibble(
 
 - `across()` works with any `dplyr` "verb", including `mutate()`:
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   mutate(across(where(is.character), as.numeric))
 ```
@@ -282,7 +281,7 @@ Columnwise mutate
 ===
 - Most often you will need to write your own mini function to do what you want. To do that you put `~` before your expression and use `.` where you would put the name of the column
 
-```{r, tidy=F, message=F}
+```{r, tidy = FALSE, message = FALSE}
 df %>%
   mutate(across(
     a:b,                      # columns to mutate
@@ -620,9 +619,7 @@ head(gtex_subject_data, 2L)
 
 The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
 ```{r, message = FALSE}
-gtex_batch_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_batch_metadata.csv"
-
+gtex_batch_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_batch_metadata.csv"
 gtex_batch_data = read_csv(file = gtex_batch_link, col_types = cols())
 
 head(gtex_batch_data, 2L)
@@ -658,8 +655,7 @@ gtex_data %>%
 
 The expression data on the previous slide is formatted slightly differently:
 ```{r, message = FALSE}
-gtex_expression_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_expression.csv"
+gtex_expression_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_expression.csv"
 
 gtex_expression = read_csv(file = gtex_expression_link, col_types = cols())
 
@@ -801,17 +797,13 @@ Joining on multiple columns
 ===
 - It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
 ```{r, message = FALSE}
-gtex_tissue_month_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_tissue_month_year.csv"
+gtex_tissue_month_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_tissue_month_year.csv"
 
 gtex_tissue_month = 
   read_csv(file = gtex_tissue_month_link, col_types = cols()) %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 
 head(gtex_tissue_month, 2L)
-
-gtex_samples_by_month_link = 
-  ""
 
 gtex_samples_by_month = 
   read_csv(file = gtex_samples_time_link, col_types = cols()) %>%
@@ -829,23 +821,15 @@ Joining on multiple columns
 
 This is also possible if the columns have different names:
 ```{r}
-gtex_data_long = 
-  gtex_data %>% 
-  pivot_longer(
-    cols = c("Blood", "Heart", "Lung", "Liver"), 
-    names_to = "tissue", 
-    values_to = "zscore"
-  ) 
-
-gtex_data_long %>% 
-  head(2L)
-
-gtex_sample_data %>% 
-  head(2L)
+gtex_data_long = gtex_data %>% 
+  pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
+    values_to = "zscore") 
+head(gtex_data_long, n = 2L)
+head(gtex_sample_data, n = 2L)
 
 gtex_data_long %>% 
   inner_join(gtex_sample_data, by = c("tissue", "Ind" = "subject_id")) %>%
-  head(5L)
+  head(n = 4L)
 ```
 
 Join problems
