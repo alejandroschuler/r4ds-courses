@@ -58,7 +58,7 @@ gtex_samples_by_month %>%
 
 ```{r, tidy = FALSE}
 gtex_samples_by_month %>% 
-  mutate(increase_in_samples = total_num_samples - lag(total_num_samples)) %>%
+  mutate(increase_in_samples = num_samples - lag(num_samples)) %>%
   head(3L)
 ```
 
@@ -103,7 +103,7 @@ slide_vec(numbers, sum, .after = 3, .step = 2L)
 
 ```{r, tidy = FALSE}
 gtex_samples_by_month %>%
-  mutate(avg_samples_2_month = slide_vec(total_num_samples, mean, .before = 1L)) %>%
+  mutate(avg_samples_2_month = slide_vec(num_samples, mean, .before = 1L)) %>%
   select(-year) %>% 
   head(2L)
 ```
@@ -121,7 +121,7 @@ cumsum(c(1, 2, 3))
 
 ```{r, tidy = FALSE}
 gtex_samples_by_month %>%
-  mutate(num_samples_to_date = cumsum(total_num_samples))
+  mutate(num_samples_to_date = cumsum(num_samples))
 ```
 
 Turning any function into a cumulative function
@@ -133,7 +133,7 @@ Turning any function into a cumulative function
 library(slider) # imports slide_vec() function
 
 gtex_samples_by_month %>%
-  mutate(samples_to_date = slide_vec(total_num_samples, sum, .before = Inf))
+  mutate(samples_to_date = slide_vec(num_samples, sum, .before = Inf))
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -144,7 +144,7 @@ Turning any function into a cumulative function
 ```{r, tidy = FALSE}
 gtex_samples_by_month %>%
   mutate(
-    avg_samples_by_month = slide_vec(total_num_samples, mean, .before = Inf, na.rm = TRUE)
+    avg_samples_by_month = slide_vec(num_samples, mean, .before = Inf, na.rm = TRUE)
   )
 ```
 
@@ -421,7 +421,7 @@ gtex_data %>%
     names_to = "tissue", 
     values_to = 'expression'
   ) %>%
-ggplot() +
+  ggplot() +
   geom_point(aes(x = Gene, y = expression, color = tissue), size = 10) + 
   facet_wrap(~Ind)
 ```
@@ -510,7 +510,7 @@ long_mice %>%
 ```{r, tidy = FALSE, eval = FALSE}
 wide_mice %>% 
   pivot_longer(
-    -mouse
+    -mouse,
     names_to = "time",
     values_to = "weight",
     names_prefix = "weight_"
@@ -806,8 +806,7 @@ gtex_tissue_month =
 head(gtex_tissue_month, 2L)
 
 gtex_samples_by_month = 
-  read_csv(file = gtex_samples_time_link, col_types = cols()) %>%
-  rename(total_num_samples = num_samples)
+  read_csv(file = gtex_samples_time_link, col_types = cols())
 
 head(gtex_samples_by_month, 2L)
 

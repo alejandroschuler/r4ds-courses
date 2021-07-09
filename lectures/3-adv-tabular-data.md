@@ -62,11 +62,14 @@ gtex_samples_by_month %>%
 
 ```r
 gtex_samples_by_month %>% 
-  mutate(increase_in_samples = total_num_samples - lag(total_num_samples)) %>%
+  mutate(increase_in_samples = num_samples - lag(num_samples)) %>%
   head(3L)
-Error: Problem with `mutate()` input `increase_in_samples`.
-x object 'total_num_samples' not found
-ℹ Input `increase_in_samples` is `total_num_samples - lag(total_num_samples)`.
+# A tibble: 3 x 4
+  month  year num_samples increase_in_samples
+  <dbl> <dbl>       <dbl>               <dbl>
+1     5  2011          20                  NA
+2     6  2011          44                  24
+3     7  2011          90                  46
 ```
 
 Exercise: multiple offsets
@@ -123,12 +126,14 @@ slide_vec(numbers, sum, .after = 3, .step = 2L)
 
 ```r
 gtex_samples_by_month %>%
-  mutate(avg_samples_2_month = slide_vec(total_num_samples, mean, .before = 1L)) %>%
+  mutate(avg_samples_2_month = slide_vec(num_samples, mean, .before = 1L)) %>%
   select(-year) %>% 
   head(2L)
-Error: Problem with `mutate()` input `avg_samples_2_month`.
-x object 'total_num_samples' not found
-ℹ Input `avg_samples_2_month` is `slide_vec(total_num_samples, mean, .before = 1L)`.
+# A tibble: 2 x 3
+  month num_samples avg_samples_2_month
+  <dbl>       <dbl>               <dbl>
+1     5          20                  20
+2     6          44                  32
 ```
 
 Cumulative functions
@@ -147,10 +152,21 @@ cumsum(c(1, 2, 3))
 
 ```r
 gtex_samples_by_month %>%
-  mutate(num_samples_to_date = cumsum(total_num_samples))
-Error: Problem with `mutate()` input `num_samples_to_date`.
-x object 'total_num_samples' not found
-ℹ Input `num_samples_to_date` is `cumsum(total_num_samples)`.
+  mutate(num_samples_to_date = cumsum(num_samples))
+# A tibble: 66 x 4
+   month  year num_samples num_samples_to_date
+   <dbl> <dbl>       <dbl>               <dbl>
+ 1     5  2011          20                  20
+ 2     6  2011          44                  64
+ 3     7  2011          90                 154
+ 4     8  2011         132                 286
+ 5     9  2011         100                 386
+ 6    10  2011         110                 496
+ 7    11  2011         203                 699
+ 8    12  2011         111                 810
+ 9     1  2012         208                1018
+10     2  2012          95                1113
+# … with 56 more rows
 ```
 
 Turning any function into a cumulative function
@@ -163,10 +179,21 @@ Turning any function into a cumulative function
 library(slider) # imports slide_vec() function
 
 gtex_samples_by_month %>%
-  mutate(samples_to_date = slide_vec(total_num_samples, sum, .before = Inf))
-Error: Problem with `mutate()` input `samples_to_date`.
-x object 'total_num_samples' not found
-ℹ Input `samples_to_date` is `slide_vec(total_num_samples, sum, .before = Inf)`.
+  mutate(samples_to_date = slide_vec(num_samples, sum, .before = Inf))
+# A tibble: 66 x 4
+   month  year num_samples samples_to_date
+   <dbl> <dbl>       <dbl>           <dbl>
+ 1     5  2011          20              20
+ 2     6  2011          44              64
+ 3     7  2011          90             154
+ 4     8  2011         132             286
+ 5     9  2011         100             386
+ 6    10  2011         110             496
+ 7    11  2011         203             699
+ 8    12  2011         111             810
+ 9     1  2012         208            1018
+10     2  2012          95            1113
+# … with 56 more rows
 ```
 
 - it is usually better (computationally faster) to use a built-in cumulative function (e.g. `cumsum()`), but if none exists this is a great solution
@@ -178,11 +205,22 @@ Turning any function into a cumulative function
 ```r
 gtex_samples_by_month %>%
   mutate(
-    avg_samples_by_month = slide_vec(total_num_samples, mean, .before = Inf, na.rm = TRUE)
+    avg_samples_by_month = slide_vec(num_samples, mean, .before = Inf, na.rm = TRUE)
   )
-Error: Problem with `mutate()` input `avg_samples_by_month`.
-x object 'total_num_samples' not found
-ℹ Input `avg_samples_by_month` is `slide_vec(total_num_samples, mean, .before = Inf, na.rm = TRUE)`.
+# A tibble: 66 x 4
+   month  year num_samples avg_samples_by_month
+   <dbl> <dbl>       <dbl>                <dbl>
+ 1     5  2011          20                 20  
+ 2     6  2011          44                 32  
+ 3     7  2011          90                 51.3
+ 4     8  2011         132                 71.5
+ 5     9  2011         100                 77.2
+ 6    10  2011         110                 82.7
+ 7    11  2011         203                 99.9
+ 8    12  2011         111                101. 
+ 9     1  2012         208                113. 
+10     2  2012          95                111. 
+# … with 56 more rows
 ```
 
 Exercise: total number of samples in the last twelve months
@@ -244,10 +282,10 @@ df %>%
     mean_b = mean(c)
   )
 # A tibble: 2 x 3
-      g mean_a mean_b
-  <int>  <dbl>  <dbl>
-1     0  0.371  0.892
-2     1  0.465 -0.423
+      g mean_a  mean_b
+  <int>  <dbl>   <dbl>
+1     0  0.386 -0.0882
+2     1  0.665  0.149 
 ```
 
 
@@ -269,10 +307,10 @@ df %>%
     median_c = median(c)
   )
 # A tibble: 2 x 6
-      g mean_a mean_b median_a median_b median_c
-  <int>  <dbl>  <dbl>    <dbl>    <dbl>    <dbl>
-1     0  0.371  0.892    0.124   0.0464    1.16 
-2     1  0.465 -0.423    0.174  -0.166    -0.299
+      g mean_a  mean_b median_a median_b median_c
+  <int>  <dbl>   <dbl>    <dbl>    <dbl>    <dbl>
+1     0  0.386 -0.0882    0.134    0.467   -0.161
+2     1  0.665  0.149     0.503   -1.22     0.153
 ```
 
 Columnwise operations
@@ -285,10 +323,10 @@ df %>%
   group_by(g) %>%
   summarize(across(.cols = c(a,b,c), .fns = mean))
 # A tibble: 2 x 4
-      g     a      b      c
-  <int> <dbl>  <dbl>  <dbl>
-1     0 0.371  0.110  0.892
-2     1 0.465 -0.321 -0.423
+      g     a       b       c
+  <int> <dbl>   <dbl>   <dbl>
+1     0 0.386  0.0962 -0.0882
+2     1 0.665 -0.740   0.149 
 ```
 
 - The **first argument** to `across()` is a selection of columns. You can use anything that would work in a `select()` here
@@ -309,10 +347,10 @@ df %>%
   group_by(g) %>%
   summarize(across(c(a,b), fns))
 # A tibble: 2 x 5
-      g a_avg a_max  b_avg b_max
-  <int> <dbl> <dbl>  <dbl> <dbl>
-1     0 0.371  1.32  0.110 1.83 
-2     1 0.465  1.65 -0.321 0.800
+      g a_avg a_max   b_avg b_max
+  <int> <dbl> <dbl>   <dbl> <dbl>
+1     0 0.386  1.12  0.0962 0.555
+2     1 0.665  1.65 -0.740  0.593
 ```
 
 - see `?across()` to find out how to control how these columns get named in the output
@@ -338,10 +376,10 @@ df %>%
   group_by(g) %>%
   summarize(across(where(is.numeric), mean))
 # A tibble: 2 x 3
-      g      a      b
-  <int>  <dbl>  <dbl>
-1     0 -0.438 -0.497
-2     1  0.367 -0.149
+      g      a       b
+  <int>  <dbl>   <dbl>
+1     0 0.577  -0.0241
+2     1 0.0333 -0.111 
 ```
 
 Columnwise mutate
@@ -365,16 +403,16 @@ df %>%
 # A tibble: 10 x 4
          a       b       c     g
      <dbl>   <dbl>   <dbl> <int>
- 1 -0.856   2.72    0.263      1
- 2  0.169  -0.623  -0.206      0
- 3  0.0144  0.160  -0.194      0
- 4 -2.42   -0.181   0.0131     0
- 5 -0.0845 -0.660   0.0375     1
- 6 -0.154   0.598  -0.643      0
- 7  1.09    0.0532  0.778      0
- 8 -1.17    0.242   0.515      1
- 9 -1.02   -0.211   0.0174     0
-10 -0.725  -1.00   -0.633      1
+ 1 -0.767  -0.272   0.989      0
+ 2 -1.75    0.0891 -0.924      1
+ 3 -1.52   -0.316  -0.993      0
+ 4  0.0927  0.643  -1.17       1
+ 5 -1.23   -1.29   -0.431      1
+ 6 -0.545  -0.208   0.0565     1
+ 7 -0.544  -1.22   -0.677      0
+ 8  0.555  -1.12   -0.270      0
+ 9  1.27    0.463   0.181      0
+10 -0.756  -0.214  -0.247      1
 ```
 
 Columnwise mutate
@@ -390,18 +428,18 @@ df %>%
     .names = '{col}_offset'   # how to name the outputs
   ))
 # A tibble: 10 x 6
-         a       b c                      g a_offset b_offset
-     <dbl>   <dbl> <chr>              <int>    <dbl>    <dbl>
- 1 -0.856   2.72   0.262607438360379      1  NA        NA    
- 2  0.169  -0.623  -0.206435639658646     0   1.03     -3.34 
- 3  0.0144  0.160  -0.193805739065168     0  -0.155     0.783
- 4 -2.42   -0.181  0.0131405547171515     0  -2.44     -0.342
- 5 -0.0845 -0.660  0.0374898188877763     1   2.34     -0.479
- 6 -0.154   0.598  -0.642794793394125     0  -0.0697    1.26 
- 7  1.09    0.0532 0.77780378569164       0   1.24     -0.544
- 8 -1.17    0.242  0.514823964452095      1  -2.26      0.189
- 9 -1.02   -0.211  0.0173906143772759     0   0.150    -0.453
-10 -0.725  -1.00   -0.632598984269104     1   0.299    -0.793
+         a       b c                      g  a_offset b_offset
+     <dbl>   <dbl> <chr>              <int>     <dbl>    <dbl>
+ 1 -0.767  -0.272  0.989193833467864      0 NA         NA     
+ 2 -1.75    0.0891 -0.92367433704112      1 -0.985      0.361 
+ 3 -1.52   -0.316  -0.992977777773988     0  0.230     -0.405 
+ 4  0.0927  0.643  -1.16663568989279      1  1.61       0.959 
+ 5 -1.23   -1.29   -0.431034642977346     1 -1.32      -1.93  
+ 6 -0.545  -0.208  0.0565274290050033     1  0.684      1.08  
+ 7 -0.544  -1.22   -0.677017265139967     0  0.000756  -1.02  
+ 8  0.555  -1.12   -0.269633106463916     0  1.10       0.0995
+ 9  1.27    0.463  0.180915842359889      0  0.719      1.59  
+10 -0.756  -0.214  -0.24741941494206      1 -2.03      -0.677 
 ```
 
 - Note that I've also used the `.names` argument to control how the output columns get named
@@ -565,10 +603,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          9.49         8.48
-2     2          9.93        12.6 
-3     3         11.0         12.4 
-4     4          8.12        15.1 
+1     1         10.1          9.22
+2     2         11.7         12.3 
+3     3          9.87        11.9 
+4     4         12.2         12.1 
 ```
 
 
@@ -579,10 +617,10 @@ wide_mice %>%
 # A tibble: 4 x 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1       -1.02
-2     2        2.69
-3     3        1.47
-4     4        6.93
+1     1     -0.850 
+2     2      0.600 
+3     3      2.04  
+4     4     -0.0881
 ```
 
 ***
@@ -592,14 +630,14 @@ wide_mice %>%
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   9.49
-2     1 after    8.48
-3     2 before   9.93
-4     2 after   12.6 
-5     3 before  11.0 
-6     3 after   12.4 
-7     4 before   8.12
-8     4 after   15.1 
+1     1 before  10.1 
+2     1 after    9.22
+3     2 before  11.7 
+4     2 after   12.3 
+5     3 before   9.87
+6     3 after   11.9 
+7     4 before  12.2 
+8     4 after   12.1 
 ```
 
 
@@ -613,10 +651,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1       -1.02
-2     2        2.69
-3     3        1.47
-4     4        6.93
+1     1     -0.850 
+2     2      0.600 
+3     3      2.04  
+4     4     -0.0881
 ```
 
 Pivoting wider
@@ -631,14 +669,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   9.49
-2     1 after    8.48
-3     2 before   9.93
-4     2 after   12.6 
-5     3 before  11.0 
-6     3 after   12.4 
-7     4 before   8.12
-8     4 after   15.1 
+1     1 before  10.1 
+2     1 after    9.22
+3     2 before  11.7 
+4     2 after   12.3 
+5     3 before   9.87
+6     3 after   11.9 
+7     4 before  12.2 
+8     4 after   12.1 
 ```
 
 ***
@@ -653,10 +691,10 @@ long_mice %>%
 # A tibble: 4 x 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1   9.49  8.48
-2     2   9.93 12.6 
-3     3  11.0  12.4 
-4     4   8.12 15.1 
+1     1  10.1   9.22
+2     2  11.7  12.3 
+3     3   9.87 11.9 
+4     4  12.2  12.1 
 ```
 
 Names prefix
@@ -668,14 +706,14 @@ long_mice
 # A tibble: 8 x 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   9.49
-2     1 after    8.48
-3     2 before   9.93
-4     2 after   12.6 
-5     3 before  11.0 
-6     3 after   12.4 
-7     4 before   8.12
-8     4 after   15.1 
+1     1 before  10.1 
+2     1 after    9.22
+3     2 before  11.7 
+4     2 after   12.3 
+5     3 before   9.87
+6     3 after   11.9 
+7     4 before  12.2 
+8     4 after   12.1 
 ```
 
 ***
@@ -694,8 +732,8 @@ long_mice %>%
 # A tibble: 2 x 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          9.49         8.48
-2     2          9.93        12.6 
+1     1          10.1         9.22
+2     2          11.7        12.3 
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -704,7 +742,7 @@ long_mice %>%
 ```r
 wide_mice %>% 
   pivot_longer(
-    -mouse
+    -mouse,
     names_to = "time",
     values_to = "weight",
     names_prefix = "weight_"
@@ -1125,27 +1163,26 @@ head(gtex_tissue_month, 2L)
 2 Blood      1  2013           16
 
 gtex_samples_by_month = 
-  read_csv(file = gtex_samples_time_link, col_types = cols()) %>%
-  rename(total_num_samples = num_samples)
+  read_csv(file = gtex_samples_time_link, col_types = cols())
 
 head(gtex_samples_by_month, 2L)
 # A tibble: 2 x 3
-  month  year total_num_samples
-  <dbl> <dbl>             <dbl>
-1     5  2011                20
-2     6  2011                44
+  month  year num_samples
+  <dbl> <dbl>       <dbl>
+1     5  2011          20
+2     6  2011          44
 
 gtex_tissue_month %>% 
   inner_join(gtex_samples_by_month, by = c("month", "year")) %>%
   head(5L)
 # A tibble: 5 x 5
-  tissue month  year tiss_samples total_num_samples
-  <chr>  <dbl> <dbl>        <dbl>             <dbl>
-1 Blood      1  2012           25               208
-2 Blood      1  2013           16                64
-3 Blood      1  2014           26               662
-4 Blood      1  2015           39               263
-5 Blood      2  2012            9                95
+  tissue month  year tiss_samples num_samples
+  <chr>  <dbl> <dbl>        <dbl>       <dbl>
+1 Blood      1  2012           25         208
+2 Blood      1  2013           16          64
+3 Blood      1  2014           26         662
+4 Blood      1  2015           39         263
+5 Blood      2  2012            9          95
 ```
 
 Joining on multiple columns
