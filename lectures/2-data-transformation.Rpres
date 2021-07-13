@@ -90,9 +90,9 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 - **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
 
 
-
+**NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
-# Read subsetted data from online file
+# Read subsetted data from online file - make sure there are no spaces
 gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
 
 # Check number of rows
@@ -546,7 +546,6 @@ mutate(df, number_plus_1 = number + 1)
 ```{r}
 mutate(df, number = as.numeric(number))
 ```
-- If you save the result into a column that already exists, it will be overwritten
 
 Exercise: mutate()
 ===
@@ -590,13 +589,6 @@ ggplot(blood_outliers) +
 ```
 
 
-```{r, eval=F}
-gene_data = filter(gtex_data, Gene == 'MYL1')
-blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
-ggplot(blood_outliers) +
-  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
-```
-
 Exercise: mutate() and ggplot
 ===
 type:prompt
@@ -615,6 +607,13 @@ ggplot(blood_outliers) +
         legend.title = element_text(size = 20))
 ```
 
+
+```{r, eval=F}
+gene_data = filter(gtex_data, Gene == 'MYL1')
+blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
+ggplot(blood_outliers) +
+  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
+```
 
 Exercise: putting it together
 ===
@@ -653,7 +652,7 @@ type:section
 Why pipe?
 ===
 
-- In our last exercise, we used a number of different function applications to arrive at our answer.
+- In our last exercise, we used a number of different function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
 
 ```{r, eval=F, tidy=F}
 gtex_data_no_change = filter(gtex_data, NTissues == 4)
@@ -772,7 +771,7 @@ Piping with a scalar
 Piping with a data frame
 
 ```{r}
-data.frame(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
+tibble(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
            age = c(10,54,21,99,96)) %>%
     filter(age > 30) 
 ```
@@ -1040,4 +1039,5 @@ gtex_data %>%
 <img src="https://miro.medium.com/max/1200/1*O4LZwd_rTEGY2zMyDkvR9A.png"; style="max-width:1500;"; class="center">
 </div>
 
+Source: [Rstudio Cheat Sheets](https://www.google.com/search?client=safari&rls=en&q=data+transformation+with+dplyr+cheat+sheet&ie=UTF-8&oe=UTF-8). Download the [full dplyr cheat sheet here.](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiP_KO4m9_xAhVYOs0KHfRUCfgQFnoECAQQAA&url=https%3A%2F%2Fraw.githubusercontent.com%2Frstudio%2Fcheatsheets%2Fmaster%2Fdata-transformation.pdf&usg=AOvVaw3vYk678LtmDz7gbHCvDeM0)
 <!-- ^^  COMPLETE   ^^ -->
