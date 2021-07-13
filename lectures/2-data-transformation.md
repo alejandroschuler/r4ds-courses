@@ -448,13 +448,13 @@ Sampling rows
 ```r
 sample_n(gtex_data, 5)
 # A tibble: 5 x 7
-  Gene        Ind        Blood Heart  Lung Liver NTissues
-  <chr>       <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 ZNF252P     GTEX-11TT1 -0.5   0.93  2.14 -0.58        4
-2 RPP40       GTEX-14E7W -0.48 -0.28  0.17 -0.89        4
-3 ZNF292      GTEX-X3Y1  -0.2  NA     0.87  0.63        3
-4 RP4-644L1.2 GTEX-X261   0.33  1.94 -0.1  -1.15        4
-5 DECR2       GTEX-ZF2S   1.22  0.73  0.99  1.08        4
+  Gene          Ind        Blood Heart  Lung Liver NTissues
+  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 METTL26       GTEX-1AX8Z  0.4   0.89 -0.08 -1.17        4
+2 FAM83G        GTEX-131YS  0.1   0.39  0.88 -1.3         4
+3 RP11-104F15.9 GTEX-13FTZ -0.26 -0.52 -0.2   0.56        4
+4 KRT10         GTEX-1AX8Z -0.47  0.15 -1.38 -0.59        4
+5 RP13-131K19.1 GTEX-1KD5A -0.41 -0.11 -0.67  0.42        4
 ```
 
 - `sample_frac()` is similar
@@ -547,7 +547,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 
 ```r
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -566,7 +566,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 
 ```r
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -579,7 +579,7 @@ filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls t
 or
 
 ```r
-gtex_by_blood = arrange(gtex_data, desc(Blood)) # using a temporary variable
+gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
@@ -1222,9 +1222,10 @@ Piping to another position
 ```r
 # install.packages("slider")
 library(slider)
+Error in library(slider): there is no package called 'slider'
 mean %>%
   slide_vec(1:10, ., .before=2)
- [1] 1.0 1.5 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0
+Error in slide_vec(1:10, ., .before = 2): could not find function "slide_vec"
 ```
 - Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
 - More about this in the functional programming section

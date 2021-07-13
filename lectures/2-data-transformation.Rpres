@@ -362,7 +362,7 @@ type:prompt
 Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 
 Exercise: top 5 high expression instances
@@ -372,11 +372,11 @@ type:prompt
 Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 or
 ```{r}
-gtex_by_blood = arrange(gtex_data, desc(Blood)) # using a temporary variable
+gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
 ```
 
