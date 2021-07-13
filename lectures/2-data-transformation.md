@@ -206,6 +206,9 @@ is.na(x)
 
 Logical conjunctions
 =========================================================
+Logic in R utilizes the following vocabulary: and (`&`), or (`|`), in (`%in%`), not (`!`), and equals (`==`)
+
+- When **OR** (pipe symbol: `|`)is used to join two conditions, *at least one condition* must be true for the statement to be true. Otherwise it's false. 
 
 ```r
 filter(gtex_data, Lung > 6 | Liver < -6)
@@ -217,16 +220,17 @@ filter(gtex_data, Lung > 6 | Liver < -6)
  3 ADAL       GTEX-1EWIQ  0.69 -0.15  6.28 -0.52        4
  4 AGAP2      GTEX-1GN73  2.32  1.46  6.1   0.89        4
  5 ALDOB      GTEX-12WSD  0.93 -0.42  6.06 -0.08        4
- 6 ALOXE3     GTEX-YFC4  -1.32  0.02  7.5  -1.37        4
- 7 AP001610.5 GTEX-X4EP  -1.25  3.12  6.59 -0.48        4
- 8 APMAP      GTEX-17HGU -0.13 -1.25  0.87 -6.14        4
- 9 APOA1      GTEX-12WSD  5.45 NA     7     0.67        3
-10 ATF4P3     GTEX-1GN2E  1.85  0.5   6.95  1.03        4
-# … with 63 more rows
+...
 ```
-- The pipe sign ` | ` stands for "OR" 
-- The ampersand sign ` & ` stands for "AND"
-- As we have seen, separating conditions by a comma is the same as using ` & ` inside `filter()`
+
+- When **AND** (ampersand symbol: `&`) is used to join two conditions, *both conditions* must be true for the statement to be true. Otherwise it's false. Separating conditions by a comma is the same as using ` & ` inside `filter()`
+
+```r
+filter(gtex_data, Lung > 6 & Liver < -6)
+# A tibble: 0 x 7
+# … with 7 variables: Gene <chr>, Ind <chr>, Blood <dbl>, Heart <dbl>,
+#   Lung <dbl>, Liver <dbl>, NTissues <dbl>
+```
 - Multiple conjunctions can describe complex logical conditions
 
 Logical conjunctions
@@ -268,11 +272,7 @@ filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissu
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
 
-**Caution!** `in` (without the flanking percent signs) has a different meaning - it is used to iterate through a sequence rather than as a matching function. For example, to loop through and print all numbers from 1 to 10 we would do the following:
-
-```
-for(x in seq(1,10)){ print x }
-``` 
+**Caution!** `in` (without the flanking percent signs) has a different meaning - we'll get to this later in the course.
 
 
 Exercise: High expression
@@ -448,13 +448,13 @@ Sampling rows
 ```r
 sample_n(gtex_data, 5)
 # A tibble: 5 x 7
-  Gene        Ind        Blood Heart  Lung Liver NTissues
-  <chr>       <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 ZNF252P     GTEX-11TT1 -0.5   0.93  2.14 -0.58        4
-2 RPP40       GTEX-14E7W -0.48 -0.28  0.17 -0.89        4
-3 ZNF292      GTEX-X3Y1  -0.2  NA     0.87  0.63        3
-4 RP4-644L1.2 GTEX-X261   0.33  1.94 -0.1  -1.15        4
-5 DECR2       GTEX-ZF2S   1.22  0.73  0.99  1.08        4
+  Gene          Ind        Blood Heart  Lung Liver NTissues
+  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 SMARCA2       GTEX-14BIL -0.01  0.2   3.9   0.85        4
+2 RP11-779O18.2 GTEX-131XE -0.59 -0.48  0.74  0.29        4
+3 RP11-338I21.1 GTEX-1MJIX -1.59  0.03  2.15 -1.63        4
+4 GSDMB         GTEX-ZPU1  -0.05  0.23 -0.58 -2.32        4
+5 ATL1          GTEX-WZTO  -1.21 -0.09 -1.59  0.97        4
 ```
 
 - `sample_frac()` is similar
@@ -547,7 +547,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 
 ```r
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -566,7 +566,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 
 ```r
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -579,7 +579,7 @@ filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls t
 or
 
 ```r
-gtex_by_blood = arrange(gtex_data, desc(Blood)) # using a temporary variable
+gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
 # A tibble: 5 x 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
@@ -1001,7 +1001,7 @@ type:prompt
 
 Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
-![plot of chunk unnamed-chunk-49](2-data-transformation-figure/unnamed-chunk-49-1.png)
+![plot of chunk unnamed-chunk-50](2-data-transformation-figure/unnamed-chunk-50-1.png)
 
 
 Exercise: mutate() and ggplot
@@ -1010,7 +1010,7 @@ type:prompt
 
 Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
-![plot of chunk unnamed-chunk-50](2-data-transformation-figure/unnamed-chunk-50-1.png)
+![plot of chunk unnamed-chunk-51](2-data-transformation-figure/unnamed-chunk-51-1.png)
 
 
 
@@ -1471,7 +1471,7 @@ type:prompt
 
 Recreate this plot. 
 
-![plot of chunk unnamed-chunk-76](2-data-transformation-figure/unnamed-chunk-76-1.png)
+![plot of chunk unnamed-chunk-77](2-data-transformation-figure/unnamed-chunk-77-1.png)
 
 
 Exercise: summarize and plot
@@ -1480,7 +1480,7 @@ type:prompt
 
 Recreate this plot. 
 
-![plot of chunk unnamed-chunk-77](2-data-transformation-figure/unnamed-chunk-77-1.png)
+![plot of chunk unnamed-chunk-78](2-data-transformation-figure/unnamed-chunk-78-1.png)
 
 
 

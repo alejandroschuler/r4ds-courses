@@ -189,12 +189,17 @@ is.na(x)
 
 Logical conjunctions
 =========================================================
-```{r}
+Logic in R utilizes the following vocabulary: and (`&`), or (`|`), in (`%in%`), not (`!`), and equals (`==`)
+
+- When **OR** (pipe symbol: `|`)is used to join two conditions, *at least one condition* must be true for the statement to be true. Otherwise it's false. 
+```{r max.lines = 8}
 filter(gtex_data, Lung > 6 | Liver < -6)
 ```
-- The pipe sign ` | ` stands for "OR" 
-- The ampersand sign ` & ` stands for "AND"
-- As we have seen, separating conditions by a comma is the same as using ` & ` inside `filter()`
+
+- When **AND** (ampersand symbol: `&`) is used to join two conditions, *both conditions* must be true for the statement to be true. Otherwise it's false. Separating conditions by a comma is the same as using ` & ` inside `filter()`
+```{r max.lines = 8}
+filter(gtex_data, Lung > 6 & Liver < -6)
+```
 - Multiple conjunctions can describe complex logical conditions
 
 Logical conjunctions
@@ -212,11 +217,7 @@ filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissu
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
 
-**Caution!** `in` (without the flanking percent signs) has a different meaning - it is used to iterate through a sequence rather than as a matching function. For example, to loop through and print all numbers from 1 to 10 we would do the following:
-
-```
-for(x in seq(1,10)){ print x }
-``` 
+**Caution!** `in` (without the flanking percent signs) has a different meaning - we'll get to this later in the course.
 
 
 Exercise: High expression
@@ -362,7 +363,7 @@ type:prompt
 Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 
 Exercise: top 5 high expression instances
@@ -372,11 +373,11 @@ type:prompt
 Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
 
 ```{r}
-filter(arrange(gtex_data, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 or
 ```{r}
-gtex_by_blood = arrange(gtex_data, desc(Blood)) # using a temporary variable
+gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
 ```
 
