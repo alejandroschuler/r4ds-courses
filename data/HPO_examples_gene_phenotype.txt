@@ -1,0 +1,357 @@
+Gene_Name	HPO_ID	HPO_Name	Gene_Disease
+ABCB11	HP:0001402	Hepatocellular carcinoma	None
+ABCC8	HP:0011902	Abnormal hemoglobin	None
+ABCG5	HP:0030872	Abnormal cardiac ventricular function	None
+ABCG5	HP:0011876	Abnormal platelet volume	None
+ABCG8	HP:0011876	Abnormal platelet volume	None
+ABCG8	HP:0030872	Abnormal cardiac ventricular function	None
+ACTA2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+ACTN1	HP:0011876	Abnormal platelet volume	None
+AGPAT2	HP:0000138	Ovarian cyst	None
+AHCY	HP:0001402	Hepatocellular carcinoma	None
+AKT1	HP:0000138	Ovarian cyst	Cancer
+AKT2	HP:0000138	Ovarian cyst	None
+ALMS1	HP:0000138	Ovarian cyst	Cardio
+ANTXR2	HP:0000138	Ovarian cyst	None
+APC	HP:0001402	Hepatocellular carcinoma	Cancer
+APC	HP:0012126	Stomach cancer	Cancer
+APOB	HP:0030872	Abnormal cardiac ventricular function	Cardio
+APPL1	HP:0011902	Abnormal hemoglobin	None
+AQP2	HP:0010931	Abnormal blood sodium concentration	None
+ARNT2	HP:0010931	Abnormal blood sodium concentration	None
+ARPC1B	HP:0011876	Abnormal platelet volume	None
+ATM	HP:0000138	Ovarian cyst	Cancer
+ATP7B	HP:0001402	Hepatocellular carcinoma	None
+ATRX	HP:0030872	Abnormal cardiac ventricular function	None
+ATRX	HP:0011902	Abnormal hemoglobin	None
+AVPR2	HP:0010931	Abnormal blood sodium concentration	None
+AXIN1	HP:0001402	Hepatocellular carcinoma	None
+BAZ1B	HP:0000138	Ovarian cyst	None
+BLK	HP:0011902	Abnormal hemoglobin	None
+BMP2	HP:0001402	Hepatocellular carcinoma	None
+BMPR1A	HP:0012126	Stomach cancer	Cancer
+BMPR1A	HP:0001402	Hepatocellular carcinoma	Cancer
+BMPR2	HP:0030872	Abnormal cardiac ventricular function	None
+BSCL2	HP:0000138	Ovarian cyst	Neuro
+BSND	HP:0010931	Abnormal blood sodium concentration	None
+BTNL2	HP:0030872	Abnormal cardiac ventricular function	None
+BUB1	HP:0012126	Stomach cancer	None
+BUB1B	HP:0012126	Stomach cancer	Cancer
+BUB3	HP:0012126	Stomach cancer	None
+CA12	HP:0010931	Abnormal blood sodium concentration	None
+CACNA1A	HP:0002457	Abnormal head movements	None
+CACNA1H	HP:0002457	Abnormal head movements	None
+CASP10	HP:0001402	Hepatocellular carcinoma	Cancer
+CASP10	HP:0012126	Stomach cancer	Cancer
+CASP8	HP:0001402	Hepatocellular carcinoma	Cancer
+CASQ2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+CAV1	HP:0000138	Ovarian cyst	None
+CAVIN1	HP:0000138	Ovarian cyst	None
+CBX2	HP:0000138	Ovarian cyst	None
+CD151	HP:0011902	Abnormal hemoglobin	None
+CD36	HP:0011876	Abnormal platelet volume	None
+CDC42	HP:0011876	Abnormal platelet volume	None
+CDH1	HP:0012126	Stomach cancer	Cancer
+CEL	HP:0011902	Abnormal hemoglobin	None
+CEP57	HP:0012126	Stomach cancer	Cancer
+CHEK2	HP:0012126	Stomach cancer	Cancer
+CIDEC	HP:0000138	Ovarian cyst	None
+CLCNKA	HP:0010931	Abnormal blood sodium concentration	None
+CLCNKB	HP:0010931	Abnormal blood sodium concentration	None
+CLIP2	HP:0000138	Ovarian cyst	None
+CORIN	HP:0000138	Ovarian cyst	None
+COX1	HP:0030872	Abnormal cardiac ventricular function	None
+COX2	HP:0030872	Abnormal cardiac ventricular function	None
+COX3	HP:0030872	Abnormal cardiac ventricular function	None
+CPOX	HP:0010931	Abnormal blood sodium concentration	None
+CTNNB1	HP:0001402	Hepatocellular carcinoma	Cancer
+CTNS	HP:0010931	Abnormal blood sodium concentration	None
+CYB5A	HP:0011902	Abnormal hemoglobin	None
+CYB5A	HP:0000138	Ovarian cyst	None
+CYB5R3	HP:0011902	Abnormal hemoglobin	None
+CYP11A1	HP:0010931	Abnormal blood sodium concentration	None
+CYP11B1	HP:0010931	Abnormal blood sodium concentration	None
+CYP11B1	HP:0000138	Ovarian cyst	None
+CYP11B2	HP:0010931	Abnormal blood sodium concentration	None
+CYP17A1	HP:0000138	Ovarian cyst	None
+CYP19A1	HP:0000138	Ovarian cyst	None
+CYTB	HP:0030872	Abnormal cardiac ventricular function	None
+DAXX	HP:0030872	Abnormal cardiac ventricular function	None
+DHH	HP:0000138	Ovarian cyst	None
+DLAT	HP:0002457	Abnormal head movements	None
+DLD	HP:0030872	Abnormal cardiac ventricular function	None
+DMRT1	HP:0000138	Ovarian cyst	None
+DNAJC21	HP:0011902	Abnormal hemoglobin	None
+DSG1	HP:0010931	Abnormal blood sodium concentration	None
+DVL1	HP:0030872	Abnormal cardiac ventricular function	None
+DVL3	HP:0030872	Abnormal cardiac ventricular function	None
+DYSF	HP:0030872	Abnormal cardiac ventricular function	Neuro
+ELN	HP:0000138	Ovarian cyst	Cardio
+ELN	HP:0030872	Abnormal cardiac ventricular function	Cardio
+ELP1	HP:0010931	Abnormal blood sodium concentration	None
+EPCAM	HP:0001402	Hepatocellular carcinoma	Cancer
+EPOR	HP:0011902	Abnormal hemoglobin	None
+ERBB2	HP:0012126	Stomach cancer	None
+ESR1	HP:0000138	Ovarian cyst	None
+EYA4	HP:0030872	Abnormal cardiac ventricular function	Cardio
+F5	HP:0001402	Hepatocellular carcinoma	Hema
+F7	HP:0000138	Ovarian cyst	None
+FAH	HP:0001402	Hepatocellular carcinoma	None
+FAN1	HP:0001402	Hepatocellular carcinoma	None
+FAS	HP:0001402	Hepatocellular carcinoma	Cancer
+FASLG	HP:0001402	Hepatocellular carcinoma	Cancer
+FBN1	HP:0030872	Abnormal cardiac ventricular function	Cardio
+FGFR1	HP:0010931	Abnormal blood sodium concentration	None
+FGFR2	HP:0012126	Stomach cancer	None
+FKRP	HP:0030872	Abnormal cardiac ventricular function	Neuro
+FKRP	HP:0030872	Abnormal cardiac ventricular function	Cardio
+FLNA	HP:0011876	Abnormal platelet volume	Cardio
+FLT1	HP:0000138	Ovarian cyst	None
+FMR1	HP:0002457	Abnormal head movements	None
+FOS	HP:0000138	Ovarian cyst	None
+FOXE3	HP:0030872	Abnormal cardiac ventricular function	None
+FSHR	HP:0000138	Ovarian cyst	None
+FYB1	HP:0011876	Abnormal platelet volume	None
+G6PC	HP:0001402	Hepatocellular carcinoma	None
+GABRA1	HP:0002457	Abnormal head movements	Neuro
+GABRB3	HP:0002457	Abnormal head movements	Neuro
+GABRG2	HP:0002457	Abnormal head movements	Neuro
+GAMT	HP:0002457	Abnormal head movements	Neuro
+GATA1	HP:0011876	Abnormal platelet volume	Hema
+GATA1	HP:0011902	Abnormal hemoglobin	Hema
+GCK	HP:0011902	Abnormal hemoglobin	None
+GDF1	HP:0030872	Abnormal cardiac ventricular function	Cardio
+GJC2	HP:0002457	Abnormal head movements	Neuro
+GNAS	HP:0000138	Ovarian cyst	None
+GP1BA	HP:0011876	Abnormal platelet volume	None
+GP1BB	HP:0011876	Abnormal platelet volume	None
+GP9	HP:0011876	Abnormal platelet volume	None
+GPR35	HP:0001402	Hepatocellular carcinoma	None
+GPR88	HP:0002457	Abnormal head movements	None
+GTF2I	HP:0000138	Ovarian cyst	None
+GTF2IRD1	HP:0000138	Ovarian cyst	None
+H19	HP:0001402	Hepatocellular carcinoma	None
+HBA1	HP:0011902	Abnormal hemoglobin	None
+HBA2	HP:0011902	Abnormal hemoglobin	None
+HBB	HP:0011902	Abnormal hemoglobin	None
+HBB-LCR	HP:0011902	Abnormal hemoglobin	None
+HBD	HP:0011902	Abnormal hemoglobin	None
+HBG1	HP:0011902	Abnormal hemoglobin	None
+HBG2	HP:0011902	Abnormal hemoglobin	None
+HFE	HP:0001402	Hepatocellular carcinoma	Hema
+HIBCH	HP:0002457	Abnormal head movements	None
+HLA-DRB1	HP:0030872	Abnormal cardiac ventricular function	None
+HMBS	HP:0010931	Abnormal blood sodium concentration	None
+HMBS	HP:0001402	Hepatocellular carcinoma	None
+HNF1A	HP:0011902	Abnormal hemoglobin	None
+HNF1A	HP:0000138	Ovarian cyst	None
+HNF4A	HP:0011902	Abnormal hemoglobin	None
+HSD3B2	HP:0010931	Abnormal blood sodium concentration	None
+HSD3B2	HP:0000138	Ovarian cyst	None
+IGF2	HP:0001402	Hepatocellular carcinoma	None
+IGF2R	HP:0001402	Hepatocellular carcinoma	None
+IL12A	HP:0001402	Hepatocellular carcinoma	None
+IL12RB1	HP:0001402	Hepatocellular carcinoma	None
+IL1B	HP:0012126	Stomach cancer	None
+IL1RN	HP:0012126	Stomach cancer	None
+INS	HP:0011902	Abnormal hemoglobin	None
+INSR	HP:0000138	Ovarian cyst	None
+IRF1	HP:0012126	Stomach cancer	None
+IRF5	HP:0001402	Hepatocellular carcinoma	None
+ITGA2B	HP:0011876	Abnormal platelet volume	None
+ITGB3	HP:0011876	Abnormal platelet volume	None
+JAG1	HP:0001402	Hepatocellular carcinoma	Cardio
+JAK2	HP:0001402	Hepatocellular carcinoma	None
+JRK	HP:0002457	Abnormal head movements	None
+KCNJ11	HP:0011902	Abnormal hemoglobin	None
+KIF1C	HP:0002457	Abnormal head movements	None
+KLF1	HP:0011902	Abnormal hemoglobin	None
+KLF11	HP:0011902	Abnormal hemoglobin	None
+KLF6	HP:0012126	Stomach cancer	None
+KLLN	HP:0000138	Ovarian cyst	None
+KRAS	HP:0012126	Stomach cancer	Cardio
+KRAS	HP:0012126	Stomach cancer	Cancer
+KRAS	HP:0001402	Hepatocellular carcinoma	Cardio
+KRAS	HP:0001402	Hepatocellular carcinoma	Cancer
+LAMA2	HP:0030872	Abnormal cardiac ventricular function	Neuro
+LBR	HP:0011876	Abnormal platelet volume	None
+LDB3	HP:0030872	Abnormal cardiac ventricular function	Neuro
+LDB3	HP:0030872	Abnormal cardiac ventricular function	Cardio
+LDLR	HP:0030872	Abnormal cardiac ventricular function	Cardio
+LDLRAP1	HP:0030872	Abnormal cardiac ventricular function	Cardio
+LHB	HP:0000138	Ovarian cyst	None
+LIMK1	HP:0000138	Ovarian cyst	None
+LIPE	HP:0000138	Ovarian cyst	None
+LMNA	HP:0000138	Ovarian cyst	Neuro
+LMNA	HP:0000138	Ovarian cyst	Cardio
+LMNA	HP:0030872	Abnormal cardiac ventricular function	Neuro
+LMNA	HP:0030872	Abnormal cardiac ventricular function	Cardio
+LMNB2	HP:0000138	Ovarian cyst	None
+LOX	HP:0030872	Abnormal cardiac ventricular function	Cardio
+MAGED2	HP:0010931	Abnormal blood sodium concentration	None
+MAP3K1	HP:0000138	Ovarian cyst	None
+MAPT	HP:0002457	Abnormal head movements	None
+MAT2A	HP:0030872	Abnormal cardiac ventricular function	None
+MC2R	HP:0010931	Abnormal blood sodium concentration	None
+MET	HP:0001402	Hepatocellular carcinoma	Cancer
+MFAP5	HP:0030872	Abnormal cardiac ventricular function	None
+MLH1	HP:0001402	Hepatocellular carcinoma	Cancer
+MLH3	HP:0001402	Hepatocellular carcinoma	Cancer
+MMEL1	HP:0001402	Hepatocellular carcinoma	None
+MMP14	HP:0000138	Ovarian cyst	None
+MMP2	HP:0000138	Ovarian cyst	None
+MPL	HP:0011902	Abnormal hemoglobin	Cancer
+MPL	HP:0011902	Abnormal hemoglobin	Hema
+MRAP	HP:0010931	Abnormal blood sodium concentration	None
+MSH2	HP:0001402	Hepatocellular carcinoma	Cancer
+MSH3	HP:0000138	Ovarian cyst	Cancer
+MSH3	HP:0012126	Stomach cancer	Cancer
+MSH6	HP:0001402	Hepatocellular carcinoma	Cancer
+MST1	HP:0001402	Hepatocellular carcinoma	None
+MSX1	HP:0000138	Ovarian cyst	None
+MUTYH	HP:0012126	Stomach cancer	Cancer
+MYH11	HP:0030872	Abnormal cardiac ventricular function	Cardio
+MYH7	HP:0030872	Abnormal cardiac ventricular function	Neuro
+MYH7	HP:0030872	Abnormal cardiac ventricular function	Cardio
+MYH9	HP:0011876	Abnormal platelet volume	None
+MYLK	HP:0030872	Abnormal cardiac ventricular function	Cardio
+NAA10	HP:0002457	Abnormal head movements	None
+ND1	HP:0030872	Abnormal cardiac ventricular function	None
+ND5	HP:0030872	Abnormal cardiac ventricular function	None
+ND6	HP:0030872	Abnormal cardiac ventricular function	None
+NEUROD1	HP:0011902	Abnormal hemoglobin	None
+NFKB2	HP:0010931	Abnormal blood sodium concentration	None
+NKX6-2	HP:0002457	Abnormal head movements	None
+NNT	HP:0010931	Abnormal blood sodium concentration	None
+NONO	HP:0030872	Abnormal cardiac ventricular function	None
+NR0B1	HP:0010931	Abnormal blood sodium concentration	None
+NR0B1	HP:0000138	Ovarian cyst	None
+NR3C2	HP:0010931	Abnormal blood sodium concentration	None
+NR5A1	HP:0000138	Ovarian cyst	None
+NSMCE2	HP:0011902	Abnormal hemoglobin	None
+NTHL1	HP:0000138	Ovarian cyst	Cancer
+NUP214	HP:0010931	Abnormal blood sodium concentration	None
+OCRL	HP:0010931	Abnormal blood sodium concentration	None
+OFD1	HP:0000138	Ovarian cyst	Cardio
+PAX4	HP:0011902	Abnormal hemoglobin	None
+PCSK9	HP:0030872	Abnormal cardiac ventricular function	Cardio
+PDGFRL	HP:0001402	Hepatocellular carcinoma	None
+PDX1	HP:0011902	Abnormal hemoglobin	None
+PEX10	HP:0002457	Abnormal head movements	None
+PIK3CA	HP:0012126	Stomach cancer	Cancer
+PIK3CA	HP:0001402	Hepatocellular carcinoma	Cancer
+PIK3CA	HP:0000138	Ovarian cyst	Cancer
+PLIN1	HP:0000138	Ovarian cyst	None
+PLP1	HP:0002457	Abnormal head movements	Neuro
+PLVAP	HP:0010931	Abnormal blood sodium concentration	None
+PMS1	HP:0001402	Hepatocellular carcinoma	Cancer
+PMS2	HP:0001402	Hepatocellular carcinoma	Cancer
+POLG	HP:0030872	Abnormal cardiac ventricular function	Neuro
+POLG2	HP:0030872	Abnormal cardiac ventricular function	None
+POMT1	HP:0030872	Abnormal cardiac ventricular function	Neuro
+POMT2	HP:0030872	Abnormal cardiac ventricular function	Neuro
+POR	HP:0000138	Ovarian cyst	None
+POU2AF1	HP:0001402	Hepatocellular carcinoma	None
+PPARG	HP:0000138	Ovarian cyst	None
+PPCS	HP:0030872	Abnormal cardiac ventricular function	None
+PRDM16	HP:0030872	Abnormal cardiac ventricular function	Cardio
+PRF1	HP:0010931	Abnormal blood sodium concentration	None
+PRKACG	HP:0011876	Abnormal platelet volume	None
+PRKAR1A	HP:0012126	Stomach cancer	Cancer
+PRKAR1A	HP:0000138	Ovarian cyst	Cancer
+PRKCD	HP:0001402	Hepatocellular carcinoma	None
+PRKG1	HP:0030872	Abnormal cardiac ventricular function	Cardio
+PRLR	HP:0000138	Ovarian cyst	None
+PRNP	HP:0002457	Abnormal head movements	None
+PTEN	HP:0000138	Ovarian cyst	Cancer
+RASGRP1	HP:0001402	Hepatocellular carcinoma	None
+RFC2	HP:0000138	Ovarian cyst	None
+ROR2	HP:0030872	Abnormal cardiac ventricular function	None
+RPL5	HP:0011902	Abnormal hemoglobin	Cancer
+RPL5	HP:0011902	Abnormal hemoglobin	Hema
+RPS20	HP:0012126	Stomach cancer	None
+RPS20	HP:0001402	Hepatocellular carcinoma	None
+RPS24	HP:0011902	Abnormal hemoglobin	Hema
+RPS24	HP:0011902	Abnormal hemoglobin	Cancer
+RRM2B	HP:0030872	Abnormal cardiac ventricular function	None
+RYR2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+SAMD9	HP:0010931	Abnormal blood sodium concentration	None
+SARS2	HP:0010931	Abnormal blood sodium concentration	None
+SBDS	HP:0011902	Abnormal hemoglobin	Cancer
+SC5D	HP:0011876	Abnormal platelet volume	None
+SCN4A	HP:0010931	Abnormal blood sodium concentration	Neuro
+SCNN1A	HP:0010931	Abnormal blood sodium concentration	None
+SCNN1B	HP:0010931	Abnormal blood sodium concentration	None
+SCNN1G	HP:0010931	Abnormal blood sodium concentration	None
+SDHA	HP:0030872	Abnormal cardiac ventricular function	Cancer
+SDHA	HP:0030872	Abnormal cardiac ventricular function	Cardio
+SDHAF1	HP:0030872	Abnormal cardiac ventricular function	None
+SDHB	HP:0030872	Abnormal cardiac ventricular function	Cancer
+SDHB	HP:0000138	Ovarian cyst	Cancer
+SDHC	HP:0000138	Ovarian cyst	Cancer
+SDHD	HP:0000138	Ovarian cyst	Cancer
+SDHD	HP:0030872	Abnormal cardiac ventricular function	Cancer
+SEC23B	HP:0000138	Ovarian cyst	None
+SELENON	HP:0030872	Abnormal cardiac ventricular function	None
+SEMA4A	HP:0001402	Hepatocellular carcinoma	None
+SEMA4A	HP:0012126	Stomach cancer	None
+SERPINA1	HP:0001402	Hepatocellular carcinoma	None
+SETD2	HP:0000138	Ovarian cyst	None
+SGCG	HP:0030872	Abnormal cardiac ventricular function	Neuro
+SKIV2L	HP:0011876	Abnormal platelet volume	None
+SLC25A13	HP:0001402	Hepatocellular carcinoma	None
+SLC25A4	HP:0030872	Abnormal cardiac ventricular function	Cardio
+SLC26A3	HP:0010931	Abnormal blood sodium concentration	None
+SLC2A1	HP:0002457	Abnormal head movements	Neuro
+SLC35A1	HP:0011876	Abnormal platelet volume	None
+SLC37A4	HP:0001402	Hepatocellular carcinoma	None
+SMAD3	HP:0030872	Abnormal cardiac ventricular function	Cardio
+SOX3	HP:0000138	Ovarian cyst	None
+SOX9	HP:0000138	Ovarian cyst	None
+SPIB	HP:0001402	Hepatocellular carcinoma	None
+SPRTN	HP:0001402	Hepatocellular carcinoma	None
+SRP54	HP:0011902	Abnormal hemoglobin	None
+SRY	HP:0000138	Ovarian cyst	None
+STAR	HP:0010931	Abnormal blood sodium concentration	None
+STK11	HP:0012126	Stomach cancer	Cancer
+STK11	HP:0000138	Ovarian cyst	Cancer
+STOX1	HP:0000138	Ovarian cyst	None
+TAB2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TBL2	HP:0000138	Ovarian cyst	None
+TBX19	HP:0010931	Abnormal blood sodium concentration	None
+TCF4	HP:0001402	Hepatocellular carcinoma	Neuro
+TDP2	HP:0010931	Abnormal blood sodium concentration	None
+TET2	HP:0030872	Abnormal cardiac ventricular function	None
+TGFB2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TGFB3	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TGFBR1	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TGFBR2	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TGFBR2	HP:0001402	Hepatocellular carcinoma	Cardio
+TJP2	HP:0001402	Hepatocellular carcinoma	None
+TNFSF15	HP:0001402	Hepatocellular carcinoma	None
+TNPO3	HP:0001402	Hepatocellular carcinoma	Neuro
+TOP3A	HP:0030872	Abnormal cardiac ventricular function	None
+TP53	HP:0001402	Hepatocellular carcinoma	Cancer
+TRDN	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TRIP13	HP:0012126	Stomach cancer	None
+TRNC	HP:0030872	Abnormal cardiac ventricular function	None
+TRNF	HP:0030872	Abnormal cardiac ventricular function	None
+TRNK	HP:0030872	Abnormal cardiac ventricular function	None
+TRNL1	HP:0030872	Abnormal cardiac ventricular function	None
+TRNQ	HP:0030872	Abnormal cardiac ventricular function	None
+TRNS1	HP:0030872	Abnormal cardiac ventricular function	None
+TRNS2	HP:0030872	Abnormal cardiac ventricular function	None
+TRNV	HP:0030872	Abnormal cardiac ventricular function	None
+TRNW	HP:0030872	Abnormal cardiac ventricular function	None
+TTC37	HP:0011876	Abnormal platelet volume	None
+TTN	HP:0030872	Abnormal cardiac ventricular function	Cardio
+TTN	HP:0030872	Abnormal cardiac ventricular function	Neuro
+TUBB1	HP:0011876	Abnormal platelet volume	None
+TWNK	HP:0030872	Abnormal cardiac ventricular function	None
+TXNRD2	HP:0010931	Abnormal blood sodium concentration	Cardio
+UCHL1	HP:0002457	Abnormal head movements	None
+UROD	HP:0001402	Hepatocellular carcinoma	None
+VAMP1	HP:0002457	Abnormal head movements	Neuro
+WAS	HP:0011876	Abnormal platelet volume	Hema
+WNT5A	HP:0030872	Abnormal cardiac ventricular function	None
+WT1	HP:0000138	Ovarian cyst	Cancer

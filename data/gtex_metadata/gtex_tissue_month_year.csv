@@ -1,0 +1,1476 @@
+tissue,month,year,tiss_samples
+Adipose Tissue,1,2012,13
+Adipose Tissue,1,2013,4
+Adipose Tissue,1,2014,52
+Adipose Tissue,1,2015,20
+Adipose Tissue,1,2016,7
+Adipose Tissue,1,2017,1
+Adipose Tissue,2,2012,6
+Adipose Tissue,2,2013,9
+Adipose Tissue,2,2014,26
+Adipose Tissue,2,2015,5
+Adipose Tissue,2,2016,11
+Adipose Tissue,2,2017,1
+Adipose Tissue,3,2012,9
+Adipose Tissue,3,2014,9
+Adipose Tissue,3,2015,2
+Adipose Tissue,3,2016,14
+Adipose Tissue,4,2012,10
+Adipose Tissue,4,2014,23
+Adipose Tissue,4,2015,5
+Adipose Tissue,4,2016,4
+Adipose Tissue,5,2012,13
+Adipose Tissue,5,2014,22
+Adipose Tissue,5,2015,9
+Adipose Tissue,6,2011,3
+Adipose Tissue,6,2012,4
+Adipose Tissue,6,2014,13
+Adipose Tissue,6,2015,14
+Adipose Tissue,6,2016,5
+Adipose Tissue,7,2011,5
+Adipose Tissue,7,2012,19
+Adipose Tissue,7,2013,3
+Adipose Tissue,7,2014,7
+Adipose Tissue,7,2015,5
+Adipose Tissue,8,2011,12
+Adipose Tissue,8,2012,9
+Adipose Tissue,8,2013,19
+Adipose Tissue,8,2014,19
+Adipose Tissue,8,2016,6
+Adipose Tissue,9,2011,7
+Adipose Tissue,9,2012,6
+Adipose Tissue,9,2013,65
+Adipose Tissue,9,2014,8
+Adipose Tissue,9,2015,5
+Adipose Tissue,9,2016,36
+Adipose Tissue,10,2011,7
+Adipose Tissue,10,2012,7
+Adipose Tissue,10,2013,62
+Adipose Tissue,10,2014,19
+Adipose Tissue,10,2015,4
+Adipose Tissue,10,2016,20
+Adipose Tissue,11,2011,15
+Adipose Tissue,11,2012,3
+Adipose Tissue,11,2013,16
+Adipose Tissue,11,2014,8
+Adipose Tissue,11,2015,15
+Adipose Tissue,11,2016,16
+Adipose Tissue,12,2011,7
+Adipose Tissue,12,2012,8
+Adipose Tissue,12,2013,65
+Adipose Tissue,12,2016,15
+Adrenal Gland,1,2012,8
+Adrenal Gland,1,2013,2
+Adrenal Gland,1,2014,15
+Adrenal Gland,1,2015,7
+Adrenal Gland,1,2016,3
+Adrenal Gland,2,2012,4
+Adrenal Gland,2,2013,1
+Adrenal Gland,2,2014,10
+Adrenal Gland,2,2016,3
+Adrenal Gland,3,2012,3
+Adrenal Gland,3,2014,3
+Adrenal Gland,3,2016,1
+Adrenal Gland,4,2012,2
+Adrenal Gland,4,2014,3
+Adrenal Gland,4,2016,3
+Adrenal Gland,5,2012,5
+Adrenal Gland,5,2014,7
+Adrenal Gland,5,2015,4
+Adrenal Gland,6,2011,1
+Adrenal Gland,6,2012,2
+Adrenal Gland,6,2014,3
+Adrenal Gland,6,2015,1
+Adrenal Gland,6,2016,1
+Adrenal Gland,7,2011,4
+Adrenal Gland,7,2012,7
+Adrenal Gland,7,2013,1
+Adrenal Gland,7,2014,3
+Adrenal Gland,7,2015,1
+Adrenal Gland,8,2011,4
+Adrenal Gland,8,2012,2
+Adrenal Gland,8,2013,6
+Adrenal Gland,8,2014,5
+Adrenal Gland,8,2016,2
+Adrenal Gland,9,2011,2
+Adrenal Gland,9,2012,2
+Adrenal Gland,9,2013,16
+Adrenal Gland,9,2014,5
+Adrenal Gland,9,2015,4
+Adrenal Gland,9,2016,5
+Adrenal Gland,10,2011,4
+Adrenal Gland,10,2013,31
+Adrenal Gland,10,2014,6
+Adrenal Gland,10,2015,1
+Adrenal Gland,10,2016,5
+Adrenal Gland,11,2011,9
+Adrenal Gland,11,2012,1
+Adrenal Gland,11,2013,6
+Adrenal Gland,11,2014,5
+Adrenal Gland,11,2015,2
+Adrenal Gland,11,2016,6
+Adrenal Gland,12,2011,4
+Adrenal Gland,12,2012,5
+Adrenal Gland,12,2013,21
+Adrenal Gland,12,2016,2
+Bladder,1,2012,2
+Bladder,2,2012,2
+Bladder,3,2012,5
+Bladder,4,2012,4
+Bladder,5,2012,4
+Bladder,6,2012,1
+Bladder,9,2011,1
+Bladder,11,2011,1
+Bladder,11,2014,1
+Blood,1,2012,25
+Blood,1,2013,16
+Blood,1,2014,26
+Blood,1,2015,39
+Blood,2,2012,9
+Blood,2,2013,11
+Blood,2,2014,24
+Blood,2,2015,16
+Blood,3,2012,8
+Blood,3,2013,14
+Blood,3,2014,21
+Blood,3,2015,14
+Blood,4,2012,13
+Blood,4,2013,29
+Blood,4,2014,18
+Blood,4,2015,11
+Blood,5,2011,2
+Blood,5,2012,9
+Blood,5,2013,29
+Blood,5,2014,10
+Blood,5,2015,17
+Blood,6,2011,6
+Blood,6,2012,1
+Blood,6,2013,23
+Blood,6,2014,28
+Blood,6,2015,11
+Blood,7,2011,9
+Blood,7,2012,17
+Blood,7,2013,20
+Blood,7,2014,15
+Blood,7,2015,6
+Blood,8,2011,15
+Blood,8,2012,11
+Blood,8,2013,23
+Blood,8,2014,10
+Blood,8,2015,6
+Blood,9,2011,12
+Blood,9,2012,27
+Blood,9,2013,32
+Blood,9,2014,11
+Blood,9,2015,2
+Blood,10,2011,11
+Blood,10,2012,17
+Blood,10,2013,44
+Blood,10,2014,28
+Blood,10,2015,6
+Blood,11,2011,9
+Blood,11,2012,12
+Blood,11,2013,52
+Blood,11,2014,10
+Blood,11,2015,33
+Blood,12,2011,9
+Blood,12,2012,6
+Blood,12,2013,37
+Blood,12,2014,22
+Blood,12,2015,17
+Blood Vessel,1,2012,15
+Blood Vessel,1,2013,3
+Blood Vessel,1,2014,43
+Blood Vessel,1,2015,13
+Blood Vessel,1,2016,8
+Blood Vessel,2,2012,5
+Blood Vessel,2,2013,4
+Blood Vessel,2,2014,24
+Blood Vessel,2,2015,2
+Blood Vessel,2,2016,6
+Blood Vessel,3,2012,12
+Blood Vessel,3,2013,1
+Blood Vessel,3,2014,14
+Blood Vessel,3,2015,1
+Blood Vessel,3,2016,4
+Blood Vessel,4,2012,10
+Blood Vessel,4,2014,19
+Blood Vessel,4,2015,6
+Blood Vessel,4,2016,6
+Blood Vessel,5,2011,2
+Blood Vessel,5,2012,13
+Blood Vessel,5,2014,27
+Blood Vessel,5,2015,8
+Blood Vessel,6,2011,3
+Blood Vessel,6,2012,5
+Blood Vessel,6,2014,7
+Blood Vessel,6,2015,17
+Blood Vessel,6,2016,7
+Blood Vessel,7,2011,9
+Blood Vessel,7,2012,17
+Blood Vessel,7,2013,5
+Blood Vessel,7,2014,6
+Blood Vessel,7,2015,4
+Blood Vessel,8,2011,11
+Blood Vessel,8,2012,14
+Blood Vessel,8,2013,20
+Blood Vessel,8,2014,20
+Blood Vessel,8,2016,11
+Blood Vessel,9,2011,6
+Blood Vessel,9,2012,6
+Blood Vessel,9,2013,60
+Blood Vessel,9,2014,8
+Blood Vessel,9,2015,9
+Blood Vessel,9,2016,24
+Blood Vessel,10,2011,9
+Blood Vessel,10,2012,5
+Blood Vessel,10,2013,50
+Blood Vessel,10,2014,16
+Blood Vessel,10,2015,7
+Blood Vessel,10,2016,26
+Blood Vessel,11,2011,14
+Blood Vessel,11,2012,4
+Blood Vessel,11,2013,15
+Blood Vessel,11,2014,21
+Blood Vessel,11,2015,9
+Blood Vessel,11,2016,17
+Blood Vessel,12,2011,8
+Blood Vessel,12,2012,9
+Blood Vessel,12,2013,71
+Blood Vessel,12,2016,12
+Bone Marrow,6,2011,1
+Brain,1,2012,2
+Brain,1,2014,20
+Brain,1,2015,14
+Brain,1,2016,12
+Brain,1,2017,2
+Brain,2,2012,4
+Brain,2,2013,2
+Brain,2,2014,5
+Brain,2,2015,3
+Brain,2,2016,15
+Brain,3,2012,4
+Brain,3,2014,5
+Brain,4,2012,3
+Brain,4,2014,1
+Brain,5,2012,1
+Brain,5,2014,7
+Brain,6,2014,5
+Brain,6,2015,1
+Brain,6,2016,2
+Brain,7,2012,3
+Brain,7,2013,12
+Brain,7,2014,4
+Brain,7,2015,7
+Brain,8,2012,2
+Brain,8,2013,13
+Brain,8,2014,1
+Brain,8,2016,3
+Brain,9,2011,6
+Brain,9,2013,26
+Brain,9,2014,3
+Brain,9,2015,12
+Brain,9,2016,2
+Brain,10,2011,5
+Brain,10,2012,3
+Brain,10,2013,14
+Brain,10,2014,12
+Brain,10,2015,3
+Brain,10,2016,9
+Brain,11,2011,3
+Brain,11,2013,5
+Brain,11,2015,17
+Brain,11,2016,24
+Brain,12,2011,1
+Brain,12,2012,4
+Brain,12,2013,27
+Brain,12,2016,9
+Breast,1,2012,8
+Breast,1,2013,2
+Breast,1,2014,19
+Breast,1,2015,8
+Breast,1,2016,8
+Breast,1,2017,1
+Breast,2,2012,4
+Breast,2,2013,4
+Breast,2,2014,13
+Breast,2,2015,3
+Breast,2,2016,6
+Breast,3,2012,6
+Breast,3,2013,1
+Breast,3,2014,6
+Breast,3,2015,1
+Breast,3,2016,3
+Breast,4,2012,4
+Breast,4,2014,8
+Breast,4,2015,2
+Breast,4,2016,4
+Breast,5,2012,9
+Breast,5,2014,20
+Breast,5,2015,4
+Breast,6,2012,4
+Breast,6,2014,5
+Breast,6,2015,11
+Breast,6,2016,5
+Breast,7,2012,9
+Breast,7,2013,2
+Breast,7,2014,5
+Breast,7,2015,8
+Breast,8,2012,6
+Breast,8,2013,10
+Breast,8,2014,13
+Breast,8,2016,2
+Breast,9,2012,4
+Breast,9,2013,49
+Breast,9,2014,11
+Breast,9,2015,9
+Breast,9,2016,19
+Breast,10,2011,1
+Breast,10,2012,3
+Breast,10,2013,37
+Breast,10,2014,5
+Breast,10,2015,7
+Breast,10,2016,20
+Breast,11,2011,4
+Breast,11,2012,2
+Breast,11,2013,6
+Breast,11,2014,13
+Breast,11,2015,5
+Breast,11,2016,8
+Breast,12,2011,2
+Breast,12,2012,6
+Breast,12,2013,33
+Breast,12,2016,3
+Cervix Uteri,2,2012,2
+Cervix Uteri,3,2012,1
+Cervix Uteri,5,2011,1
+Cervix Uteri,5,2012,4
+Cervix Uteri,6,2012,1
+Cervix Uteri,7,2011,1
+Cervix Uteri,9,2011,1
+Cervix Uteri,9,2013,1
+Cervix Uteri,10,2011,1
+Cervix Uteri,11,2011,1
+Colon,1,2012,7
+Colon,1,2013,2
+Colon,1,2014,34
+Colon,1,2015,8
+Colon,1,2016,6
+Colon,2,2012,1
+Colon,2,2013,2
+Colon,2,2014,17
+Colon,2,2015,2
+Colon,2,2016,5
+Colon,3,2012,8
+Colon,3,2014,10
+Colon,3,2016,4
+Colon,4,2012,3
+Colon,4,2014,20
+Colon,4,2015,1
+Colon,4,2016,1
+Colon,5,2012,9
+Colon,5,2014,21
+Colon,5,2015,10
+Colon,6,2011,1
+Colon,6,2012,3
+Colon,6,2014,9
+Colon,6,2015,10
+Colon,6,2016,8
+Colon,7,2011,4
+Colon,7,2012,14
+Colon,7,2013,1
+Colon,7,2014,5
+Colon,7,2015,4
+Colon,8,2011,7
+Colon,8,2012,7
+Colon,8,2013,16
+Colon,8,2014,18
+Colon,8,2016,9
+Colon,9,2011,3
+Colon,9,2012,5
+Colon,9,2013,48
+Colon,9,2014,5
+Colon,9,2015,3
+Colon,9,2016,22
+Colon,10,2011,4
+Colon,10,2012,4
+Colon,10,2013,42
+Colon,10,2014,7
+Colon,10,2015,6
+Colon,10,2016,22
+Colon,11,2011,10
+Colon,11,2013,12
+Colon,11,2014,8
+Colon,11,2015,11
+Colon,11,2016,12
+Colon,12,2011,4
+Colon,12,2012,7
+Colon,12,2013,39
+Colon,12,2016,9
+Esophagus,1,2012,16
+Esophagus,1,2013,2
+Esophagus,1,2014,40
+Esophagus,1,2015,12
+Esophagus,1,2016,4
+Esophagus,1,2017,2
+Esophagus,2,2012,5
+Esophagus,2,2013,4
+Esophagus,2,2014,24
+Esophagus,2,2015,1
+Esophagus,2,2016,3
+Esophagus,3,2012,8
+Esophagus,3,2014,14
+Esophagus,3,2016,3
+Esophagus,4,2012,8
+Esophagus,4,2014,32
+Esophagus,4,2015,2
+Esophagus,4,2016,3
+Esophagus,5,2011,2
+Esophagus,5,2012,13
+Esophagus,5,2014,19
+Esophagus,5,2015,9
+Esophagus,6,2011,2
+Esophagus,6,2012,6
+Esophagus,6,2014,7
+Esophagus,6,2015,19
+Esophagus,6,2016,9
+Esophagus,7,2011,6
+Esophagus,7,2012,20
+Esophagus,7,2014,2
+Esophagus,7,2015,9
+Esophagus,8,2011,9
+Esophagus,8,2012,10
+Esophagus,8,2013,20
+Esophagus,8,2014,28
+Esophagus,8,2016,5
+Esophagus,9,2011,6
+Esophagus,9,2012,8
+Esophagus,9,2013,67
+Esophagus,9,2014,8
+Esophagus,9,2015,5
+Esophagus,9,2016,38
+Esophagus,10,2011,8
+Esophagus,10,2012,5
+Esophagus,10,2013,36
+Esophagus,10,2014,13
+Esophagus,10,2015,6
+Esophagus,10,2016,24
+Esophagus,11,2011,14
+Esophagus,11,2012,2
+Esophagus,11,2013,10
+Esophagus,11,2014,11
+Esophagus,11,2015,7
+Esophagus,11,2016,8
+Esophagus,12,2011,8
+Esophagus,12,2012,9
+Esophagus,12,2013,64
+Esophagus,12,2016,7
+Fallopian Tube,2,2012,2
+Fallopian Tube,3,2012,1
+Fallopian Tube,5,2012,3
+Fallopian Tube,6,2012,1
+Fallopian Tube,7,2011,1
+Fallopian Tube,10,2011,1
+Heart,1,2012,11
+Heart,1,2013,1
+Heart,1,2014,37
+Heart,1,2015,11
+Heart,1,2016,5
+Heart,1,2017,1
+Heart,2,2012,4
+Heart,2,2013,3
+Heart,2,2014,24
+Heart,2,2015,5
+Heart,2,2016,4
+Heart,3,2012,5
+Heart,3,2014,5
+Heart,3,2016,5
+Heart,4,2012,5
+Heart,4,2014,21
+Heart,4,2015,3
+Heart,4,2016,3
+Heart,5,2011,2
+Heart,5,2012,5
+Heart,5,2014,13
+Heart,5,2015,3
+Heart,6,2011,2
+Heart,6,2012,3
+Heart,6,2014,6
+Heart,6,2015,12
+Heart,6,2016,2
+Heart,7,2011,7
+Heart,7,2012,17
+Heart,7,2013,1
+Heart,7,2014,4
+Heart,7,2015,5
+Heart,8,2011,9
+Heart,8,2012,9
+Heart,8,2013,15
+Heart,8,2014,14
+Heart,8,2016,7
+Heart,9,2011,5
+Heart,9,2012,5
+Heart,9,2013,38
+Heart,9,2014,11
+Heart,9,2015,2
+Heart,9,2016,16
+Heart,10,2011,5
+Heart,10,2012,4
+Heart,10,2013,48
+Heart,10,2014,15
+Heart,10,2015,6
+Heart,10,2016,20
+Heart,11,2011,9
+Heart,11,2012,2
+Heart,11,2013,8
+Heart,11,2014,10
+Heart,11,2015,15
+Heart,11,2016,8
+Heart,12,2011,6
+Heart,12,2012,7
+Heart,12,2013,55
+Heart,12,2016,5
+Kidney,1,2012,4
+Kidney,1,2014,4
+Kidney,1,2015,3
+Kidney,1,2016,2
+Kidney,1,2017,1
+Kidney,2,2012,1
+Kidney,2,2014,3
+Kidney,3,2014,1
+Kidney,4,2012,1
+Kidney,4,2014,3
+Kidney,4,2016,1
+Kidney,5,2011,1
+Kidney,5,2012,2
+Kidney,5,2014,4
+Kidney,5,2015,1
+Kidney,6,2011,1
+Kidney,6,2014,1
+Kidney,6,2015,3
+Kidney,6,2016,2
+Kidney,7,2011,1
+Kidney,7,2012,1
+Kidney,7,2013,1
+Kidney,7,2014,1
+Kidney,8,2012,1
+Kidney,8,2013,2
+Kidney,8,2014,3
+Kidney,8,2016,2
+Kidney,9,2011,1
+Kidney,9,2013,6
+Kidney,9,2014,3
+Kidney,9,2015,1
+Kidney,9,2016,3
+Kidney,10,2013,7
+Kidney,10,2014,3
+Kidney,10,2015,5
+Kidney,10,2016,2
+Kidney,11,2011,2
+Kidney,11,2012,1
+Kidney,11,2014,1
+Kidney,11,2016,1
+Kidney,12,2011,1
+Kidney,12,2013,7
+Kidney,12,2016,3
+Liver,1,2012,7
+Liver,1,2013,1
+Liver,1,2014,19
+Liver,1,2015,4
+Liver,1,2016,1
+Liver,2,2012,3
+Liver,2,2013,1
+Liver,2,2014,4
+Liver,2,2016,1
+Liver,3,2012,1
+Liver,3,2014,3
+Liver,3,2016,3
+Liver,4,2012,2
+Liver,4,2014,6
+Liver,4,2015,1
+Liver,5,2012,3
+Liver,5,2014,6
+Liver,5,2015,2
+Liver,6,2012,2
+Liver,6,2014,3
+Liver,6,2015,2
+Liver,6,2016,6
+Liver,7,2011,2
+Liver,7,2012,4
+Liver,7,2014,5
+Liver,7,2015,3
+Liver,8,2011,3
+Liver,8,2012,6
+Liver,8,2013,3
+Liver,8,2014,8
+Liver,8,2016,1
+Liver,9,2011,1
+Liver,9,2012,4
+Liver,9,2013,20
+Liver,9,2014,4
+Liver,9,2015,1
+Liver,9,2016,7
+Liver,10,2012,1
+Liver,10,2013,21
+Liver,10,2014,5
+Liver,10,2015,2
+Liver,10,2016,2
+Liver,11,2011,7
+Liver,11,2012,1
+Liver,11,2013,4
+Liver,11,2014,5
+Liver,11,2015,6
+Liver,11,2016,2
+Liver,12,2011,2
+Liver,12,2012,1
+Liver,12,2013,26
+Liver,12,2016,4
+Lung,1,2012,13
+Lung,1,2013,1
+Lung,1,2014,33
+Lung,1,2015,13
+Lung,1,2016,3
+Lung,1,2017,2
+Lung,2,2012,7
+Lung,2,2013,4
+Lung,2,2014,13
+Lung,2,2015,1
+Lung,2,2016,3
+Lung,3,2012,7
+Lung,3,2014,13
+Lung,3,2015,2
+Lung,3,2016,6
+Lung,4,2012,14
+Lung,4,2014,13
+Lung,4,2015,4
+Lung,4,2016,3
+Lung,5,2011,2
+Lung,5,2012,10
+Lung,5,2014,20
+Lung,5,2015,5
+Lung,6,2011,3
+Lung,6,2012,4
+Lung,6,2014,5
+Lung,6,2015,12
+Lung,6,2016,4
+Lung,7,2011,7
+Lung,7,2012,14
+Lung,7,2013,2
+Lung,7,2014,3
+Lung,7,2015,3
+Lung,8,2011,8
+Lung,8,2012,16
+Lung,8,2013,16
+Lung,8,2014,18
+Lung,8,2016,5
+Lung,9,2011,6
+Lung,9,2012,7
+Lung,9,2013,47
+Lung,9,2014,11
+Lung,9,2015,5
+Lung,9,2016,14
+Lung,10,2011,8
+Lung,10,2012,4
+Lung,10,2013,41
+Lung,10,2014,7
+Lung,10,2015,7
+Lung,10,2016,11
+Lung,11,2011,13
+Lung,11,2012,1
+Lung,11,2013,9
+Lung,11,2014,13
+Lung,11,2015,11
+Lung,11,2016,5
+Lung,12,2011,5
+Lung,12,2012,7
+Lung,12,2013,58
+Lung,12,2016,6
+Muscle,1,2012,16
+Muscle,1,2013,4
+Muscle,1,2014,50
+Muscle,1,2015,18
+Muscle,1,2016,9
+Muscle,2,2012,7
+Muscle,2,2013,7
+Muscle,2,2014,23
+Muscle,2,2015,2
+Muscle,2,2016,10
+Muscle,3,2012,11
+Muscle,3,2014,14
+Muscle,3,2016,9
+Muscle,4,2012,10
+Muscle,4,2014,27
+Muscle,4,2015,7
+Muscle,4,2016,3
+Muscle,5,2011,1
+Muscle,5,2012,15
+Muscle,5,2014,21
+Muscle,5,2015,6
+Muscle,6,2011,2
+Muscle,6,2012,4
+Muscle,6,2014,14
+Muscle,6,2015,11
+Muscle,6,2016,7
+Muscle,7,2011,7
+Muscle,7,2012,16
+Muscle,7,2013,4
+Muscle,7,2014,6
+Muscle,7,2015,9
+Muscle,8,2011,12
+Muscle,8,2012,14
+Muscle,8,2013,16
+Muscle,8,2014,21
+Muscle,8,2016,8
+Muscle,9,2011,7
+Muscle,9,2012,5
+Muscle,9,2013,71
+Muscle,9,2014,9
+Muscle,9,2015,7
+Muscle,9,2016,26
+Muscle,10,2011,8
+Muscle,10,2012,3
+Muscle,10,2013,55
+Muscle,10,2014,13
+Muscle,10,2015,5
+Muscle,10,2016,26
+Muscle,11,2011,14
+Muscle,11,2012,3
+Muscle,11,2013,20
+Muscle,11,2014,19
+Muscle,11,2015,9
+Muscle,11,2016,15
+Muscle,12,2011,8
+Muscle,12,2012,6
+Muscle,12,2013,81
+Muscle,12,2016,13
+Nerve,1,2012,10
+Nerve,1,2013,2
+Nerve,1,2014,34
+Nerve,1,2015,20
+Nerve,1,2016,6
+Nerve,2,2012,4
+Nerve,2,2013,8
+Nerve,2,2014,17
+Nerve,2,2015,3
+Nerve,2,2016,7
+Nerve,3,2012,6
+Nerve,3,2014,7
+Nerve,3,2015,2
+Nerve,3,2016,7
+Nerve,4,2012,10
+Nerve,4,2014,19
+Nerve,4,2015,2
+Nerve,4,2016,4
+Nerve,5,2012,10
+Nerve,5,2014,17
+Nerve,5,2015,6
+Nerve,6,2011,3
+Nerve,6,2012,1
+Nerve,6,2014,6
+Nerve,6,2015,13
+Nerve,6,2016,7
+Nerve,7,2011,5
+Nerve,7,2012,13
+Nerve,7,2013,4
+Nerve,7,2014,10
+Nerve,7,2015,6
+Nerve,8,2011,5
+Nerve,8,2012,12
+Nerve,8,2013,10
+Nerve,8,2014,20
+Nerve,8,2016,6
+Nerve,9,2011,6
+Nerve,9,2012,7
+Nerve,9,2013,51
+Nerve,9,2014,7
+Nerve,9,2015,6
+Nerve,9,2016,20
+Nerve,10,2011,9
+Nerve,10,2012,2
+Nerve,10,2013,43
+Nerve,10,2014,12
+Nerve,10,2015,5
+Nerve,10,2016,22
+Nerve,11,2011,12
+Nerve,11,2012,3
+Nerve,11,2013,16
+Nerve,11,2014,17
+Nerve,11,2015,11
+Nerve,11,2016,12
+Nerve,12,2011,6
+Nerve,12,2012,5
+Nerve,12,2013,53
+Nerve,12,2016,5
+Ovary,1,2012,3
+Ovary,1,2013,2
+Ovary,1,2014,10
+Ovary,1,2015,4
+Ovary,1,2016,1
+Ovary,2,2012,4
+Ovary,2,2013,1
+Ovary,2,2014,8
+Ovary,2,2016,3
+Ovary,3,2012,3
+Ovary,3,2014,2
+Ovary,3,2016,1
+Ovary,4,2012,2
+Ovary,4,2014,4
+Ovary,4,2015,1
+Ovary,4,2016,1
+Ovary,5,2012,5
+Ovary,5,2014,1
+Ovary,5,2015,2
+Ovary,6,2012,2
+Ovary,6,2014,5
+Ovary,6,2015,4
+Ovary,7,2011,2
+Ovary,7,2012,3
+Ovary,7,2013,1
+Ovary,7,2014,2
+Ovary,7,2015,2
+Ovary,8,2012,3
+Ovary,8,2013,3
+Ovary,8,2014,2
+Ovary,8,2016,2
+Ovary,9,2011,3
+Ovary,9,2012,3
+Ovary,9,2013,14
+Ovary,9,2014,1
+Ovary,9,2016,7
+Ovary,10,2011,3
+Ovary,10,2012,1
+Ovary,10,2013,16
+Ovary,10,2014,7
+Ovary,10,2015,2
+Ovary,10,2016,5
+Ovary,11,2011,6
+Ovary,11,2012,1
+Ovary,11,2013,5
+Ovary,11,2014,3
+Ovary,11,2016,1
+Ovary,12,2011,1
+Ovary,12,2012,4
+Ovary,12,2013,15
+Ovary,12,2016,4
+Pancreas,1,2012,4
+Pancreas,1,2013,2
+Pancreas,1,2014,19
+Pancreas,1,2015,2
+Pancreas,1,2016,2
+Pancreas,1,2017,3
+Pancreas,2,2012,3
+Pancreas,2,2013,3
+Pancreas,2,2014,13
+Pancreas,2,2015,4
+Pancreas,2,2016,1
+Pancreas,3,2012,6
+Pancreas,3,2014,3
+Pancreas,3,2016,1
+Pancreas,4,2012,2
+Pancreas,4,2014,15
+Pancreas,4,2016,3
+Pancreas,5,2011,1
+Pancreas,5,2012,7
+Pancreas,5,2014,7
+Pancreas,5,2015,3
+Pancreas,6,2011,2
+Pancreas,6,2012,4
+Pancreas,6,2014,2
+Pancreas,6,2015,5
+Pancreas,6,2016,3
+Pancreas,7,2011,3
+Pancreas,7,2012,14
+Pancreas,7,2013,2
+Pancreas,7,2014,3
+Pancreas,7,2015,4
+Pancreas,8,2011,5
+Pancreas,8,2012,5
+Pancreas,8,2013,13
+Pancreas,8,2014,15
+Pancreas,9,2011,3
+Pancreas,9,2012,3
+Pancreas,9,2013,24
+Pancreas,9,2014,5
+Pancreas,9,2015,4
+Pancreas,9,2016,17
+Pancreas,10,2011,3
+Pancreas,10,2012,1
+Pancreas,10,2013,26
+Pancreas,10,2014,5
+Pancreas,10,2015,3
+Pancreas,10,2016,5
+Pancreas,11,2011,9
+Pancreas,11,2012,2
+Pancreas,11,2013,8
+Pancreas,11,2014,3
+Pancreas,11,2015,4
+Pancreas,11,2016,6
+Pancreas,12,2011,6
+Pancreas,12,2012,5
+Pancreas,12,2013,19
+Pancreas,12,2016,4
+Pituitary,1,2012,3
+Pituitary,1,2014,21
+Pituitary,1,2015,11
+Pituitary,1,2016,3
+Pituitary,1,2017,2
+Pituitary,2,2013,1
+Pituitary,2,2014,14
+Pituitary,2,2016,3
+Pituitary,3,2014,5
+Pituitary,3,2016,8
+Pituitary,4,2012,3
+Pituitary,4,2014,4
+Pituitary,4,2015,4
+Pituitary,4,2016,3
+Pituitary,5,2011,2
+Pituitary,5,2012,1
+Pituitary,5,2014,9
+Pituitary,5,2015,2
+Pituitary,6,2011,2
+Pituitary,6,2012,1
+Pituitary,6,2014,4
+Pituitary,6,2015,5
+Pituitary,6,2016,5
+Pituitary,7,2012,1
+Pituitary,7,2015,3
+Pituitary,8,2011,1
+Pituitary,8,2012,5
+Pituitary,8,2013,5
+Pituitary,8,2014,10
+Pituitary,8,2016,6
+Pituitary,9,2011,1
+Pituitary,9,2012,2
+Pituitary,9,2013,16
+Pituitary,9,2014,4
+Pituitary,9,2015,3
+Pituitary,9,2016,8
+Pituitary,10,2011,1
+Pituitary,10,2012,1
+Pituitary,10,2013,25
+Pituitary,10,2014,12
+Pituitary,10,2015,2
+Pituitary,10,2016,9
+Pituitary,11,2011,1
+Pituitary,11,2013,6
+Pituitary,11,2014,12
+Pituitary,11,2015,6
+Pituitary,11,2016,4
+Pituitary,12,2011,1
+Pituitary,12,2013,31
+Pituitary,12,2016,4
+Prostate,1,2012,2
+Prostate,1,2014,18
+Prostate,1,2015,3
+Prostate,1,2016,4
+Prostate,2,2012,3
+Prostate,2,2013,1
+Prostate,2,2014,6
+Prostate,2,2015,1
+Prostate,2,2016,1
+Prostate,3,2012,4
+Prostate,4,2012,7
+Prostate,4,2014,7
+Prostate,4,2016,2
+Prostate,5,2012,5
+Prostate,5,2014,7
+Prostate,5,2015,5
+Prostate,6,2011,2
+Prostate,6,2012,2
+Prostate,6,2014,1
+Prostate,6,2015,6
+Prostate,6,2016,3
+Prostate,7,2012,9
+Prostate,7,2014,3
+Prostate,7,2015,5
+Prostate,8,2011,5
+Prostate,8,2012,3
+Prostate,8,2013,5
+Prostate,8,2014,10
+Prostate,8,2016,5
+Prostate,9,2011,2
+Prostate,9,2012,1
+Prostate,9,2013,20
+Prostate,9,2014,3
+Prostate,9,2015,2
+Prostate,9,2016,9
+Prostate,10,2011,1
+Prostate,10,2012,1
+Prostate,10,2013,14
+Prostate,10,2014,5
+Prostate,10,2015,3
+Prostate,10,2016,9
+Prostate,11,2011,5
+Prostate,11,2012,2
+Prostate,11,2013,5
+Prostate,11,2014,7
+Prostate,11,2015,3
+Prostate,11,2016,5
+Prostate,12,2011,4
+Prostate,12,2012,4
+Prostate,12,2013,9
+Prostate,12,2016,3
+Salivary Gland,1,2013,1
+Salivary Gland,1,2014,6
+Salivary Gland,1,2015,4
+Salivary Gland,1,2016,1
+Salivary Gland,1,2017,2
+Salivary Gland,2,2013,2
+Salivary Gland,2,2014,6
+Salivary Gland,2,2015,1
+Salivary Gland,3,2013,1
+Salivary Gland,3,2014,2
+Salivary Gland,3,2015,1
+Salivary Gland,3,2016,1
+Salivary Gland,4,2014,3
+Salivary Gland,5,2014,5
+Salivary Gland,6,2014,3
+Salivary Gland,6,2015,13
+Salivary Gland,6,2016,2
+Salivary Gland,7,2012,3
+Salivary Gland,7,2014,2
+Salivary Gland,7,2015,3
+Salivary Gland,8,2012,3
+Salivary Gland,8,2013,4
+Salivary Gland,8,2014,9
+Salivary Gland,8,2016,1
+Salivary Gland,9,2012,3
+Salivary Gland,9,2013,19
+Salivary Gland,9,2014,1
+Salivary Gland,9,2015,4
+Salivary Gland,9,2016,9
+Salivary Gland,10,2012,1
+Salivary Gland,10,2013,11
+Salivary Gland,10,2014,3
+Salivary Gland,10,2015,3
+Salivary Gland,10,2016,10
+Salivary Gland,11,2012,1
+Salivary Gland,11,2013,5
+Salivary Gland,11,2014,3
+Salivary Gland,11,2015,3
+Salivary Gland,11,2016,4
+Salivary Gland,12,2012,1
+Salivary Gland,12,2013,12
+Salivary Gland,12,2016,5
+Skin,1,2012,1
+Skin,1,2013,8
+Skin,1,2014,46
+Skin,1,2015,14
+Skin,1,2016,7
+Skin,2,2012,1
+Skin,2,2014,23
+Skin,2,2015,4
+Skin,2,2016,11
+Skin,2,2017,1
+Skin,3,2012,1
+Skin,3,2013,17
+Skin,3,2014,3
+Skin,3,2015,1
+Skin,3,2016,12
+Skin,4,2013,41
+Skin,4,2014,3
+Skin,4,2015,2
+Skin,4,2016,7
+Skin,5,2012,12
+Skin,5,2013,13
+Skin,5,2014,2
+Skin,5,2015,8
+Skin,6,2011,1
+Skin,6,2012,1
+Skin,6,2013,11
+Skin,6,2014,84
+Skin,6,2015,6
+Skin,6,2016,12
+Skin,7,2012,3
+Skin,7,2013,19
+Skin,7,2014,1
+Skin,7,2015,6
+Skin,8,2011,3
+Skin,8,2012,3
+Skin,8,2013,2
+Skin,8,2014,2
+Skin,8,2016,10
+Skin,9,2013,21
+Skin,9,2014,1
+Skin,9,2015,4
+Skin,9,2016,31
+Skin,10,2011,1
+Skin,10,2012,54
+Skin,10,2013,7
+Skin,10,2014,76
+Skin,10,2015,7
+Skin,10,2016,25
+Skin,11,2011,1
+Skin,11,2012,103
+Skin,11,2013,87
+Skin,11,2014,2
+Skin,11,2015,11
+Skin,11,2016,23
+Skin,12,2011,6
+Skin,12,2013,62
+Skin,12,2016,16
+Small Intestine,1,2013,2
+Small Intestine,1,2014,8
+Small Intestine,1,2015,2
+Small Intestine,1,2016,2
+Small Intestine,1,2017,1
+Small Intestine,2,2013,3
+Small Intestine,2,2014,10
+Small Intestine,2,2017,1
+Small Intestine,3,2014,2
+Small Intestine,3,2016,2
+Small Intestine,4,2014,3
+Small Intestine,5,2014,6
+Small Intestine,5,2015,1
+Small Intestine,6,2014,1
+Small Intestine,6,2015,2
+Small Intestine,6,2016,3
+Small Intestine,7,2012,10
+Small Intestine,7,2014,1
+Small Intestine,7,2015,2
+Small Intestine,8,2012,4
+Small Intestine,8,2013,9
+Small Intestine,8,2014,5
+Small Intestine,8,2016,2
+Small Intestine,9,2012,2
+Small Intestine,9,2013,25
+Small Intestine,9,2014,4
+Small Intestine,9,2015,2
+Small Intestine,9,2016,7
+Small Intestine,10,2012,2
+Small Intestine,10,2013,17
+Small Intestine,10,2014,2
+Small Intestine,10,2016,9
+Small Intestine,11,2012,1
+Small Intestine,11,2013,11
+Small Intestine,11,2014,3
+Small Intestine,11,2015,1
+Small Intestine,11,2016,7
+Small Intestine,12,2012,3
+Small Intestine,12,2013,14
+Small Intestine,12,2016,1
+Spleen,1,2012,3
+Spleen,1,2013,2
+Spleen,1,2014,7
+Spleen,1,2015,1
+Spleen,1,2016,3
+Spleen,1,2017,3
+Spleen,2,2013,2
+Spleen,2,2014,11
+Spleen,2,2015,1
+Spleen,2,2016,1
+Spleen,3,2012,3
+Spleen,3,2014,8
+Spleen,3,2016,2
+Spleen,4,2014,8
+Spleen,4,2015,3
+Spleen,4,2016,2
+Spleen,5,2012,4
+Spleen,5,2014,6
+Spleen,6,2011,2
+Spleen,6,2012,1
+Spleen,6,2014,4
+Spleen,6,2015,5
+Spleen,6,2016,3
+Spleen,7,2011,1
+Spleen,7,2012,3
+Spleen,7,2013,2
+Spleen,8,2011,2
+Spleen,8,2012,6
+Spleen,8,2013,10
+Spleen,8,2014,10
+Spleen,8,2016,4
+Spleen,9,2011,5
+Spleen,9,2012,3
+Spleen,9,2013,20
+Spleen,9,2014,6
+Spleen,9,2016,9
+Spleen,10,2011,3
+Spleen,10,2012,1
+Spleen,10,2013,15
+Spleen,10,2014,1
+Spleen,10,2015,2
+Spleen,10,2016,8
+Spleen,11,2011,6
+Spleen,11,2012,2
+Spleen,11,2013,5
+Spleen,11,2014,4
+Spleen,11,2015,3
+Spleen,11,2016,9
+Spleen,12,2011,5
+Spleen,12,2012,4
+Spleen,12,2013,13
+Spleen,12,2016,8
+Stomach,1,2012,8
+Stomach,1,2013,1
+Stomach,1,2014,21
+Stomach,1,2015,6
+Stomach,1,2016,3
+Stomach,1,2017,1
+Stomach,2,2012,2
+Stomach,2,2013,1
+Stomach,2,2014,12
+Stomach,2,2015,3
+Stomach,2,2016,1
+Stomach,3,2012,8
+Stomach,3,2013,1
+Stomach,3,2014,3
+Stomach,3,2016,3
+Stomach,4,2012,3
+Stomach,4,2014,8
+Stomach,4,2015,2
+Stomach,4,2016,3
+Stomach,5,2012,9
+Stomach,5,2014,10
+Stomach,5,2015,5
+Stomach,6,2011,1
+Stomach,6,2012,3
+Stomach,6,2014,8
+Stomach,6,2015,6
+Stomach,6,2016,4
+Stomach,7,2011,4
+Stomach,7,2012,14
+Stomach,7,2014,3
+Stomach,7,2015,2
+Stomach,8,2011,5
+Stomach,8,2012,8
+Stomach,8,2013,8
+Stomach,8,2014,10
+Stomach,8,2016,4
+Stomach,9,2011,4
+Stomach,9,2012,1
+Stomach,9,2013,32
+Stomach,9,2014,4
+Stomach,9,2015,3
+Stomach,9,2016,14
+Stomach,10,2011,5
+Stomach,10,2012,2
+Stomach,10,2013,25
+Stomach,10,2014,4
+Stomach,10,2015,6
+Stomach,10,2016,4
+Stomach,11,2011,10
+Stomach,11,2012,1
+Stomach,11,2013,8
+Stomach,11,2014,3
+Stomach,11,2015,7
+Stomach,11,2016,7
+Stomach,12,2011,6
+Stomach,12,2012,6
+Stomach,12,2013,22
+Stomach,12,2016,4
+Testis,1,2012,8
+Testis,1,2014,24
+Testis,1,2015,13
+Testis,1,2016,3
+Testis,1,2017,1
+Testis,2,2012,2
+Testis,2,2013,3
+Testis,2,2014,9
+Testis,2,2015,2
+Testis,2,2016,6
+Testis,3,2012,7
+Testis,3,2014,5
+Testis,3,2016,2
+Testis,4,2012,4
+Testis,4,2014,11
+Testis,4,2015,3
+Testis,4,2016,1
+Testis,5,2011,1
+Testis,5,2012,9
+Testis,5,2014,14
+Testis,5,2015,4
+Testis,6,2011,2
+Testis,6,2012,1
+Testis,6,2014,3
+Testis,6,2015,6
+Testis,6,2016,4
+Testis,7,2011,2
+Testis,7,2012,11
+Testis,7,2013,1
+Testis,7,2014,6
+Testis,7,2015,1
+Testis,8,2011,6
+Testis,8,2012,6
+Testis,8,2013,9
+Testis,8,2014,15
+Testis,8,2016,4
+Testis,9,2011,3
+Testis,9,2012,2
+Testis,9,2013,28
+Testis,9,2014,7
+Testis,9,2015,3
+Testis,9,2016,19
+Testis,10,2011,4
+Testis,10,2012,5
+Testis,10,2013,27
+Testis,10,2014,6
+Testis,10,2015,5
+Testis,10,2016,12
+Testis,11,2011,5
+Testis,11,2012,3
+Testis,11,2013,10
+Testis,11,2014,8
+Testis,11,2015,6
+Testis,11,2016,3
+Testis,12,2011,5
+Testis,12,2012,2
+Testis,12,2013,24
+Testis,12,2016,4
+Thyroid,1,2012,15
+Thyroid,1,2013,3
+Thyroid,1,2014,42
+Thyroid,1,2015,10
+Thyroid,1,2016,4
+Thyroid,1,2017,1
+Thyroid,2,2012,4
+Thyroid,2,2013,4
+Thyroid,2,2014,17
+Thyroid,2,2015,4
+Thyroid,2,2016,7
+Thyroid,3,2012,8
+Thyroid,3,2014,14
+Thyroid,3,2016,6
+Thyroid,4,2012,9
+Thyroid,4,2014,23
+Thyroid,4,2015,2
+Thyroid,4,2016,1
+Thyroid,5,2011,1
+Thyroid,5,2012,10
+Thyroid,5,2014,25
+Thyroid,5,2015,9
+Thyroid,6,2011,2
+Thyroid,6,2012,4
+Thyroid,6,2014,6
+Thyroid,6,2015,15
+Thyroid,6,2016,5
+Thyroid,7,2011,4
+Thyroid,7,2012,16
+Thyroid,7,2013,1
+Thyroid,7,2014,4
+Thyroid,7,2015,5
+Thyroid,8,2011,10
+Thyroid,8,2012,11
+Thyroid,8,2013,13
+Thyroid,8,2014,22
+Thyroid,8,2016,7
+Thyroid,9,2011,4
+Thyroid,9,2012,6
+Thyroid,9,2013,55
+Thyroid,9,2014,13
+Thyroid,9,2015,6
+Thyroid,9,2016,23
+Thyroid,10,2011,4
+Thyroid,10,2012,3
+Thyroid,10,2013,49
+Thyroid,10,2014,10
+Thyroid,10,2015,6
+Thyroid,10,2016,13
+Thyroid,11,2011,12
+Thyroid,11,2012,2
+Thyroid,11,2013,12
+Thyroid,11,2014,16
+Thyroid,11,2015,14
+Thyroid,11,2016,19
+Thyroid,12,2011,5
+Thyroid,12,2012,6
+Thyroid,12,2013,58
+Thyroid,12,2016,7
+Uterus,1,2012,3
+Uterus,1,2013,2
+Uterus,1,2014,6
+Uterus,1,2015,2
+Uterus,2,2012,4
+Uterus,2,2013,1
+Uterus,2,2014,6
+Uterus,2,2015,2
+Uterus,2,2016,1
+Uterus,2,2017,1
+Uterus,3,2012,2
+Uterus,3,2014,3
+Uterus,3,2016,2
+Uterus,4,2012,1
+Uterus,4,2014,4
+Uterus,5,2011,1
+Uterus,5,2012,4
+Uterus,5,2015,2
+Uterus,6,2012,1
+Uterus,6,2014,2
+Uterus,6,2015,3
+Uterus,6,2016,1
+Uterus,7,2011,3
+Uterus,7,2012,3
+Uterus,7,2014,1
+Uterus,7,2015,1
+Uterus,8,2012,3
+Uterus,8,2013,3
+Uterus,8,2014,2
+Uterus,8,2016,2
+Uterus,9,2011,3
+Uterus,9,2012,1
+Uterus,9,2013,11
+Uterus,9,2014,4
+Uterus,9,2015,1
+Uterus,9,2016,3
+Uterus,10,2011,2
+Uterus,10,2013,12
+Uterus,10,2014,2
+Uterus,10,2016,4
+Uterus,11,2011,5
+Uterus,11,2013,4
+Uterus,11,2014,4
+Uterus,11,2015,2
+Uterus,11,2016,3
+Uterus,12,2012,4
+Uterus,12,2013,15
+Uterus,12,2016,2
+Vagina,1,2012,1
+Vagina,1,2013,1
+Vagina,1,2014,8
+Vagina,1,2015,1
+Vagina,2,2012,2
+Vagina,2,2013,1
+Vagina,2,2014,6
+Vagina,3,2012,4
+Vagina,3,2014,3
+Vagina,3,2015,1
+Vagina,3,2016,2
+Vagina,4,2012,2
+Vagina,4,2014,4
+Vagina,4,2016,2
+Vagina,5,2011,1
+Vagina,5,2012,5
+Vagina,5,2014,5
+Vagina,5,2015,2
+Vagina,6,2011,2
+Vagina,6,2012,1
+Vagina,6,2014,1
+Vagina,6,2015,2
+Vagina,7,2011,3
+Vagina,7,2012,2
+Vagina,7,2014,2
+Vagina,7,2015,2
+Vagina,8,2012,3
+Vagina,8,2013,3
+Vagina,8,2014,4
+Vagina,8,2016,1
+Vagina,9,2011,2
+Vagina,9,2012,2
+Vagina,9,2013,18
+Vagina,9,2014,1
+Vagina,9,2015,3
+Vagina,9,2016,5
+Vagina,10,2011,2
+Vagina,10,2013,13
+Vagina,10,2014,1
+Vagina,10,2015,1
+Vagina,10,2016,4
+Vagina,11,2011,6
+Vagina,11,2013,3
+Vagina,11,2014,5
+Vagina,11,2015,3
+Vagina,11,2016,2
+Vagina,12,2011,1
+Vagina,12,2012,4
+Vagina,12,2013,13
+Vagina,12,2016,1
