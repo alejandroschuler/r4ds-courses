@@ -61,10 +61,10 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 - **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
 
 
-
+**NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 
 ```r
-# Read subsetted data from online file
+# Read subsetted data from online file - make sure there are no spaces
 gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
 
 # Check number of rows
@@ -448,13 +448,13 @@ Sampling rows
 ```r
 sample_n(gtex_data, 5)
 # A tibble: 5 x 7
-  Gene         Ind        Blood Heart  Lung Liver NTissues
-  <chr>        <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 CELF5        GTEX-YFC4   1.51  0.69  0.61 -1.21        4
-2 MAN2B2       GTEX-11DXZ  2.51 -1.08  1.15 -0.7         4
-3 TOP2A        GTEX-YECK  -0.62  0.52  0.61 -0.27        4
-4 PCSK1N       GTEX-X3Y1   0.26 -2.63 -0.76 -1.24        4
-5 RP11-465N4.5 GTEX-1GN2E -0.33  0.65  0.56  0.27        4
+  Gene        Ind        Blood Heart  Lung Liver NTissues
+  <chr>       <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 ZNF252P     GTEX-11TT1 -0.5   0.93  2.14 -0.58        4
+2 RPP40       GTEX-14E7W -0.48 -0.28  0.17 -0.89        4
+3 ZNF292      GTEX-X3Y1  -0.2  NA     0.87  0.63        3
+4 RP4-644L1.2 GTEX-X261   0.33  1.94 -0.1  -1.15        4
+5 DECR2       GTEX-ZF2S   1.22  0.73  0.99  1.08        4
 ```
 
 - `sample_frac()` is similar
@@ -956,7 +956,6 @@ mutate(df, number = as.numeric(number))
 2      2
 3      3
 ```
-- If you save the result into a column that already exists, it will be overwritten
 
 Exercise: mutate()
 ===
@@ -1005,6 +1004,15 @@ Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use muta
 ![plot of chunk unnamed-chunk-49](2-data-transformation-figure/unnamed-chunk-49-1.png)
 
 
+Exercise: mutate() and ggplot
+===
+type:prompt
+
+Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
+
+![plot of chunk unnamed-chunk-50](2-data-transformation-figure/unnamed-chunk-50-1.png)
+
+
 
 ```r
 gene_data = filter(gtex_data, Gene == 'MYL1')
@@ -1012,15 +1020,6 @@ blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
 ggplot(blood_outliers) +
   geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
 ```
-
-Exercise: mutate() and ggplot
-===
-type:prompt
-
-Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
-
-![plot of chunk unnamed-chunk-51](2-data-transformation-figure/unnamed-chunk-51-1.png)
-
 
 Exercise: putting it together
 ===
@@ -1073,7 +1072,7 @@ type:section
 Why pipe?
 ===
 
-- In our last exercise, we used a number of different function applications to arrive at our answer.
+- In our last exercise, we used a number of different function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
 
 
 ```r
@@ -1205,13 +1204,15 @@ Piping with a data frame
 
 
 ```r
-data.frame(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
+tibble(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
            age = c(10,54,21,99,96)) %>%
     filter(age > 30) 
-         name age
-1        Rose  54
-2    Marigold  99
-3 Arabidopsis  96
+# A tibble: 3 x 2
+  name          age
+  <chr>       <dbl>
+1 Rose           54
+2 Marigold       99
+3 Arabidopsis    96
 ```
 
 Piping to another position
@@ -1590,4 +1591,5 @@ gtex_data %>%
 <img src="https://miro.medium.com/max/1200/1*O4LZwd_rTEGY2zMyDkvR9A.png"; style="max-width:1500;"; class="center">
 </div>
 
+Source: [Rstudio Cheat Sheets](https://www.google.com/search?client=safari&rls=en&q=data+transformation+with+dplyr+cheat+sheet&ie=UTF-8&oe=UTF-8). Download the [full dplyr cheat sheet here.](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiP_KO4m9_xAhVYOs0KHfRUCfgQFnoECAQQAA&url=https%3A%2F%2Fraw.githubusercontent.com%2Frstudio%2Fcheatsheets%2Fmaster%2Fdata-transformation.pdf&usg=AOvVaw3vYk678LtmDz7gbHCvDeM0)
 <!-- ^^  COMPLETE   ^^ -->
