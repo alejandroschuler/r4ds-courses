@@ -1,7 +1,7 @@
 Datatypes and I/O
 ========================================================
 author: Alejandro Schuler, based on R for Data Science by Hadley Wickham
-date: 2019
+date: 2019, updated 2021
 transition: none
 width: 1680
 height: 1050
@@ -9,7 +9,9 @@ height: 1050
 ```{r include=FALSE}
 ## better font size for slides
 library(tidyverse)
-theme_set(theme_grey(base_size = 22))
+theme_set(theme_grey(base_size = 34) )
+update_geom_defaults("point", list(size = 3.5))
+theme_update(legend.title=element_text(size=24))
 opts_chunk$set(collapse=TRUE,tidy=FALSE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
 ```
@@ -186,7 +188,7 @@ Exercise: coercing a data frame to matrix
 type: prompt
 
 ```{r message=FALSE, warning=FALSE}
-gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
+gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
 head(gtex_data)
 ```
 
@@ -271,17 +273,17 @@ Indexing for data frames
 ===
 - Data frames can be indexed like matrices:
 ```{r}
-gtex_data[1:5, c(2,3)]
+gtex_data[1:3, c(2,3)]
 ```
 
 - Or using column names instead of column indices:
 ```{r}
-gtex_data[1:5, c("Ind","Blood")]
+gtex_data[1:3, c("Ind","Blood")]
 ```
 
 - The `$` operator provides a shortcut to access a single column as a vector:
 ```{r}
-gtex_data$Ind[1:5] # gtex_data %>% pull(Ind)
+gtex_data$Ind[1:3] # gtex_data %>% pull(Ind)
 ```
 
 Comparing tidyverse vs. vector indexing
@@ -307,7 +309,7 @@ Tidyverse vs. vector indexing
 - **Tidyverse**:
   - operations are ordered top-to-bottom/left-to-right in the way that they are being performed so the code can be read like natural language
   - each operation gets its own line, which facilitates finding bugs
-  - functions are named sensibly so the code can be understood without knowledge of symbols like `$` or `[`. Even `$>$` is made to look like an arrow to suggest the left-to-right flow
+  - functions are named sensibly so the code can be understood without knowledge of symbols like `$` or `[`. Even `%>%` is made to look like an arrow to suggest the left-to-right flow
   - variables are always referred to as bare names (no quotes or `$`)
   - will be easier for you to skim over and understand in 6 months
 - **Vector indexing**
@@ -359,10 +361,7 @@ c("1234", "sum(c(1,2,3,4))", "Alejandro", "a long string with weird characters!@
 
 stringr
 ========================================================
-- Many of the functions we will use to work with strings come from the `stringr` package, which is `tidyverse`-associated, but not loaded with `library(tidyverse)`
-```{r}
-library(stringr)
-```
+- Many of the functions we will use to work with strings come from the `stringr` package, which is `tidyverse`-associated and by default loaded with tidyverse.
 
 String basics
 ========================================================
@@ -436,8 +435,8 @@ str_subset(x, "e") # compare to x[str_detect(x,"e")]
 Exercise: find rows according to string match
 ===
 type: prompt
-```{r}
-drugs <- read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
+```{r, message=F} 
+drugs <- read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/drugSurvey.csv")
 head(drugs)
 ```
 - Dataset from polling patients that have been taking all sorts of prescription drugs
@@ -562,7 +561,7 @@ Exercise: what does this regex match?
 type: prompt
 `"^[a-zA-Z]+\\d+[a-zA-Z]+$"`
 
-- If you think you know, come up with examples or counter-examples and test them out with `str_detect`
+- If you think you know, come up with examples or counter-examples and test them out with `str_detect()`
 
 Escaping special characters
 ===
@@ -616,10 +615,8 @@ type: section
 Factor basics
 ===
 - factors are R's representation of variables that can take values in a limited number of categoires
-- the `tidyverse`-adjacent `forcats` (forcats = for-categoricals, also an anagram of factor!) package has useful functions for working with them
-```{r}
-library(forcats)
-```
+- the `tidyverse`-adjacent `forcats` (forcats = for-categoricals, also an anagram of factor!) package has useful functions for working with them. Like stringr, it is loaded with tidyverse by deffault.
+
 - consider a variable that stores a month of the year:
 ```{r}
 months_vec <- c("Dec", "Apr", "Jan", "Mar")
@@ -662,7 +659,7 @@ Example: Human Phenotype Ontology (HPO) dataset
 - Using the `col_types` argument, we tell R to read in several columns as factors, which are identifiable by the `<fct>` tag
 - This data frame contains information about several structured phenotypes (HPO_ID) which have associated descriptions (HPO_Name), related genes (Gene_Name), and broad disease categories associated with that gene (Gene_Disease)
 ```{r}
-hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
+hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
 head(hpo_data,2)
 ```
 
@@ -676,7 +673,7 @@ Ordering factor levels
 ===
 - It’s often useful to change the order of the factor levels in a visualization
 - For example, imagine you want to explore the number of genes associated with each phenotype
-```{r, message=F}
+```{r, message=F, fig.align="center"}
 num_genes = hpo_data %>%
   group_by(HPO_ID) %>%
   summarise(ngenes = n())
@@ -688,20 +685,22 @@ ggplot(num_genes, aes(HPO_ID, ngenes)) +
 Ordering factor levels
 ===
 - It would be better if the HPO IDs in this plot were ordered according to the number of associated genes
-```{r message=FALSE}
+
+```{r message=FALSE, fig.align="center"}
 num_genes %>%
   mutate(HPO_ID = fct_reorder(HPO_ID, ngenes)) %>%
 ggplot() + 
   geom_point(aes(HPO_ID, ngenes)) + 
   theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
-- `fct_reorder()` takes in a factor vector and a numeric vector that is used to sort the levels
+
 
 Ordering factor levels
 ===
+- `fct_reorder()` takes in a factor vector and a numeric vector that is used to sort the levels
 - `fct_infreq()` orders by how often the levels appear in the factor vector
 - `fct_rev()` reverses the order
-```{r}
+```{r, fig.align="center", fig.width=10}
 hpo_data %>%
   mutate(Gene_Disease = Gene_Disease %>% 
     fct_infreq() %>% 
@@ -735,15 +734,14 @@ hpo_data %>%
   levels()
 ```
 - Levels that you don't mention are left alone
-- You can code multiple old levels to one new level (also see `?fct_collapse`)
+- You can code multiple old levels to one new level (also see `?fct_collapse()`)
 
-Exercise: plotting factors over time
+Exercise: plotting proportions across phenotypes
 ===
-type:prompt 
+type: prompt
 
 How does the proportion of disease associations (Cancer, Cardio, etc.) for the genes mapped to each given HPO ID vary across each phenotype (HPO_Name)? Recreate the following plot from the `hpo_data` data:
-
-```{r message=FALSE, echo=F, fig.width = 15}
+```{r message=FALSE, echo=F, fig.width = 18, fig.height=10, fig.align="center"}
 type_colors = c(
   "Cancer" = "lightblue",
   "Cardiology_or_Hematology" = "darkred",
@@ -763,9 +761,8 @@ hpo_data %>%
 ggplot(aes(x=HPO_Name, y=proportion, fill=Gene_Disease)) + 
   geom_bar(position = "fill", stat = "identity") + 
   scale_fill_manual(values = type_colors) +
-  theme(axis.text.x=element_text(hjust=1,angle=45))
+  theme(axis.text.x=element_text(hjust=1,angle=45, size=22))
 ```
-
 `geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
 
 Dates and times
@@ -775,7 +772,8 @@ type: section
 Date and time objects in R
 ===
 - Dates and times are not well captured as strings (since you can't do math with them) or as numbers (since date-time arithmetic is irregular), so they need their own data type
-- we'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type
+- Before we tried making dates into factors with the appropriate order, but it's a pain to always have to set this up and it misses  edge cases.
+- Luckily, `tidyverse` has a solution. We'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type. We have to install and load it as well.
 ```{r message=FALSE, warning=FALSE}
 library(lubridate) # install.package("lubridate")
 ```
@@ -798,7 +796,7 @@ c(ymd("2017-01-31"), mdy("January 31st, 2017"),
 ymd_hms("2017-01-31 20:11:59")
 mdy_hm("01/31/2017 08:01")
 ```
-- All of these get printed out as strings, but they are actually `date` or dttm` objects
+- All of these get printed out as strings, but they are actually `date` or `dttm` objects
 - these also all work on vectors, even if they fromatted heterogenously 
 ```{r}
 x <- c(20090101, "2009-01-02", "2009 01 03", "2009-1-4",
@@ -891,7 +889,7 @@ head(gtex_dates_clean6)
 Plotting with dates
 ===
 - ggplot2 understands `dates` and `ddtm`s
-```{r}
+```{r, fig.width=12, fig.align = "center"}
 # get the dates samples were isolated from just 2014
 gtex_dates_clean6 %>% 
   filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
@@ -903,7 +901,7 @@ Accessing dttm elements
 ===
 - You can pull out individual parts of the date with the accessor functions `year()`, `month()`, `mday()` (day of the month), `yday()` (day of the year), `wday()` (day of the week), `hour()`, `minute()`, and `second()`
 
-```{r}
+```{r, fig.width=12, fig.align = "center"}
 # look at the dates RNA isolation was perfomed. what do you notice?
 gtex_dates_clean6 %>%  
   mutate(wday = wday(iso_date, label = TRUE)) %>% 
@@ -1005,7 +1003,7 @@ gtex_dates_clean6 %>%
 Plotting difftimes
 ===
 We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
-```{r}
+```{r, width=12, fig.align="center"}
 gtex_dates_clean6 %>% # look at the rest of the data
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
   filter(pax_time > 0) %>%
@@ -1016,7 +1014,6 @@ gtex_dates_clean6 %>% # look at the rest of the data
 
 Example using periods
 ===
-type: prompt
 
 To fix this we add a year to some of the ones with negative times. Which of these work and why?
 ```{r, eval=F}
@@ -1176,16 +1173,16 @@ Non-flat files
   - `DBI` with a database backend (e.g. `odbc`) reads in from databases
   - `jsonlite` and `xml2` for heirarchical data
   - `rio` for more esoteric formats
-  
+
 Writing files
 ===
 ```{r, eval=F}
-write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
+write_csv(challenge, "challenge.csv")
 ```
 - metadata about column types is lost when writing to .csv
 - use `write_rds()` (and `read_rds()`) to save to a binary R format that preserves column types
 ```{r, eval=F}
-write_rds(challenge, "/Users/c242587/Desktop/challenge.rds")
+write_rds(challenge, "challenge.rds")
 ```
 
 Exercise: file I/O
@@ -1197,9 +1194,111 @@ challenge = read_csv(file,
    col_types = cols(
      y = col_date() # the first 1000 rows of y are NA so need to specify it's a date
    ))
-write_csv(challenge, "~/Desktop/challenge.csv")
-challenge2 = read_csv("~/Desktop/challenge.csv")
+write_csv(challenge, "challenge.csv")
+challenge2 = read_csv("challenge.csv")
 ```
+
+
+Understanding paths
+===
+When you read and write files from R, you will need to know where the file is located -- either on your computer or somewhere on the internet. If you've noticed so far, we've only been reading files from URLs on GitHub. However, a lot of the time you will want to read from and write to files on your computer.
+
+
+Finding out where you are
+===
+Figuring out where you are (or the "working directory") is important for looking at where files are. The term "directory" means effectively the same thing as a "folder". 
+
+You can get the path of working directory using the command 
+```{r, eval=FALSE}
+getwd()
+```
+Try this right now -- what gets printed out? Where are you located?
+
+You can also set the working directory using the command `setwd()` where you fill in the path you want as the argument, for example: 
+```{r, eval=FALSE}
+setwd("/Users/home/my_folder/")
+```
+(While we recommend you don't run this, it also shouldn't work because this path probably doesn't exist on your computer -- more on that later.)
+
+In general, you want to use `setwd()` very sparingly. It's not good practice to change where you are, and it can mess up your code uninentionally. However, there are some R package functions that require you to be in a particular directory (usually the same directory as the data) in order to run. For now, just know it exists and avoid using it if you can. 
+
+Relative and absolute paths
+===
+Paths describe where files are located, and there are two types of paths: relative and absolute. Relative paths describe the location of a file is relative to the working directory. 
+Some examples of relative paths are: 
+```{r, eval=FALSE}
+"challenge.csv" # in the directory you're in
+"data/challenge.csv" # in a directory called "data/" within your working directory
+"../challenge.csv" # in the directory above you
+"../../challenge.csv" # in the directory two above you
+```
+It's important to note that if your working directory changes, then the relative path to a file will no longer work.
+
+While it's considered better coding practice to use relative paths (we'll talk about this in a later lecture), sometimes it is helpful to use an absolute path to make sure it works regardless of where you are.
+
+Absolute paths list out the entire location of a file, such as:
+```{r, eval=FALSE}
+"/home/users/Documents/my_file.csv" # path on Linux or Mac
+"~/Desktop/my_file.csv" # "~" means the home directory
+"C:\Users\me\projects\my_file.csv" # typical path on Windows
+```
+
+Writing and reading to local directories
+====
+Let's try reading and writing from your current directory.
+```{r, message = FALSE}
+file = readr_example("mtcars.csv")
+print(file) # look at the path
+mtcars = read_csv(file)
+head(mtcars)
+```
+The `readr_example()` command grabs the path of an example file that is installed with tidyverse. Take a look at the path -- this is where the file is located on your computer.
+
+Now let's write it out:
+```{r}
+write_csv(mtcars, "mtcars.csv")
+```
+The file should appear in the "Files" pane on the bottom right of RStudio after running this code. Does it?
+
+Using the Files pane
+====
+
+Try reading it back in:
+```{r, message = FALSE}
+mtcars2 = read_csv("mtcars.csv")
+```
+
+Now use RStudio to create a folder called `data/` and move the `mtcars.csv` file to `data/`. Try reading it in from here now:
+```{r, eval=FALSE}
+mtcars3 = read_csv("data/mtcars.csv") 
+```
+
+The `tab` button is very helpful when specifying files - it should autocomplete the file name. Try this.
+
+Exercise: Downloading a file and reading it into R
+===
+type: prompt
+
+First, download this file from GitHub:
+```{r, eval=FALSE}
+"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/poly.csv"
+```
+Go to the link, right click, and then "Save As" so it is on your local machine. 
+
+Now we have to figure out where the file is so we can read it in.
+
+On a Windows machine, the path can be found by right-clicking the file icon, and selecting "Properties." You'll see the file path, minus the name of the file, in the "General" tab, labeled "location." The full file name will be this path plus the name of the file .
+
+On a Mac, you can copy the full file path by right-clicking on the file or folder in the Mac Finder. While in the right-click menu, hold down the option key. The right-click menu will then reveal an option to "Copy "filename" as Pathname."
+
+Fill this in to `read_csv` and see if you can read it in!
+Think about how you would do this to read in a file from your computer.
+
+
+Some of these materials were adapted from: Introduction to R Illinois University Library https://guides.library.illinois.edu/c.php?g=347944&p=2345554
+
+
+
 
 readr cheat sheet
 ===
