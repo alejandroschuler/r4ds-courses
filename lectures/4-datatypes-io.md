@@ -1,7 +1,7 @@
 Datatypes and I/O
 ========================================================
 author: Alejandro Schuler, based on R for Data Science by Hadley Wickham
-date: 2019
+date: 2019, updated 2021
 transition: none
 width: 1680
 height: 1050
@@ -200,12 +200,12 @@ Matrices
 
 ```r
 my_example_matrix
-          [,1]        [,2]        [,3]       [,4]       [,5]
-[1,] 0.8236130  1.49411411  0.16605855 -0.1532487  0.9066853
-[2,] 0.7765409 -2.90049151 -1.33000786  0.0924317 -1.3112955
-[3,] 0.5819262 -0.05901151  0.05897793  1.3148605  1.0707586
-[4,] 0.2872085 -0.60614165 -1.30207325 -0.2784625 -2.0438981
-[5,] 1.0019646 -0.04503459  0.07263515  0.2420674  1.0426404
+           [,1]        [,2]        [,3]       [,4]       [,5]
+[1,] -0.8147981 -0.12691164  0.15320466  0.2514097  1.8769308
+[2,] -0.9599709 -0.15283104 -1.59178959 -0.2188753 -1.5261497
+[3,] -0.2265966  0.03906986 -0.03295731  0.7352565  0.3401731
+[4,] -1.0282813 -0.64951751  0.83685936  0.7517605  0.3168973
+[5,]  0.6658058 -0.68062971  0.43948325 -2.4527679 -0.2359612
 ```
 
 - All the usual vector rules apply- in particular, all entries of the matrix must be of the same type
@@ -232,7 +232,7 @@ type: prompt
 
 
 ```r
-gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
+gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
 head(gtex_data)
 # A tibble: 6 x 7
   Gene  Ind        Blood Heart   Lung Liver NTissues
@@ -337,26 +337,26 @@ Similar syntax is used for 2D entities
 ```r
 my_example_matrix[1:3, c(2,2)]
             [,1]        [,2]
-[1,]  1.49411411  1.49411411
-[2,] -2.90049151 -2.90049151
-[3,] -0.05901151 -0.05901151
+[1,] -0.12691164 -0.12691164
+[2,] -0.15283104 -0.15283104
+[3,]  0.03906986  0.03906986
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
 my_example_matrix[1:3,]
-          [,1]        [,2]        [,3]       [,4]       [,5]
-[1,] 0.8236130  1.49411411  0.16605855 -0.1532487  0.9066853
-[2,] 0.7765409 -2.90049151 -1.33000786  0.0924317 -1.3112955
-[3,] 0.5819262 -0.05901151  0.05897793  1.3148605  1.0707586
+           [,1]        [,2]        [,3]       [,4]       [,5]
+[1,] -0.8147981 -0.12691164  0.15320466  0.2514097  1.8769308
+[2,] -0.9599709 -0.15283104 -1.59178959 -0.2188753 -1.5261497
+[3,] -0.2265966  0.03906986 -0.03295731  0.7352565  0.3401731
 my_example_matrix[,c(T,T,F,F,T)]
-          [,1]        [,2]       [,3]
-[1,] 0.8236130  1.49411411  0.9066853
-[2,] 0.7765409 -2.90049151 -1.3112955
-[3,] 0.5819262 -0.05901151  1.0707586
-[4,] 0.2872085 -0.60614165 -2.0438981
-[5,] 1.0019646 -0.04503459  1.0426404
+           [,1]        [,2]       [,3]
+[1,] -0.8147981 -0.12691164  1.8769308
+[2,] -0.9599709 -0.15283104 -1.5261497
+[3,] -0.2265966  0.03906986  0.3401731
+[4,] -1.0282813 -0.64951751  0.3168973
+[5,]  0.6658058 -0.68062971 -0.2359612
 ```
 
 Indexing for data frames
@@ -364,36 +364,32 @@ Indexing for data frames
 - Data frames can be indexed like matrices:
 
 ```r
-gtex_data[1:5, c(2,3)]
-# A tibble: 5 x 2
+gtex_data[1:3, c(2,3)]
+# A tibble: 3 x 2
   Ind        Blood
   <chr>      <dbl>
 1 GTEX-11DXZ -0.14
 2 GTEX-11GSP -0.5 
 3 GTEX-11NUK -0.08
-4 GTEX-11NV4 -0.37
-5 GTEX-11TT1  0.3 
 ```
 
 - Or using column names instead of column indices:
 
 ```r
-gtex_data[1:5, c("Ind","Blood")]
-# A tibble: 5 x 2
+gtex_data[1:3, c("Ind","Blood")]
+# A tibble: 3 x 2
   Ind        Blood
   <chr>      <dbl>
 1 GTEX-11DXZ -0.14
 2 GTEX-11GSP -0.5 
 3 GTEX-11NUK -0.08
-4 GTEX-11NV4 -0.37
-5 GTEX-11TT1  0.3 
 ```
 
 - The `$` operator provides a shortcut to access a single column as a vector:
 
 ```r
-gtex_data$Ind[1:5] # gtex_data %>% pull(Ind)
-[1] "GTEX-11DXZ" "GTEX-11GSP" "GTEX-11NUK" "GTEX-11NV4" "GTEX-11TT1"
+gtex_data$Ind[1:3] # gtex_data %>% pull(Ind)
+[1] "GTEX-11DXZ" "GTEX-11GSP" "GTEX-11NUK"
 ```
 
 Comparing tidyverse vs. vector indexing
@@ -411,9 +407,9 @@ df %>%
 # A tibble: 3 x 2
       x       y
   <dbl>   <dbl>
-1   0.3 -0.593 
-2   0.1 -0.0488
-3  12    0.301 
+1   0.3 -0.139 
+2   0.1  0.0487
+3  12    0.709 
 ```
 **Vector indexing**
 
@@ -422,9 +418,9 @@ df[df$x>0, c(1,2)] # df$x takes the column x from the data frame df (details lat
 # A tibble: 3 x 2
       x       y
   <dbl>   <dbl>
-1   0.3 -0.593 
-2   0.1 -0.0488
-3  12    0.301 
+1   0.3 -0.139 
+2   0.1  0.0487
+3  12    0.709 
 ```
 - What are the advantages/disadvantages of each?
 
@@ -434,7 +430,7 @@ Tidyverse vs. vector indexing
 - **Tidyverse**:
   - operations are ordered top-to-bottom/left-to-right in the way that they are being performed so the code can be read like natural language
   - each operation gets its own line, which facilitates finding bugs
-  - functions are named sensibly so the code can be understood without knowledge of symbols like `$` or `[`. Even `$>$` is made to look like an arrow to suggest the left-to-right flow
+  - functions are named sensibly so the code can be understood without knowledge of symbols like `$` or `[`. Even `%>%` is made to look like an arrow to suggest the left-to-right flow
   - variables are always referred to as bare names (no quotes or `$`)
   - will be easier for you to skim over and understand in 6 months
 - **Vector indexing**
@@ -509,11 +505,7 @@ c("1234", "sum(c(1,2,3,4))", "Alejandro", "a long string with weird characters!@
 
 stringr
 ========================================================
-- Many of the functions we will use to work with strings come from the `stringr` package, which is `tidyverse`-associated, but not loaded with `library(tidyverse)`
-
-```r
-library(stringr)
-```
+- Many of the functions we will use to work with strings come from the `stringr` package, which is `tidyverse`-associated and by default loaded with tidyverse.
 
 String basics
 ========================================================
@@ -616,17 +608,7 @@ Exercise: find rows according to string match
 type: prompt
 
 ```r
-drugs <- read_csv("https://raw.githubusercontent.com/lkalesinskas/r4ds-courses/advance-2020/data/drugSurvey.csv")
-Parsed with column specification:
-cols(
-  uniqueID = col_double(),
-  drugName = col_character(),
-  condition = col_character(),
-  review = col_character(),
-  rating = col_double(),
-  date = col_character(),
-  usefulCount = col_double()
-)
+drugs <- read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/drugSurvey.csv")
 head(drugs)
 # A tibble: 6 x 7
   uniqueID drugName   condition     review              rating date  usefulCount
@@ -817,7 +799,7 @@ Exercise: what does this regex match?
 type: prompt
 `"^[a-zA-Z]+\\d+[a-zA-Z]+$"`
 
-- If you think you know, come up with examples or counter-examples and test them out with `str_detect`
+- If you think you know, come up with examples or counter-examples and test them out with `str_detect()`
 
 Escaping special characters
 ===
@@ -883,11 +865,8 @@ type: section
 Factor basics
 ===
 - factors are R's representation of variables that can take values in a limited number of categoires
-- the `tidyverse`-adjacent `forcats` (forcats = for-categoricals, also an anagram of factor!) package has useful functions for working with them
+- the `tidyverse`-adjacent `forcats` (forcats = for-categoricals, also an anagram of factor!) package has useful functions for working with them. Like stringr, it is loaded with tidyverse by deffault.
 
-```r
-library(forcats)
-```
 - consider a variable that stores a month of the year:
 
 ```r
@@ -937,144 +916,131 @@ factor(months_vec) %>%
 Levels: Dec Apr Jan Mar
 ```
 
-Example: gss_cat
+Example: Human Phenotype Ontology (HPO) dataset
 ===
-- This is an example data frame loaded by `forcats` that has many factor columns, which are identifiable by the `<fct>` tag
-- It’s a sample of data from the General Social Survey, which is a long-running US survey conducted by the independent research organization NORC at the University of Chicago.
+- This is an example data frame from the HPO resource (https://hpo.jax.org/app/) which uses structured IDs to describe patient phenotypes and map to associated genes. Also included are broad disease categories assigned to each gene based on several curated disease lists.
+- Using the `col_types` argument, we tell R to read in several columns as factors, which are identifiable by the `<fct>` tag
+- This data frame contains information about several structured phenotypes (HPO_ID) which have associated descriptions (HPO_Name), related genes (Gene_Name), and broad disease categories associated with that gene (Gene_Disease)
 
 ```r
-gss_cat
-# A tibble: 21,483 x 9
-    year marital     age race  rincome    partyid     relig     denom    tvhours
-   <int> <fct>     <int> <fct> <fct>      <fct>       <fct>     <fct>      <int>
- 1  2000 Never ma…    26 White $8000 to … Ind,near r… Protesta… Souther…      12
- 2  2000 Divorced     48 White $8000 to … Not str re… Protesta… Baptist…      NA
- 3  2000 Widowed      67 White Not appli… Independent Protesta… No deno…       2
- 4  2000 Never ma…    39 White Not appli… Ind,near r… Orthodox… Not app…       4
- 5  2000 Divorced     25 White Not appli… Not str de… None      Not app…       1
- 6  2000 Married      25 White $20000 - … Strong dem… Protesta… Souther…      NA
- 7  2000 Never ma…    36 White $25000 or… Not str re… Christian Not app…       3
- 8  2000 Divorced     44 White $7000 to … Ind,near d… Protesta… Luthera…      NA
- 9  2000 Married      44 White $25000 or… Not str de… Protesta… Other          0
-10  2000 Married      47 White $25000 or… Strong rep… Protesta… Souther…       3
-# … with 21,473 more rows
+hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
+head(hpo_data,2)
+# A tibble: 2 x 4
+  Gene_Name HPO_ID     HPO_Name                 Gene_Disease
+  <chr>     <fct>      <fct>                    <fct>       
+1 ABCB11    HP:0001402 Hepatocellular carcinoma None        
+2 ABCC8     HP:0011902 Abnormal hemoglobin      None        
 ```
 
 
 ```r
-gss_cat %>%
-  pull(marital) %>%
-  levels()
-[1] "No answer"     "Never married" "Separated"     "Divorced"     
-[5] "Widowed"       "Married"      
+hpo_data %>%
+  pull(HPO_Name) %>%
+  levels() 
+[1] "Hepatocellular carcinoma"             
+[2] "Abnormal hemoglobin"                  
+[3] "Abnormal cardiac ventricular function"
+[4] "Abnormal platelet volume"             
+[5] "Ovarian cyst"                         
+[6] "Stomach cancer"                       
+[7] "Abnormal blood sodium concentration"  
+[8] "Abnormal head movements"              
 ```
 
 Ordering factor levels
 ===
-- It’s often useful to change the order of the factor levels in a visualisation
-- For example, imagine you want to explore the average number of hours spent watching TV per day across religions
+- It’s often useful to change the order of the factor levels in a visualization
+- For example, imagine you want to explore the number of genes associated with each phenotype
 
 ```r
-relig_tv = gss_cat %>%
-  group_by(relig) %>%
-  summarise(
-    age = mean(age, na.rm = TRUE),
-    tvhours = mean(tvhours, na.rm = TRUE),
-    n = n())
-`summarise()` ungrouping output (override with `.groups` argument)
-ggplot(relig_tv, aes(tvhours, relig)) + 
-  geom_point()
+num_genes = hpo_data %>%
+  group_by(HPO_ID) %>%
+  summarise(ngenes = n())
+ggplot(num_genes, aes(HPO_ID, ngenes)) + 
+  geom_point() + 
+  theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 
-![plot of chunk unnamed-chunk-77](4-datatypes-io-figure/unnamed-chunk-77-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-75-1.png" title="plot of chunk unnamed-chunk-75" alt="plot of chunk unnamed-chunk-75" style="display: block; margin: auto;" />
 
 Ordering factor levels
 ===
-- It would be better if the religions in this plot were ordered according to the number of TV hours
+- It would be better if the HPO IDs in this plot were ordered according to the number of associated genes
+
 
 ```r
-relig_tv %>%
-  mutate(relig = fct_reorder(relig, tvhours)) %>%
-ggplot(aes(tvhours, relig)) + 
-  geom_point()
+num_genes %>%
+  mutate(HPO_ID = fct_reorder(HPO_ID, ngenes)) %>%
+ggplot() + 
+  geom_point(aes(HPO_ID, ngenes)) + 
+  theme(axis.text.x=element_text(hjust=1,angle=45))
 ```
 
-![plot of chunk unnamed-chunk-78](4-datatypes-io-figure/unnamed-chunk-78-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-76-1.png" title="plot of chunk unnamed-chunk-76" alt="plot of chunk unnamed-chunk-76" style="display: block; margin: auto;" />
+
+
+Ordering factor levels
+===
 - `fct_reorder()` takes in a factor vector and a numeric vector that is used to sort the levels
-
-Ordering factor levels
-===
 - `fct_infreq()` orders by how often the levels appear in the factor vector
 - `fct_rev()` reverses the order
 
 ```r
-gss_cat %>%
-  mutate(marital = marital %>% 
-        fct_infreq() %>% 
-        fct_rev()) %>%
-ggplot(aes(marital)) +
+hpo_data %>%
+  mutate(Gene_Disease = Gene_Disease %>% 
+    fct_infreq() %>% 
+    fct_rev()) %>%
+ggplot(aes(Gene_Disease)) +
   geom_bar()
 ```
 
-![plot of chunk unnamed-chunk-79](4-datatypes-io-figure/unnamed-chunk-79-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-77-1.png" title="plot of chunk unnamed-chunk-77" alt="plot of chunk unnamed-chunk-77" style="display: block; margin: auto;" />
 
 Recoding factor levels
 ===
 
 ```r
-gss_cat %>% 
-  group_by(partyid) %>%
+hpo_data %>% 
+  group_by(Gene_Disease) %>%
   summarize(count=n()) %>%
   arrange(desc(count))
-# A tibble: 10 x 2
-   partyid            count
-   <fct>              <int>
- 1 Independent         4119
- 2 Not str democrat    3690
- 3 Strong democrat     3490
- 4 Not str republican  3032
- 5 Ind,near dem        2499
- 6 Strong republican   2314
- 7 Ind,near rep        1791
- 8 Other party          393
- 9 No answer            154
-10 Don't know             1
+# A tibble: 5 x 2
+  Gene_Disease count
+  <fct>        <int>
+1 None           234
+2 Cancer          50
+3 Cardio          40
+4 Neuro           24
+5 Hema             8
 ```
-- These factor levels are terrible
+- These factor levels are vague
 - we can change them with `fct_recode()`
 
 Recoding factor levels
 ===
 
 ```r
-gss_cat %>%
-  mutate(partyid = fct_recode(partyid,
-    "Republican, strong"    = "Strong republican",
-    "Republican, weak"      = "Not str republican",
-    "Independent, near rep" = "Ind,near rep",
-    "Independent, near dem" = "Ind,near dem",
-    "Democrat, weak"        = "Not str democrat",
-    "Democrat, strong"      = "Strong democrat"
+hpo_data %>%
+  mutate(Gene_Disease = fct_recode(
+    Gene_Disease, 
+    "Cardiology" = "Cardio",
+    "Neurology" = "Neuro",
+    "Hematology" = "Hema"
   )) %>%
-  pull(partyid) %>%
+  pull(Gene_Disease) %>%
   levels()
- [1] "No answer"             "Don't know"            "Other party"          
- [4] "Republican, strong"    "Republican, weak"      "Independent, near rep"
- [7] "Independent"           "Independent, near dem" "Democrat, weak"       
-[10] "Democrat, strong"     
+[1] "None"       "Cardiology" "Cancer"     "Neurology"  "Hematology"
 ```
 - Levels that you don't mention are left alone
-- You can code multiple old levels to one new level (also see `?fct_collapse`)
+- You can code multiple old levels to one new level (also see `?fct_collapse()`)
 
-Exercise: plotting factors over time
+Exercise: plotting proportions across phenotypes
 ===
-type:prompt 
+type: prompt
 
-How have the proportions of people identifying as Democrat, Republican, and Independent changed over time? Recreate the following plot from the `gss_cat` data:
-
-![plot of chunk unnamed-chunk-82](4-datatypes-io-figure/unnamed-chunk-82-1.png)
-
-`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate parties with their familiar colors.
+How does the proportion of disease associations (Cancer, Cardio, etc.) for the genes mapped to each given HPO ID vary across each phenotype (HPO_Name)? Recreate the following plot from the `hpo_data` data:
+<img src="4-datatypes-io-figure/unnamed-chunk-80-1.png" title="plot of chunk unnamed-chunk-80" alt="plot of chunk unnamed-chunk-80" style="display: block; margin: auto;" />
+`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
 
 Dates and times
 === 
@@ -1083,7 +1049,8 @@ type: section
 Date and time objects in R
 ===
 - Dates and times are not well captured as strings (since you can't do math with them) or as numbers (since date-time arithmetic is irregular), so they need their own data type
-- we'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type
+- Before we tried making dates into factors with the appropriate order, but it's a pain to always have to set this up and it misses  edge cases.
+- Luckily, `tidyverse` has a solution. We'll use the `tidyverse`-adjacent `lubridate` package to provide work with that data type. We have to install and load it as well.
 
 ```r
 library(lubridate) # install.package("lubridate")
@@ -1096,7 +1063,7 @@ tibble(date_time = now(), # a date-time (dttm), prints as a string
 # A tibble: 1 x 2
   date_time           date      
   <dttm>              <date>    
-1 2020-08-03 17:38:15 2020-08-03
+1 2021-07-19 17:36:52 2021-07-19
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1117,7 +1084,7 @@ ymd_hms("2017-01-31 20:11:59")
 mdy_hm("01/31/2017 08:01")
 [1] "2017-01-31 08:01:00 UTC"
 ```
-- All of these get printed out as strings, but they are actually `date` or dttm` objects
+- All of these get printed out as strings, but they are actually `date` or `dttm` objects
 - these also all work on vectors, even if they fromatted heterogenously 
 
 ```r
@@ -1276,7 +1243,7 @@ ggplot(aes(iso_date)) +
   geom_freqpoly(binwidth=10) # bin by every 10 days (if we had dttm, the unit is seconds)
 ```
 
-![plot of chunk unnamed-chunk-94](4-datatypes-io-figure/unnamed-chunk-94-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-92-1.png" title="plot of chunk unnamed-chunk-92" alt="plot of chunk unnamed-chunk-92" style="display: block; margin: auto;" />
 
 Accessing dttm elements
 ===
@@ -1291,7 +1258,7 @@ gtex_dates_clean6 %>%
     geom_bar()
 ```
 
-![plot of chunk unnamed-chunk-95](4-datatypes-io-figure/unnamed-chunk-95-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-93-1.png" title="plot of chunk unnamed-chunk-93" alt="plot of chunk unnamed-chunk-93" style="display: block; margin: auto;" />
 
 Date-time arithmetic
 ===
@@ -1307,14 +1274,14 @@ Durations
 ```r
 usa_age <- today() - ymd(17760704)
 usa_age
-Time difference of 89149 days
+Time difference of 89499 days
 ```
 - Subtracting `dttm`s in R gives something called a `difftime`, which ambiguously represents differences in weeks, days, hours, or seconds. A `duration` always uses seconds so it is preferable.
 - You can conver to a duration with `as.duration()`
 
 ```r
 as.duration(usa_age)
-[1] "7702473600s (~244.08 years)"
+[1] "7732713600s (~245.03 years)"
 ```
 - `dseconds()`, `dminutes()`, `dhours()`, `ddays()`, `dweeks()`, and `dyears()` make durations of the given length of time and are vectorized
 
@@ -1332,7 +1299,7 @@ Duration arithmetic
 
 ```r
 2 * (as.duration(usa_age) + dyears(1) + dweeks(12) + dhours(15))
-[1] "15482685600s (~490.62 years)"
+[1] "15543165600s (~492.53 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
@@ -1436,12 +1403,11 @@ Don't know how to automatically pick scale for object of type difftime. Defaulti
 `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![plot of chunk unnamed-chunk-108](4-datatypes-io-figure/unnamed-chunk-108-1.png)
+<img src="4-datatypes-io-figure/unnamed-chunk-106-1.png" title="plot of chunk unnamed-chunk-106" alt="plot of chunk unnamed-chunk-106" style="display: block; margin: auto;" />
 
 
 Example using periods
 ===
-type: prompt
 
 To fix this we add a year to some of the ones with negative times. Which of these work and why?
 
@@ -1479,7 +1445,7 @@ Intervals
 
 ```r
 mdy("July 4 1776") %--% today()
-[1] 1776-07-04 UTC--2020-08-03 UTC
+[1] 1776-07-04 UTC--2021-07-19 UTC
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 
@@ -1531,11 +1497,11 @@ cols(
 )
 Warning: 1000 parsing failures.
  row col           expected     actual                                                                                         file
-1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
-1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/4.0/Resources/library/readr/extdata/challenge.csv'
+1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
+1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
 .... ... .................. .......... ............................................................................................
 See problems(...) for more details.
 ```
@@ -1683,18 +1649,18 @@ Non-flat files
   - `DBI` with a database backend (e.g. `odbc`) reads in from databases
   - `jsonlite` and `xml2` for heirarchical data
   - `rio` for more esoteric formats
-  
+
 Writing files
 ===
 
 ```r
-write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
+write_csv(challenge, "challenge.csv")
 ```
 - metadata about column types is lost when writing to .csv
 - use `write_rds()` (and `read_rds()`) to save to a binary R format that preserves column types
 
 ```r
-write_rds(challenge, "/Users/c242587/Desktop/challenge.rds")
+write_rds(challenge, "challenge.rds")
 ```
 
 Exercise: file I/O
@@ -1707,9 +1673,130 @@ challenge = read_csv(file,
    col_types = cols(
      y = col_date() # the first 1000 rows of y are NA so need to specify it's a date
    ))
-write_csv(challenge, "~/Desktop/challenge.csv")
-challenge2 = read_csv("~/Desktop/challenge.csv")
+write_csv(challenge, "challenge.csv")
+challenge2 = read_csv("challenge.csv")
 ```
+
+
+Understanding paths
+===
+When you read and write files from R, you will need to know where the file is located -- either on your computer or somewhere on the internet. If you've noticed so far, we've only been reading files from URLs on GitHub. However, a lot of the time you will want to read from and write to files on your computer.
+
+
+Finding out where you are
+===
+Figuring out where you are (or the "working directory") is important for looking at where files are. The term "directory" means effectively the same thing as a "folder". 
+
+You can get the path of working directory using the command 
+
+```r
+getwd()
+```
+Try this right now -- what gets printed out? Where are you located?
+
+You can also set the working directory using the command `setwd()` where you fill in the path you want as the argument, for example: 
+
+```r
+setwd("/Users/home/my_folder/")
+```
+(While we recommend you don't run this, it also shouldn't work because this path probably doesn't exist on your computer -- more on that later.)
+
+In general, you want to use `setwd()` very sparingly. It's not good practice to change where you are, and it can mess up your code uninentionally. However, there are some R package functions that require you to be in a particular directory (usually the same directory as the data) in order to run. For now, just know it exists and avoid using it if you can. 
+
+Relative and absolute paths
+===
+Paths describe where files are located, and there are two types of paths: relative and absolute. Relative paths describe the location of a file is relative to the working directory. 
+Some examples of relative paths are: 
+
+```r
+"challenge.csv" # in the directory you're in
+"data/challenge.csv" # in a directory called "data/" within your working directory
+"../challenge.csv" # in the directory above you
+"../../challenge.csv" # in the directory two above you
+```
+It's important to note that if your working directory changes, then the relative path to a file will no longer work.
+
+While it's considered better coding practice to use relative paths (we'll talk about this in a later lecture), sometimes it is helpful to use an absolute path to make sure it works regardless of where you are.
+
+Absolute paths list out the entire location of a file, such as:
+
+```r
+"/home/users/Documents/my_file.csv" # path on Linux or Mac
+"~/Desktop/my_file.csv" # "~" means the home directory
+"C:\Users\me\projects\my_file.csv" # typical path on Windows
+```
+
+Writing and reading to local directories
+====
+Let's try reading and writing from your current directory.
+
+```r
+file = readr_example("mtcars.csv")
+print(file) # look at the path
+[1] "/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/mtcars.csv"
+mtcars = read_csv(file)
+head(mtcars)
+# A tibble: 6 x 11
+    mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
+2  21       6   160   110  3.9   2.88  17.0     0     1     4     4
+3  22.8     4   108    93  3.85  2.32  18.6     1     1     4     1
+4  21.4     6   258   110  3.08  3.22  19.4     1     0     3     1
+5  18.7     8   360   175  3.15  3.44  17.0     0     0     3     2
+6  18.1     6   225   105  2.76  3.46  20.2     1     0     3     1
+```
+The `readr_example()` command grabs the path of an example file that is installed with tidyverse. Take a look at the path -- this is where the file is located on your computer.
+
+Now let's write it out:
+
+```r
+write_csv(mtcars, "mtcars.csv")
+```
+The file should appear in the "Files" pane on the bottom right of RStudio after running this code. Does it?
+
+Using the Files pane
+====
+
+Try reading it back in:
+
+```r
+mtcars2 = read_csv("mtcars.csv")
+```
+
+Now use RStudio to create a folder called `data/` and move the `mtcars.csv` file to `data/`. Try reading it in from here now:
+
+```r
+mtcars3 = read_csv("data/mtcars.csv") 
+```
+
+The `tab` button is very helpful when specifying files - it should autocomplete the file name. Try this.
+
+Exercise: Downloading a file and reading it into R
+===
+type: prompt
+
+First, download this file from GitHub:
+
+```r
+"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/poly.csv"
+```
+Go to the link, right click, and then "Save As" so it is on your local machine. 
+
+Now we have to figure out where the file is so we can read it in.
+
+On a Windows machine, the path can be found by right-clicking the file icon, and selecting "Properties." You'll see the file path, minus the name of the file, in the "General" tab, labeled "location." The full file name will be this path plus the name of the file .
+
+On a Mac, you can copy the full file path by right-clicking on the file or folder in the Mac Finder. While in the right-click menu, hold down the option key. The right-click menu will then reveal an option to "Copy "filename" as Pathname."
+
+Fill this in to `read_csv` and see if you can read it in!
+Think about how you would do this to read in a file from your computer.
+
+
+Some of these materials were adapted from: Introduction to R Illinois University Library https://guides.library.illinois.edu/c.php?g=347944&p=2345554
+
+
+
 
 readr cheat sheet
 ===
