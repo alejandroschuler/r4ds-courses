@@ -6,13 +6,7 @@ transition: none
 width: 1680
 height: 1050
 
-```{r include=FALSE}
-## better font size for slides
-library(tidyverse)
-theme_set(theme_grey(base_size = 22))
-opts_chunk$set(collapse=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
-opts_chunk$set(error=TRUE,warning=TRUE,message=FALSE)
-```
+
 
 - write and test your own functions
 - write code that evaluates conditionally
@@ -37,7 +31,8 @@ Motivation
 Example
 ===
 What does this code do? (recall that `df$col` is the same as `df %>% pull(col)`)
-```{r}
+
+```r
 df <- tibble(
   a = rnorm(10), # 10 random numbers from a normal distribution
   b = rnorm(10),
@@ -45,7 +40,8 @@ df <- tibble(
   d = rnorm(10)
 )
 ```
-```{r, eval=F}
+
+```r
 df$a = (df$a - min(df$a, na.rm = TRUE)) / 
   (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
 df$b = (df$b - min(df$b, na.rm = TRUE)) / 
@@ -59,7 +55,8 @@ df$d = (df$d - min(df$d, na.rm = TRUE)) /
 Example
 ===
 (recall that `df$col` is the same as `df %>% pull(col)`)
-```{r, eval=F}
+
+```r
 df$a = (df$a - min(df$a, na.rm = TRUE)) / 
   (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
 df$b = (df$b - min(df$b, na.rm = TRUE)) / 
@@ -76,7 +73,8 @@ Example
 ===
 We already know a better way to do this:
 
-```{r, eval=F}
+
+```r
 df2 = df %>%
   mutate(across(
     a:d, 
@@ -87,7 +85,8 @@ df2 = df %>%
 
 Example
 ===
-```{r, eval=F}
+
+```r
 rescale_0_1 = function(vec) {
   (vec - min(vec))/(max(vec) - min(vec))
 }
@@ -104,7 +103,8 @@ df2 = df %>%
 
 Example
 ===
-```{r}
+
+```r
 rescale_0_1 = function(vec) {
   vec_rng = range(vec, na.rm=T) # same as c(min(vec,na.rm=T), max(vec,na.rm=T))
   (vec - vec_rng[1])/(vec_rng[2] - vec_rng[1])
@@ -119,26 +119,34 @@ df2 = df %>%
 Example
 ===
 We can also test our function in cases where we know what the output should be to make sure it works as intended before we let it loose on the real data
-```{r}
+
+```r
 rescale_0_1(c(0,0,0,0,0,1))
+[1] 0 0 0 0 0 1
 rescale_0_1(0:10)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 rescale_0_1(-10:0)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 x = c(0,1,runif(100))
 all(x == rescale_0_1(x))
+[1] TRUE
 ```
 - These tests are a critical part of writing good code! It is helpful to save your tests in a separate file and organize them as you go
 
 Function syntax
 ===
 To write a function, just wrap your code in some special syntax that tells it what variables will be passed in and what will be returned
-```{r}
+
+```r
 rescale_0_1 = function(x) {
   x_rng = range(x, na.rm=T) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
 
 rescale_0_1(c(0,0,0,0,0,1))
+[1] 0 0 0 0 0 1
 rescale_0_1(0:10)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 ```
 - The syntax is `FUNCTION_NAME <- function(ARGUMENTS...) { CODE }`
 - Just like assigning a variable, except what you put into `FUNCTION_NAME` now isn't a data frame, vector, etc, it's a function object that gets created by the `function(..) {...}` syntax
@@ -147,14 +155,17 @@ rescale_0_1(0:10)
 Function syntax
 ===
 To add a named argument, add an `=` after you declare it as a variable and write in the default value that you would like that variable to take
-```{r}
+
+```r
 rescale_0_1 = function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
 
 rescale_0_1(c(0,0,0,0,0,1))
+[1] 0 0 0 0 0 1
 rescale_0_1(0:10)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 ```
 - All named arguments must go after positional arguments in the function declaration
 
@@ -166,11 +177,18 @@ type: prompt
 
 Note: functions are objects just like variables are
 ===
-```{r}
+
+```r
 rescale_0_1
+function(x, na.rm=TRUE) {
+  x_rng = range(x, na.rm=na.rm) 
+  (x - x_rng[1])/(x_rng[2] - x_rng[1])
+}
+<bytecode: 0x7fc83dfda308>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
-```{r}
+
+```r
 df2 = df %>% mutate(across(a:d, rescale_0_1))
 ```
 - This is what **functional programming** means. The functions themselves are can be treated as regular objects like variables
@@ -180,7 +198,8 @@ Exercise: function factory
 ===
 type: prompt
 Without running this code, predict what the output will be:
-```{r, eval=F}
+
+```r
 f = function(x) {
   y = x
   function(y) {
@@ -194,26 +213,24 @@ Exercise: exponent function factory
 ===
 type: prompt
 Write a function called `power()` that takes an argument `n` and returns a function that takes an argument x and computes `x^n`
-```{r, echo=F}
-power = function(n) {
-  function(x) {
-    x^n
-  }
-}
-```
+
 - Example use:
-```{r}
+
+```r
 square = power(2)
 cube = power(3)
 square(2)
+[1] 4
 cube(2)
+[1] 8
 ```
 
 Function operators
 ===
 - As we've seen, functions can also take other functions as arguments
 - We can use this to write functions that take functions, modify them, and return the modified function
-```{r}
+
+```r
 set_na.rm = function(f, na.rm) {
   function(x) {
     f(x, na.rm=na.rm)
@@ -223,6 +240,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
+[1] 0.1592803
 ```
 
 Functional programming
@@ -245,11 +263,10 @@ type: section
 Passing column names to tidyverse within functions
 ===
 - Consider this function, which shuffles the `number` column in the passed-in dataframe
-```{r, echo=F}
-set.seed(4)
-```
 
-```{r}
+
+
+```r
 data = tibble(
   number = c(1,2,3),
   label = c('a','b','c')
@@ -261,10 +278,17 @@ shuffle_col_named_number = function(df) {
 }
 
 data %>% shuffle_col_named_number()
+# A tibble: 3 x 2
+  number label
+   <dbl> <chr>
+1      3 a    
+2      1 b    
+3      2 c    
 ```
 
 - What if we wanted to modify it so that `mpg` weren't hard-coded? Intuitively, we should write something like this:
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate(col = sample(col, nrow(data)))
@@ -273,7 +297,8 @@ shuffle_col = function(data, col) {
 
 Passing column names to tidyverse within functions
 ===
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate(col = sample(
@@ -284,8 +309,12 @@ shuffle_col = function(data, col) {
 ```
 - Unfortunately, this doesn't work:
 
-```{r}
+
+```r
 data %>% shuffle_col(number)
+Error: Problem with `mutate()` column `col`.
+ℹ `col = sample(col, nrow(data))`.
+x object 'number' not found
 ```
 - The problem is that R doesn't know that `number` should refer to a column in the data, not to an object in the global environment. 
 
@@ -293,7 +322,8 @@ data %>% shuffle_col(number)
 
 - The fix is to use the `{{...}}` syntax to surround the passed in variable name where it gets used in the function. 
 
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate(new_col = sample(
@@ -303,6 +333,12 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
+# A tibble: 3 x 3
+  number label new_col
+   <dbl> <chr>   <dbl>
+1      1 a           3
+2      2 b           2
+3      3 c           1
 ```
 - This tells R not to look for that object in the global environment.
 - Called "embracing"
@@ -312,7 +348,8 @@ Passing column names to tidyverse within functions
 - The last thing we need to resolve is how to specify the naming of the new column. 
 - You may think this would work:
 
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate({{col}} = sample(
@@ -320,13 +357,18 @@ shuffle_col = function(data, col) {
       nrow(data)
     ))
 }
+Error: <text>:3:20: unexpected '='
+2:   data %>% 
+3:     mutate({{col}} =
+                      ^
 ```
 - But unfortunately this doesn't even parse as valid R code
 
 ***
 
 - For arcane technical reasons, the right way to do this is to use the Walrus operator `:=`
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate({{col}} := sample(
@@ -336,21 +378,34 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
+# A tibble: 3 x 2
+  number label
+   <dbl> <chr>
+1      2 a    
+2      1 b    
+3      3 c    
 ```
 
 Passing column names to tidyverse within functions as strings
 ===
 - What if we wanted our function to work with character vectors so it could ingest the output of other code? For instance:
-```{r}
+
+```r
 col_to_shuffle = names(data)[1] # whatever the name of the first column is
 col_to_shuffle
+[1] "number"
 ```
-```{r}
+
+```r
 data %>% shuffle_col(col_to_shuffle)
+Error: Problem with `mutate()` column `col_to_shuffle`.
+ℹ `col_to_shuffle = sample(col_to_shuffle, nrow(data))`.
+x cannot take a sample larger than the population when 'replace = FALSE'
 ```
 - This fails because now that we've embraced the argument R expects it to be a bare column name that it will parse in the context of the data, not a string.
 - The un-embraced version also fails (why?):
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate(col = sample(
@@ -359,13 +414,17 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
+Error: Problem with `mutate()` column `col`.
+ℹ `col = sample(col, nrow(data))`.
+x cannot take a sample larger than the population when 'replace = FALSE'
 ```
 
 
 Passing column names to tidyverse within functions as strings
 ===
 - To get this to work you have to use the special `.data` pronoun within the tidyverse function and index into that dataframe using the string column name:
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate(col = sample(
@@ -374,11 +433,18 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
+# A tibble: 3 x 3
+  number label   col
+   <dbl> <chr> <dbl>
+1      1 a         3
+2      2 b         2
+3      3 c         1
 ```
 
 ***
 - If you want to use the arguments to assign new column names inside tidyverse functions you  need to use single braces inside a string along with the Walrus operator:
-```{r}
+
+```r
 shuffle_col = function(data, col) {
   data %>% 
     mutate("{col}" := sample(
@@ -387,6 +453,12 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
+# A tibble: 3 x 2
+  number label
+   <dbl> <chr>
+1      2 a    
+2      3 b    
+3      1 c    
 ```
 - Is this hideous? Yes. Confusing? Yes.
 - This is the price you pay for being able to write beautiful, concise tidyverse code outside of functions!
@@ -417,7 +489,8 @@ if (condition) {
 ```
 
 - The condition is code that evaluates to TRUE or FALSE
-```{r}
+
+```r
 absolute_value = function(x) {
     if (x>0) {
         x
@@ -426,7 +499,9 @@ absolute_value = function(x) {
     }
 }
 absolute_value(2)
+[1] 2
 absolute_value(-2)
+[1] 2
 ```
 
 
@@ -434,19 +509,23 @@ Conditional Evaluation
 === 
 - if_else is a function that condenses an if-else statement and is good when the condition and bodies of code are very short
 - the first argument is the conditon, the second is what it returns when the condition is true, the third is what it returns when the condition is false
-```{r}
+
+```r
 absolute_value = function(x) {
     if_else(x>0, x, -x)
 }
 absolute_value(2)
+[1] 2
 absolute_value(-2)
+[1] 2
 ```
 
 Multiple conditions 
 ===
 
 - You can evaluate multiple conditions with if...  else if... else
-```{r}
+
+```r
 valence = function(x) {
     if (x>0) {
         "positive"
@@ -457,8 +536,11 @@ valence = function(x) {
     }
 }
 valence(-12)
+[1] "negative"
 valence(99)
+[1] "positive"
 valence(0)
+[1] "zero"
 ```
 
 Exercise: greeting
@@ -470,7 +552,8 @@ Write a greeting function that says “good morning”, “good afternoon”, or
 Conditions
 ===
 - Conditions can be anything that evaluates to a single `TRUE` or `FALSE`
-```{r}
+
+```r
 library(lubridate)
 
 sun_or_moon = function(time = now()) {
@@ -482,27 +565,43 @@ sun_or_moon = function(time = now()) {
   }
 }
 sun_or_moon(mdy_hm("Jan 2, 2000, 10:55pm"))
+[1] "moon in the sky"
 sun_or_moon(mdy_hm("Sept 10, 1990, 09:12am"))
+[1] "sun in the sky"
 ```
 - but not a logical vector or an NA
-```{r}
+
+```r
 sun_or_moon(c(
   mdy_hm("Jan 2, 2000, 10:55pm"), 
   mdy_hm("Sept 10, 1990, 09:12am")))
+Warning in if (this_hour < 6 | this_hour > 18) {: the condition has length > 1
+and only the first element will be used
+[1] "moon in the sky"
 ```
 
 Motivation for lists and iteration
 ===
-```{r}
+
+```r
 sun_or_moon(c(
   mdy_hm("Jan 2, 2000, 10:55pm"), 
   mdy_hm("Sept 10, 1990, 09:12am")))
+Warning in if (this_hour < 6 | this_hour > 18) {: the condition has length > 1
+and only the first element will be used
+[1] "moon in the sky"
 ```
 - We see this doesn't work. How can we tell the function to iterate over multiple sets of arguments?
-```{r}
+
+```r
 list(mdy_hm("Jan 2, 2000, 10:55pm"), 
      mdy_hm("Sept 10, 1990, 09:12am")) %>%
 map(sun_or_moon)
+[[1]]
+[1] "moon in the sky"
+
+[[2]]
+[1] "sun in the sky"
 ```
 - To do this, we need to understand:
   - how to build and manipulate `list`s 
@@ -515,15 +614,26 @@ type: section
 Lists
 ===
 - A `list` is like an atomic vector, except the elements don't have to be the same type of thing
-```{r}
+
+```r
 a_vector = c(1,2,4,5)
 maybe_a_vector = c(1,2,"hello",5,TRUE)
 maybe_a_vector # R converted all of these things to strings!
+[1] "1"     "2"     "hello" "5"     "TRUE" 
 ```
 - You make them with list() and you can index them like vectors
-```{r}
+
+```r
 a_list = list(1,2,"hello",5,TRUE)
 a_list[3:5]
+[[1]]
+[1] "hello"
+
+[[2]]
+[1] 5
+
+[[3]]
+[1] TRUE
 ```
 - Anything can go in lists, including vectors, other lists, data frames, etc.
 - In fact, a data frame (or tibble) is actually just a list of named column vectors with an enforced constraint that all of the vectors have to be of the same length. That's why the `df$col` syntax works for data frames.
@@ -531,15 +641,37 @@ a_list[3:5]
 Seeing into lists
 ===
 - Use `str()` to dig into nested lists and other complicated objects
-```{r}
+
+```r
 nested_list = list(a_list, 4, mtcars)
 str(nested_list)
+List of 3
+ $ :List of 5
+  ..$ : num 1
+  ..$ : num 2
+  ..$ : chr "hello"
+  ..$ : num 5
+  ..$ : logi TRUE
+ $ : num 4
+ $ :'data.frame':	32 obs. of  11 variables:
+  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
+  ..$ disp: num [1:32] 160 160 108 258 360 ...
+  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
+  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
+  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
+  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
+  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
+  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
+  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
 ```
 
 Getting elements from a list
 ===
 - You can also name the elements in a list
-```{r}
+
+```r
 a_list = list(
     first_number = 1,
     second_number = 2,
@@ -548,33 +680,46 @@ a_list = list(
     some_logical = TRUE)
 ```
 - and then retrieve elements by name or position or using the tidyverse-friendly `pluck()`
-```{r}
+
+```r
 a_list$a_string  # returns the element named "thrid_number"
+[1] "hello"
 a_list[[3]] # returns the 3rd element
+[1] "hello"
 a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
+$a_string
+[1] "hello"
 a_list %>%
   pluck("a_string")
+[1] "hello"
 ```
 
 Using elements in list
 ===
 - If you use the `magrittr` package, you can operate on items in lists with the `%$%` operator (fun fact: the `%>%` operator originally came from `magrittr`)
-```{r}
+
+```r
 library(magrittr)
 list(a=5, b=6) %$%
   rnorm(10, mean=a, sd=b)
+ [1] 16.379239 15.661179  8.399627  5.094317  7.298344  4.729177  5.206111
+ [8]  6.014161 11.990161  4.734776
 ```
 - `%$%` makes the elements of the list on the left-hand side accessible in bare-name form to the expression on the right-hand side so you don't have to type extra dollar signs:
-```{r}
+
+```r
 x =  list(a=5, b=6)
 rnorm(10, mean=x$a, sd=x$b)
+ [1]  4.397789  3.299333 14.244890  5.991014 12.845734 12.729541  8.557382
+ [8]  3.302338 12.535304 10.459035
 ```
 
 Exercise: getting things out of a list
 ===
 type:prompt
 Create this list in your workspace and write code to extract the element `"b"`.
-```{r}
+
+```r
 x = list(
   list("a", "b", "c"), 
   "d", 
@@ -588,7 +733,8 @@ Functions returning multiple values
 - A function can only return a single object
 - Often, however, it makes sense to group the calculation of two or more things you want to return within a single function
 - You can put all of that into a list and then retrun a single list
-```{r}
+
+```r
 min_max = function(x) {
   x_sorted = sort(x)
   list(
@@ -602,7 +748,8 @@ min_max = function(x) {
 Functions returning multiple values
 ===
 - If you use the `zeallot` package, you can assign multiple values out of a list at once using the `c(...) %<-% ...` syntax
-```{r, warning=FALSE, message=FALSE}
+
+```r
 min_max = function(x) {
   x_sorted = sort(x)
   list(
@@ -614,41 +761,54 @@ min_max = function(x) {
 library(zeallot)
 c(min_x, max_x) %<-% min_max(rnorm(10))
 min_x
+[1] -1.482189
 max_x
+[1] 1.240181
 ```
 
 Dots
 ===
 - Besides positional and named arguments, functions in R can also be written to take a variable number of arguments!
-```{r}
+
+```r
 sum(1)
+[1] 1
 sum(1,2,3,6) # pass in as many as you want and it still works
+[1] 12
 ```
 - Obviously there aren't an infinite number of `sum()` functions to work with all the possible different numbers of arguments
 - To write functions like this, use the dots `...` syntax
-```{r}
+
+```r
 space_text = function(...) {
   dots = list(...)
   str_c(dots, collapse=" ")
 } 
 
 space_text("hello", "there,", "how", "are", "you")
+[1] "hello there, how are you"
 space_text("fine,", "thanks")
+[1] "fine, thanks"
 ```
 - You can get whatever is passed to the function and save it as a (possibly named) list using `list(...)`
 
 Dots
 ===
 - This is useful when you want to pass on a bunch of arbitrary named arguments to another function, but hardcode one or more of them
-```{r}
+
+```r
 mean_no_na = function(...) {
   mean(..., na.rm=T)
 }
 x = c(rnorm(100), NA)
 mean(x)
+[1] NA
 mean_no_na(x)
+[1] -0.06457281
 mean_no_na(x, trim=0.5)
+[1] -0.1241746
 mean(x, trim=0.5, na.rm=T)
+[1] -0.1241746
 ```
 - Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
 
@@ -657,18 +817,16 @@ Exercise: ggplot with default red points
 type: prompt
 - Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
 - Test it out using data of your choice
-```{r, echo=F}
-ggplot_redpoint = function(...) {
-  ggplot(...) + 
-    geom_point(color="red")
-}
-```
+
 
 Example: 
-```{r}
+
+```r
 mtcars %>%
 ggplot_redpoint(aes(mpg, hp)) 
 ```
+
+![plot of chunk unnamed-chunk-51](5-functional-programming-figure/unnamed-chunk-51-1.png)
 
 Iteration
 ===
@@ -680,58 +838,88 @@ Map
 - Recall that functions are objects just like anything else so you can pass them around to other functions
 - Map then runs that function on each element of the first argument, slaps 
 the results together into a list, and returns that
-```{r}
+
+```r
 times = list(mdy_hm("Jan 2, 2000, 10:55pm"), 
              mdy_hm("Sept 10, 1990, 09:12am"))
 map(times, sun_or_moon)
+[[1]]
+[1] "moon in the sky"
+
+[[2]]
+[1] "sun in the sky"
 ```
 - Equivalently:
-```{r}
+
+```r
 list(mdy_hm("Jan 2, 2000, 10:55pm"), 
      mdy_hm("Sept 10, 1990, 09:12am")) %>%
 map(sun_or_moon)
+[[1]]
+[1] "moon in the sky"
+
+[[2]]
+[1] "sun in the sky"
 ```
 
 Names are preserved through map
 ===
 - If the input list (or vector) has names, the output will have elements with the same names
-```{r}
+
+```r
 list(
   random_day = mdy_hm("Jan 2, 2000, 10:55pm"), 
   my_birthday = mdy_hm("Sept 10, 1990, 09:12am")) %>%
 map(sun_or_moon)
+$random_day
+[1] "moon in the sky"
+
+$my_birthday
+[1] "sun in the sky"
 ```
 - You can also dynamically set names in a list using `set_names()`
-```{r}
+
+```r
 list(
   mdy_hm("Jan 2, 2000, 10:55pm"), 
   mdy_hm("Sept 10, 1990, 09:12am")) %>%
 set_names(c("random_day", "my_birthday")) %>%
 map(sun_or_moon)
+$random_day
+[1] "moon in the sky"
+
+$my_birthday
+[1] "sun in the sky"
 ```
 
 Returning vectors
 ===
 - `map()` typically returns a list (why?)
 - But there are variants that return vectors of different types
-```{r}
+
+```r
 list(mdy_hm("Jan 2, 2000, 10:55pm"), 
      mdy_hm("Sept 10, 1990, 09:12am")) %>%
 map_chr(sun_or_moon)
+[1] "moon in the sky" "sun in the sky" 
 ```
 
-```{r}
+
+```r
 harmonic_sum = function(n) {
   sum(1/(1:n)) # 1/1 + 1/2 + ... 1/n
 }
 
 1:10 %>%
   map_dbl(harmonic_sum)
+ [1] 1.000000 1.500000 1.833333 2.083333 2.283333 2.450000 2.592857 2.717857
+ [9] 2.828968 2.928968
 ```
 
 Returning a data frame
 ===
-```{r}
+
+```r
 df <- tibble::tibble(
   a = rnorm(10), 
   b = rnorm(10),
@@ -741,9 +929,14 @@ df <- tibble::tibble(
   mutate(d = if_else(row_number()==6, NA_real_, d)) # makes an element an NA
 ```
 
-```{r}
+
+```r
 df %>%
   map_df(mean)
+# A tibble: 1 x 4
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385    NA
 ```
 - Why can we feed a data frame into `map()`?
 - Notice the `c` column's mean is NA because we don't have a way to specify `na.rm=TRUE` to `mean()`
@@ -753,26 +946,46 @@ Composing functions inside map()
 - How can we pass na.rm=TRUE to mean() inside of map?
 
 - Define a new function with `na.rm=T` hardcoded in
-```{r}
+
+```r
 mean_no_rm = function(x) mean(x, na.rm=TRUE)
 df %>% map_df(mean_no_rm)
+# A tibble: 1 x 4
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - **Better**: define an anonymous function inside of map
-```{r}
+
+```r
 df %>% map_df(function(x) mean(x, na.rm=TRUE))
+# A tibble: 1 x 4
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 ***
 
 - **Better**: use the `~ .` syntax to create an "anonymous" function inside of map. The `~` tells map that what follows is the body of a function (with no name) and a single argument called `.`
-```{r}
+
+```r
 df %>% map_df(~ mean(., na.rm=TRUE))
+# A tibble: 1 x 4
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - **Best**: any additional named arguments to map get passed on as named arguments to the function you want to call!
-```{r}
+
+```r
 df %>% map_df(mean, na.rm=TRUE)
+# A tibble: 1 x 4
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - In this case, the last option is the clearest, but in others it maybe a good idea to define a function outside of map or explicitly inside of map with the `function` syntax. It all depends on what makes the most sense for the situation.
@@ -786,7 +999,8 @@ type: prompt
 Exercise: partial harmonic sum
 ===
 type:prompt
-```{r}
+
+```r
 harmonic_sum = function(n) {
   sum(1/(1:n)) # 1/1 + 1/2 + ... 1/n
 }
@@ -803,29 +1017,40 @@ type:prompt
 Mapping over multiple inputs
 ===
 - So far we’ve mapped along a single input. But often you have multiple related inputs that you need iterate along in parallel. That’s the job of `pmap()`. For example, imagine you want to simulate some random normals with different means. You know how to do that with `map()`:
-```{r}
+
+```r
 means <- list(5, 10, -3)
 means %>% 
   map(rnorm, n = 5) %>%
   glimpse()
+List of 3
+ $ : num [1:5] 4.2 3.87 3.97 5.07 5.38
+ $ : num [1:5] 8.38 11.9 9.28 10.38 10.44
+ $ : num [1:5] -2.74 -3.18 -3.69 -3 -2.43
 ```
 
 Mapping over multiple inputs
 ===
 - What if you also want to vary the standard deviation and `n`? One way to do that would be to iterate over the indices and index into vectors of means and sds:
-```{r}
+
+```r
 mean = list(5, 10, -3)
 sd = list(1, 5, 10)
 n = list(1, 3, 5)
 1:3 %>%
   map(~rnorm(n[[.]], mean[[.]], sd[[.]])) %>% 
   glimpse()
+List of 3
+ $ : num 3.79
+ $ : num [1:3] 8.27 6.75 5.55
+ $ : num [1:5] 11.77 -14.95 14.5 9.15 -18.48
 ```
 - This looks like `C++`, not `R`. It's better to use `pmap()`
 
 Mapping over multiple inputs
 ===
-```{r}
+
+```r
 list(
   n = list(1, 3, 5),
   mean = list(5, 10, -3),
@@ -833,6 +1058,10 @@ list(
 ) %>%
 pmap(rnorm) %>% 
 glimpse()
+List of 3
+ $ : num 4.7
+ $ : num [1:3] 15.2 6.16 17.62
+ $ : num [1:5] -27.22 2.56 8.06 -1.34 -5.25
 ```
 
 <div align="center">
@@ -842,7 +1071,8 @@ glimpse()
 Mapping over multiple inputs
 ===
 - If you name the elements of the list, `pmap()` will match them to named arguments of the function you are calling
-```{r, eval=F}
+
+```r
 list(
     to = c(1,2,3),
     from = c(10,11,12)
@@ -851,7 +1081,8 @@ list(
   glimpse()
 ```
 - Otherwise arguments will be passed positionally
-```{r, eval=F}
+
+```r
 list(
     c(1,2,3),
     c(10,11,12)
@@ -864,7 +1095,8 @@ Mapping over multiple inputs
 ===
 - You can and should sometimes write functions inside of `pmap()`
 - The same variants (e.g. `pmap_dbl()`) exist for `pmap()` as for `map()`
-```{r}
+
+```r
 list(
     c(1,2,3),
     c(10,11,12)
@@ -873,41 +1105,91 @@ list(
     seq(x,y) %>%
       median()
   })
+[1] 5.5 6.5 7.5
 ```
 
 Cross
 === 
 - `cross()` gives you every combintion of the items in the list you pass it
-```{r}
+
+```r
 list(
     a = c(1,2,3),
     b = c(10,11)
   ) %>%
   cross() %>%
   glimpse()
+List of 6
+ $ :List of 2
+  ..$ a: num 1
+  ..$ b: num 10
+ $ :List of 2
+  ..$ a: num 2
+  ..$ b: num 10
+ $ :List of 2
+  ..$ a: num 3
+  ..$ b: num 10
+ $ :List of 2
+  ..$ a: num 1
+  ..$ b: num 11
+ $ :List of 2
+  ..$ a: num 2
+  ..$ b: num 11
+ $ :List of 2
+  ..$ a: num 3
+  ..$ b: num 11
 ```
 
 Cross
 === 
 - `cross_df()` returns the result as a data frame
-```{r}
+
+```r
 list(
     a = c(1,2,3),
     b = c(10,11)
   ) %>%
   cross_df()
+# A tibble: 6 x 2
+      a     b
+  <dbl> <dbl>
+1     1    10
+2     2    10
+3     3    10
+4     1    11
+5     2    11
+6     3    11
 ```
 
 Binding rows
 ===
 - `map()` and `pmap()` sometimes give you back a list of data frames. To glue them all together you will need `bind_rows()`:
-```{r}
+
+```r
 1:3 %>%
   map(~tibble(
     rep = .,
     sample = rnorm(5)
   )) %>%
   bind_rows()
+# A tibble: 15 x 2
+     rep   sample
+   <int>    <dbl>
+ 1     1 -0.228  
+ 2     1 -0.253  
+ 3     1  2.07   
+ 4     1  1.58   
+ 5     1 -1.04   
+ 6     2 -0.00839
+ 7     2 -1.33   
+ 8     2  0.147  
+ 9     2 -0.788  
+10     2 -0.289  
+11     3  0.667  
+12     3 -0.137  
+13     3  0.224  
+14     3  1.12   
+15     3 -1.44   
 ```
 
 Exercise: 
@@ -916,25 +1198,36 @@ type: prompt
 
 Generate a table like the one shown here by drawing 3 normally-distributed random numbers from every combination of the following parameters: `mean = c(-1, 0, 1)`, `sd = c(1,2)`.
 
-```{r, echo=F}
-list(
-    mean = c(-1, 0, 1),
-    sd = c(1,2)
-  ) %>%
-  cross_df() %>%
-  pmap(function(mean, sd){
-    tibble(
-      sample = rnorm(mean=mean, sd=sd, n=3),
-      mean = mean,
-      sd = sd)
-  }) %>%
-  bind_rows()
+
+```
+# A tibble: 18 x 3
+    sample  mean    sd
+     <dbl> <dbl> <dbl>
+ 1 -0.366     -1     1
+ 2 -1.50      -1     1
+ 3  0.126     -1     1
+ 4 -0.100      0     1
+ 5 -1.11       0     1
+ 6  0.658      0     1
+ 7  0.957      1     1
+ 8  1.63       1     1
+ 9  0.0632     1     1
+10 -1.71      -1     2
+11 -1.09      -1     2
+12 -1.70      -1     2
+13 -0.718      0     2
+14  0.791      0     2
+15 -1.97       0     2
+16  0.955      1     2
+17 -0.769      1     2
+18  1.97       1     2
 ```
 
 Why not for loops?
 ===
 - R also provides something called a `for` loop, which is common to many other languages as well. It looks like this:
-```{r}
+
+```r
 ## generate 5 random numbers each from 3 normal distributions with different means
 samples = list(NA, NA, NA)
 means = c(1,10,100)
@@ -948,7 +1241,8 @@ for (i in 1:3) {
 ***
 
 - Compare to the `map()`-style solution:
-```{r}
+
+```r
 ## generate 5 random numbers each from 3 normal distributions with different means
 samples = c(1,10,100) %>%
   map(~rnorm(5,.))
@@ -980,10 +1274,15 @@ Example: Permutation test of a regression coefficient
 ===
 - Let's say we're interested in the association of `mpg` and `hp` in the mtcars data set (adjusted for other variables)
 - We can run a linear model to estimate that association, assuming a linear trend
-```{r}
+
+```r
 lm(mpg~., data=mtcars) %>%
   broom::tidy() %>%
   filter(term=="hp")
+# A tibble: 1 x 5
+  term  estimate std.error statistic p.value
+  <chr>    <dbl>     <dbl>     <dbl>   <dbl>
+1 hp     -0.0215    0.0218    -0.987   0.335
 ```
 - Here we've used `lm()` to run a linear model- you can learn more about `lm()` and the formula interface it uses by looking at the help page
 - We've also used `tidy()` from the `broom` package to clean up the output into a tibble.
@@ -1000,7 +1299,8 @@ Example: Permutation test of a regression coefficient
 Example: Permutation test of a regression coefficient
 ===
 - These are the functions we'll need
-```{r}
+
+```r
 shuffle_row = function(data, row) {
   data %>% mutate({{row}} := sample({{row}}, nrow(data)))
 }
@@ -1013,23 +1313,28 @@ analyze = function(data) {
 }
 ```
 
-```{r}
+
+```r
 mtcars %>%
   shuffle_row(mpg) %>% 
   analyze()
+[1] 0.05180838
 
 mtcars %>%
   shuffle_row(mpg) %>% 
   analyze()
+[1] -0.009589738
 ```
 
 Example: Permutation test of a regression coefficient
 ===
-```{r, messages=FALSE, warning=FALSE}
+
+```r
 library(tictoc) # for timing things easily
 ```
 
-```{r, messages=FALSE, warning=FALSE}
+
+```r
 tic()
 perm_distribution = 1:1000 %>%
   map_dbl(~
@@ -1038,17 +1343,20 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
+8.05 sec elapsed
 ```
 - We made 1000 coefficients, but it's slow!
 
 Example: Permutation test of a regression coefficient
 ===
 - If we parallelize across CPUs, we can go faster
-```{r, warning=F, message=F}
+
+```r
 library(furrr) # parallel maps
 plan(multiprocess(workers=4)) # turns on parallel processing 
 ```
-```{r, warning=F, message=F}
+
+```r
 tic()
 perm_distribution = 1:1000 %>%
   future_map_dbl(~
@@ -1057,11 +1365,13 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
+5.212 sec elapsed
 ```
 
 Example: Permutation test of a regression coefficient
 ===
-```{r}
+
+```r
 beta = analyze(mtcars)
 
 p_empirical = mean(abs(perm_distribution) >= abs(beta))
@@ -1072,9 +1382,12 @@ p_parametric = lm(mpg~., data=mtcars) %>%
   pull(p.value)
 ```
 
-```{r}
+
+```r
 p_empirical
+[1] 0.678
 p_parametric
+[1] 0.3349553
 ```
 - Under the assumptions of the permutation test, we can be even less sure there is an association.
 
