@@ -763,7 +763,7 @@ ggplot(aes(x=HPO_Name, y=proportion, fill=Gene_Disease)) +
   scale_fill_manual(values = type_colors) +
   theme(axis.text.x=element_text(hjust=1,angle=45, size=22))
 ```
-`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
+To rotate the x axis labels, use: `theme(axis.text.x=element_text(hjust=1,angle=45)`. The function `geom_bar(position="fill")` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
 
 Dates and times
 === 
@@ -809,7 +809,7 @@ Creating dates from components
 ===
 - Sometimes the dates and times you get are split up (usually in columns)
 ```{r message=FALSE}
-gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
+gtex_dates = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_sample_mdy.csv")
 gtex_dates %>% 
   select(contains("iso")) %>%
   head(5) # look at relevant columns
@@ -849,7 +849,7 @@ gtex_dates_clean3 = gtex_dates_clean2 %>%
          pax_start_min = str_sub(pax_start_time, -2, -1) %>% as.numeric(),
          pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(),
          pax_end_min = str_sub(pax_end_time, -2, -1) %>% as.numeric())
-gtex_dates_clean %>% select(contains("pax")) %>% tail(2)
+gtex_dates_clean3 %>% select(contains("pax")) %>% tail(2)
 # remove extra columns again
 gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time")) 
 ```
@@ -872,8 +872,9 @@ gtex_dates_clean5 %>%
   head(3)
 
 # remove columns we just used
-gtex_dates_clean6 <- gtex_dates_clean5 %>% 
+gtex_dates_clean <- gtex_dates_clean5 %>% 
   select(-pax_start_date, -pax_end_date, -contains("hr"), -contains("min"))
+
 ```
 
 Cleaned date data
@@ -882,8 +883,14 @@ Take a look at both the data frame we started with and the one we have cleaned.
 Which do you prefer? Which is clearer?
 
 ```{r}
-head(gtex_dates) 
-head(gtex_dates_clean6)
+head(gtex_dates, 4) 
+head(gtex_dates_clean, 4)
+```
+
+
+Note: you can also read in the cleaned data from this URL.
+```{r, eval=F}
+gtex_dates_clean = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_dates_clean.csv")`
 ```
 
 Plotting with dates
@@ -891,7 +898,7 @@ Plotting with dates
 - ggplot2 understands `dates` and `ddtm`s
 ```{r, fig.width=12, fig.align = "center"}
 # get the dates samples were isolated from just 2014
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
 ggplot(aes(iso_date)) + 
   geom_freqpoly(binwidth=10) # bin by every 10 days (if we had dttm, the unit is seconds)
@@ -903,7 +910,7 @@ Accessing dttm elements
 
 ```{r, fig.width=12, fig.align = "center"}
 # look at the dates RNA isolation was perfomed. what do you notice?
-gtex_dates_clean6 %>%  
+gtex_dates_clean %>%  
   mutate(wday = wday(iso_date, label = TRUE)) %>% 
   ggplot(aes(x = wday)) +
     geom_bar()
@@ -984,7 +991,7 @@ Example using periods
 ===
 - Let's calculate the length of time samples were in PaxGene fixative and look at how it differs when we look at it as a Duration and a Period. What do you prefer?
 ```{r}
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   mutate(pax_time=pax_end_dt-pax_start_dt)  %>% 
   mutate(pax_time_d=as.duration(pax_time),
          pax_time_p=as.period(pax_time)) %>%
@@ -994,7 +1001,7 @@ gtex_dates_clean6 %>%
 
 You take a look at the data and realize some of the difftimes are negative. What is going on here?
 ```{r}
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
   filter(pax_time < 0) %>%
   select(pax_start_dt, pax_end_dt, pax_time)
@@ -1004,7 +1011,7 @@ Plotting difftimes
 ===
 We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
 ```{r, width=12, fig.align="center"}
-gtex_dates_clean6 %>% # look at the rest of the data
+gtex_dates_clean %>% # look at the rest of the data
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
   filter(pax_time > 0) %>%
   ggplot(aes(x=pax_time))+
@@ -1017,7 +1024,7 @@ Example using periods
 
 To fix this we add a year to some of the ones with negative times. Which of these work and why?
 ```{r, eval=F}
-gtex_dates_clean6 %>%
+gtex_dates_clean %>%
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
@@ -1025,7 +1032,7 @@ gtex_dates_clean6 %>%
   filter(neg_pax) 
 ```
 ```{r, eval=F}
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
@@ -1033,7 +1040,7 @@ gtex_dates_clean6 %>%
   filter(neg_pax)
 ```
 ```{r, eval=F}
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   select(contains("pax")) %>%
   mutate(pax_time_p=as.period(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time_p < 0)) %>%
@@ -1050,16 +1057,26 @@ mdy("July 4 1776") %--% today()
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 ```{r}
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   filter(iso_date %within% (mdy("feb 15 2013") %--% mdy("feb 14 2014"))) %>% 
   head()
 ```
 
-Exercise: first days of the month
+Exercise: Plotting a histogram with dates
 ===
 type:prompt
 
-Create a vector of dates giving the first day of every month in 2015. Create a vector of dates giving the first day of every month in the current year.
+Recreate this plot using the cleaned GTEx dates data (`gtex_dates_clean`).
+
+Hint: you may want to use `geom_histogram()`
+
+```{r, echo=F, message=F, fig.width=14, fig.align = "center"}
+gtex_dates_clean %>% 
+  mutate(days_btw_iso_expr=expr_date-iso_date) %>% 
+  filter(tissue %in% c("Lung", "Liver", "Blood", "Heart")) %>%
+ggplot( aes(x=days_btw_iso_expr, fill=tissue))+geom_histogram()
+```
+
 
 lubridate cheat sheet
 ===

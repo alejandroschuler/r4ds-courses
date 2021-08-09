@@ -44,7 +44,7 @@ orange %>%
   mutate(approx_age_yr = round(age_yrs)) %>%
   group_by(approx_age_yr) %>%
   summarize(mean_circ = mean(circumference))
-# A tibble: 5 x 2
+# A tibble: 5 × 2
   approx_age_yr mean_circ
           <dbl>     <dbl>
 1             0      31  
@@ -200,12 +200,12 @@ Matrices
 
 ```r
 my_example_matrix
-           [,1]        [,2]        [,3]       [,4]       [,5]
-[1,] -0.8147981 -0.12691164  0.15320466  0.2514097  1.8769308
-[2,] -0.9599709 -0.15283104 -1.59178959 -0.2188753 -1.5261497
-[3,] -0.2265966  0.03906986 -0.03295731  0.7352565  0.3401731
-[4,] -1.0282813 -0.64951751  0.83685936  0.7517605  0.3168973
-[5,]  0.6658058 -0.68062971  0.43948325 -2.4527679 -0.2359612
+           [,1]        [,2]       [,3]       [,4]       [,5]
+[1,] -0.3891569  0.22763339 -0.4888385 -0.8208803 -1.6735399
+[2,] -0.2374259 -0.13084785 -1.4628013 -0.8400235  0.2606133
+[3,]  0.8253362 -1.49853588  0.7734820 -1.1805125 -1.1433724
+[4,] -0.4086636  0.03660701 -0.4899599  0.2534294 -0.9153715
+[5,]  0.8623823  0.42711167 -1.6247422  0.3470410  1.1635825
 ```
 
 - All the usual vector rules apply- in particular, all entries of the matrix must be of the same type
@@ -234,15 +234,15 @@ type: prompt
 ```r
 gtex_data = read_tsv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex.tissue.zscores.advance2020.txt")  # includes normalized expression data for GTEx individuals across four tissues
 head(gtex_data)
-# A tibble: 6 x 7
-  Gene  Ind        Blood Heart   Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl>  <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA     -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76  -0.1         4
-3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26  -0.13        4
-4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42  -0.61        4
-5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59  -0.12        4
-6 A2ML1 GTEX-11TUW  0.02 -0.47  0.290 -0.66        4
+# A tibble: 6 × 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
+4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4
+5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4
+6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4
 ```
 
 Convert this dataset into a matrix and find out what type it is. Does this make sense?
@@ -336,27 +336,27 @@ Similar syntax is used for 2D entities
 
 ```r
 my_example_matrix[1:3, c(2,2)]
-            [,1]        [,2]
-[1,] -0.12691164 -0.12691164
-[2,] -0.15283104 -0.15283104
-[3,]  0.03906986  0.03906986
+           [,1]       [,2]
+[1,]  0.2276334  0.2276334
+[2,] -0.1308478 -0.1308478
+[3,] -1.4985359 -1.4985359
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
 my_example_matrix[1:3,]
-           [,1]        [,2]        [,3]       [,4]       [,5]
-[1,] -0.8147981 -0.12691164  0.15320466  0.2514097  1.8769308
-[2,] -0.9599709 -0.15283104 -1.59178959 -0.2188753 -1.5261497
-[3,] -0.2265966  0.03906986 -0.03295731  0.7352565  0.3401731
+           [,1]       [,2]       [,3]       [,4]       [,5]
+[1,] -0.3891569  0.2276334 -0.4888385 -0.8208803 -1.6735399
+[2,] -0.2374259 -0.1308478 -1.4628013 -0.8400235  0.2606133
+[3,]  0.8253362 -1.4985359  0.7734820 -1.1805125 -1.1433724
 my_example_matrix[,c(T,T,F,F,T)]
            [,1]        [,2]       [,3]
-[1,] -0.8147981 -0.12691164  1.8769308
-[2,] -0.9599709 -0.15283104 -1.5261497
-[3,] -0.2265966  0.03906986  0.3401731
-[4,] -1.0282813 -0.64951751  0.3168973
-[5,]  0.6658058 -0.68062971 -0.2359612
+[1,] -0.3891569  0.22763339 -1.6735399
+[2,] -0.2374259 -0.13084785  0.2606133
+[3,]  0.8253362 -1.49853588 -1.1433724
+[4,] -0.4086636  0.03660701 -0.9153715
+[5,]  0.8623823  0.42711167  1.1635825
 ```
 
 Indexing for data frames
@@ -365,7 +365,7 @@ Indexing for data frames
 
 ```r
 gtex_data[1:3, c(2,3)]
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   Ind        Blood
   <chr>      <dbl>
 1 GTEX-11DXZ -0.14
@@ -377,7 +377,7 @@ gtex_data[1:3, c(2,3)]
 
 ```r
 gtex_data[1:3, c("Ind","Blood")]
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   Ind        Blood
   <chr>      <dbl>
 1 GTEX-11DXZ -0.14
@@ -404,23 +404,23 @@ df <- tibble(x=x, y=rnorm(4), z=rnorm(4))
 df %>% 
   filter(x>0) %>%
   select(x,y)
-# A tibble: 3 x 2
-      x       y
-  <dbl>   <dbl>
-1   0.3 -0.139 
-2   0.1  0.0487
-3  12    0.709 
+# A tibble: 3 × 2
+      x      y
+  <dbl>  <dbl>
+1   0.3  0.883
+2   0.1 -0.865
+3  12    0.172
 ```
 **Vector indexing**
 
 ```r
 df[df$x>0, c(1,2)] # df$x takes the column x from the data frame df (details later)
-# A tibble: 3 x 2
-      x       y
-  <dbl>   <dbl>
-1   0.3 -0.139 
-2   0.1  0.0487
-3  12    0.709 
+# A tibble: 3 × 2
+      x      y
+  <dbl>  <dbl>
+1   0.3  0.883
+2   0.1 -0.865
+3  12    0.172
 ```
 - What are the advantages/disadvantages of each?
 
@@ -464,7 +464,7 @@ all_tissues = gtex_data[gtex_data$NTissues==4,]
 all_tissues$lung_blood_diff = all_tissues$Lung - all_tissues$Blood
 ordering = sort(all_tissues$lung_blood_diff, index.return=T)$ix
 all_tissues[ordering,][1:10, c("Gene", "Ind", "Lung", "Blood", "lung_blood_diff")]
-# A tibble: 10 x 5
+# A tibble: 10 × 5
    Gene         Ind         Lung Blood lung_blood_diff
    <chr>        <chr>      <dbl> <dbl>           <dbl>
  1 KLK3         GTEX-147F4 -0.44 15.7            -16.2
@@ -610,15 +610,15 @@ type: prompt
 ```r
 drugs <- read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/drugSurvey.csv")
 head(drugs)
-# A tibble: 6 x 7
-  uniqueID drugName   condition     review              rating date  usefulCount
-     <dbl> <chr>      <chr>         <chr>                <dbl> <chr>       <dbl>
-1   163740 Mirtazapi… Depression    "\"I&#039;ve tried…     10 28-F…          22
-2   206473 Mesalamine Crohn's Dise… "\"My son has Croh…      8 17-M…          17
-3   159672 Bactrim    Urinary Trac… "\"Quick reduction…      9 29-S…           3
-4    39293 Contrave   Weight Loss   "\"Contrave combin…      9 5-Ma…          35
-5    97768 Cyclafem … Birth Control "\"I have been on …      9 22-O…           4
-6   208087 Zyclara    Keratosis     "\"4 days in on fi…      4 3-Ju…          13
+# A tibble: 6 × 7
+  uniqueID drugName        condition    review          rating date  usefulCount
+     <dbl> <chr>           <chr>        <chr>            <dbl> <chr>       <dbl>
+1   163740 Mirtazapine     Depression   "\"I&#039;ve t…     10 28-F…          22
+2   206473 Mesalamine      Crohn's Dis… "\"My son has …      8 17-M…          17
+3   159672 Bactrim         Urinary Tra… "\"Quick reduc…      9 29-S…           3
+4    39293 Contrave        Weight Loss  "\"Contrave co…      9 5-Ma…          35
+5    97768 Cyclafem 1 / 35 Birth Contr… "\"I have been…      9 22-O…           4
+6   208087 Zyclara         Keratosis    "\"4 days in o…      4 3-Ju…          13
 ```
 - Dataset from polling patients that have been taking all sorts of prescription drugs
 - Contains columns for: `drugName`, `condition`, `rating`, `date` and `usefulCount` (how many people found the review useful)
@@ -642,7 +642,7 @@ drugs %>%
   arrange(desc(n_vomiting)) %>%
   select(drugName, condition, n_vomiting) %>%
   head()
-# A tibble: 6 x 3
+# A tibble: 6 × 3
   drugName                         condition                    n_vomiting
   <chr>                            <chr>                             <int>
 1 Trintellix                       Depression                            5
@@ -925,7 +925,7 @@ Example: Human Phenotype Ontology (HPO) dataset
 ```r
 hpo_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/HPO_examples_gene_phenotype.txt', col_types='cfff')
 head(hpo_data,2)
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   Gene_Name HPO_ID     HPO_Name                 Gene_Disease
   <chr>     <fct>      <fct>                    <fct>       
 1 ABCB11    HP:0001402 Hepatocellular carcinoma None        
@@ -1004,7 +1004,7 @@ hpo_data %>%
   group_by(Gene_Disease) %>%
   summarize(count=n()) %>%
   arrange(desc(count))
-# A tibble: 5 x 2
+# A tibble: 5 × 2
   Gene_Disease count
   <fct>        <int>
 1 None           234
@@ -1040,7 +1040,7 @@ type: prompt
 
 How does the proportion of disease associations (Cancer, Cardio, etc.) for the genes mapped to each given HPO ID vary across each phenotype (HPO_Name)? Recreate the following plot from the `hpo_data` data:
 <img src="4-datatypes-io-figure/unnamed-chunk-80-1.png" title="plot of chunk unnamed-chunk-80" alt="plot of chunk unnamed-chunk-80" style="display: block; margin: auto;" />
-`geom_bar()` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
+To rotate the x axis labels, use: `theme(axis.text.x=element_text(hjust=1,angle=45)`. The function `geom_bar(position="fill")` may be useful. `scale_fill_manual()` may also be useful to associate the disease categories with particular colors if you so choose.
 
 Dates and times
 === 
@@ -1060,10 +1060,10 @@ library(lubridate) # install.package("lubridate")
 ```r
 tibble(date_time = now(), # a date-time (dttm), prints as a string
        date = today()) # a date, also prints as a string
-# A tibble: 1 x 2
+# A tibble: 1 × 2
   date_time           date      
   <dttm>              <date>    
-1 2021-07-19 17:36:52 2021-07-19
+1 2021-08-09 11:53:55 2021-08-09
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1101,11 +1101,11 @@ Creating dates from components
 - Sometimes the dates and times you get are split up (usually in columns)
 
 ```r
-gtex_dates = read_csv("https://raw.githubusercontent.com/erflynn/r4ds-courses/advance-2020/data/gtex_metadata/gtex_sample_mdy.csv")
+gtex_dates = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_sample_mdy.csv")
 gtex_dates %>% 
   select(contains("iso")) %>%
   head(5) # look at relevant columns
-# A tibble: 5 x 3
+# A tibble: 5 × 3
   iso_month iso_day iso_year
       <dbl>   <dbl>    <dbl>
 1         5      21     2013
@@ -1128,7 +1128,7 @@ gtex_dates_clean1 = gtex_dates %>%
 gtex_dates_clean1 %>% 
   select(contains("iso") | contains("expr")) %>%
   head(3)
-# A tibble: 3 x 8
+# A tibble: 3 × 8
   iso_month iso_day iso_year iso_date   expr_month expr_day expr_year expr_date 
       <dbl>   <dbl>    <dbl> <date>          <dbl>    <dbl>     <dbl> <date>    
 1         5      21     2013 2013-05-21          1       15      2014 2014-01-15
@@ -1149,7 +1149,7 @@ Information about when a sample went into PAXgene fixative and was taken out is 
 gtex_dates_clean2 %>% 
   select(contains("pax")) %>%
   tail(2)
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   pax_start_date pax_end_date pax_start_time pax_end_time
   <date>         <date>       <chr>          <chr>       
 1 2013-03-19     2013-03-19   1247           2008        
@@ -1163,8 +1163,14 @@ gtex_dates_clean3 = gtex_dates_clean2 %>%
          pax_start_min = str_sub(pax_start_time, -2, -1) %>% as.numeric(),
          pax_end_hr = str_sub(pax_end_time, 1, -3) %>% as.numeric(),
          pax_end_min = str_sub(pax_end_time, -2, -1) %>% as.numeric())
-gtex_dates_clean %>% select(contains("pax")) %>% tail(2)
-Error in eval(lhs, parent, parent): object 'gtex_dates_clean' not found
+gtex_dates_clean3 %>% select(contains("pax")) %>% tail(2)
+# A tibble: 2 × 8
+  pax_start_date pax_end_date pax_start_time pax_end_time pax_start_hr
+  <date>         <date>       <chr>          <chr>               <dbl>
+1 2013-03-19     2013-03-19   1247           2008                   12
+2 2012-10-03     2012-10-04   2205           0524                   22
+# … with 3 more variables: pax_start_min <dbl>, pax_end_hr <dbl>,
+#   pax_end_min <dbl>
 # remove extra columns again
 gtex_dates_clean4 = gtex_dates_clean3 %>% select(-contains("time"), -contains("time")) 
 ```
@@ -1186,7 +1192,7 @@ gtex_dates_clean5 = gtex_dates_clean4 %>%
 gtex_dates_clean5 %>% 
   select(contains("pax")) %>% 
   head(3)
-# A tibble: 3 x 8
+# A tibble: 3 × 8
   pax_start_date pax_end_date pax_start_hr pax_start_min pax_end_hr pax_end_min
   <date>         <date>              <dbl>         <dbl>      <dbl>       <dbl>
 1 2012-10-15     NA                     NA            NA         NA          NA
@@ -1195,7 +1201,7 @@ gtex_dates_clean5 %>%
 # … with 2 more variables: pax_start_dt <dttm>, pax_end_dt <dttm>
 
 # remove columns we just used
-gtex_dates_clean6 <- gtex_dates_clean5 %>% 
+gtex_dates_clean <- gtex_dates_clean5 %>% 
   select(-pax_start_date, -pax_end_date, -contains("hr"), -contains("min"))
 ```
 
@@ -1206,29 +1212,32 @@ Which do you prefer? Which is clearer?
 
 
 ```r
-head(gtex_dates) 
-# A tibble: 6 x 12
-  subject_id tissue expr_month expr_day expr_year iso_month iso_day iso_year
-  <chr>      <chr>       <dbl>    <dbl>     <dbl>     <dbl>   <dbl>    <dbl>
-1 GTEX-11DXZ Blood           1       15      2014         5      21     2013
-2 GTEX-11DXZ Liver           2        9      2014        10       8     2013
-3 GTEX-11DXZ Adren…          2        9      2014        10       8     2013
-4 GTEX-11DXZ Heart           2        9      2014        10       8     2013
-5 GTEX-11DXZ Blood…          1       23      2014        10      11     2013
-6 GTEX-11DXZ Lung            3       22      2014         9      25     2013
+head(gtex_dates, 4) 
+# A tibble: 4 × 12
+  subject_id tissue     expr_month expr_day expr_year iso_month iso_day iso_year
+  <chr>      <chr>           <dbl>    <dbl>     <dbl>     <dbl>   <dbl>    <dbl>
+1 GTEX-11DXZ Blood               1       15      2014         5      21     2013
+2 GTEX-11DXZ Liver               2        9      2014        10       8     2013
+3 GTEX-11DXZ Adrenal G…          2        9      2014        10       8     2013
+4 GTEX-11DXZ Heart               2        9      2014        10       8     2013
 # … with 4 more variables: pax_start_date <date>, pax_end_date <date>,
 #   pax_start_time <chr>, pax_end_time <chr>
-head(gtex_dates_clean6)
-# A tibble: 6 x 6
-  subject_id tissue iso_date   expr_date  pax_start_dt       
-  <chr>      <chr>  <date>     <date>     <dttm>             
-1 GTEX-11DXZ Blood  2013-05-21 2014-01-15 NA                 
-2 GTEX-11DXZ Liver  2013-10-08 2014-02-09 2013-06-27 22:32:00
-3 GTEX-11DXZ Adren… 2013-10-08 2014-02-09 2013-01-28 05:32:00
-4 GTEX-11DXZ Heart  2013-10-08 2014-02-09 2013-07-01 12:33:00
-5 GTEX-11DXZ Blood… 2013-10-11 2014-01-23 2013-02-14 01:52:00
-6 GTEX-11DXZ Lung   2013-09-25 2014-03-22 2012-10-31 06:31:00
+head(gtex_dates_clean, 4)
+# A tibble: 4 × 6
+  subject_id tissue        iso_date   expr_date  pax_start_dt       
+  <chr>      <chr>         <date>     <date>     <dttm>             
+1 GTEX-11DXZ Blood         2013-05-21 2014-01-15 NA                 
+2 GTEX-11DXZ Liver         2013-10-08 2014-02-09 2013-06-27 22:32:00
+3 GTEX-11DXZ Adrenal Gland 2013-10-08 2014-02-09 2013-01-28 05:32:00
+4 GTEX-11DXZ Heart         2013-10-08 2014-02-09 2013-07-01 12:33:00
 # … with 1 more variable: pax_end_dt <dttm>
+```
+
+
+Note: you can also read in the cleaned data from this URL.
+
+```r
+gtex_dates_clean = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_dates_clean.csv")`
 ```
 
 Plotting with dates
@@ -1237,13 +1246,13 @@ Plotting with dates
 
 ```r
 # get the dates samples were isolated from just 2014
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   filter(ymd(20140101) < iso_date & iso_date < ymd(20141230)) %>% 
 ggplot(aes(iso_date)) + 
   geom_freqpoly(binwidth=10) # bin by every 10 days (if we had dttm, the unit is seconds)
 ```
 
-<img src="4-datatypes-io-figure/unnamed-chunk-92-1.png" title="plot of chunk unnamed-chunk-92" alt="plot of chunk unnamed-chunk-92" style="display: block; margin: auto;" />
+<img src="4-datatypes-io-figure/unnamed-chunk-93-1.png" title="plot of chunk unnamed-chunk-93" alt="plot of chunk unnamed-chunk-93" style="display: block; margin: auto;" />
 
 Accessing dttm elements
 ===
@@ -1252,13 +1261,13 @@ Accessing dttm elements
 
 ```r
 # look at the dates RNA isolation was perfomed. what do you notice?
-gtex_dates_clean6 %>%  
+gtex_dates_clean %>%  
   mutate(wday = wday(iso_date, label = TRUE)) %>% 
   ggplot(aes(x = wday)) +
     geom_bar()
 ```
 
-<img src="4-datatypes-io-figure/unnamed-chunk-93-1.png" title="plot of chunk unnamed-chunk-93" alt="plot of chunk unnamed-chunk-93" style="display: block; margin: auto;" />
+<img src="4-datatypes-io-figure/unnamed-chunk-94-1.png" title="plot of chunk unnamed-chunk-94" alt="plot of chunk unnamed-chunk-94" style="display: block; margin: auto;" />
 
 Date-time arithmetic
 ===
@@ -1274,14 +1283,14 @@ Durations
 ```r
 usa_age <- today() - ymd(17760704)
 usa_age
-Time difference of 89499 days
+Time difference of 89520 days
 ```
 - Subtracting `dttm`s in R gives something called a `difftime`, which ambiguously represents differences in weeks, days, hours, or seconds. A `duration` always uses seconds so it is preferable.
 - You can conver to a duration with `as.duration()`
 
 ```r
 as.duration(usa_age)
-[1] "7732713600s (~245.03 years)"
+[1] "7734528000s (~245.09 years)"
 ```
 - `dseconds()`, `dminutes()`, `dhours()`, `ddays()`, `dweeks()`, and `dyears()` make durations of the given length of time and are vectorized
 
@@ -1299,7 +1308,7 @@ Duration arithmetic
 
 ```r
 2 * (as.duration(usa_age) + dyears(1) + dweeks(12) + dhours(15))
-[1] "15543165600s (~492.53 years)"
+[1] "15546794400s (~492.65 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
@@ -1361,28 +1370,28 @@ Example using periods
 - Let's calculate the length of time samples were in PaxGene fixative and look at how it differs when we look at it as a Duration and a Period. What do you prefer?
 
 ```r
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   mutate(pax_time=pax_end_dt-pax_start_dt)  %>% 
   mutate(pax_time_d=as.duration(pax_time),
          pax_time_p=as.period(pax_time)) %>%
   select(contains("pax")) %>%
   tail(2)
-# A tibble: 2 x 5
-  pax_start_dt        pax_end_dt          pax_time pax_time_d          
-  <dttm>              <dttm>              <drtn>   <Duration>          
-1 2013-03-19 12:47:00 2013-03-19 20:08:00 7.35000… 26460s (~7.35 hours)
-2 2012-10-03 22:05:00 2012-10-04 05:24:00 7.31666… 26340s (~7.32 hours)
+# A tibble: 2 × 5
+  pax_start_dt        pax_end_dt          pax_time       pax_time_d          
+  <dttm>              <dttm>              <drtn>         <Duration>          
+1 2013-03-19 12:47:00 2013-03-19 20:08:00 7.350000 hours 26460s (~7.35 hours)
+2 2012-10-03 22:05:00 2012-10-04 05:24:00 7.316667 hours 26340s (~7.32 hours)
 # … with 1 more variable: pax_time_p <Period>
 ```
 
 You take a look at the data and realize some of the difftimes are negative. What is going on here?
 
 ```r
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
   filter(pax_time < 0) %>%
   select(pax_start_dt, pax_end_dt, pax_time)
-# A tibble: 2 x 3
+# A tibble: 2 × 3
   pax_start_dt        pax_end_dt          pax_time      
   <dttm>              <dttm>              <drtn>        
 1 2013-12-31 07:38:00 2013-01-01 02:53:00 -8740.75 hours
@@ -1394,7 +1403,7 @@ Plotting difftimes
 We can also plot difftimes. Lets' look at the distribution of times in pax-genes fixative. What are the units here?
 
 ```r
-gtex_dates_clean6 %>% # look at the rest of the data
+gtex_dates_clean %>% # look at the rest of the data
   mutate(pax_time=pax_end_dt-pax_start_dt) %>%
   filter(pax_time > 0) %>%
   ggplot(aes(x=pax_time))+
@@ -1403,7 +1412,7 @@ Don't know how to automatically pick scale for object of type difftime. Defaulti
 `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="4-datatypes-io-figure/unnamed-chunk-106-1.png" title="plot of chunk unnamed-chunk-106" alt="plot of chunk unnamed-chunk-106" style="display: block; margin: auto;" />
+<img src="4-datatypes-io-figure/unnamed-chunk-107-1.png" title="plot of chunk unnamed-chunk-107" alt="plot of chunk unnamed-chunk-107" style="display: block; margin: auto;" />
 
 
 Example using periods
@@ -1412,7 +1421,7 @@ Example using periods
 To fix this we add a year to some of the ones with negative times. Which of these work and why?
 
 ```r
-gtex_dates_clean6 %>%
+gtex_dates_clean %>%
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
@@ -1421,7 +1430,7 @@ gtex_dates_clean6 %>%
 ```
 
 ```r
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   select(contains("pax")) %>%
   mutate(pax_time=(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time < 0)) %>%
@@ -1430,7 +1439,7 @@ gtex_dates_clean6 %>%
 ```
 
 ```r
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   select(contains("pax")) %>%
   mutate(pax_time_p=as.period(pax_end_dt-pax_start_dt))  %>% 
   mutate(neg_pax=(pax_time_p < 0)) %>%
@@ -1445,31 +1454,36 @@ Intervals
 
 ```r
 mdy("July 4 1776") %--% today()
-[1] 1776-07-04 UTC--2021-07-19 UTC
+[1] 1776-07-04 UTC--2021-08-09 UTC
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 
 ```r
-gtex_dates_clean6 %>% 
+gtex_dates_clean %>% 
   filter(iso_date %within% (mdy("feb 15 2013") %--% mdy("feb 14 2014"))) %>% 
   head()
-# A tibble: 6 x 6
-  subject_id tissue iso_date   expr_date  pax_start_dt       
-  <chr>      <chr>  <date>     <date>     <dttm>             
-1 GTEX-11DXZ Blood  2013-05-21 2014-01-15 NA                 
-2 GTEX-11DXZ Liver  2013-10-08 2014-02-09 2013-06-27 22:32:00
-3 GTEX-11DXZ Adren… 2013-10-08 2014-02-09 2013-01-28 05:32:00
-4 GTEX-11DXZ Heart  2013-10-08 2014-02-09 2013-07-01 12:33:00
-5 GTEX-11DXZ Blood… 2013-10-11 2014-01-23 2013-02-14 01:52:00
-6 GTEX-11DXZ Lung   2013-09-25 2014-03-22 2012-10-31 06:31:00
+# A tibble: 6 × 6
+  subject_id tissue        iso_date   expr_date  pax_start_dt       
+  <chr>      <chr>         <date>     <date>     <dttm>             
+1 GTEX-11DXZ Blood         2013-05-21 2014-01-15 NA                 
+2 GTEX-11DXZ Liver         2013-10-08 2014-02-09 2013-06-27 22:32:00
+3 GTEX-11DXZ Adrenal Gland 2013-10-08 2014-02-09 2013-01-28 05:32:00
+4 GTEX-11DXZ Heart         2013-10-08 2014-02-09 2013-07-01 12:33:00
+5 GTEX-11DXZ Blood Vessel  2013-10-11 2014-01-23 2013-02-14 01:52:00
+6 GTEX-11DXZ Lung          2013-09-25 2014-03-22 2012-10-31 06:31:00
 # … with 1 more variable: pax_end_dt <dttm>
 ```
 
-Exercise: first days of the month
+Exercise: Plotting a histogram with dates
 ===
 type:prompt
 
-Create a vector of dates giving the first day of every month in 2015. Create a vector of dates giving the first day of every month in the current year.
+Recreate this plot using the cleaned GTEx dates data (`gtex_dates_clean`).
+
+Hint: you may want to use `geom_histogram()`
+
+<img src="4-datatypes-io-figure/unnamed-chunk-113-1.png" title="plot of chunk unnamed-chunk-113" alt="plot of chunk unnamed-chunk-113" style="display: block; margin: auto;" />
+
 
 lubridate cheat sheet
 ===
@@ -1490,20 +1504,14 @@ Rationale
 ```r
 file = readr_example("challenge.csv")
 challenge = read_csv(file)
-Parsed with column specification:
-cols(
-  x = col_double(),
-  y = col_logical()
-)
-Warning: 1000 parsing failures.
- row col           expected     actual                                                                                         file
-1001   y 1/0/T/F/TRUE/FALSE 2015-01-16 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
-1002   y 1/0/T/F/TRUE/FALSE 2018-05-18 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
-1003   y 1/0/T/F/TRUE/FALSE 2015-09-05 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
-1004   y 1/0/T/F/TRUE/FALSE 2012-11-28 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
-1005   y 1/0/T/F/TRUE/FALSE 2020-01-13 '/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/challenge.csv'
-.... ... .................. .......... ............................................................................................
-See problems(...) for more details.
+Rows: 2000 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl  (1): x
+date (1): y
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 Diagnosing intake errors
@@ -1512,20 +1520,9 @@ Diagnosing intake errors
 
 ```r
 problems(challenge)
-# A tibble: 1,000 x 5
-     row col   expected       actual   file                                     
-   <int> <chr> <chr>          <chr>    <chr>                                    
- 1  1001 y     1/0/T/F/TRUE/… 2015-01… '/Library/Frameworks/R.framework/Version…
- 2  1002 y     1/0/T/F/TRUE/… 2018-05… '/Library/Frameworks/R.framework/Version…
- 3  1003 y     1/0/T/F/TRUE/… 2015-09… '/Library/Frameworks/R.framework/Version…
- 4  1004 y     1/0/T/F/TRUE/… 2012-11… '/Library/Frameworks/R.framework/Version…
- 5  1005 y     1/0/T/F/TRUE/… 2020-01… '/Library/Frameworks/R.framework/Version…
- 6  1006 y     1/0/T/F/TRUE/… 2016-04… '/Library/Frameworks/R.framework/Version…
- 7  1007 y     1/0/T/F/TRUE/… 2011-05… '/Library/Frameworks/R.framework/Version…
- 8  1008 y     1/0/T/F/TRUE/… 2020-07… '/Library/Frameworks/R.framework/Version…
- 9  1009 y     1/0/T/F/TRUE/… 2011-04… '/Library/Frameworks/R.framework/Version…
-10  1010 y     1/0/T/F/TRUE/… 2010-05… '/Library/Frameworks/R.framework/Version…
-# … with 990 more rows
+# A tibble: 0 × 5
+# … with 5 variables: row <int>, col <int>, expected <chr>, actual <chr>,
+#   file <chr>
 ```
 - This tells us that `read_csv()` was expecting the `y` column to be logical, but when we look at what was actually in the file at rows 1001+, there are what appear to be dates!
 - This happens because `read_csv()` does not know what type of data are in the file- you haven't told it, so it has to guess. 
@@ -1542,15 +1539,15 @@ challenge = read_csv(file,
      y = col_date()
    ))
 head(challenge)
-# A tibble: 6 x 2
-      x y         
-  <dbl> <date>    
-1   404 NA        
-2  4172 NA        
-3  3004 NA        
-4   787 NA        
-5    37 NA        
-6  2332 NA        
+# A tibble: 6 × 2
+      x y     
+  <dbl> <date>
+1   404 NA    
+2  4172 NA    
+3  3004 NA    
+4   787 NA    
+5    37 NA    
+6  2332 NA    
 ```
 - This is a more robust solution than using more rows to guess
 - Now we see that the problem was caused because the first 1000 rows of `y` are NAs
@@ -1568,7 +1565,7 @@ challenge = read_csv(file,
      y = col_date(format="%Y-%m-%d")
    ))
 tail(challenge)
-# A tibble: 6 x 2
+# A tibble: 6 × 2
       x y         
   <dbl> <date>    
 1 0.805 2019-11-21
@@ -1627,13 +1624,27 @@ Non-csv flat files
 
 ```r
 read_delim("1,2,3\n4,5,6", delim=",", col_names = c("x","y","z"))
-# A tibble: 2 x 3
+Rows: 2 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (3): x, y, z
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 2 × 3
       x     y     z
   <dbl> <dbl> <dbl>
 1     1     2     3
 2     4     5     6
 read_delim("1\t2\t3\n4\t5\t6", delim="\t", col_names = c("x","y","z"))
-# A tibble: 2 x 3
+Rows: 2 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+dbl (3): x, y, z
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+# A tibble: 2 × 3
       x     y     z
   <dbl> <dbl> <dbl>
 1     1     2     3
@@ -1733,10 +1744,10 @@ Let's try reading and writing from your current directory.
 ```r
 file = readr_example("mtcars.csv")
 print(file) # look at the path
-[1] "/Library/Frameworks/R.framework/Versions/3.6/Resources/library/readr/extdata/mtcars.csv"
+[1] "/Library/Frameworks/R.framework/Versions/4.1/Resources/library/readr/extdata/mtcars.csv"
 mtcars = read_csv(file)
 head(mtcars)
-# A tibble: 6 x 11
+# A tibble: 6 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
