@@ -184,7 +184,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x7fc83dfda308>
+<bytecode: 0x7fd562b77e10>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
 
@@ -240,7 +240,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
-[1] 0.1592803
+[1] -0.08758595
 ```
 
 Functional programming
@@ -278,7 +278,7 @@ shuffle_col_named_number = function(df) {
 }
 
 data %>% shuffle_col_named_number()
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      3 a    
@@ -286,7 +286,7 @@ data %>% shuffle_col_named_number()
 3      2 c    
 ```
 
-- What if we wanted to modify it so that `mpg` weren't hard-coded? Intuitively, we should write something like this:
+- What if we wanted to modify it so that `number` weren't hard-coded? Intuitively, we should write something like this:
 
 ```r
 shuffle_col = function(data, col) {
@@ -333,7 +333,7 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
-# A tibble: 3 x 3
+# A tibble: 3 × 3
   number label new_col
    <dbl> <chr>   <dbl>
 1      1 a           3
@@ -378,7 +378,7 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      2 a    
@@ -433,7 +433,7 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
-# A tibble: 3 x 3
+# A tibble: 3 × 3
   number label   col
    <dbl> <chr> <dbl>
 1      1 a         3
@@ -453,7 +453,7 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      2 a    
@@ -468,9 +468,25 @@ Exercise: mean-by
 type: prompt
 
 1. Write a function that takes a dataframe and two bare (unquoted) column names as arguments. Your function should return the result of grouping the dataframe by the first column and then taking the mean of the second column by the groups defined by the first. Name the resulting column `"mean_by_grp"`.
-2. Modify your function so that the user must pass in a string as a fourth argument. This string should be the name of the resulting summary column in the resulting dataframe
-3. Modify your function so that the summarizing function (e.g. `mean`) can be passed in by the user as an argument
 
+For an example, try using this toy data:
+
+```r
+data = tibble(
+  grp = c("a", "a", "b", "b", "b"),
+  val = c(1, 3, 5, 2, 2))
+```
+
+Then try your function on the GTEx data to get the average expression of each gene in Blood. (Hint: how do you deal with NAs?)
+
+```r
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex.tissue.zscores.advance2020.txt')
+```
+Try different sets of columns and modifying the toy data to make sure it works.
+
+2. Modify your function so that the user must pass in a string as a fourth argument. This string should be the name of the resulting summary column in the resulting dataframe.
+
+3. Modify your function so that the summarizing function (e.g. `mean`) can be passed in by the user as an argument. Hint: first try functions like `min` and `max`, and then think about other functions to play with.
 
 Conditional Evaluation
 === 
@@ -643,7 +659,7 @@ Seeing into lists
 - Use `str()` to dig into nested lists and other complicated objects
 
 ```r
-nested_list = list(a_list, 4, mtcars)
+nested_list = list(a_list, 4, gtex_data)
 str(nested_list)
 List of 3
  $ :List of 5
@@ -653,18 +669,25 @@ List of 3
   ..$ : num 5
   ..$ : logi TRUE
  $ : num 4
- $ :'data.frame':	32 obs. of  11 variables:
-  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
-  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
-  ..$ disp: num [1:32] 160 160 108 258 360 ...
-  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
-  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
-  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
-  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
-  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
-  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
-  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
-  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
+ $ : spec_tbl_df [389,922 × 7] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+  ..$ Gene    : chr [1:389922] "A2ML1" "A2ML1" "A2ML1" "A2ML1" ...
+  ..$ Ind     : chr [1:389922] "GTEX-11DXZ" "GTEX-11GSP" "GTEX-11NUK" "GTEX-11NV4" ...
+  ..$ Blood   : num [1:389922] -0.14 -0.5 -0.08 -0.37 0.3 0.02 -1.07 -0.27 -0.3 -0.11 ...
+  ..$ Heart   : num [1:389922] -1.08 0.53 -0.4 0.11 -1.11 -0.47 -0.41 -0.51 0.53 0.24 ...
+  ..$ Lung    : num [1:389922] NA 0.76 -0.26 -0.42 0.59 0.29 0.67 0.13 0.1 0.96 ...
+  ..$ Liver   : num [1:389922] -0.66 -0.1 -0.13 -0.61 -0.12 -0.66 0.06 -0.75 -0.48 0.72 ...
+  ..$ NTissues: num [1:389922] 3 4 4 4 4 4 4 4 4 4 ...
+  ..- attr(*, "spec")=
+  .. .. cols(
+  .. ..   Gene = col_character(),
+  .. ..   Ind = col_character(),
+  .. ..   Blood = col_double(),
+  .. ..   Heart = col_double(),
+  .. ..   Lung = col_double(),
+  .. ..   Liver = col_double(),
+  .. ..   NTissues = col_double()
+  .. .. )
+  ..- attr(*, "problems")=<externalptr> 
 ```
 
 Getting elements from a list
@@ -759,11 +782,13 @@ min_max = function(x) {
 }
 
 library(zeallot)
+Error in library(zeallot): there is no package called 'zeallot'
 c(min_x, max_x) %<-% min_max(rnorm(10))
+Error in c(min_x, max_x) %<-% min_max(rnorm(10)): could not find function "%<-%"
 min_x
-[1] -1.482189
+Error in eval(expr, envir, enclos): object 'min_x' not found
 max_x
-[1] 1.240181
+Error in eval(expr, envir, enclos): object 'max_x' not found
 ```
 
 Dots
@@ -804,7 +829,7 @@ x = c(rnorm(100), NA)
 mean(x)
 [1] NA
 mean_no_na(x)
-[1] -0.06457281
+[1] -0.02697209
 mean_no_na(x, trim=0.5)
 [1] -0.1241746
 mean(x, trim=0.5, na.rm=T)
@@ -812,7 +837,7 @@ mean(x, trim=0.5, na.rm=T)
 ```
 - Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
 
-Exercise: ggplot with default red points
+Exercise: ggplot with 
 ===
 type: prompt
 - Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
@@ -822,11 +847,14 @@ type: prompt
 Example: 
 
 ```r
-mtcars %>%
-ggplot_redpoint(aes(mpg, hp)) 
+# similarity between expression of genes in blood and lung 
+gtex_data %>%
+  filter(Ind=="GTEX-11DXZ") %>% # look at one person
+ggplot_redpoint(aes(Blood, Lung)) 
+Warning: Removed 96 rows containing missing values (geom_point).
 ```
 
-![plot of chunk unnamed-chunk-51](5-functional-programming-figure/unnamed-chunk-51-1.png)
+<img src="5-functional-programming-figure/unnamed-chunk-53-1.png" title="plot of chunk unnamed-chunk-53" alt="plot of chunk unnamed-chunk-53" style="display: block; margin: auto;" />
 
 Iteration
 ===
@@ -933,10 +961,10 @@ df <- tibble::tibble(
 ```r
 df %>%
   map_df(mean)
-# A tibble: 1 x 4
-        a     b      c     d
-    <dbl> <dbl>  <dbl> <dbl>
-1 -0.0944 0.187 -0.385    NA
+# A tibble: 1 × 4
+       a       b     c     d
+   <dbl>   <dbl> <dbl> <dbl>
+1 -0.332 -0.0944 0.187    NA
 ```
 - Why can we feed a data frame into `map()`?
 - Notice the `c` column's mean is NA because we don't have a way to specify `na.rm=TRUE` to `mean()`
@@ -950,20 +978,20 @@ Composing functions inside map()
 ```r
 mean_no_rm = function(x) mean(x, na.rm=TRUE)
 df %>% map_df(mean_no_rm)
-# A tibble: 1 x 4
-        a     b      c     d
-    <dbl> <dbl>  <dbl> <dbl>
-1 -0.0944 0.187 -0.385 0.240
+# A tibble: 1 × 4
+       a       b     c      d
+   <dbl>   <dbl> <dbl>  <dbl>
+1 -0.332 -0.0944 0.187 -0.269
 ```
 
 - **Better**: define an anonymous function inside of map
 
 ```r
 df %>% map_df(function(x) mean(x, na.rm=TRUE))
-# A tibble: 1 x 4
-        a     b      c     d
-    <dbl> <dbl>  <dbl> <dbl>
-1 -0.0944 0.187 -0.385 0.240
+# A tibble: 1 × 4
+       a       b     c      d
+   <dbl>   <dbl> <dbl>  <dbl>
+1 -0.332 -0.0944 0.187 -0.269
 ```
 
 ***
@@ -972,20 +1000,20 @@ df %>% map_df(function(x) mean(x, na.rm=TRUE))
 
 ```r
 df %>% map_df(~ mean(., na.rm=TRUE))
-# A tibble: 1 x 4
-        a     b      c     d
-    <dbl> <dbl>  <dbl> <dbl>
-1 -0.0944 0.187 -0.385 0.240
+# A tibble: 1 × 4
+       a       b     c      d
+   <dbl>   <dbl> <dbl>  <dbl>
+1 -0.332 -0.0944 0.187 -0.269
 ```
 
 - **Best**: any additional named arguments to map get passed on as named arguments to the function you want to call!
 
 ```r
 df %>% map_df(mean, na.rm=TRUE)
-# A tibble: 1 x 4
-        a     b      c     d
-    <dbl> <dbl>  <dbl> <dbl>
-1 -0.0944 0.187 -0.385 0.240
+# A tibble: 1 × 4
+       a       b     c      d
+   <dbl>   <dbl> <dbl>  <dbl>
+1 -0.332 -0.0944 0.187 -0.269
 ```
 
 - In this case, the last option is the clearest, but in others it maybe a good idea to define a function outside of map or explicitly inside of map with the `function` syntax. It all depends on what makes the most sense for the situation.
@@ -993,7 +1021,7 @@ df %>% map_df(mean, na.rm=TRUE)
 Exercise: map practice
 ===
 type: prompt
-- Determine the type of each column in `nycflights13::flights` (`?typeof`). Return the result as a vector of strings
+- Determine the type of each column in `gtex_data` (`?typeof`). Return the result as a vector of strings
 - Generate 10 normally-distributed random numbers for each of `mean`=-10, 0, 10, and 100 (?rnorm). Use the default value of `sd`. 
 
 Exercise: partial harmonic sum
@@ -1024,9 +1052,9 @@ means %>%
   map(rnorm, n = 5) %>%
   glimpse()
 List of 3
- $ : num [1:5] 4.2 3.87 3.97 5.07 5.38
- $ : num [1:5] 8.38 11.9 9.28 10.38 10.44
- $ : num [1:5] -2.74 -3.18 -3.69 -3 -2.43
+ $ : num [1:5] 4.77 4.73 6.8 4.52 4.41
+ $ : num [1:5] 7.74 11.68 10.07 9.56 10.63
+ $ : num [1:5] -3.8 -4.13 -4.03 -2.93 -2.62
 ```
 
 Mapping over multiple inputs
@@ -1041,9 +1069,9 @@ n = list(1, 3, 5)
   map(~rnorm(n[[.]], mean[[.]], sd[[.]])) %>% 
   glimpse()
 List of 3
- $ : num 3.79
- $ : num [1:3] 8.27 6.75 5.55
- $ : num [1:5] 11.77 -14.95 14.5 9.15 -18.48
+ $ : num 3.38
+ $ : num [1:3] 19.5 6.42 11.9
+ $ : num [1:5] 1.408 -0.427 -4.794 -9.901 -3.004
 ```
 - This looks like `C++`, not `R`. It's better to use `pmap()`
 
@@ -1059,9 +1087,9 @@ list(
 pmap(rnorm) %>% 
 glimpse()
 List of 3
- $ : num 4.7
- $ : num [1:3] 15.2 6.16 17.62
- $ : num [1:5] -27.22 2.56 8.06 -1.34 -5.25
+ $ : num 5.57
+ $ : num [1:3] 3.96 8.27 6.75
+ $ : num [1:5] -11.9 11.77 -14.95 14.5 9.15
 ```
 
 <div align="center">
@@ -1150,7 +1178,7 @@ list(
     b = c(10,11)
   ) %>%
   cross_df()
-# A tibble: 6 x 2
+# A tibble: 6 × 2
       a     b
   <dbl> <dbl>
 1     1    10
@@ -1172,24 +1200,24 @@ Binding rows
     sample = rnorm(5)
   )) %>%
   bind_rows()
-# A tibble: 15 x 2
-     rep   sample
-   <int>    <dbl>
- 1     1 -0.228  
- 2     1 -0.253  
- 3     1  2.07   
- 4     1  1.58   
- 5     1 -1.04   
- 6     2 -0.00839
- 7     2 -1.33   
- 8     2  0.147  
- 9     2 -0.788  
-10     2 -0.289  
-11     3  0.667  
-12     3 -0.137  
-13     3  0.224  
-14     3  1.12   
-15     3 -1.44   
+# A tibble: 15 × 2
+     rep sample
+   <int>  <dbl>
+ 1     1 -1.55 
+ 2     1 -0.302
+ 3     1  1.04 
+ 4     1 -0.768
+ 5     1  1.52 
+ 6     2 -2.42 
+ 7     2  0.556
+ 8     2  1.11 
+ 9     2  0.166
+10     2 -0.225
+11     3 -0.228
+12     3 -0.253
+13     3  2.07 
+14     3  1.58 
+15     3 -1.04 
 ```
 
 Exercise: 
@@ -1200,27 +1228,27 @@ Generate a table like the one shown here by drawing 3 normally-distributed rando
 
 
 ```
-# A tibble: 18 x 3
-    sample  mean    sd
-     <dbl> <dbl> <dbl>
- 1 -0.366     -1     1
- 2 -1.50      -1     1
- 3  0.126     -1     1
- 4 -0.100      0     1
- 5 -1.11       0     1
- 6  0.658      0     1
- 7  0.957      1     1
- 8  1.63       1     1
- 9  0.0632     1     1
-10 -1.71      -1     2
-11 -1.09      -1     2
-12 -1.70      -1     2
-13 -0.718      0     2
-14  0.791      0     2
-15 -1.97       0     2
-16  0.955      1     2
-17 -0.769      1     2
-18  1.97       1     2
+# A tibble: 18 × 3
+   sample  mean    sd
+    <dbl> <dbl> <dbl>
+ 1 -1.01     -1     1
+ 2 -2.33     -1     1
+ 3 -0.853    -1     1
+ 4 -0.788     0     1
+ 5 -0.289     0     1
+ 6  0.667     0     1
+ 7  0.863     1     1
+ 8  1.22      1     1
+ 9  2.12      1     1
+10 -3.88     -1     2
+11  0.269    -1     2
+12 -2.00     -1     2
+13  2.25      0     2
+14 -0.200     0     2
+15 -2.22      0     2
+16  2.32      1     2
+17  0.913     1     2
+18  2.26      1     2
 ```
 
 Why not for loops?
@@ -1272,17 +1300,21 @@ Motivation
 
 Example: Permutation test of a regression coefficient
 ===
-- Let's say we're interested in the association of `mpg` and `hp` in the mtcars data set (adjusted for other variables)
+- Let's say we're interested in the association of two genes in the shortened GTEx dataset (adjusted for other variables). [Try visualizing the relationship between these two genes first!]
 - We can run a linear model to estimate that association, assuming a linear trend
 
 ```r
-lm(mpg~., data=mtcars) %>%
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+genes2 = genes %>% 
+  drop_na() %>% # remove NAs
+  select(age, gender, ancestry, phenotype, VAPA, EIF3L) # select th variables we want to include
+lm(VAPA~., data=genes2) %>%
   broom::tidy() %>%
-  filter(term=="hp")
-# A tibble: 1 x 5
+  filter(term=="EIF3L")
+# A tibble: 1 × 5
   term  estimate std.error statistic p.value
   <chr>    <dbl>     <dbl>     <dbl>   <dbl>
-1 hp     -0.0215    0.0218    -0.987   0.335
+1 EIF3L    0.118    0.0808      1.46   0.151
 ```
 - Here we've used `lm()` to run a linear model- you can learn more about `lm()` and the formula interface it uses by looking at the help page
 - We've also used `tidy()` from the `broom` package to clean up the output into a tibble.
@@ -1306,30 +1338,31 @@ shuffle_row = function(data, row) {
 }
 
 analyze = function(data) {
-  lm(mpg~., data=data) %>%
+  lm(VAPA~., data=data) %>%
     broom::tidy() %>%
-    filter(term=="hp") %>%
+    filter(term=="EIF3L") %>%
     pull(estimate)
 }
 ```
 
 
 ```r
-mtcars %>%
-  shuffle_row(mpg) %>% 
+genes2 %>%
+  shuffle_row(VAPA) %>% 
   analyze()
-[1] 0.05180838
+[1] 0.2139228
 
-mtcars %>%
-  shuffle_row(mpg) %>% 
+genes2 %>%
+  shuffle_row(VAPA) %>% 
   analyze()
-[1] -0.009589738
+[1] 0.07057006
 ```
 
 Example: Permutation test of a regression coefficient
 ===
 
 ```r
+#install.packages('tictoc')
 library(tictoc) # for timing things easily
 ```
 
@@ -1338,12 +1371,12 @@ library(tictoc) # for timing things easily
 tic()
 perm_distribution = 1:1000 %>%
   map_dbl(~
-    mtcars %>%
-      shuffle_row(mpg) %>% 
+    genes2 %>%
+      shuffle_row(VAPA) %>% 
       analyze()
   )
 toc()
-8.05 sec elapsed
+10.828 sec elapsed
 ```
 - We made 1000 coefficients, but it's slow!
 
@@ -1352,6 +1385,7 @@ Example: Permutation test of a regression coefficient
 - If we parallelize across CPUs, we can go faster
 
 ```r
+#install.packages('furrr')
 library(furrr) # parallel maps
 plan(multiprocess(workers=4)) # turns on parallel processing 
 ```
@@ -1360,34 +1394,34 @@ plan(multiprocess(workers=4)) # turns on parallel processing
 tic()
 perm_distribution = 1:1000 %>%
   future_map_dbl(~
-    mtcars %>%
-      shuffle_row(mpg) %>% 
+    genes2 %>%
+      shuffle_row(VAPA) %>% 
       analyze()
   )
 toc()
-5.212 sec elapsed
+6.852 sec elapsed
 ```
 
 Example: Permutation test of a regression coefficient
 ===
 
 ```r
-beta = analyze(mtcars)
+beta = analyze(genes2)
 
 p_empirical = mean(abs(perm_distribution) >= abs(beta))
 
-p_parametric = lm(mpg~., data=mtcars) %>%
+p_parametric = lm(VAPA~., data=genes2) %>%
   broom::tidy() %>%
-  filter(term=="hp") %>%
+  filter(term=="EIF3L") %>%
   pull(p.value)
 ```
 
 
 ```r
 p_empirical
-[1] 0.678
+[1] 0.168
 p_parametric
-[1] 0.3349553
+[1] 0.151147
 ```
 - Under the assumptions of the permutation test, we can be even less sure there is an association.
 
