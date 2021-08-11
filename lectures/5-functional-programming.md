@@ -184,7 +184,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x7fd562b77e10>
+<bytecode: 0x7fe14ecd2010>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
 
@@ -240,7 +240,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
-[1] -0.08758595
+[1] 0.03711522
 ```
 
 Functional programming
@@ -782,13 +782,11 @@ min_max = function(x) {
 }
 
 library(zeallot)
-Error in library(zeallot): there is no package called 'zeallot'
 c(min_x, max_x) %<-% min_max(rnorm(10))
-Error in c(min_x, max_x) %<-% min_max(rnorm(10)): could not find function "%<-%"
 min_x
-Error in eval(expr, envir, enclos): object 'min_x' not found
+[1] -1.482189
 max_x
-Error in eval(expr, envir, enclos): object 'max_x' not found
+[1] 1.240181
 ```
 
 Dots
@@ -829,7 +827,7 @@ x = c(rnorm(100), NA)
 mean(x)
 [1] NA
 mean_no_na(x)
-[1] -0.02697209
+[1] -0.06457281
 mean_no_na(x, trim=0.5)
 [1] -0.1241746
 mean(x, trim=0.5, na.rm=T)
@@ -962,9 +960,9 @@ df <- tibble::tibble(
 df %>%
   map_df(mean)
 # A tibble: 1 × 4
-       a       b     c     d
-   <dbl>   <dbl> <dbl> <dbl>
-1 -0.332 -0.0944 0.187    NA
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385    NA
 ```
 - Why can we feed a data frame into `map()`?
 - Notice the `c` column's mean is NA because we don't have a way to specify `na.rm=TRUE` to `mean()`
@@ -979,9 +977,9 @@ Composing functions inside map()
 mean_no_rm = function(x) mean(x, na.rm=TRUE)
 df %>% map_df(mean_no_rm)
 # A tibble: 1 × 4
-       a       b     c      d
-   <dbl>   <dbl> <dbl>  <dbl>
-1 -0.332 -0.0944 0.187 -0.269
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - **Better**: define an anonymous function inside of map
@@ -989,9 +987,9 @@ df %>% map_df(mean_no_rm)
 ```r
 df %>% map_df(function(x) mean(x, na.rm=TRUE))
 # A tibble: 1 × 4
-       a       b     c      d
-   <dbl>   <dbl> <dbl>  <dbl>
-1 -0.332 -0.0944 0.187 -0.269
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 ***
@@ -1001,9 +999,9 @@ df %>% map_df(function(x) mean(x, na.rm=TRUE))
 ```r
 df %>% map_df(~ mean(., na.rm=TRUE))
 # A tibble: 1 × 4
-       a       b     c      d
-   <dbl>   <dbl> <dbl>  <dbl>
-1 -0.332 -0.0944 0.187 -0.269
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - **Best**: any additional named arguments to map get passed on as named arguments to the function you want to call!
@@ -1011,9 +1009,9 @@ df %>% map_df(~ mean(., na.rm=TRUE))
 ```r
 df %>% map_df(mean, na.rm=TRUE)
 # A tibble: 1 × 4
-       a       b     c      d
-   <dbl>   <dbl> <dbl>  <dbl>
-1 -0.332 -0.0944 0.187 -0.269
+        a     b      c     d
+    <dbl> <dbl>  <dbl> <dbl>
+1 -0.0944 0.187 -0.385 0.240
 ```
 
 - In this case, the last option is the clearest, but in others it maybe a good idea to define a function outside of map or explicitly inside of map with the `function` syntax. It all depends on what makes the most sense for the situation.
@@ -1052,9 +1050,9 @@ means %>%
   map(rnorm, n = 5) %>%
   glimpse()
 List of 3
- $ : num [1:5] 4.77 4.73 6.8 4.52 4.41
- $ : num [1:5] 7.74 11.68 10.07 9.56 10.63
- $ : num [1:5] -3.8 -4.13 -4.03 -2.93 -2.62
+ $ : num [1:5] 4.2 3.87 3.97 5.07 5.38
+ $ : num [1:5] 8.38 11.9 9.28 10.38 10.44
+ $ : num [1:5] -2.74 -3.18 -3.69 -3 -2.43
 ```
 
 Mapping over multiple inputs
@@ -1069,9 +1067,9 @@ n = list(1, 3, 5)
   map(~rnorm(n[[.]], mean[[.]], sd[[.]])) %>% 
   glimpse()
 List of 3
- $ : num 3.38
- $ : num [1:3] 19.5 6.42 11.9
- $ : num [1:5] 1.408 -0.427 -4.794 -9.901 -3.004
+ $ : num 3.79
+ $ : num [1:3] 8.27 6.75 5.55
+ $ : num [1:5] 11.77 -14.95 14.5 9.15 -18.48
 ```
 - This looks like `C++`, not `R`. It's better to use `pmap()`
 
@@ -1087,9 +1085,9 @@ list(
 pmap(rnorm) %>% 
 glimpse()
 List of 3
- $ : num 5.57
- $ : num [1:3] 3.96 8.27 6.75
- $ : num [1:5] -11.9 11.77 -14.95 14.5 9.15
+ $ : num 4.7
+ $ : num [1:3] 15.2 6.16 17.62
+ $ : num [1:5] -27.22 2.56 8.06 -1.34 -5.25
 ```
 
 <div align="center">
@@ -1201,23 +1199,23 @@ Binding rows
   )) %>%
   bind_rows()
 # A tibble: 15 × 2
-     rep sample
-   <int>  <dbl>
- 1     1 -1.55 
- 2     1 -0.302
- 3     1  1.04 
- 4     1 -0.768
- 5     1  1.52 
- 6     2 -2.42 
- 7     2  0.556
- 8     2  1.11 
- 9     2  0.166
-10     2 -0.225
-11     3 -0.228
-12     3 -0.253
-13     3  2.07 
-14     3  1.58 
-15     3 -1.04 
+     rep   sample
+   <int>    <dbl>
+ 1     1 -0.228  
+ 2     1 -0.253  
+ 3     1  2.07   
+ 4     1  1.58   
+ 5     1 -1.04   
+ 6     2 -0.00839
+ 7     2 -1.33   
+ 8     2  0.147  
+ 9     2 -0.788  
+10     2 -0.289  
+11     3  0.667  
+12     3 -0.137  
+13     3  0.224  
+14     3  1.12   
+15     3 -1.44   
 ```
 
 Exercise: 
@@ -1229,26 +1227,26 @@ Generate a table like the one shown here by drawing 3 normally-distributed rando
 
 ```
 # A tibble: 18 × 3
-   sample  mean    sd
-    <dbl> <dbl> <dbl>
- 1 -1.01     -1     1
- 2 -2.33     -1     1
- 3 -0.853    -1     1
- 4 -0.788     0     1
- 5 -0.289     0     1
- 6  0.667     0     1
- 7  0.863     1     1
- 8  1.22      1     1
- 9  2.12      1     1
-10 -3.88     -1     2
-11  0.269    -1     2
-12 -2.00     -1     2
-13  2.25      0     2
-14 -0.200     0     2
-15 -2.22      0     2
-16  2.32      1     2
-17  0.913     1     2
-18  2.26      1     2
+    sample  mean    sd
+     <dbl> <dbl> <dbl>
+ 1 -0.366     -1     1
+ 2 -1.50      -1     1
+ 3  0.126     -1     1
+ 4 -0.100      0     1
+ 5 -1.11       0     1
+ 6  0.658      0     1
+ 7  0.957      1     1
+ 8  1.63       1     1
+ 9  0.0632     1     1
+10 -1.71      -1     2
+11 -1.09      -1     2
+12 -1.70      -1     2
+13 -0.718      0     2
+14  0.791      0     2
+15 -1.97       0     2
+16  0.955      1     2
+17 -0.769      1     2
+18  1.97       1     2
 ```
 
 Why not for loops?
@@ -1350,12 +1348,12 @@ analyze = function(data) {
 genes2 %>%
   shuffle_row(VAPA) %>% 
   analyze()
-[1] 0.2139228
+[1] 0.06924138
 
 genes2 %>%
   shuffle_row(VAPA) %>% 
   analyze()
-[1] 0.07057006
+[1] -0.08418758
 ```
 
 Example: Permutation test of a regression coefficient
@@ -1376,7 +1374,7 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
-10.828 sec elapsed
+12.578 sec elapsed
 ```
 - We made 1000 coefficients, but it's slow!
 
@@ -1399,7 +1397,7 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
-6.852 sec elapsed
+8.695 sec elapsed
 ```
 
 Example: Permutation test of a regression coefficient
@@ -1419,7 +1417,7 @@ p_parametric = lm(VAPA~., data=genes2) %>%
 
 ```r
 p_empirical
-[1] 0.168
+[1] 0.159
 p_parametric
 [1] 0.151147
 ```
