@@ -28,12 +28,12 @@ By the end of the course you should be able to...
 
 - write neat R scripts and markdown reports in R studio
 - find, read, and understand package and function documentation 
-- read and write tabular data into R from flat files
-- perform basic manipulations on tabular data: subsetting, manipulating and summarizing data, and joining
-- visualize tabluar data using line and scatter plots along with color and facets
+- read and write tabular data into R from CSV files
+- manipulate and subset tabular data
+- visualize tabular data using line and scatter plots
 
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" width=800 height=300>
+<div align="left">
+<img src="images/data-science.png" width=800 height=300>
 </div>
 
 Tidyverse
@@ -1042,11 +1042,11 @@ Sampling rows
 # A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1  17.3     8  276.   180  3.07  3.73  17.6     0     0     3     3
-2  10.4     8  472    205  2.93  5.25  18.0     0     0     3     4
-3  15       8  301    335  3.54  3.57  14.6     0     1     5     8
-4  21.4     4  121    109  4.11  2.78  18.6     1     1     4     2
-5  24.4     4  147.    62  3.69  3.19  20       1     0     4     2
+1  10.4     8   460   215  3     5.42  17.8     0     0     3     4
+2  21       6   160   110  3.9   2.62  16.5     0     1     4     4
+3  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2
+4  19.7     6   145   175  3.62  2.77  15.5     0     1     5     6
+5  15.8     8   351   264  4.22  3.17  14.5     0     1     5     4
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -2648,7 +2648,7 @@ Error in group_by(., region): object 'state_data' not found
 > plot
 function (x, y, ...) 
 UseMethod("plot")
-<bytecode: 0x7f837ea663e8>
+<bytecode: 0x7f7d1b80cc20>
 <environment: namespace:base>
 ```
 

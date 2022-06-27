@@ -34,12 +34,12 @@ By the end of the course you should be able to...
 
 - write neat R scripts and markdown reports in R studio
 - find, read, and understand package and function documentation 
-- read and write tabular data into R from flat files
-- perform basic manipulations on tabular data: subsetting, manipulating and summarizing data, and joining
-- visualize tabluar data using line and scatter plots along with color and facets
+- read and write tabular data into R from CSV files
+- manipulate and subset tabular data
+- visualize tabular data using line and scatter plots
 
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" width=800 height=300>
+<div align="left">
+<img src="images/data-science.png" width=800 height=300>
 </div>
 
 Tidyverse
