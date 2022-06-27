@@ -1,10 +1,14 @@
 Tabular Data Foundations
 ========================================================
-author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+author: Alejandro Schuler
+date: 2022
 transition: none
 width: 1680
 height: 1050
+
+Edited by David Connell
+
+Adapted from [Steve Bagley](https://profiles.stanford.edu/steven-bagley) and based on [R for Data Science by Hadley Wickham](https://r4ds.had.co.nz/)
 
 ```{r include=FALSE}
 ## better font size for slides

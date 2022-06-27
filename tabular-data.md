@@ -1,10 +1,14 @@
 Tabular Data Foundations
 ========================================================
-author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+author: Alejandro Schuler
+date: 2022
 transition: none
 width: 1680
 height: 1050
+
+Edited by David Connell
+
+Adapted from [Steve Bagley](https://profiles.stanford.edu/steven-bagley) and based on [R for Data Science by Hadley Wickham](https://r4ds.had.co.nz/)
 
 
 <style>
@@ -125,9 +129,8 @@ Vectors
 
 ```r
 > 1:50
- [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-[24] 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46
-[47] 47 48 49 50
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+[26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
 ```
 - The colon `:` is a handy shortcut to create a vector that is
 a sequence of integers from the first number to the second number
@@ -335,8 +338,8 @@ easily as on vectors containing a single number.
 
 ```r
 > sqrt(0:10)
- [1] 0.000000 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490
- [8] 2.645751 2.828427 3.000000 3.162278
+ [1] 0.000000 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751
+ [9] 2.828427 3.000000 3.162278
 ```
 
 Functions and variable assignment
@@ -674,14 +677,14 @@ Need to install the tidyverse set of packages
 
 ```r
 > library("tidyverse")
-── Attaching packages ────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1.9000 ──
-✔ tibble  2.0.1       ✔ dplyr   0.8.0.1
-✔ tidyr   0.8.2       ✔ stringr 1.4.0  
-✔ readr   1.3.1       ✔ forcats 0.3.0  
-✔ purrr   0.3.0       
-── Conflicts ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✓ tibble  3.1.5     ✓ dplyr   1.0.7
+✓ tidyr   1.1.4     ✓ stringr 1.4.0
+✓ readr   2.0.2     ✓ forcats 0.5.1
+✓ purrr   0.3.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
 ```
 - "tidyverse" is a coherent set of packages for operating a kind of data called the "data frame".
 - It is not built-in, so you need to install it (once), then load it each time you restart R.
@@ -707,7 +710,7 @@ Data frame example
 
 ```r
 > mtc
-# A tibble: 32 x 11
+# A tibble: 32 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
@@ -731,7 +734,7 @@ Data frame example
 
 ```r
 > mtc
-# A tibble: 32 x 11
+# A tibble: 32 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
@@ -772,7 +775,7 @@ Making data frames
 +   age = c(33, 48, 8, 29)
 + )
 > my_data
-# A tibble: 4 x 2
+# A tibble: 4 × 2
     mrn   age
   <dbl> <dbl>
 1     1    33
@@ -807,12 +810,12 @@ Data frame properties
 
 ```r
 > glimpse(my_data)
-Observations: 4
-Variables: 2
+Rows: 4
+Columns: 2
 $ mrn <dbl> 1, 2, 3, 4
 $ age <dbl> 33, 48, 8, 29
 > head(my_data, n=2)
-# A tibble: 2 x 2
+# A tibble: 2 × 2
     mrn   age
   <dbl> <dbl>
 1     1    33
@@ -844,7 +847,7 @@ filter() subsets the rows of a data frame
 
 ```r
 > filter(mtc, mpg >= 25)
-# A tibble: 6 x 11
+# A tibble: 6 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  32.4     4  78.7    66  4.08  2.2   19.5     1     1     4     1
@@ -863,7 +866,7 @@ Combining constraints in filter
 
 ```r
 > filter(mtc, mpg >= 25, qsec < 19)
-# A tibble: 4 x 11
+# A tibble: 4 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2
@@ -880,10 +883,9 @@ Filtering out all rows
 
 ```r
 > filter(mtc, mpg > 60)
-# A tibble: 0 x 11
-# … with 11 variables: mpg <dbl>, cyl <dbl>, disp <dbl>, hp <dbl>,
-#   drat <dbl>, wt <dbl>, qsec <dbl>, vs <dbl>, am <dbl>, gear <dbl>,
-#   carb <dbl>
+# A tibble: 0 × 11
+# … with 11 variables: mpg <dbl>, cyl <dbl>, disp <dbl>, hp <dbl>, drat <dbl>,
+#   wt <dbl>, qsec <dbl>, vs <dbl>, am <dbl>, gear <dbl>, carb <dbl>
 ```
 - If the constraint is too severe, then you will select **no** rows, and produce a zero row sized tibble.
 
@@ -904,7 +906,7 @@ Logical conjunctions
 
 ```r
 > filter(mtc, mpg > 30 | mpg < 20)
-# A tibble: 22 x 11
+# A tibble: 22 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
@@ -928,7 +930,7 @@ Logical conjunctions
 
 ```r
 > filter(mtc, !(mpg > 30 | mpg < 20))
-# A tibble: 10 x 11
+# A tibble: 10 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
@@ -949,7 +951,7 @@ Logical conjunctions
 
 ```r
 > filter(mtc, cyl %in% c(6,8)) # equivalent to filter(mtc, cyl==6 | cyl==8)
-# A tibble: 21 x 11
+# A tibble: 21 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  21       6  160    110  3.9   2.62  16.5     0     1     4     4
@@ -976,7 +978,7 @@ Answer: cars with powerful engines
 
 ```r
 > filter(mtc, hp > 200)
-# A tibble: 7 x 11
+# A tibble: 7 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  14.3     8   360   245  3.21  3.57  15.8     0     0     3     4
@@ -1000,7 +1002,7 @@ Answer: filtering rows
 
 ```r
 > filter(mtc, mpg > 15, mpg < 20)
-# A tibble: 12 x 11
+# A tibble: 12 × 11
      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
@@ -1023,7 +1025,7 @@ Filtering by row number
 
 ```r
 > filter(mtc, row_number()<=3)
-# A tibble: 3 x 11
+# A tibble: 3 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
@@ -1037,14 +1039,14 @@ Sampling rows
 
 ```r
 > sample_n(mtc, 5)
-# A tibble: 5 x 11
+# A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1  14.7     8 440     230  3.23  5.34  17.4     0     0     3     4
-2  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2
-3  18.7     8 360     175  3.15  3.44  17.0     0     0     3     2
-4  26       4 120.     91  4.43  2.14  16.7     0     1     5     2
-5  16.4     8 276.    180  3.07  4.07  17.4     0     0     3     3
+1  17.3     8  276.   180  3.07  3.73  17.6     0     0     3     3
+2  10.4     8  472    205  2.93  5.25  18.0     0     0     3     4
+3  15       8  301    335  3.54  3.57  14.6     0     1     5     8
+4  21.4     4  121    109  4.11  2.78  18.6     1     1     4     2
+5  24.4     4  147.    62  3.69  3.19  20       1     0     4     2
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -1055,7 +1057,7 @@ select() subsets columns by name
 
 ```r
 > select(mtc, mpg, qsec, wt)
-# A tibble: 32 x 3
+# A tibble: 32 × 3
      mpg  qsec    wt
    <dbl> <dbl> <dbl>
  1  21    16.5  2.62
@@ -1078,7 +1080,7 @@ select() subsets columns by name
 
 ```r
 > select(mtc, starts_with("m"))
-# A tibble: 32 x 1
+# A tibble: 32 × 1
      mpg
    <dbl>
  1  21  
@@ -1100,7 +1102,7 @@ select() subsets columns by name
 
 ```r
 > select(mtc, hp, contains("m"))
-# A tibble: 32 x 3
+# A tibble: 32 × 3
       hp   mpg    am
    <dbl> <dbl> <dbl>
  1   110  21       1
@@ -1124,7 +1126,7 @@ select() subsets columns by name
 
 ```r
 > select(mtc, -contains("m"), -hp)
-# A tibble: 32 x 8
+# A tibble: 32 × 8
      cyl  disp  drat    wt  qsec    vs  gear  carb
    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
  1     6  160   3.9   2.62  16.5     0     4     4
@@ -1146,7 +1148,7 @@ pull() is a friend of select()
 
 ```r
 > select(mtc, hp)
-# A tibble: 32 x 1
+# A tibble: 32 × 1
       hp
    <dbl>
  1   110
@@ -1161,8 +1163,8 @@ pull() is a friend of select()
 10   123
 # … with 22 more rows
 > pull(mtc, hp)
- [1] 110 110  93 110 175 105 245  62  95 123 123 180 180 180 205 215 230
-[18]  66  52  65  97 150 150 245 175  66  91 113 264 175 335 109
+ [1] 110 110  93 110 175 105 245  62  95 123 123 180 180 180 205 215 230  66  52
+[20]  65  97 150 150 245 175  66  91 113 264 175 335 109
 ```
 
 Saving the result
@@ -1170,12 +1172,12 @@ Saving the result
 
 ```r
 > filter(mtc, row_number()==1)
-# A tibble: 1 x 11
+# A tibble: 1 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1    21     6   160   110   3.9  2.62  16.5     0     1     4     4
 > head(mtc)
-# A tibble: 6 x 11
+# A tibble: 6 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
@@ -1194,7 +1196,7 @@ Saving the result
 ```r
 > mtc_first_row = filter(mtc, row_number()==1)
 > mtc_first_row
-# A tibble: 1 x 11
+# A tibble: 1 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1    21     6   160   110   3.9  2.62  16.5     0     1     4     4
@@ -1208,7 +1210,7 @@ Combining filtering and selecting
 > # tmp = select(mtc, mpg, qsec, wt)
 > # filter(tmp, mpg >= 25)
 > filter(select(mtc, mpg, qsec, wt), mpg >= 25)
-# A tibble: 6 x 3
+# A tibble: 6 × 3
     mpg  qsec    wt
   <dbl> <dbl> <dbl>
 1  32.4  19.5  2.2 
@@ -1227,7 +1229,7 @@ arrange() sorts rows
 ```r
 > powerful <- filter(mtc, hp > 200)
 > arrange(powerful, mpg)
-# A tibble: 7 x 11
+# A tibble: 7 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  10.4     8   472   205  2.93  5.25  18.0     0     0     3     4
@@ -1245,7 +1247,7 @@ Arrange can sort by more than one column
 
 ```r
 > arrange(powerful, gear, disp)
-# A tibble: 7 x 11
+# A tibble: 7 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  13.3     8   350   245  3.73  3.84  15.4     0     0     3     4
@@ -1263,7 +1265,7 @@ Use the desc function to sort by descending values
 
 ```r
 > arrange(powerful, desc(mpg))
-# A tibble: 7 x 11
+# A tibble: 7 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  15.8     8   351   264  4.22  3.17  14.5     0     1     5     4
@@ -1284,7 +1286,7 @@ Answer: top 5 mpg cars
 
 ```r
 > filter(arrange(mtc, desc(mpg)), row_number()<=5) # "nesting" the calls to filter and arrange
-# A tibble: 5 x 11
+# A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  33.9     4  71.1    65  4.22  1.84  19.9     1     1     4     1
@@ -1298,7 +1300,7 @@ or
 ```r
 > cars_by_mpg = arrange(mtc, desc(mpg)) # using a temporary variable
 > filter(cars_by_mpg, row_number()<=5)
-# A tibble: 5 x 11
+# A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
 1  33.9     4  71.1    65  4.22  1.84  19.9     1     1     4     1
@@ -1314,7 +1316,7 @@ mutate() creates new columns
 ```r
 > mtc_vars_subset = select(mtc, mpg, hp)
 > mutate(mtc_vars_subset, gpm = 1/mpg)
-# A tibble: 32 x 3
+# A tibble: 32 × 3
      mpg    hp    gpm
    <dbl> <dbl>  <dbl>
  1  21     110 0.0476
@@ -1341,7 +1343,7 @@ mutate() can create multiple new columns at once
 > mutate(mtc_vars_subset, # the newlines make it more readable
 +       gpm = 1/mpg,
 +       mpg_hp_ratio = mpg/hp) 
-# A tibble: 32 x 4
+# A tibble: 32 × 4
      mpg    hp    gpm mpg_hp_ratio
    <dbl> <dbl>  <dbl>        <dbl>
  1  21     110 0.0476       0.191 
@@ -1365,14 +1367,16 @@ mutate() for data type conversion
 ```r
 > df = tibble(number = c("1", "2", "3"))
 > mutate(df, number_plus_1 = number + 1)
-Error in number + 1: non-numeric argument to binary operator
+Error: Problem with `mutate()` column `number_plus_1`.
+ℹ `number_plus_1 = number + 1`.
+x non-numeric argument to binary operator
 ```
 
 - `mutate()` is also useful for converting data types, in this case text to numbers
 
 ```r
 > mutate(df, number = as.numeric(number)) 
-# A tibble: 3 x 1
+# A tibble: 3 × 1
   number
    <dbl>
 1      1
@@ -1386,7 +1390,7 @@ summarize() computes desired summaires across rows
 
 ```r
 > summarize(mtc, mpg_avg=mean(mpg))
-# A tibble: 1 x 1
+# A tibble: 1 × 1
   mpg_avg
     <dbl>
 1    20.1
@@ -1403,7 +1407,7 @@ summarize() computes desired summaires across rows
 +           mpg_avg = mean(mpg), 
 +           mpg_2x_max = max(2*mpg), 
 +           hp_mpg_ratio_min = min(hp/mpg))
-# A tibble: 1 x 3
+# A tibble: 1 × 3
   mpg_avg mpg_2x_max hp_mpg_ratio_min
     <dbl>      <dbl>            <dbl>
 1    20.1       67.8             1.71
@@ -1437,22 +1441,9 @@ First, let's load in some new data.
 
 ```r
 > data1 <- read_csv("http://stanford.edu/~sbagley2/bios205/data/data1.csv")
-Parsed with column specification:
-cols(
-  name = col_character(),
-  gender = col_character(),
-  age = col_double(),
-  weight = col_double(),
-  shoesize = col_double()
-)
+Error in open.connection(structure(4L, class = c("curl", "connection"), conn_id = <pointer: 0x26e>), : HTTP error 404.
 > data1
-# A tibble: 4 x 5
-  name  gender   age weight shoesize
-  <chr> <chr>  <dbl>  <dbl>    <dbl>
-1 Alice F         10    1          5
-2 Bob   M         11    3          8
-3 Carol F         20    1.5        5
-4 Dave  M         25    4         10
+Error in eval(expr, envir, enclos): object 'data1' not found
 ```
 - `<chr>` is short for "character string", which means text data
 - Let's compute the mean weight for each gender.
@@ -1461,6 +1452,7 @@ cols(
 
 ```r
 > data1_by_gender <- group_by(data1, gender)
+Error in group_by(data1, gender): object 'data1' not found
 ```
 - We can now use the grouped data frame in further calculations.
 
@@ -1469,14 +1461,7 @@ group_by() groups data according to some variable(s)
 
 ```r
 > data1_by_gender
-# A tibble: 4 x 5
-# Groups:   gender [2]
-  name  gender   age weight shoesize
-  <chr> <chr>  <dbl>  <dbl>    <dbl>
-1 Alice F         10    1          5
-2 Bob   M         11    3          8
-3 Carol F         20    1.5        5
-4 Dave  M         25    4         10
+Error in eval(expr, envir, enclos): object 'data1_by_gender' not found
 ```
 - The grouped data looks exactly the same, but under the hood, `R` knows that this is really two sub-data-frames (one for each group) instead of one.
 
@@ -1485,11 +1470,7 @@ Grouped summary: computing the mean of each group
 
 ```r
 > summarize(data1_by_gender, mean_weight = mean(weight))
-# A tibble: 2 x 2
-  gender mean_weight
-  <chr>        <dbl>
-1 F             1.25
-2 M             3.5 
+Error in summarize(data1_by_gender, mean_weight = mean(weight)): object 'data1_by_gender' not found
 ```
 - `summarize()` works the same as before, except now it returns two rows instead of one because there are two groups that were defined by `group_by(gender)`.
 - The result also always contains colunmns corresponding to the unique values of the grouping variable
@@ -1500,16 +1481,11 @@ Grouping can also be applied across multiple variables
 
 ```r
 > data1_by_gender_and_shoesize = group_by(data1, gender, shoesize)
+Error in group_by(data1, gender, shoesize): object 'data1' not found
 > summarize(data1_by_gender_and_shoesize, 
 +           mean_weight = mean(weight), 
 +           mean_age = mean(age))
-# A tibble: 3 x 4
-# Groups:   gender [2]
-  gender shoesize mean_weight mean_age
-  <chr>     <dbl>       <dbl>    <dbl>
-1 F             5        1.25       15
-2 M             8        3          11
-3 M            10        4          25
+Error in summarize(data1_by_gender_and_shoesize, mean_weight = mean(weight), : object 'data1_by_gender_and_shoesize' not found
 ```
 - Now both `gender` and `shoesize` appear as columns in the result
 - There are 3 rows because there are 3 unique combinations of `gender` and `shoesize` in the original data
@@ -1520,11 +1496,7 @@ Computing the number of rows in each group
 
 ```r
 > summarize(data1_by_gender, count = n())
-# A tibble: 2 x 2
-  gender count
-  <chr>  <int>
-1 F          2
-2 M          2
+Error in summarize(data1_by_gender, count = n()): object 'data1_by_gender' not found
 ```
 
 
@@ -1534,11 +1506,7 @@ Computing the number of distinct values of a column in each group
 
 ```r
 > summarize(data1_by_gender, n_sizes = n_distinct(shoesize))
-# A tibble: 2 x 2
-  gender n_sizes
-  <chr>    <int>
-1 F            1
-2 M            2
+Error in summarize(data1_by_gender, n_sizes = n_distinct(shoesize)): object 'data1_by_gender' not found
 ```
 - Note: `distinct()` filters out any duplicate rows in a dataframe. The equivalent for vectors is `unique()`
 
@@ -1548,27 +1516,9 @@ Exercise: count states in each region
 
 ```r
 > state_data <- read_csv("http://stanford.edu/~sbagley2/bios205/data/state_data.csv")
-Parsed with column specification:
-cols(
-  name = col_character(),
-  region = col_character(),
-  area = col_double()
-)
+Error in open.connection(structure(5L, class = c("curl", "connection"), conn_id = <pointer: 0x278>), : HTTP error 404.
 > state_data
-# A tibble: 50 x 3
-   name        region      area
-   <chr>       <chr>      <dbl>
- 1 Alabama     South      51609
- 2 Alaska      West      589757
- 3 Arizona     West      113909
- 4 Arkansas    South      53104
- 5 California  West      158693
- 6 Colorado    West      104247
- 7 Connecticut Northeast   5009
- 8 Delaware    South       2057
- 9 Florida     South      58560
-10 Georgia     South      58876
-# … with 40 more rows
+Error in eval(expr, envir, enclos): object 'state_data' not found
 ```
 - How many states are in each region?
 
@@ -1578,14 +1528,9 @@ Answer: count states in each region
 
 ```r
 > state_data_by_region <- group_by(state_data, region)
+Error in group_by(state_data, region): object 'state_data' not found
 > summarize(state_data_by_region, n_states = n())
-# A tibble: 4 x 2
-  region        n_states
-  <chr>            <int>
-1 North Central       12
-2 Northeast            9
-3 South               16
-4 West                13
+Error in summarize(state_data_by_region, n_states = n()): object 'state_data_by_region' not found
 ```
 
 
@@ -1599,12 +1544,7 @@ Answer: finding rows by group
 
 ```r
 > filter(data1_by_gender, age==min(age))
-# A tibble: 2 x 5
-# Groups:   gender [2]
-  name  gender   age weight shoesize
-  <chr> <chr>  <dbl>  <dbl>    <dbl>
-1 Alice F         10      1        5
-2 Bob   M         11      3        8
+Error in filter(data1_by_gender, age == min(age)): object 'data1_by_gender' not found
 ```
 - This shows how filter can be applied to grouped data. Instead of applying the condition across all the data, it applies it group-by-group.
 
@@ -1624,15 +1564,11 @@ Both nesting and temporary variables can be ugly and hard to read
 
 ```r
 > state_data_by_region <- group_by(state_data, region)
+Error in group_by(state_data, region): object 'state_data' not found
 > region_area_sds <- summarize(state_data_by_region, sd_area = sd(area))
+Error in summarize(state_data_by_region, sd_area = sd(area)): object 'state_data_by_region' not found
 > arrange(region_area_sds, sd_area)
-# A tibble: 4 x 2
-  region        sd_area
-  <chr>           <dbl>
-1 North Central  15540.
-2 Northeast      18589.
-3 South          59052.
-4 West          141002.
+Error in arrange(region_area_sds, sd_area): object 'region_area_sds' not found
 ```
 
 
@@ -1646,13 +1582,7 @@ function call to the second function call.
 +   group_by(region) %>%
 +   summarize(sd_area = sd(area)) %>%
 +   arrange(sd_area)
-# A tibble: 4 x 2
-  region        sd_area
-  <chr>           <dbl>
-1 North Central  15540.
-2 Northeast      18589.
-3 South          59052.
-4 West          141002.
+Error in group_by(., region): object 'state_data' not found
 ```
 
 - This makes explicit the flow of data through operations:
@@ -1776,6 +1706,7 @@ Fit straight line to points
 > ggplot(mtc, aes(hp, mpg)) + 
 +   geom_point() + 
 +   geom_smooth(method="lm")
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-105](tabular-data-figure/unnamed-chunk-105-1.png)
@@ -1790,6 +1721,7 @@ Fit smooth line to points
 > ggplot(mtc, aes(hp, mpg)) + 
 +   geom_point() + 
 +   geom_smooth(method="loess")
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-106](tabular-data-figure/unnamed-chunk-106-1.png)
@@ -1805,6 +1737,7 @@ Fit smooth line to points without standard error
 + ggplot(aes(hp, mpg)) + 
 +   geom_point() + 
 +   geom_smooth(method="loess", se=FALSE)
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-107](tabular-data-figure/unnamed-chunk-107-1.png)
@@ -1820,9 +1753,8 @@ Plotting categorical variables
 +   summarize(mean_age=mean(age), mean_weight=mean(weight)) %>%
 + ggplot(aes(gender, mean_weight)) + 
 +   geom_col()
+Error in group_by(., gender): object 'data1' not found
 ```
-
-![plot of chunk unnamed-chunk-108](tabular-data-figure/unnamed-chunk-108-1.png)
 - `geom_col()` is used to make a bar plot. Height of bar is the value for that group.
 
 The grammar of graphics
@@ -1874,6 +1806,7 @@ Answer: Is there a linear relationship between hp and 1/mpg?
 > ggplot(mtc, aes(hp, 1/mpg)) + 
 +   geom_point() + 
 +   geom_smooth(method="lm", se=FALSE)
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-109](tabular-data-figure/unnamed-chunk-109-1.png)
@@ -1941,7 +1874,7 @@ Answer: even more orange trees
 
 ```r
 > mutate(orange, circum_in = circumference/(10 * 2.54))
-# A tibble: 35 x 4
+# A tibble: 35 × 4
    Tree    age circumference circum_in
    <ord> <dbl>         <dbl>     <dbl>
  1 1       118            30      1.18
@@ -1973,13 +1906,7 @@ Answer: compute mean area per region
 +   group_by(region) %>%
 +   summarize(mean_area = mean(area)) %>%
 +   arrange(desc(mean_area))
-# A tibble: 4 x 2
-  region        mean_area
-  <chr>             <dbl>
-1 West            137228.
-2 North Central    63794.
-3 South            56222.
-4 Northeast        18817 
+Error in group_by(., region): object 'state_data' not found
 ```
 
 
@@ -1996,13 +1923,7 @@ Answer: Sort the regions by area range
 +   group_by(region) %>%
 +   summarize(area_range = max(area) - min(area)) %>%
 +   arrange(area_range)
-# A tibble: 4 x 2
-  region        area_range
-  <chr>              <dbl>
-1 North Central      47777
-2 Northeast          48362
-3 South             265282
-4 West              583307
+Error in group_by(., region): object 'state_data' not found
 ```
 
 
@@ -2013,22 +1934,9 @@ Adding new column with data by group
 > state_data2 <- state_data %>%
 +   group_by(region) %>%
 +   mutate(region_mean = mean(area))
+Error in group_by(., region): object 'state_data' not found
 > state_data2
-# A tibble: 50 x 4
-# Groups:   region [4]
-   name        region      area region_mean
-   <chr>       <chr>      <dbl>       <dbl>
- 1 Alabama     South      51609      56222.
- 2 Alaska      West      589757     137228.
- 3 Arizona     West      113909     137228.
- 4 Arkansas    South      53104      56222.
- 5 California  West      158693     137228.
- 6 Colorado    West      104247     137228.
- 7 Connecticut Northeast   5009      18817 
- 8 Delaware    South       2057      56222.
- 9 Florida     South      58560      56222.
-10 Georgia     South      58876      56222.
-# … with 40 more rows
+Error in eval(expr, envir, enclos): object 'state_data2' not found
 ```
 - This computes the mean area for each region, and places those values in a new column.
 - The `region_mean` column has 50 values, one for each state, depending on the region the state is in.
@@ -2046,14 +1954,7 @@ Answer: closest to region mean
 > state_data2 %>%
 +     mutate(diff = abs(area-region_mean)) %>%
 +     filter(diff == min(diff))
-# A tibble: 4 x 5
-# Groups:   region [4]
-  name     region          area region_mean  diff
-  <chr>    <chr>          <dbl>       <dbl> <dbl>
-1 Florida  South          58560      56222. 2338.
-2 Michigan North Central  58216      63794. 5578.
-3 Montana  West          147138     137228. 9910.
-4 Vermont  Northeast       9609      18817  9208 
+Error in mutate(., diff = abs(area - region_mean)): object 'state_data2' not found
 ```
 
 - We should use `ungroup()` to undo the `group_by()` so that the `filter()` is applied across the whole data frame and not region-by-region
@@ -2064,10 +1965,7 @@ Answer: closest to region mean
 +     mutate(diff = abs(area-region_mean)) %>%
 +     ungroup() %>% 
 +     filter(diff == min(diff))
-# A tibble: 1 x 5
-  name    region  area region_mean  diff
-  <chr>   <chr>  <dbl>       <dbl> <dbl>
-1 Florida South  58560      56222. 2338.
+Error in mutate(., diff = abs(area - region_mean)): object 'state_data2' not found
 ```
 - Answer: Florida
 
@@ -2085,14 +1983,7 @@ Answer: smallest state in each region
 > state_data %>%
 +     group_by(region) %>%
 +     filter(area == min(area))
-# A tibble: 4 x 3
-# Groups:   region [4]
-  name         region         area
-  <chr>        <chr>         <dbl>
-1 Delaware     South          2057
-2 Hawaii       West           6450
-3 Indiana      North Central 36291
-4 Rhode Island Northeast      1214
+Error in group_by(., region): object 'state_data' not found
 ```
 
 
@@ -2113,32 +2004,31 @@ class: small-code
 
 ```r
 > head(flights)
-# A tibble: 6 x 19
-   year month   day dep_time sched_dep_time dep_delay arr_time
-  <int> <int> <int>    <int>          <int>     <dbl>    <int>
-1  2013     1     1      517            515         2      830
-2  2013     1     1      533            529         4      850
-3  2013     1     1      542            540         2      923
-4  2013     1     1      544            545        -1     1004
-5  2013     1     1      554            600        -6      812
-6  2013     1     1      554            558        -4      740
-# … with 12 more variables: sched_arr_time <int>, arr_delay <dbl>,
-#   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
-#   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>,
-#   time_hour <dttm>
+# A tibble: 6 × 19
+   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+  <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+1  2013     1     1      517            515         2      830            819
+2  2013     1     1      533            529         4      850            830
+3  2013     1     1      542            540         2      923            850
+4  2013     1     1      544            545        -1     1004           1022
+5  2013     1     1      554            600        -6      812            837
+6  2013     1     1      554            558        -4      740            728
+# … with 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+#   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+#   hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 ```r
 > head(airports)
-# A tibble: 6 x 8
-  faa   name                       lat   lon   alt    tz dst   tzone       
-  <chr> <chr>                    <dbl> <dbl> <int> <dbl> <chr> <chr>       
-1 04G   Lansdowne Airport         41.1 -80.6  1044    -5 A     America/New…
-2 06A   Moton Field Municipal A…  32.5 -85.7   264    -6 A     America/Chi…
-3 06C   Schaumburg Regional       42.0 -88.1   801    -6 A     America/Chi…
-4 06N   Randall Airport           41.4 -74.4   523    -5 A     America/New…
-5 09J   Jekyll Island Airport     31.1 -81.4    11    -5 A     America/New…
-6 0A9   Elizabethton Municipal …  36.4 -82.2  1593    -5 A     America/New…
+# A tibble: 6 × 8
+  faa   name                             lat   lon   alt    tz dst   tzone      
+  <chr> <chr>                          <dbl> <dbl> <dbl> <dbl> <chr> <chr>      
+1 04G   Lansdowne Airport               41.1 -80.6  1044    -5 A     America/Ne…
+2 06A   Moton Field Municipal Airport   32.5 -85.7   264    -6 A     America/Ch…
+3 06C   Schaumburg Regional             42.0 -88.1   801    -6 A     America/Ch…
+4 06N   Randall Airport                 41.4 -74.4   523    -5 A     America/Ne…
+5 09J   Jekyll Island Airport           31.1 -81.4    11    -5 A     America/Ne…
+6 0A9   Elizabethton Municipal Airport  36.4 -82.2  1593    -5 A     America/Ne…
 ```
 
 ***
@@ -2146,30 +2036,30 @@ class: small-code
 
 ```r
 > head(planes)
-# A tibble: 6 x 9
-  tailnum  year type       manufacturer   model  engines seats speed engine
-  <chr>   <int> <chr>      <chr>          <chr>    <int> <int> <int> <chr> 
-1 N10156   2004 Fixed win… EMBRAER        EMB-1…       2    55    NA Turbo…
-2 N102UW   1998 Fixed win… AIRBUS INDUST… A320-…       2   182    NA Turbo…
-3 N103US   1999 Fixed win… AIRBUS INDUST… A320-…       2   182    NA Turbo…
-4 N104UW   1999 Fixed win… AIRBUS INDUST… A320-…       2   182    NA Turbo…
-5 N10575   2002 Fixed win… EMBRAER        EMB-1…       2    55    NA Turbo…
-6 N105UW   1999 Fixed win… AIRBUS INDUST… A320-…       2   182    NA Turbo…
+# A tibble: 6 × 9
+  tailnum  year type           manufacturer   model  engines seats speed engine 
+  <chr>   <int> <chr>          <chr>          <chr>    <int> <int> <int> <chr>  
+1 N10156   2004 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
+2 N102UW   1998 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+3 N103US   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+4 N104UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
+5 N10575   2002 Fixed wing mu… EMBRAER        EMB-1…       2    55    NA Turbo-…
+6 N105UW   1999 Fixed wing mu… AIRBUS INDUST… A320-…       2   182    NA Turbo-…
 ```
 
 ```r
 > head(weather)
-# A tibble: 6 x 15
-  origin  year month   day  hour  temp  dewp humid wind_dir wind_speed
-  <chr>  <dbl> <dbl> <int> <int> <dbl> <dbl> <dbl>    <dbl>      <dbl>
-1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4 
-2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06
-3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5 
-4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7 
-5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7 
-6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5 
-# … with 5 more variables: wind_gust <dbl>, precip <dbl>, pressure <dbl>,
-#   visib <dbl>, time_hour <dttm>
+# A tibble: 6 × 15
+  origin  year month   day  hour  temp  dewp humid wind_dir wind_speed wind_gust
+  <chr>  <int> <int> <int> <int> <dbl> <dbl> <dbl>    <dbl>      <dbl>     <dbl>
+1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4         NA
+2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06        NA
+3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5         NA
+4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7         NA
+5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7         NA
+6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5         NA
+# … with 4 more variables: precip <dbl>, pressure <dbl>, visib <dbl>,
+#   time_hour <dttm>
 ```
 
 Relational data
@@ -2192,7 +2082,7 @@ An example join
 > flights %>%
 +   select(tailnum, origin, dest, carrier) %>%
 +   inner_join(airlines, by="carrier")
-# A tibble: 336,776 x 5
+# A tibble: 336,776 × 5
    tailnum origin dest  carrier name                    
    <chr>   <chr>  <chr> <chr>   <chr>                   
  1 N14228  EWR    IAH   UA      United Air Lines Inc.   
@@ -2231,7 +2121,7 @@ Joins
 
 ```r
 > inner_join(x, y, by="key")
-# A tibble: 2 x 3
+# A tibble: 2 × 3
     key val_x val_y
   <dbl> <chr> <chr>
 1     1 x1    y1   
@@ -2267,7 +2157,7 @@ Duplicate keys
 
 ```r
 > inner_join(x, y, by="key")
-# A tibble: 5 x 3
+# A tibble: 5 × 3
     key val_x val_y
   <dbl> <chr> <chr>
 1     1 x1    y1   
@@ -2284,7 +2174,8 @@ Specifying the keys
 
 ```r
 > inner_join(airports, flights, by="origin")
-Error: `by` can't contain join column `origin` which is missing from LHS
+Error: Join columns must be present in data.
+x Problem with `origin`.
 ```
 - Why does this fail?
 
@@ -2294,24 +2185,23 @@ Specifying the keys
 
 ```r
 > inner_join(airports, flights, by=c("faa"="origin"))
-# A tibble: 336,776 x 26
-   faa   name    lat   lon   alt    tz dst   tzone  year month   day
-   <chr> <chr> <dbl> <dbl> <int> <dbl> <chr> <chr> <int> <int> <int>
- 1 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 2 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 3 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 4 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 5 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 6 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 7 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 8 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
- 9 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
-10 EWR   Newa…  40.7 -74.2    18    -5 A     Amer…  2013     1     1
-# … with 336,766 more rows, and 15 more variables: dep_time <int>,
-#   sched_dep_time <int>, dep_delay <dbl>, arr_time <int>,
-#   sched_arr_time <int>, arr_delay <dbl>, carrier <chr>, flight <int>,
-#   tailnum <chr>, dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>,
-#   minute <dbl>, time_hour <dttm>
+# A tibble: 336,776 × 26
+   faa   name      lat   lon   alt    tz dst   tzone   year month   day dep_time
+   <chr> <chr>   <dbl> <dbl> <dbl> <dbl> <chr> <chr>  <int> <int> <int>    <int>
+ 1 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      517
+ 2 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      554
+ 3 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      555
+ 4 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      558
+ 5 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      559
+ 6 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      601
+ 7 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      606
+ 8 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      607
+ 9 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      608
+10 EWR   Newark…  40.7 -74.2    18    -5 A     Ameri…  2013     1     1      615
+# … with 336,766 more rows, and 14 more variables: sched_dep_time <int>,
+#   dep_delay <dbl>, arr_time <int>, sched_arr_time <int>, arr_delay <dbl>,
+#   carrier <chr>, flight <int>, tailnum <chr>, dest <chr>, air_time <dbl>,
+#   distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 Exercise: finding planes
@@ -2329,7 +2219,7 @@ Use joins to find the models of airplane that fly into Seattle Tacoma Intl.
 +   inner_join(planes, by="tailnum") %>%
 +   select(model) %>%
 +   distinct()
-# A tibble: 24 x 1
+# A tibble: 24 × 1
    model    
    <chr>    
  1 737-890  
@@ -2374,14 +2264,14 @@ Joining on multiple columns
 +   select(tailnum, year:day, hour, origin) %>%
 +   left_join(weather, by=c("year", "month", "day", "hour", "origin")) %>% 
 +   head(3)
-# A tibble: 3 x 16
-  tailnum  year month   day  hour origin  temp  dewp humid wind_dir
-  <chr>   <dbl> <dbl> <int> <dbl> <chr>  <dbl> <dbl> <dbl>    <dbl>
-1 N14228   2013     1     1     5 EWR     39.0  28.0  64.4      260
-2 N24211   2013     1     1     5 LGA     39.9  25.0  54.8      250
-3 N619AA   2013     1     1     5 JFK     39.0  27.0  61.6      260
-# … with 6 more variables: wind_speed <dbl>, wind_gust <dbl>,
-#   precip <dbl>, pressure <dbl>, visib <dbl>, time_hour <dttm>
+# A tibble: 3 × 16
+  tailnum  year month   day  hour origin  temp  dewp humid wind_dir wind_speed
+  <chr>   <int> <int> <int> <dbl> <chr>  <dbl> <dbl> <dbl>    <dbl>      <dbl>
+1 N14228   2013     1     1     5 EWR     39.0  28.0  64.4      260       12.7
+2 N24211   2013     1     1     5 LGA     39.9  25.0  54.8      250       15.0
+3 N619AA   2013     1     1     5 JFK     39.0  27.0  61.6      260       15.0
+# … with 5 more variables: wind_gust <dbl>, precip <dbl>, pressure <dbl>,
+#   visib <dbl>, time_hour <dttm>
 ```
 - This is also possible if the columns have different names
 
@@ -2425,7 +2315,7 @@ It appears some of the `tailnum`s in `flights` do not appear in `planes`. Is the
 +   count(carrier) %>% 
 +   arrange(desc(n))
 > bad_flight_carrier_count
-# A tibble: 10 x 2
+# A tibble: 10 × 2
    carrier     n
    <chr>   <int>
  1 MQ      25397
@@ -2451,7 +2341,7 @@ Let's compare the counts of airlines with missing planes to the counts of airlin
 +   count(carrier) %>% 
 +   arrange(desc(n))
 > flight_carrier_count
-# A tibble: 16 x 2
+# A tibble: 16 × 2
    carrier     n
    <chr>   <int>
  1 UA      58665
@@ -2503,7 +2393,7 @@ Distinguishing groups in plots
 
 ```r
 > head(orange, 3)
-# A tibble: 3 x 3
+# A tibble: 3 × 3
   Tree    age circumference
   <ord> <dbl>         <dbl>
 1 1       118            30
@@ -2606,6 +2496,7 @@ Using the loess smoother
 +   geom_point() +
 +   facet_wrap(~ Tree) +
 +   geom_smooth(method = loess, se = FALSE)
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-150](tabular-data-figure/unnamed-chunk-150-1.png)
@@ -2613,6 +2504,11 @@ Using the loess smoother
 Exercise: loess with color
 ========================================================
 Reproduce the following plot:
+
+
+```
+`geom_smooth()` using formula 'y ~ x'
+```
 
 ![plot of chunk unnamed-chunk-151](tabular-data-figure/unnamed-chunk-151-1.png)
 
@@ -2623,6 +2519,7 @@ Answer: loess with color
 > ggplot(orange, aes(age, circumference, color=Tree)) +
 +   geom_point() +
 +   geom_smooth(method = loess, se = FALSE)
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-152](tabular-data-figure/unnamed-chunk-152-1.png)
@@ -2635,6 +2532,7 @@ Aesthetics can be used within each plot element separately
 +   geom_point(aes(shape=Tree)) +
 +   geom_smooth(aes(color=Tree), method = loess, se = FALSE)
 Warning: Using shapes for an ordinal variable is not advised
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-153](tabular-data-figure/unnamed-chunk-153-1.png)
@@ -2715,6 +2613,7 @@ Facet example with fitted lines (linear regression)
 +   geom_point() +
 +   facet_wrap(~ Tree) +
 +   geom_smooth(method = lm, se=FALSE)
+`geom_smooth()` using formula 'y ~ x'
 ```
 
 ![plot of chunk unnamed-chunk-158](tabular-data-figure/unnamed-chunk-158-1.png)
@@ -2731,9 +2630,8 @@ Error bars, first plot
 ```r
 > ggplot(state_data, aes(region, area)) + 
 +   geom_point()
+Error in ggplot(state_data, aes(region, area)): object 'state_data' not found
 ```
-
-![plot of chunk unnamed-chunk-159](tabular-data-figure/unnamed-chunk-159-1.png)
 
 Error bars, computing group mean and standard deviation
 ============================================================
@@ -2746,10 +2644,13 @@ Error bars, computing group mean and standard deviation
 +     region_sd = sd(area)) %>%
 + ggplot(aes(region, region_mean)) + 
 +   geom_point()
+Error in group_by(., region): object 'state_data' not found
 > plot
+function (x, y, ...) 
+UseMethod("plot")
+<bytecode: 0x7f837ea663e8>
+<environment: namespace:base>
 ```
-
-![plot of chunk unnamed-chunk-160](tabular-data-figure/unnamed-chunk-160-1.png)
 
 Error bars: plot the error bars
 ============================================================
@@ -2759,9 +2660,8 @@ Error bars: plot the error bars
 +   geom_errorbar(aes(ymin = region_mean - region_sd,
 +                     ymax = region_mean + region_sd,
 +                     width = 0.3))
+NULL
 ```
-
-![plot of chunk unnamed-chunk-161](tabular-data-figure/unnamed-chunk-161-1.png)
 
 
 ggplot2 and the + operator
