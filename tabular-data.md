@@ -36,28 +36,35 @@ By the end of the course you should be able to...
 <img src="images/data-science.png" width=800 height=300>
 </div>
 
-Tidyverse
+Resources for this course
 ========================================================
+
+## Tidyverse
+
+- The tidyverse collection of R packages is used in this course, and in PHW142, to provide lots of additional functionality that's not present in the basic R programming language.
+
 <div align="center">
-<img src="https://pbs.twimg.com/media/DuRP1tVVAAEcpxO.jpg">
+<img src="images/tidyverse.png">
 </div>
 
 Resources for this course
 ========================================================
 
-R for Data Science (R4DS): https://r4ds.had.co.nz
-<div align="center">
+<div align="right">
 <img src="https://r4ds.had.co.nz/cover.png">
 </div>
 
 ***
+## [R for Data Science (R4DS) free online book by Hadley Wickham](https://r4ds.had.co.nz)
 
 - Fundamentals: ch 1, 4, 6
 - Input/output: ch 11
 - Data manipulation: ch 5, 13
 - Visualization: ch 3, 28
 
-Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+## [RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
+
+- Extremely useful reference guides for functions used in this course
 
 RStudio
 ========================================================
@@ -1042,11 +1049,11 @@ Sampling rows
 # A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1  10.4     8   460   215  3     5.42  17.8     0     0     3     4
-2  21       6   160   110  3.9   2.62  16.5     0     1     4     4
-3  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2
-4  19.7     6   145   175  3.62  2.77  15.5     0     1     5     6
-5  15.8     8   351   264  4.22  3.17  14.5     0     1     5     4
+1  17.3     8 276.    180  3.07  3.73  17.6     0     0     3     3
+2  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2
+3  15.2     8 276.    180  3.07  3.78  18       0     0     3     3
+4  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6
+5  16.4     8 276.    180  3.07  4.07  17.4     0     0     3     3
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -2648,7 +2655,7 @@ Error in group_by(., region): object 'state_data' not found
 > plot
 function (x, y, ...) 
 UseMethod("plot")
-<bytecode: 0x7f7d1b80cc20>
+<bytecode: 0x7fc0b5e2b9f8>
 <environment: namespace:base>
 ```
 

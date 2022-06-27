@@ -42,28 +42,35 @@ By the end of the course you should be able to...
 <img src="images/data-science.png" width=800 height=300>
 </div>
 
-Tidyverse
+Resources for this course
 ========================================================
+
+## Tidyverse
+
+- The tidyverse collection of R packages is used in this course, and in PHW142, to provide lots of additional functionality that's not present in the basic R programming language.
+
 <div align="center">
-<img src="https://pbs.twimg.com/media/DuRP1tVVAAEcpxO.jpg">
+<img src="images/tidyverse.png">
 </div>
 
 Resources for this course
 ========================================================
 
-R for Data Science (R4DS): https://r4ds.had.co.nz
-<div align="center">
+<div align="right">
 <img src="https://r4ds.had.co.nz/cover.png">
 </div>
 
 ***
+## [R for Data Science (R4DS) free online book by Hadley Wickham](https://r4ds.had.co.nz)
 
 - Fundamentals: ch 1, 4, 6
 - Input/output: ch 11
 - Data manipulation: ch 5, 13
 - Visualization: ch 3, 28
 
-Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
+## [RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
+
+- Extremely useful reference guides for functions used in this course
 
 RStudio
 ========================================================
