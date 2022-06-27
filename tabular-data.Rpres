@@ -80,6 +80,8 @@ The basics of interaction using the console window
 
 If you haven't already, please open RStudio on DataHub by [clicking this link](https://publichealth.datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fpre-142-training%2Ftutorial-playground&urlpath=rstudio%2F&branch=main). If you're viewing this on bCourses, you'll have to right click and then choose "Open Link in New Tab".
 
+You will get more out of this tutorial if you try out these things in R yourself!!
+
 The R console window is the left (or lower-left) window in RStudio.
 The R console uses a "read, eval, print" loop. This is sometimes
 called a REPL.
@@ -102,7 +104,7 @@ A simple example in the console
 1 + 2
 ```
 - `3` is the answer
-- `[1]` means: the answer is a vector and this line starts with the first element of that vector.
+- `[1]` means: the answer is a vector (a list of elements of the same type) and this line starts with the first element of that vector.
 - It does not mean the answer has one element (although that is true in this case).
 
 
@@ -114,7 +116,12 @@ Spaces (mostly) don't matter
 1+2
 1 + 2
 ```
-- These all do the same thing.
+
+These all do the same thing. The result of each line is `3`:
+
+```{r echo=FALSE,tidy=FALSE}
+1 + 2
+```
 
 Basic calculations and vectors
 ========================================================

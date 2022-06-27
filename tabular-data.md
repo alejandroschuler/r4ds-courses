@@ -74,6 +74,8 @@ The basics of interaction using the console window
 
 If you haven't already, please open RStudio on DataHub by [clicking this link](https://publichealth.datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fpre-142-training%2Ftutorial-playground&urlpath=rstudio%2F&branch=main). If you're viewing this on bCourses, you'll have to right click and then choose "Open Link in New Tab".
 
+You will get more out of this tutorial if you try out these things in R yourself!!
+
 The R console window is the left (or lower-left) window in RStudio.
 The R console uses a "read, eval, print" loop. This is sometimes
 called a REPL.
@@ -98,7 +100,7 @@ A simple example in the console
 [1] 3
 ```
 - `3` is the answer
-- `[1]` means: the answer is a vector and this line starts with the first element of that vector.
+- `[1]` means: the answer is a vector (a list of elements of the same type) and this line starts with the first element of that vector.
 - It does not mean the answer has one element (although that is true in this case).
 
 
@@ -111,7 +113,13 @@ Spaces (mostly) don't matter
 > 1+2
 > 1 + 2
 ```
-- These all do the same thing.
+
+These all do the same thing. The result of each line is `3`:
+
+
+```
+[1] 3
+```
 
 Basic calculations and vectors
 ========================================================
@@ -1056,11 +1064,11 @@ Sampling rows
 # A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2
-2  15       8 301     335  3.54  3.57  14.6     0     1     5     8
-3  24.4     4 147.     62  3.69  3.19  20       1     0     4     2
-4  27.3     4  79      66  4.08  1.94  18.9     1     1     4     1
-5  19.2     8 400     175  3.08  3.84  17.0     0     0     3     2
+1  10.4     8  460    215  3     5.42  17.8     0     0     3     4
+2  16.4     8  276.   180  3.07  4.07  17.4     0     0     3     3
+3  22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
+4  19.2     8  400    175  3.08  3.84  17.0     0     0     3     2
+5  15.5     8  318    150  2.76  3.52  16.9     0     0     3     2
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -1455,7 +1463,7 @@ First, let's load in some new data.
 
 ```r
 > data1 <- read_csv("http://stanford.edu/~sbagley2/bios205/data/data1.csv")
-Error in open.connection(structure(4L, class = c("curl", "connection"), conn_id = <pointer: 0x26e>), : HTTP error 404.
+Error in open.connection(structure(4L, class = c("curl", "connection"), conn_id = <pointer: 0x26f>), : HTTP error 404.
 > data1
 Error in eval(expr, envir, enclos): object 'data1' not found
 ```
@@ -1530,7 +1538,7 @@ Exercise: count states in each region
 
 ```r
 > state_data <- read_csv("http://stanford.edu/~sbagley2/bios205/data/state_data.csv")
-Error in open.connection(structure(5L, class = c("curl", "connection"), conn_id = <pointer: 0x278>), : HTTP error 404.
+Error in open.connection(structure(5L, class = c("curl", "connection"), conn_id = <pointer: 0x279>), : HTTP error 404.
 > state_data
 Error in eval(expr, envir, enclos): object 'state_data' not found
 ```
@@ -1680,7 +1688,7 @@ A simple scatterplot
 +   geom_point()
 ```
 
-![plot of chunk unnamed-chunk-101](tabular-data-figure/unnamed-chunk-101-1.png)
+![plot of chunk unnamed-chunk-102](tabular-data-figure/unnamed-chunk-102-1.png)
 - Note that, although the package is named `ggplot2`, the function is called simply `ggplot()`
 
 How to call ggplot
@@ -1709,7 +1717,7 @@ Change points to lines
 +   geom_line()
 ```
 
-![plot of chunk unnamed-chunk-104](tabular-data-figure/unnamed-chunk-104-1.png)
+![plot of chunk unnamed-chunk-105](tabular-data-figure/unnamed-chunk-105-1.png)
 - This is pretty ugly. Line plots are better for time series.
 
 
@@ -1723,7 +1731,7 @@ Fit straight line to points
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-105](tabular-data-figure/unnamed-chunk-105-1.png)
+![plot of chunk unnamed-chunk-106](tabular-data-figure/unnamed-chunk-106-1.png)
 - `"lm"` means "linear model," which is a least-squares regression line.
 - The gray band is the confidence interval.
 
@@ -1738,7 +1746,7 @@ Fit smooth line to points
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-106](tabular-data-figure/unnamed-chunk-106-1.png)
+![plot of chunk unnamed-chunk-107](tabular-data-figure/unnamed-chunk-107-1.png)
 - "loess" fits a collection of tiny regression lines, then glues them together.
 - This is a better approximation than a straight line for these data.
 
@@ -1754,7 +1762,7 @@ Fit smooth line to points without standard error
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-107](tabular-data-figure/unnamed-chunk-107-1.png)
+![plot of chunk unnamed-chunk-108](tabular-data-figure/unnamed-chunk-108-1.png)
 - `se = FALSE` means do not plot the confidence band (using the standard error)
 
 Plotting categorical variables
@@ -1823,7 +1831,7 @@ Answer: Is there a linear relationship between hp and 1/mpg?
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-109](tabular-data-figure/unnamed-chunk-109-1.png)
+![plot of chunk unnamed-chunk-110](tabular-data-figure/unnamed-chunk-110-1.png)
 - So, probably "yes"
 
 Answer: Is there a linear relationship between hp and 1/mpg?
@@ -1857,7 +1865,7 @@ Answer: orange trees
 +   geom_point()
 ```
 
-![plot of chunk unnamed-chunk-112](tabular-data-figure/unnamed-chunk-112-1.png)
+![plot of chunk unnamed-chunk-113](tabular-data-figure/unnamed-chunk-113-1.png)
 
 
 Exercise: more orange trees
@@ -1875,7 +1883,7 @@ Answer: more orange trees
 +   geom_point()
 ```
 
-![plot of chunk unnamed-chunk-113](tabular-data-figure/unnamed-chunk-113-1.png)
+![plot of chunk unnamed-chunk-114](tabular-data-figure/unnamed-chunk-114-1.png)
 
 
 Exercise: even more orange trees
@@ -2394,7 +2402,7 @@ We can already see the trend but let's clean it up a bit
 
 ***
 
-![plot of chunk unnamed-chunk-140](tabular-data-figure/unnamed-chunk-140-1.png)
+![plot of chunk unnamed-chunk-141](tabular-data-figure/unnamed-chunk-141-1.png)
 
 - Envoy Air and American Airlines are the culprits!
 
@@ -2424,7 +2432,7 @@ Distinguishing groups in plots
 +   geom_point()
 ```
 
-![plot of chunk unnamed-chunk-142](tabular-data-figure/unnamed-chunk-142-1.png)
+![plot of chunk unnamed-chunk-143](tabular-data-figure/unnamed-chunk-143-1.png)
 - If we plot it, we see the data from all the trees in a single
 plot, but would be better to visually distinguish the different trees
 
@@ -2436,7 +2444,7 @@ Example of ggplot2 with color
 +   geom_point(aes(color = Tree))
 ```
 
-![plot of chunk unnamed-chunk-143](tabular-data-figure/unnamed-chunk-143-1.png)
+![plot of chunk unnamed-chunk-144](tabular-data-figure/unnamed-chunk-144-1.png)
 
 
 Example of ggplot2 with color with larger dots
@@ -2447,7 +2455,7 @@ Example of ggplot2 with color with larger dots
 +   geom_point(aes(color = Tree), size=3)
 ```
 
-![plot of chunk unnamed-chunk-144](tabular-data-figure/unnamed-chunk-144-1.png)
+![plot of chunk unnamed-chunk-145](tabular-data-figure/unnamed-chunk-145-1.png)
 - the aesthetics (what's inside of `aes()`) tell ggplot how the columns of the data relate to what should go on the plot
 - things that don't relate to the data should go outisde of the call to `aes()`. e.g. `size=3` in this case.
 - aesthetics defined in `ggplot()` are passed down to the geoms
@@ -2461,7 +2469,7 @@ Example of ggplot2 with plot shape
 Warning: Using shapes for an ordinal variable is not advised
 ```
 
-![plot of chunk unnamed-chunk-145](tabular-data-figure/unnamed-chunk-145-1.png)
+![plot of chunk unnamed-chunk-146](tabular-data-figure/unnamed-chunk-146-1.png)
 
 
 Example of ggplot2 with plot color and shape
@@ -2473,14 +2481,14 @@ Example of ggplot2 with plot color and shape
 Warning: Using shapes for an ordinal variable is not advised
 ```
 
-![plot of chunk unnamed-chunk-146](tabular-data-figure/unnamed-chunk-146-1.png)
+![plot of chunk unnamed-chunk-147](tabular-data-figure/unnamed-chunk-147-1.png)
 
 
 Exercise: lines and colors
 ========================================================
 Reproduce this plot
 
-![plot of chunk unnamed-chunk-147](tabular-data-figure/unnamed-chunk-147-1.png)
+![plot of chunk unnamed-chunk-148](tabular-data-figure/unnamed-chunk-148-1.png)
 
 Answer: lines and colors
 ========================================================
@@ -2499,7 +2507,7 @@ or
 +   geom_line()
 ```
 
-![plot of chunk unnamed-chunk-149](tabular-data-figure/unnamed-chunk-149-1.png)
+![plot of chunk unnamed-chunk-150](tabular-data-figure/unnamed-chunk-150-1.png)
 - Recall that the aesthetics in `ggplot` are passed down to the geoms
 
 Using the loess smoother
@@ -2513,7 +2521,7 @@ Using the loess smoother
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-150](tabular-data-figure/unnamed-chunk-150-1.png)
+![plot of chunk unnamed-chunk-151](tabular-data-figure/unnamed-chunk-151-1.png)
 
 Exercise: loess with color
 ========================================================
@@ -2524,7 +2532,7 @@ Reproduce the following plot:
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-151](tabular-data-figure/unnamed-chunk-151-1.png)
+![plot of chunk unnamed-chunk-152](tabular-data-figure/unnamed-chunk-152-1.png)
 
 Answer: loess with color
 ========================================================
@@ -2536,7 +2544,7 @@ Answer: loess with color
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-152](tabular-data-figure/unnamed-chunk-152-1.png)
+![plot of chunk unnamed-chunk-153](tabular-data-figure/unnamed-chunk-153-1.png)
 
 Aesthetics can be used within each plot element separately
 ========================================================
@@ -2549,7 +2557,7 @@ Warning: Using shapes for an ordinal variable is not advised
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-153](tabular-data-figure/unnamed-chunk-153-1.png)
+![plot of chunk unnamed-chunk-154](tabular-data-figure/unnamed-chunk-154-1.png)
 
 Facets: multiple aligned plots by group
 ============================================================
@@ -2560,7 +2568,7 @@ Facets: multiple aligned plots by group
 +   facet_wrap(~ Tree)
 ```
 
-![plot of chunk unnamed-chunk-154](tabular-data-figure/unnamed-chunk-154-1.png)
+![plot of chunk unnamed-chunk-155](tabular-data-figure/unnamed-chunk-155-1.png)
 
 
 Alternative using facets
@@ -2574,7 +2582,7 @@ Alternative using facets
 +   facet_wrap(~ Tree)
 ```
 
-![plot of chunk unnamed-chunk-155](tabular-data-figure/unnamed-chunk-155-1.png)
+![plot of chunk unnamed-chunk-156](tabular-data-figure/unnamed-chunk-156-1.png)
 
 
 Facet syntax
@@ -2596,7 +2604,7 @@ Facet grid example 1
 +   facet_grid(. ~ Tree)
 ```
 
-![plot of chunk unnamed-chunk-156](tabular-data-figure/unnamed-chunk-156-1.png)
+![plot of chunk unnamed-chunk-157](tabular-data-figure/unnamed-chunk-157-1.png)
 
 
 Facet grid example 2
@@ -2608,7 +2616,7 @@ Facet grid example 2
 +   facet_grid(Tree ~ .)
 ```
 
-![plot of chunk unnamed-chunk-157](tabular-data-figure/unnamed-chunk-157-1.png)
+![plot of chunk unnamed-chunk-158](tabular-data-figure/unnamed-chunk-158-1.png)
 
 
 Fitting straight lines
@@ -2630,7 +2638,7 @@ Facet example with fitted lines (linear regression)
 `geom_smooth()` using formula 'y ~ x'
 ```
 
-![plot of chunk unnamed-chunk-158](tabular-data-figure/unnamed-chunk-158-1.png)
+![plot of chunk unnamed-chunk-159](tabular-data-figure/unnamed-chunk-159-1.png)
 
 
 Error bars
@@ -2662,7 +2670,7 @@ Error in group_by(., region): object 'state_data' not found
 > plot
 function (x, y, ...) 
 UseMethod("plot")
-<bytecode: 0x7fb5fba48ea0>
+<bytecode: 0x7f86dc5722c0>
 <environment: namespace:base>
 ```
 
