@@ -1,12 +1,10 @@
 Tabular Data Foundations
 ========================================================
-author: Alejandro Schuler
+author: Alejandro Schuler and David Connell
 date: 2022
 transition: none
 width: 1680
 height: 1050
-
-Edited by David Connell
 
 Adapted from [Steve Bagley](https://profiles.stanford.edu/steven-bagley) and based on [R for Data Science by Hadley Wickham](https://r4ds.had.co.nz/)
 
@@ -73,6 +71,9 @@ type: section
 
 The basics of interaction using the console window
 ========================================================
+
+If you haven't already, please open RStudio on DataHub by [clicking this link](https://publichealth.datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fpre-142-training%2Ftutorial-playground&urlpath=rstudio%2F&branch=main). If you're viewing this on bCourses, you'll have to right click and then choose "Open Link in New Tab".
+
 The R console window is the left (or lower-left) window in RStudio.
 The R console uses a "read, eval, print" loop. This is sometimes
 called a REPL.
@@ -80,6 +81,12 @@ called a REPL.
 - Eval: R evaluates it ...
 - Print: R prints the result ...
 - Loop: (repeat forever)
+
+***
+
+<div align="left">
+<img src="images/console.png">
+</div>
 
 
 A simple example in the console
@@ -1049,11 +1056,11 @@ Sampling rows
 # A tibble: 5 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1  17.3     8 276.    180  3.07  3.73  17.6     0     0     3     3
-2  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2
-3  15.2     8 276.    180  3.07  3.78  18       0     0     3     3
-4  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6
-5  16.4     8 276.    180  3.07  4.07  17.4     0     0     3     3
+1  30.4     4  75.7    52  4.93  1.62  18.5     1     1     4     2
+2  15       8 301     335  3.54  3.57  14.6     0     1     5     8
+3  24.4     4 147.     62  3.69  3.19  20       1     0     4     2
+4  27.3     4  79      66  4.08  1.94  18.9     1     1     4     1
+5  19.2     8 400     175  3.08  3.84  17.0     0     0     3     2
 ```
 - You can use `sample_n()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 - `sample_frac()` is similar
@@ -2655,7 +2662,7 @@ Error in group_by(., region): object 'state_data' not found
 > plot
 function (x, y, ...) 
 UseMethod("plot")
-<bytecode: 0x7fc0b5e2b9f8>
+<bytecode: 0x7fb5fba48ea0>
 <environment: namespace:base>
 ```
 

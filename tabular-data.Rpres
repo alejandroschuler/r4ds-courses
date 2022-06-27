@@ -1,12 +1,10 @@
 Tabular Data Foundations
 ========================================================
-author: Alejandro Schuler
+author: Alejandro Schuler and David Connell
 date: 2022
 transition: none
 width: 1680
 height: 1050
-
-Edited by David Connell
 
 Adapted from [Steve Bagley](https://profiles.stanford.edu/steven-bagley) and based on [R for Data Science by Hadley Wickham](https://r4ds.had.co.nz/)
 
@@ -79,6 +77,9 @@ type: section
 
 The basics of interaction using the console window
 ========================================================
+
+If you haven't already, please open RStudio on DataHub by [clicking this link](https://publichealth.datahub.berkeley.edu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fpre-142-training%2Ftutorial-playground&urlpath=rstudio%2F&branch=main). If you're viewing this on bCourses, you'll have to right click and then choose "Open Link in New Tab".
+
 The R console window is the left (or lower-left) window in RStudio.
 The R console uses a "read, eval, print" loop. This is sometimes
 called a REPL.
@@ -86,6 +87,12 @@ called a REPL.
 - Eval: R evaluates it ...
 - Print: R prints the result ...
 - Loop: (repeat forever)
+
+***
+
+<div align="left">
+<img src="images/console.png">
+</div>
 
 
 A simple example in the console
