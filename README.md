@@ -4,10 +4,6 @@
 | Person | Role | Contact |
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
-| Emily Flynn | TA | erflynn@stanford.edu |
-| Margaret Antonio | TA | antmarge@stanford.edu |
-| Tim James Keyes | TA | tkeyes@stanford.edu |
-| Jacklyn Ha Luu | TA | jacklynl@stanford.edu |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
 - Time: 12-1:30 T/Th
