@@ -5,10 +5,7 @@
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
 
-- Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
-- Time: 12-1:30 T/Th
-- Location: https://stanford.zoom.us/j/91577806125?pwd=Y2FsMTRZU1dFWUlnc2xLZkFPZndzUT09
-- Office Hours: by appointment with TAs
+- Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
