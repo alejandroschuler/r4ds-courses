@@ -6,6 +6,9 @@
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022
+- Location: CCSR 4205
+- Dates: Tuesday July 5, 2022 - Thursday July 7, 2022
+- Time: 10am - 2pm
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
@@ -38,7 +41,7 @@ By the end of the course, you will be able to:
 <table>
   <tbody>
     <tr>
-        <th>Week</th>
+        <th>Day</th>
         <th>Topic</th>
         <th>Learning Goals</th>
         <th>Packages</th>
@@ -89,6 +92,13 @@ By the end of the course, you will be able to:
         </ul></td>
         <td>R4DS ch. 5</td>
     </tr>
+  </tbody>
+</table>
+
+This course is based on a longer version I've taught before. The materials for the longer version are also accessible here so I'll give you the outline for them as well
+
+<table>
+  <tbody>
     <tr>
       <td>4</td>
       <td>Advanced Tabular Data Manipulation</td>
@@ -174,7 +184,7 @@ Programming, like all things, is something you learn by doing. The lectures incl
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021/lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
+Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
