@@ -100,6 +100,13 @@ This course is based on a longer version I've taught before. The materials for t
 <table>
   <tbody>
     <tr>
+        <th>Day</th>
+        <th>Topic</th>
+        <th>Learning Goals</th>
+        <th>Packages</th>
+        <th>Reading</th>
+    </tr>
+    <tr>
       <td>4</td>
       <td>Advanced Tabular Data Manipulation</td>
       <td>
@@ -150,26 +157,6 @@ This course is based on a longer version I've taught before. The materials for t
             <li><code>zeallot</code></li>
         </ul></td>
         <td>R4DS ch. 17-21</td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td>Worked Analyses in R</td>
-        <td><ul>
-            <li>point out ways to use tidyverse functions in biological analyses</li>
-            <li>find, learn, and integrate domain-specific R packages into an analysis</li>
-        </ul></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>Bring-Your-Own-Data Lab</td>
-        <td><ul>
-            <li>apply tidyverse functions to solve a real-life data processing problem</li>
-            <li>provide programming consultation support to peers</li>
-        </ul></td>
-        <td></td>
-        <td></td>
     </tr>
   </tbody>
 </table>
