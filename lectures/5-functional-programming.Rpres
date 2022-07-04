@@ -111,7 +111,7 @@ rescale_0_1 = function(vec) {
 }
 
 df2 = df %>%
-  mutate_all(rescale_0_1)
+  mutate(across(a:d, rescale_0_1))
 ```
 - Since we have a function, we can make the change in a single place and improve the efficiency of multiple parts of our code
 - Bonus question: why use `range()` instead of getting and saving the results of `min()` and `max()` separately?
@@ -263,7 +263,7 @@ shuffle_col_named_number = function(df) {
 data %>% shuffle_col_named_number()
 ```
 
-- What if we wanted to modify it so that `mpg` weren't hard-coded? Intuitively, we should write something like this:
+- What if we wanted to modify it so that `number` weren't hard-coded? Intuitively, we should write something like this:
 ```{r}
 shuffle_col = function(data, col) {
   data %>% 

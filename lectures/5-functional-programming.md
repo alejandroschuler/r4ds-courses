@@ -111,7 +111,7 @@ rescale_0_1 = function(vec) {
 }
 
 df2 = df %>%
-  mutate_all(rescale_0_1)
+  mutate(across(a:d, rescale_0_1))
 ```
 - Since we have a function, we can make the change in a single place and improve the efficiency of multiple parts of our code
 - Bonus question: why use `range()` instead of getting and saving the results of `min()` and `max()` separately?
@@ -184,7 +184,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x7fc83dfda308>
+<bytecode: 0x7fd6bf707c60>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
 
@@ -240,7 +240,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
-[1] 0.1592803
+[1] 0.0966088
 ```
 
 Functional programming
@@ -278,7 +278,7 @@ shuffle_col_named_number = function(df) {
 }
 
 data %>% shuffle_col_named_number()
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      3 a    
@@ -286,7 +286,7 @@ data %>% shuffle_col_named_number()
 3      2 c    
 ```
 
-- What if we wanted to modify it so that `mpg` weren't hard-coded? Intuitively, we should write something like this:
+- What if we wanted to modify it so that `number` weren't hard-coded? Intuitively, we should write something like this:
 
 ```r
 shuffle_col = function(data, col) {
@@ -333,7 +333,7 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
-# A tibble: 3 x 3
+# A tibble: 3 × 3
   number label new_col
    <dbl> <chr>   <dbl>
 1      1 a           3
@@ -378,7 +378,7 @@ shuffle_col = function(data, col) {
 }
 
 data %>% shuffle_col(number)
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      2 a    
@@ -433,7 +433,7 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
-# A tibble: 3 x 3
+# A tibble: 3 × 3
   number label   col
    <dbl> <chr> <dbl>
 1      1 a         3
@@ -453,7 +453,7 @@ shuffle_col = function(data, col) {
     ))
 }
 data %>% shuffle_col(col_to_shuffle)
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   number label
    <dbl> <chr>
 1      2 a    
@@ -933,7 +933,7 @@ df <- tibble::tibble(
 ```r
 df %>%
   map_df(mean)
-# A tibble: 1 x 4
+# A tibble: 1 × 4
         a     b      c     d
     <dbl> <dbl>  <dbl> <dbl>
 1 -0.0944 0.187 -0.385    NA
@@ -950,7 +950,7 @@ Composing functions inside map()
 ```r
 mean_no_rm = function(x) mean(x, na.rm=TRUE)
 df %>% map_df(mean_no_rm)
-# A tibble: 1 x 4
+# A tibble: 1 × 4
         a     b      c     d
     <dbl> <dbl>  <dbl> <dbl>
 1 -0.0944 0.187 -0.385 0.240
@@ -960,7 +960,7 @@ df %>% map_df(mean_no_rm)
 
 ```r
 df %>% map_df(function(x) mean(x, na.rm=TRUE))
-# A tibble: 1 x 4
+# A tibble: 1 × 4
         a     b      c     d
     <dbl> <dbl>  <dbl> <dbl>
 1 -0.0944 0.187 -0.385 0.240
@@ -972,7 +972,7 @@ df %>% map_df(function(x) mean(x, na.rm=TRUE))
 
 ```r
 df %>% map_df(~ mean(., na.rm=TRUE))
-# A tibble: 1 x 4
+# A tibble: 1 × 4
         a     b      c     d
     <dbl> <dbl>  <dbl> <dbl>
 1 -0.0944 0.187 -0.385 0.240
@@ -982,7 +982,7 @@ df %>% map_df(~ mean(., na.rm=TRUE))
 
 ```r
 df %>% map_df(mean, na.rm=TRUE)
-# A tibble: 1 x 4
+# A tibble: 1 × 4
         a     b      c     d
     <dbl> <dbl>  <dbl> <dbl>
 1 -0.0944 0.187 -0.385 0.240
@@ -1150,7 +1150,7 @@ list(
     b = c(10,11)
   ) %>%
   cross_df()
-# A tibble: 6 x 2
+# A tibble: 6 × 2
       a     b
   <dbl> <dbl>
 1     1    10
@@ -1172,7 +1172,7 @@ Binding rows
     sample = rnorm(5)
   )) %>%
   bind_rows()
-# A tibble: 15 x 2
+# A tibble: 15 × 2
      rep   sample
    <int>    <dbl>
  1     1 -0.228  
@@ -1200,7 +1200,7 @@ Generate a table like the one shown here by drawing 3 normally-distributed rando
 
 
 ```
-# A tibble: 18 x 3
+# A tibble: 18 × 3
     sample  mean    sd
      <dbl> <dbl> <dbl>
  1 -0.366     -1     1
@@ -1279,7 +1279,7 @@ Example: Permutation test of a regression coefficient
 lm(mpg~., data=mtcars) %>%
   broom::tidy() %>%
   filter(term=="hp")
-# A tibble: 1 x 5
+# A tibble: 1 × 5
   term  estimate std.error statistic p.value
   <chr>    <dbl>     <dbl>     <dbl>   <dbl>
 1 hp     -0.0215    0.0218    -0.987   0.335
@@ -1343,7 +1343,7 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
-8.05 sec elapsed
+27.981 sec elapsed
 ```
 - We made 1000 coefficients, but it's slow!
 
@@ -1365,7 +1365,7 @@ perm_distribution = 1:1000 %>%
       analyze()
   )
 toc()
-5.212 sec elapsed
+16.692 sec elapsed
 ```
 
 Example: Permutation test of a regression coefficient
@@ -1385,7 +1385,7 @@ p_parametric = lm(mpg~., data=mtcars) %>%
 
 ```r
 p_empirical
-[1] 0.678
+[1] 0.685
 p_parametric
 [1] 0.3349553
 ```
