@@ -167,7 +167,7 @@ This course is based on a longer version I've taught before. The materials for t
 </table>
 
 ### In-class Exercises
-Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into [Zoom breakout rooms](https://blog.zoom.us/using-zoom-breakout-rooms/) of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
+Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into small groups of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
 - **scribe** (1): The scribe will share their screen with the group and type out/execute the code required for the exercise. They will also contribute to the solution.
 - **presenter** (1): The presenter is in charge of presenting the group's work to the rest of the class once the breakout session has concluded. They should also contribute to the solution.
 - **contributor** (0+): Contributors are responsible for generating ideas and code for the exercise.
