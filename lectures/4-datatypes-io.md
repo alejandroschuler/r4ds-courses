@@ -200,12 +200,12 @@ Matrices
 
 ```r
 my_example_matrix
-           [,1]        [,2]       [,3]       [,4]       [,5]
-[1,] -0.3891569  0.22763339 -0.4888385 -0.8208803 -1.6735399
-[2,] -0.2374259 -0.13084785 -1.4628013 -0.8400235  0.2606133
-[3,]  0.8253362 -1.49853588  0.7734820 -1.1805125 -1.1433724
-[4,] -0.4086636  0.03660701 -0.4899599  0.2534294 -0.9153715
-[5,]  0.8623823  0.42711167 -1.6247422  0.3470410  1.1635825
+            [,1]       [,2]       [,3]        [,4]       [,5]
+[1,]  1.95043118 -1.3928669  0.6012431  1.43689225 -3.2235145
+[2,] -0.05968044 -1.2182318  0.5707310 -0.02079338  2.0854780
+[3,] -0.01702747 -1.4958696  0.2118092  0.82472810 -2.3580814
+[4,] -0.82526222 -0.6061178 -0.6443620  0.20935032  0.8038541
+[5,]  0.01609437 -0.6819451  0.7317556 -0.51168141 -0.9455993
 ```
 
 - All the usual vector rules apply- in particular, all entries of the matrix must be of the same type
@@ -336,27 +336,27 @@ Similar syntax is used for 2D entities
 
 ```r
 my_example_matrix[1:3, c(2,2)]
-           [,1]       [,2]
-[1,]  0.2276334  0.2276334
-[2,] -0.1308478 -0.1308478
-[3,] -1.4985359 -1.4985359
+          [,1]      [,2]
+[1,] -1.392867 -1.392867
+[2,] -1.218232 -1.218232
+[3,] -1.495870 -1.495870
 ```
 - the general pattern is `matrix[row_index, column_index]`.
 - leaving either blank returns all rows or columns
 
 ```r
 my_example_matrix[1:3,]
-           [,1]       [,2]       [,3]       [,4]       [,5]
-[1,] -0.3891569  0.2276334 -0.4888385 -0.8208803 -1.6735399
-[2,] -0.2374259 -0.1308478 -1.4628013 -0.8400235  0.2606133
-[3,]  0.8253362 -1.4985359  0.7734820 -1.1805125 -1.1433724
+            [,1]      [,2]      [,3]        [,4]      [,5]
+[1,]  1.95043118 -1.392867 0.6012431  1.43689225 -3.223514
+[2,] -0.05968044 -1.218232 0.5707310 -0.02079338  2.085478
+[3,] -0.01702747 -1.495870 0.2118092  0.82472810 -2.358081
 my_example_matrix[,c(T,T,F,F,T)]
-           [,1]        [,2]       [,3]
-[1,] -0.3891569  0.22763339 -1.6735399
-[2,] -0.2374259 -0.13084785  0.2606133
-[3,]  0.8253362 -1.49853588 -1.1433724
-[4,] -0.4086636  0.03660701 -0.9153715
-[5,]  0.8623823  0.42711167  1.1635825
+            [,1]       [,2]       [,3]
+[1,]  1.95043118 -1.3928669 -3.2235145
+[2,] -0.05968044 -1.2182318  2.0854780
+[3,] -0.01702747 -1.4958696 -2.3580814
+[4,] -0.82526222 -0.6061178  0.8038541
+[5,]  0.01609437 -0.6819451 -0.9455993
 ```
 
 Indexing for data frames
@@ -405,22 +405,22 @@ df %>%
   filter(x>0) %>%
   select(x,y)
 # A tibble: 3 × 2
-      x      y
-  <dbl>  <dbl>
-1   0.3  0.883
-2   0.1 -0.865
-3  12    0.172
+      x       y
+  <dbl>   <dbl>
+1   0.3 -0.0473
+2   0.1 -0.887 
+3  12   -1.59  
 ```
 **Vector indexing**
 
 ```r
 df[df$x>0, c(1,2)] # df$x takes the column x from the data frame df (details later)
 # A tibble: 3 × 2
-      x      y
-  <dbl>  <dbl>
-1   0.3  0.883
-2   0.1 -0.865
-3  12    0.172
+      x       y
+  <dbl>   <dbl>
+1   0.3 -0.0473
+2   0.1 -0.887 
+3  12   -1.59  
 ```
 - What are the advantages/disadvantages of each?
 
@@ -1063,7 +1063,7 @@ tibble(date_time = now(), # a date-time (dttm), prints as a string
 # A tibble: 1 × 2
   date_time           date      
   <dttm>              <date>    
-1 2021-08-09 11:53:55 2021-08-09
+1 2021-08-17 11:59:34 2021-08-17
 ```
 - Always use the simplest possible data type that works for your needs. Date-times are more complicated because of the need to handle time zones.
 
@@ -1283,14 +1283,14 @@ Durations
 ```r
 usa_age <- today() - ymd(17760704)
 usa_age
-Time difference of 89520 days
+Time difference of 89528 days
 ```
 - Subtracting `dttm`s in R gives something called a `difftime`, which ambiguously represents differences in weeks, days, hours, or seconds. A `duration` always uses seconds so it is preferable.
 - You can conver to a duration with `as.duration()`
 
 ```r
 as.duration(usa_age)
-[1] "7734528000s (~245.09 years)"
+[1] "7735219200s (~245.11 years)"
 ```
 - `dseconds()`, `dminutes()`, `dhours()`, `ddays()`, `dweeks()`, and `dyears()` make durations of the given length of time and are vectorized
 
@@ -1308,7 +1308,7 @@ Duration arithmetic
 
 ```r
 2 * (as.duration(usa_age) + dyears(1) + dweeks(12) + dhours(15))
-[1] "15546794400s (~492.65 years)"
+[1] "15548176800s (~492.69 years)"
 ```
 - Or added and subtracted from `ddtm`s
 
@@ -1454,7 +1454,7 @@ Intervals
 
 ```r
 mdy("July 4 1776") %--% today()
-[1] 1776-07-04 UTC--2021-08-09 UTC
+[1] 1776-07-04 UTC--2021-08-17 UTC
 ```
 - You can use %within% to see if a date or `dttm` falls in the interval
 
