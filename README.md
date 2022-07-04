@@ -4,8 +4,14 @@
 | Person | Role | Contact |
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
+| Checo Gonzales | TA | checo@stanford.edu |
+| Adi Mukund | TA | amukund@stanford.edu |
+| Jon Judd | TA| jjudd5@stanford.edu |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022
+- Location: CCSR 4205
+- Dates: Tuesday July 5, 2022 - Thursday July 7, 2022
+- Time: 10am - 2pm
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
@@ -20,7 +26,9 @@ This course is not graded, nor are there any assignments or homework. The lectur
 ### Prerequisites
 No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has only recently gained traction.
 
-You will need to install R (and RStudio) to follow along with the material, or have access to a machine that has that software installed.
+We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: https://rstudio.cloud. It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
+
+Alternatively, you can install R and RStudio on your own computer: 
 [Follow this link](https://cran.rstudio.com/) and click on the appropriate options for your operating system to install R, 
 then do the same to [install RStudio](https://rstudio.com/products/rstudio/download/#download).
 
@@ -38,7 +46,7 @@ By the end of the course, you will be able to:
 <table>
   <tbody>
     <tr>
-        <th>Week</th>
+        <th>Day</th>
         <th>Topic</th>
         <th>Learning Goals</th>
         <th>Packages</th>
@@ -88,6 +96,20 @@ By the end of the course, you will be able to:
             <li><code>dplyr</code></li>
         </ul></td>
         <td>R4DS ch. 5</td>
+    </tr>
+  </tbody>
+</table>
+
+This course is based on a longer version I've taught before. The materials for the longer version are also accessible here so I'll give you the outline for them as well. If we get through the basics we'll start in on this more advanced material in class, but otherwise you are welcome to go through it on your own.
+
+<table>
+  <tbody>
+    <tr>
+        <th>Day</th>
+        <th>Topic</th>
+        <th>Learning Goals</th>
+        <th>Packages</th>
+        <th>Reading</th>
     </tr>
     <tr>
       <td>4</td>
@@ -141,31 +163,11 @@ By the end of the course, you will be able to:
         </ul></td>
         <td>R4DS ch. 17-21</td>
     </tr>
-    <tr>
-      <td>7</td>
-      <td>Worked Analyses in R</td>
-        <td><ul>
-            <li>point out ways to use tidyverse functions in biological analyses</li>
-            <li>find, learn, and integrate domain-specific R packages into an analysis</li>
-        </ul></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>Bring-Your-Own-Data Lab</td>
-        <td><ul>
-            <li>apply tidyverse functions to solve a real-life data processing problem</li>
-            <li>provide programming consultation support to peers</li>
-        </ul></td>
-        <td></td>
-        <td></td>
-    </tr>
   </tbody>
 </table>
 
 ### In-class Exercises
-Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into [Zoom breakout rooms](https://blog.zoom.us/using-zoom-breakout-rooms/) of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
+Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into small groups of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
 - **scribe** (1): The scribe will share their screen with the group and type out/execute the code required for the exercise. They will also contribute to the solution.
 - **presenter** (1): The presenter is in charge of presenting the group's work to the rest of the class once the breakout session has concluded. They should also contribute to the solution.
 - **contributor** (0+): Contributors are responsible for generating ideas and code for the exercise.
@@ -174,7 +176,7 @@ Programming, like all things, is something you learn by doing. The lectures incl
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021/lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
+Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
