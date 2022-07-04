@@ -471,7 +471,7 @@ my_data = tibble(
   age = c(33, 48, 8, 29)
 )
 my_data
-# A tibble: 4 x 2
+# A tibble: 4 × 2
   person      age
   <chr>     <dbl>
 1 carlos       33
@@ -511,7 +511,7 @@ Columns: 2
 $ person <chr> "carlos", "nathalie", "christina", "alejandro"
 $ age    <dbl> 33, 48, 8, 29
 head(my_data, n=2)
-# A tibble: 2 x 2
+# A tibble: 2 × 2
   person     age
   <chr>    <dbl>
 1 carlos      33

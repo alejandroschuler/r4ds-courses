@@ -1,7 +1,7 @@
 Basic Tabular Data Manipulation	
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham, updated to include GTEx sample data by Nicole Ferraro
-date: 2019, updated July 2021
+date: 2022
 transition: none
 width: 1680
 height: 1050
@@ -84,7 +84,7 @@ Filter rows with filter()
 
 ```r
 filter(gtex_data, Blood >= 12)
-# A tibble: 12 x 7
+# A tibble: 12 × 7
    Gene       Ind        Blood Heart  Lung Liver NTissues
    <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 AC012358.7 GTEX-VUSG   13.6 -1.43  1.22 -0.39        4
@@ -133,7 +133,7 @@ Combining constraints in filter
 
 ```r
 filter(gtex_data, Blood <= -5, Heart <= -5)
-# A tibble: 3 x 7
+# A tibble: 3 × 7
   Gene     Ind        Blood  Heart   Lung Liver NTissues
   <chr>    <chr>      <dbl>  <dbl>  <dbl> <dbl>    <dbl>
 1 ATP5A1   GTEX-YFC4  -5.35  -6.05  -7.96 -4.4         4
@@ -149,7 +149,7 @@ Filtering out all rows
 
 ```r
 filter(gtex_data, NTissues > 5)
-# A tibble: 0 x 7
+# A tibble: 0 × 7
 # … with 7 variables: Gene <chr>, Ind <chr>, Blood <dbl>, Heart <dbl>,
 #   Lung <dbl>, Liver <dbl>, NTissues <dbl>
 ```
@@ -209,7 +209,7 @@ Logical conjunctions
 
 ```r
 filter(gtex_data, Lung > 6 | Liver < -6)
-# A tibble: 73 x 7
+# A tibble: 73 × 7
    Gene       Ind        Blood Heart  Lung Liver NTissues
    <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 ACOT12     GTEX-12WSD  5.43  0.53  8.2   0.71        4
@@ -234,7 +234,7 @@ Logical conjunctions
 
 ```r
 filter(gtex_data, !(Blood < 6 | Lung < 6))
-# A tibble: 5 x 7
+# A tibble: 5 × 7
   Gene           Ind        Blood Heart  Lung Liver NTissues
   <chr>          <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 CTAG2          GTEX-17HGU  6.61  0.65  7.4   2.85        4
@@ -250,7 +250,7 @@ Logical conjunctions
 
 ```r
 filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissues==1 | NTissues==2)
-# A tibble: 132 x 7
+# A tibble: 132 × 7
    Gene       Ind        Blood Heart  Lung Liver NTissues
    <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 AC016757.3 GTEX-131YS  1.43 NA    NA    -0.07        2
@@ -307,7 +307,7 @@ type: prompt
 
 ```r
 filter(gtex_data, Blood < -3, Heart < -3)
-# A tibble: 26 x 7
+# A tibble: 26 × 7
    Gene               Ind        Blood Heart  Lung Liver NTissues
    <chr>              <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 ABC7-42389800N19.1 GTEX-14E7W -4.24 -3.29 -3.55 -3.2         4
@@ -338,7 +338,7 @@ type: prompt
 
 ```r
 filter(gtex_data, Blood > 3, Heart > 3, Lung > 3, Liver > 3)
-# A tibble: 16 x 7
+# A tibble: 16 × 7
    Gene           Ind        Blood Heart  Lung Liver NTissues
    <chr>          <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 AC004453.8     GTEX-12WSI  6.2   4.31  4.57  3.77        4
@@ -374,7 +374,7 @@ type: prompt
 
 ```r
 filter(gtex_data, abs(Blood) > 3 | abs(Heart) > 3 | abs(Lung) > 3 | abs(Liver) > 3)
-# A tibble: 10,171 x 7
+# A tibble: 10,171 × 7
    Gene    Ind        Blood Heart  Lung Liver NTissues
    <chr>   <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 A2ML1   GTEX-14E7W  0.55 -0.63  3.7   1.6         4
@@ -406,7 +406,7 @@ type: prompt
 
 ```r
 filter(gtex_data, !is.na(Heart))
-# A tibble: 383,941 x 7
+# A tibble: 383,941 × 7
    Gene  Ind        Blood Heart  Lung Liver NTissues
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
@@ -431,7 +431,7 @@ Filtering by row number
 
 ```r
 filter(gtex_data, row_number()<=3)
-# A tibble: 3 x 7
+# A tibble: 3 × 7
   Gene  Ind        Blood Heart  Lung Liver NTissues
   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
@@ -447,14 +447,14 @@ Sampling rows
 
 ```r
 sample_n(gtex_data, 5)
-# A tibble: 5 x 7
-  Gene          Ind        Blood Heart  Lung Liver NTissues
-  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 METTL26       GTEX-1AX8Z  0.4   0.89 -0.08 -1.17        4
-2 FAM83G        GTEX-131YS  0.1   0.39  0.88 -1.3         4
-3 RP11-104F15.9 GTEX-13FTZ -0.26 -0.52 -0.2   0.56        4
-4 KRT10         GTEX-1AX8Z -0.47  0.15 -1.38 -0.59        4
-5 RP13-131K19.1 GTEX-1KD5A -0.41 -0.11 -0.67  0.42        4
+# A tibble: 5 × 7
+  Gene       Ind        Blood Heart  Lung Liver NTissues
+  <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 RARA       GTEX-12WSD  0.7  -1.02  0.17 -0.13        4
+2 ZNF528-AS1 GTEX-13OW6 -1.28 -0.14 -0.71  1.23        4
+3 MCTP1      GTEX-18A7A  0.08  1.58 -0.34  0.08        4
+4 SMAD5      GTEX-1KANB -0.79  0.28 -0.85  1.44        4
+5 TLE1P1     GTEX-14DAQ  0.07 -0.91 -0.72  0.27        4
 ```
 
 - `sample_frac()` is similar
@@ -471,7 +471,7 @@ Arrange rows with arrange()
 
 ```r
 arrange(gtex_data, Blood)
-# A tibble: 389,922 x 7
+# A tibble: 389,922 × 7
    Gene        Ind        Blood  Heart   Lung Liver NTissues
    <chr>       <chr>      <dbl>  <dbl>  <dbl> <dbl>    <dbl>
  1 HBA2        GTEX-11DXZ -9.44  -1.52  -1.44 -2.15        4
@@ -494,7 +494,7 @@ Arrange can sort by more than one column
 
 ```r
 arrange(gtex_data, NTissues, Blood)
-# A tibble: 389,922 x 7
+# A tibble: 389,922 × 7
    Gene       Ind        Blood Heart  Lung Liver NTissues
    <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 HEATR1     GTEX-1EWIQ -1.63  NA      NA  0.49        2
@@ -517,7 +517,7 @@ Use the desc function to arrange by descending values
 
 ```r
 arrange(gtex_data, desc(Blood))
-# A tibble: 389,922 x 7
+# A tibble: 389,922 × 7
    Gene       Ind        Blood Heart  Lung Liver NTissues
    <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 REN        GTEX-U8XE   18.9 -0.57 NA     0.09        3
@@ -548,7 +548,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 ```r
 filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
-# A tibble: 5 x 7
+# A tibble: 5 × 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09        3
@@ -567,7 +567,7 @@ Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs w
 
 ```r
 filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
-# A tibble: 5 x 7
+# A tibble: 5 × 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09        3
@@ -581,7 +581,7 @@ or
 ```r
 gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
-# A tibble: 5 x 7
+# A tibble: 5 × 7
   Gene     Ind        Blood Heart  Lung Liver NTissues
   <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09        3
@@ -600,7 +600,7 @@ Select columns with select()
 
 ```r
 select(gtex_data, Gene, Ind, Blood)
-# A tibble: 389,922 x 3
+# A tibble: 389,922 × 3
    Gene  Ind        Blood
    <chr> <chr>      <dbl>
  1 A2ML1 GTEX-11DXZ -0.14
@@ -624,7 +624,7 @@ Select columns with select()
 
 ```r
 select(gtex_data, starts_with("L"))
-# A tibble: 389,922 x 2
+# A tibble: 389,922 × 2
     Lung Liver
    <dbl> <dbl>
  1 NA    -0.66
@@ -646,7 +646,7 @@ Select columns with select()
 
 ```r
 select(gtex_data, contains("N"))
-# A tibble: 389,922 x 4
+# A tibble: 389,922 × 4
    Gene  Ind         Lung NTissues
    <chr> <chr>      <dbl>    <dbl>
  1 A2ML1 GTEX-11DXZ NA           3
@@ -670,7 +670,7 @@ select() subsets columns by name
 
 ```r
 select(gtex_data, -starts_with("L"), -Ind)
-# A tibble: 389,922 x 4
+# A tibble: 389,922 × 4
    Gene  Blood Heart NTissues
    <chr> <dbl> <dbl>    <dbl>
  1 A2ML1 -0.14 -1.08        3
@@ -693,7 +693,7 @@ select() subsets columns by name
 
 ```r
 select(gtex_data, where(is.numeric))
-# A tibble: 389,922 x 5
+# A tibble: 389,922 × 5
    Blood Heart  Lung Liver NTissues
    <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 -0.14 -1.08 NA    -0.66        3
@@ -715,7 +715,7 @@ pull() is a friend of select()
 
 ```r
 select(gtex_data, Gene)
-# A tibble: 389,922 x 1
+# A tibble: 389,922 × 1
    Gene 
    <chr>
  1 A2ML1
@@ -749,7 +749,7 @@ Rename column names with rename()
 
 ```r
 select(gtex_data, number_tissues = NTissues)
-# A tibble: 389,922 x 1
+# A tibble: 389,922 × 1
    number_tissues
             <dbl>
  1              3
@@ -762,7 +762,7 @@ select(gtex_data, number_tissues = NTissues)
 
 ```r
 rename(gtex_data, number_tissues = NTissues)
-# A tibble: 389,922 x 7
+# A tibble: 389,922 × 7
    Gene  Ind        Blood Heart  Lung Liver number_tissues
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>          <dbl>
  1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66              3
@@ -789,7 +789,7 @@ type:prompt
 
 ```r
 select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
-# A tibble: 78 x 1
+# A tibble: 78 × 1
    Heart
    <dbl>
  1  0.78
@@ -811,7 +811,7 @@ type:prompt
 
 ```r
 select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
-# A tibble: 78 x 1
+# A tibble: 78 × 1
    Heart
    <dbl>
  1  0.78
@@ -851,7 +851,7 @@ type:prompt
 
 ```r
 select(gtex_data, where(is.character))
-# A tibble: 389,922 x 2
+# A tibble: 389,922 × 2
    Gene  Ind       
    <chr> <chr>     
  1 A2ML1 GTEX-11DXZ
@@ -876,7 +876,7 @@ Add new variables with mutate()
 
 ```r
 mutate(gtex_data, abs_blood = abs(Blood))
-# A tibble: 389,922 x 8
+# A tibble: 389,922 × 8
    Gene  Ind        Blood Heart  Lung Liver NTissues abs_blood
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>
  1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3      0.14
@@ -890,7 +890,7 @@ mutate(gtex_data, abs_blood = abs(Blood))
 
 ```r
 mutate(gtex_data, Blood = Blood *1000)
-# A tibble: 389,922 x 7
+# A tibble: 389,922 × 7
    Gene  Ind        Blood Heart  Lung Liver NTissues
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
  1 A2ML1 GTEX-11DXZ  -140 -1.08 NA    -0.66        3
@@ -909,7 +909,7 @@ mutate(gtex_data, # the newlines make it more readable
       abs_heart = abs(Heart),
       blood_heart_dif = abs_blood - abs_heart
 )
-# A tibble: 389,922 x 10
+# A tibble: 389,922 × 10
    Gene  Ind        Blood Heart  Lung Liver NTissues abs_blood abs_heart
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>     <dbl>
  1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3      0.14      1.08
@@ -933,23 +933,26 @@ mutate() for data type conversion
 ```r
 df = tibble(number = c("1", "2", "3"))
 df
-# A tibble: 3 x 1
+# A tibble: 3 × 1
   number
   <chr> 
 1 1     
 2 2     
 3 3     
 mutate(df, number_plus_1 = number + 1)
-Error: Problem with `mutate()` column `number_plus_1`.
+Error in `mutate_cols()`:
+! Problem with `mutate()` column `number_plus_1`.
 ℹ `number_plus_1 = number + 1`.
 x non-numeric argument to binary operator
+Caused by error in `number + 1`:
+! non-numeric argument to binary operator
 ```
 
 - `mutate()` is also useful for converting data types, in this case text to numbers
 
 ```r
 mutate(df, number = as.numeric(number))
-# A tibble: 3 x 1
+# A tibble: 3 × 1
   number
    <dbl>
 1      1
@@ -972,7 +975,7 @@ I want to identify genes that have large average expression changes across blood
 
 ```r
 mutate(gtex_data, avg_blood_liver = (Blood+Liver)/2)
-# A tibble: 389,922 x 8
+# A tibble: 389,922 × 8
    Gene  Ind        Blood Heart  Lung Liver NTissues avg_blood_liver
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>           <dbl>
  1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3          -0.4  
@@ -1049,7 +1052,7 @@ gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
 sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
 top_10 = filter(sorted, row_number()<=10)
 select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
-# A tibble: 10 x 5
+# A tibble: 10 × 5
    Gene           Ind         Lung Blood lung_blood_dif
    <chr>          <chr>      <dbl> <dbl>          <dbl>
  1 TMEM151A       GTEX-ZEX8  12.0  -0.77          12.8 
@@ -1207,7 +1210,7 @@ Piping with a data frame
 tibble(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
            age = c(10,54,21,99,96)) %>%
     filter(age > 30) 
-# A tibble: 3 x 2
+# A tibble: 3 × 2
   name          age
   <chr>       <dbl>
 1 Rose           54
@@ -1222,10 +1225,9 @@ Piping to another position
 ```r
 # install.packages("slider")
 library(slider)
-Error in library(slider): there is no package called 'slider'
 mean %>%
   slide_vec(1:10, ., .before=2)
-Error in slide_vec(1:10, ., .before = 2): could not find function "slide_vec"
+ [1] 1.0 1.5 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0
 ```
 - Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
 - More about this in the functional programming section
@@ -1282,7 +1284,7 @@ Grouped summaries with summarise()
 
 ```r
 summarize(gtex_data, tissue_avg=mean(NTissues))
-# A tibble: 1 x 1
+# A tibble: 1 × 1
   tissue_avg
        <dbl>
 1       3.97
@@ -1303,7 +1305,7 @@ summarize( # newlines not necessary, again just increase clarity
   blood_max = max(Blood, na.rm=T),
   blood_lung_dif_min = min(Blood - Lung, na.rm=T)
 )
-# A tibble: 1 x 3
+# A tibble: 1 × 3
   tissue_avg blood_max blood_lung_dif_min
        <dbl>     <dbl>              <dbl>
 1       3.97      18.9              -12.8
@@ -1318,7 +1320,7 @@ Grouped summaries with summarise()
 gtex_data %>% 
   group_by(Gene) %>%
   summarize(max_blood = max(Blood))
-# A tibble: 4,999 x 2
+# A tibble: 4,999 × 2
    Gene               max_blood
    <chr>                  <dbl>
  1 A2ML1                   2.08
@@ -1348,7 +1350,7 @@ Multiple columns can be used to group the data simultaneously
 gtex_data %>% 
   group_by(Gene,Ind) %>%
   summarize(max_blood = max(Blood))
-# A tibble: 389,922 x 3
+# A tibble: 389,922 × 3
 # Groups:   Gene [4,999]
    Gene  Ind        max_blood
    <chr> <chr>          <dbl>
@@ -1377,7 +1379,7 @@ gtex_data %>%
   filter(!is.na(Blood)) %>%
   group_by(Gene) %>%
   summarize(how_many = n())
-# A tibble: 4,999 x 2
+# A tibble: 4,999 × 2
    Gene               how_many
    <chr>                 <int>
  1 A2ML1                    78
@@ -1411,7 +1413,7 @@ Computing the number of distinct elements in a column, per group
 gtex_data %>% 
   group_by(Ind) %>%
   summarize(n_genes = n_distinct(Gene))
-# A tibble: 78 x 2
+# A tibble: 78 × 2
    Ind        n_genes
    <chr>        <int>
  1 GTEX-11DXZ    4999
@@ -1450,7 +1452,7 @@ gtex_data %>%
     max_liver = max(Liver, na.rm=T),
     min_liver = min(Liver, na.rm=T)
   )
-# A tibble: 4,999 x 3
+# A tibble: 4,999 × 3
    Gene               max_liver min_liver
    <chr>                  <dbl>     <dbl>
  1 A2ML1                   3.65     -1.94
@@ -1510,7 +1512,7 @@ Filtering grouped data
 gtex_data %>% 
   group_by(Gene) %>%
   filter(NTissues == max(NTissues))
-# A tibble: 376,883 x 7
+# A tibble: 376,883 × 7
 # Groups:   Gene [4,999]
    Gene  Ind        Blood Heart  Lung Liver NTissues
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -1540,7 +1542,7 @@ Which are the individual pairs that have both the max blood expression change *a
 gtex_data %>% 
   group_by(Gene) %>%
   filter(Blood == max(Blood), Lung==max(Lung))
-# A tibble: 64 x 7
+# A tibble: 64 × 7
 # Groups:   Gene [64]
    Gene        Ind        Blood Heart  Lung Liver NTissues
    <chr>       <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
@@ -1568,7 +1570,7 @@ gtex_data %>%
   group_by(Gene) %>%
   mutate(blood_diff_from_min = Blood - min(Blood)) %>%
   select(Gene, Ind, Blood, blood_diff_from_min)
-# A tibble: 389,922 x 4
+# A tibble: 389,922 × 4
 # Groups:   Gene [4,999]
    Gene  Ind        Blood blood_diff_from_min
    <chr> <chr>      <dbl>               <dbl>
