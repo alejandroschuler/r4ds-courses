@@ -396,9 +396,23 @@ Exercise: mean-by
 type: prompt
 
 1. Write a function that takes a dataframe and two bare (unquoted) column names as arguments. Your function should return the result of grouping the dataframe by the first column and then taking the mean of the second column by the groups defined by the first. Name the resulting column `"mean_by_grp"`.
-2. Modify your function so that the user must pass in a string as a fourth argument. This string should be the name of the resulting summary column in the resulting dataframe
-3. Modify your function so that the summarizing function (e.g. `mean`) can be passed in by the user as an argument
 
+For an example, try using this toy data:
+```{r}
+data = tibble(
+  grp = c("a", "a", "b", "b", "b"),
+  val = c(1, 3, 5, 2, 2))
+```
+
+Then try your function on the GTEx data to get the average expression of each gene in Blood. (Hint: how do you deal with NAs?)
+```{r}
+gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex.tissue.zscores.advance2020.txt')
+```
+Try different sets of columns and modifying the toy data to make sure it works.
+
+2. Modify your function so that the user must pass in a string as a fourth argument. This string should be the name of the resulting summary column in the resulting dataframe.
+
+3. Modify your function so that the summarizing function (e.g. `mean`) can be passed in by the user as an argument. Hint: first try functions like `min` and `max`, and then think about other functions to play with.
 
 Conditional Evaluation
 === 
@@ -532,7 +546,7 @@ Seeing into lists
 ===
 - Use `str()` to dig into nested lists and other complicated objects
 ```{r}
-nested_list = list(a_list, 4, mtcars)
+nested_list = list(a_list, 4, gtex_data)
 str(nested_list)
 ```
 
@@ -652,7 +666,7 @@ mean(x, trim=0.5, na.rm=T)
 ```
 - Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
 
-Exercise: ggplot with default red points
+Exercise: ggplot with 
 ===
 type: prompt
 - Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
@@ -665,9 +679,11 @@ ggplot_redpoint = function(...) {
 ```
 
 Example: 
-```{r}
-mtcars %>%
-ggplot_redpoint(aes(mpg, hp)) 
+```{r, fig.align="center"}
+# similarity between expression of genes in blood and lung 
+gtex_data %>%
+  filter(Ind=="GTEX-11DXZ") %>% # look at one person
+ggplot_redpoint(aes(Blood, Lung)) 
 ```
 
 Iteration
@@ -780,7 +796,7 @@ df %>% map_df(mean, na.rm=TRUE)
 Exercise: map practice
 ===
 type: prompt
-- Determine the type of each column in `nycflights13::flights` (`?typeof`). Return the result as a vector of strings
+- Determine the type of each column in `gtex_data` (`?typeof`). Return the result as a vector of strings
 - Generate 10 normally-distributed random numbers for each of `mean`=-10, 0, 10, and 100 (?rnorm). Use the default value of `sd`. 
 
 Exercise: partial harmonic sum
@@ -978,12 +994,16 @@ Motivation
 
 Example: Permutation test of a regression coefficient
 ===
-- Let's say we're interested in the association of `mpg` and `hp` in the mtcars data set (adjusted for other variables)
+- Let's say we're interested in the association of two genes in the shortened GTEx dataset (adjusted for other variables). [Try visualizing the relationship between these two genes first!]
 - We can run a linear model to estimate that association, assuming a linear trend
 ```{r}
-lm(mpg~., data=mtcars) %>%
+genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+genes2 = genes %>% 
+  drop_na() %>% # remove NAs
+  select(age, gender, ancestry, phenotype, VAPA, EIF3L) # select th variables we want to include
+lm(VAPA~., data=genes2) %>%
   broom::tidy() %>%
-  filter(term=="hp")
+  filter(term=="EIF3L")
 ```
 - Here we've used `lm()` to run a linear model- you can learn more about `lm()` and the formula interface it uses by looking at the help page
 - We've also used `tidy()` from the `broom` package to clean up the output into a tibble.
@@ -1006,26 +1026,27 @@ shuffle_row = function(data, row) {
 }
 
 analyze = function(data) {
-  lm(mpg~., data=data) %>%
+  lm(VAPA~., data=data) %>%
     broom::tidy() %>%
-    filter(term=="hp") %>%
+    filter(term=="EIF3L") %>%
     pull(estimate)
 }
 ```
 
 ```{r}
-mtcars %>%
-  shuffle_row(mpg) %>% 
+genes2 %>%
+  shuffle_row(VAPA) %>% 
   analyze()
 
-mtcars %>%
-  shuffle_row(mpg) %>% 
+genes2 %>%
+  shuffle_row(VAPA) %>% 
   analyze()
 ```
 
 Example: Permutation test of a regression coefficient
 ===
 ```{r, messages=FALSE, warning=FALSE}
+#install.packages('tictoc')
 library(tictoc) # for timing things easily
 ```
 
@@ -1033,8 +1054,8 @@ library(tictoc) # for timing things easily
 tic()
 perm_distribution = 1:1000 %>%
   map_dbl(~
-    mtcars %>%
-      shuffle_row(mpg) %>% 
+    genes2 %>%
+      shuffle_row(VAPA) %>% 
       analyze()
   )
 toc()
@@ -1045,6 +1066,7 @@ Example: Permutation test of a regression coefficient
 ===
 - If we parallelize across CPUs, we can go faster
 ```{r, warning=F, message=F}
+#install.packages('furrr')
 library(furrr) # parallel maps
 plan(multiprocess(workers=4)) # turns on parallel processing 
 ```
@@ -1052,8 +1074,8 @@ plan(multiprocess(workers=4)) # turns on parallel processing
 tic()
 perm_distribution = 1:1000 %>%
   future_map_dbl(~
-    mtcars %>%
-      shuffle_row(mpg) %>% 
+    genes2 %>%
+      shuffle_row(VAPA) %>% 
       analyze()
   )
 toc()
@@ -1062,13 +1084,13 @@ toc()
 Example: Permutation test of a regression coefficient
 ===
 ```{r}
-beta = analyze(mtcars)
+beta = analyze(genes2)
 
 p_empirical = mean(abs(perm_distribution) >= abs(beta))
 
-p_parametric = lm(mpg~., data=mtcars) %>%
+p_parametric = lm(VAPA~., data=genes2) %>%
   broom::tidy() %>%
-  filter(term=="hp") %>%
+  filter(term=="EIF3L") %>%
   pull(p.value)
 ```
 
