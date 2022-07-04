@@ -4,6 +4,9 @@
 | Person | Role | Contact |
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
+| Checo Gonzales | TA | checo@stanford.edu |
+| Adi Mukund | TA | amukund@stanford.edu |
+| Jon Judd | TA| jjudd5@stanford.edu |
 
 - Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022
 - Location: CCSR 4205
@@ -23,7 +26,9 @@ This course is not graded, nor are there any assignments or homework. The lectur
 ### Prerequisites
 No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has only recently gained traction.
 
-You will need to install R (and RStudio) to follow along with the material, or have access to a machine that has that software installed.
+We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: https://rstudio.cloud. It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
+
+Alternatively, you can install R and RStudio on your own computer: 
 [Follow this link](https://cran.rstudio.com/) and click on the appropriate options for your operating system to install R, 
 then do the same to [install RStudio](https://rstudio.com/products/rstudio/download/#download).
 
@@ -95,7 +100,7 @@ By the end of the course, you will be able to:
   </tbody>
 </table>
 
-This course is based on a longer version I've taught before. The materials for the longer version are also accessible here so I'll give you the outline for them as well
+This course is based on a longer version I've taught before. The materials for the longer version are also accessible here so I'll give you the outline for them as well. If we get through the basics we'll start in on this more advanced material in class, but otherwise you are welcome to go through it on your own.
 
 <table>
   <tbody>
