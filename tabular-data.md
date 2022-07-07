@@ -1834,6 +1834,12 @@ graphics," a set of primitives and rules for combining them in a way
 that makes sense for plotting data.
 - This perspective is quite powerful, but requires learning a bit of
 vocabulary and a new way of thinking about graphics.
+- For a brief introduction to this way of thinking (albeit in the context
+of the Python package Altair), check out Jake Vanderplas's talk 
+[here](https://www.youtube.com/watch?v=vTingdk_pVM). If you have slightly 
+more time, Hadley Wickham (the author of much of the Tidyverse) has a
+talk explaining this in the context of ggplot
+[here](https://www.youtube.com/watch?v=9YTNYT1maa4). 
 
 
 The ggplot2 model (simplified version)
