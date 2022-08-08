@@ -3,15 +3,15 @@
 ### Logistics
 | Person | Role | Contact |
 |---|---|---|
-| Alejandro Schuler | Instructor | alejandro.schuler@gmail.com |
-| Checo Gonzales | TA | checo@stanford.edu |
-| Adi Mukund | TA | amukund@stanford.edu |
-| Jon Judd | TA| jjudd5@stanford.edu |
+| Alejandro Schuler | Instructor | alejandro.schuler@berkeley.edu |
+| Adi Mukund | TA |  |
+| Tyler Mansfield | TA | |
+| Sky Qui | TA |  |
+| Nolan Gunter | TA |  |
+| Noel Pimentel | TA |  |
 
-- Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022
-- Location: CCSR 4205
-- Dates: Tuesday July 5, 2022 - Thursday July 7, 2022
-- Time: 10am - 2pm
+- Website: https://github.com/alejandroschuler/r4ds-courses/tree/bph-summer-seminar-2022
+- Location: BWW Colloquia Rooms
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
@@ -39,14 +39,14 @@ By the end of the course, you will be able to:
 * read and write tabular data between R and flat files
 * subset, transform, summarize, join, and plot data
 * write reusable and readable programs
-* seek out, learn, and integrate new packages into your analyses
+* seek out, learn, and integrate new packages and code into your analyses
 
 ### Schedule
 
 <table>
   <tbody>
     <tr>
-        <th>Day</th>
+        <th>Module</th>
         <th>Topic</th>
         <th>Learning Goals</th>
         <th>Packages</th>
@@ -105,7 +105,7 @@ This course is based on a longer version I've taught before. The materials for t
 <table>
   <tbody>
     <tr>
-        <th>Day</th>
+        <th>Module</th>
         <th>Topic</th>
         <th>Learning Goals</th>
         <th>Packages</th>
@@ -176,7 +176,7 @@ Programming, like all things, is something you learn by doing. The lectures incl
 We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found [here](https://github.com/alejandroschuler/r4ds-courses/tree/advance-2022lectures). Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
+Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
