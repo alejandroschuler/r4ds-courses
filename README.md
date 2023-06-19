@@ -4,14 +4,9 @@
 | Person | Role | Contact |
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@berkeley.edu |
-| Adi Mukund | TA |  |
-| Tyler Mansfield | TA | |
-| Sky Qui | TA |  |
-| Nolan Gunter | TA |  |
-| Noel Pimentel | TA |  |
 
-- Website: https://github.com/alejandroschuler/r4ds-courses/tree/bph-summer-seminar-2022
-- Location: BWW Colloquia Rooms
+- Website: https://github.com/alejandroschuler/r4ds-courses/tree/summer-2023
+- Location: TBA 
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
@@ -97,27 +92,11 @@ By the end of the course, you will be able to:
         </ul></td>
         <td>R4DS ch. 5</td>
     </tr>
-  </tbody>
-</table>
-
-This course is based on a longer version I've taught before. The materials for the longer version are also accessible here so I'll give you the outline for them as well. If we get through the basics we'll start in on this more advanced material in class, but otherwise you are welcome to go through it on your own.
-
-<table>
-  <tbody>
-    <tr>
-        <th>Module</th>
-        <th>Topic</th>
-        <th>Learning Goals</th>
-        <th>Packages</th>
-        <th>Reading</th>
-    </tr>
     <tr>
       <td>4</td>
       <td>Advanced Tabular Data Manipulation</td>
       <td>
         <ul>
-            <li>compute cumulative, offset, and sliding-window transformations</li>
-            <li>simultaneously transform or summarize multiple columns</li>
             <li>transform between long and wide data formats</li>
             <li>combine multiple data frames using joins on one or more columns</li>
         </ul></td>
@@ -130,41 +109,23 @@ This course is based on a longer version I've taught before. The materials for t
     </tr>
     <tr>
       <td>5</td>
-      <td>Datatypes and I/O</td>
-      <td>
-        <ul>
-            <li>create and index vectors of different types</li>
-            <li>efficiently manipulate strings, factors, and date-time vectors</li>
-            <li>tightly control the intake of tabular data</li>
-        </ul>
-      </td>
-        <td><ul>
-            <li><code>forcats</code></li>
-            <li><code>stringr</code></li>
-            <li><code>lubridate</code></li>
-            <li><code>readr</code></li>
-        </ul></td>
-        <td>R4DS ch. 11, 14-16</td>
-    </tr>
-    <tr>
-      <td>6</td>
       <td>Functional Programming</td>
         <td><ul>
             <li>write your own functions</li>
             <li>write code that evaluates conditionally</li>
             <li>create, manipulate, and inspect lists</li>
             <li>iterate functions over lists of arguments</li>
-            <li>iterate in parallel</li>
         </ul></td>
         <td><ul>
             <li><code>purrr</code></li>
-            <li><code>furrr</code></li>
             <li><code>zeallot</code></li>
         </ul></td>
         <td>R4DS ch. 17-21</td>
     </tr>
   </tbody>
 </table>
+
+
 
 ### In-class Exercises
 Programming, like all things, is something you learn by doing. The lectures include a lot of in-class group exercises so you can get your hands dirty. When we come upon one of these we will split the class into small groups of 3-4 students each (plus maybe a TA). Once you are in your group you should then decide the roles each of you will have:
