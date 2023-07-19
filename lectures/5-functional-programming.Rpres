@@ -18,7 +18,6 @@ opts_chunk$set(error=TRUE,warning=TRUE,message=FALSE)
 - write code that evaluates conditionally
 - create, manipulate, and inspect lists
 - iterate functions over lists of arguments
-- iterate in parallel
 
 Writing functions
 ============================================================
@@ -376,7 +375,7 @@ valence(99)
 valence(0)
 ```
 
-Exercise: greeting
+Exercise: number of elements
 ===
 type: prompt
 Write a function that takes a vector as input and returns whether or not it has at least 5 elements in it.
@@ -441,7 +440,7 @@ Seeing into lists
 ===
 - Use `str()` to dig into nested lists and other complicated objects
 ```{r}
-nested_list = list(a_list, 4, gtex_data)
+nested_list = list(a_list, 4, mtcars)
 str(nested_list)
 ```
 
@@ -561,7 +560,7 @@ mean(x, trim=0.5, na.rm=T)
 ```
 - Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
 
-Exercise: ggplot with 
+Exercise: ggplot with red dots
 ===
 type: prompt
 - Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
@@ -571,14 +570,6 @@ ggplot_redpoint = function(...) {
   ggplot(...) + 
     geom_point(color="red")
 }
-```
-
-Example: 
-```{r, fig.align="center"}
-# similarity between expression of genes in blood and lung 
-gtex_data %>%
-  filter(Ind=="GTEX-11DXZ") %>% # look at one person
-ggplot_redpoint(aes(Blood, Lung)) 
 ```
 
 Iteration

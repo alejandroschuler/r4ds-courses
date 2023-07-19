@@ -10,13 +10,7 @@ height: 1050
 - transform between long and wide data formats
 - combine multiple data frames using joins on one or more columns
 
-```{r include = FALSE}
-## better font size for slides
-library(tidyverse)
-theme_set(theme_grey(base_size = 22))
-knitr::opts_chunk$set(collapse=TRUE,tidy=FALSE,prompt=FALSE,comment=NA,cache=FALSE)
-knitr::opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
-```
+
 <style>
 .small-code pre code {
   font-size: 0.5em;
@@ -39,18 +33,25 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
-```{r, message=F}
+
+```r
 # Read subsetted data from online file - make sure there are no spaces
 gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
 
 # Check number of rows
 nrow(gtex_data)
+[1] 389922
 ```
 
 Grouped summaries with summarize()
 ================================================================
-```{r}
+
+```r
 summarize(gtex_data, tissue_avg=mean(NTissues))
+# A tibble: 1 × 1
+  tissue_avg
+       <dbl>
+1       3.97
 ```
 - `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `tissue_avg` that contains the mean of the `NTissues` column
 - As with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
@@ -60,23 +61,43 @@ summarize(gtex_data, tissue_avg=mean(NTissues))
 Grouped summaries with summarize()
 ================================================================
 - note that you can also pass in multiple conditions that operate on multiple columns at the same time
-```{r, tidy=F}
+
+```r
 gtex_data %>% 
 summarize( # newlines not necessary, again just increase clarity
   tissue_avg = mean(NTissues),
   blood_max = max(Blood, na.rm=T),
   blood_lung_dif_min = min(Blood - Lung, na.rm=T)
 )
+# A tibble: 1 × 3
+  tissue_avg blood_max blood_lung_dif_min
+       <dbl>     <dbl>              <dbl>
+1       3.97      18.9              -12.8
 ```
 
 Grouped summaries with summarize()
 ==================================================================
 - Summaries are more useful when you apply them to subgroups of the data
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>% 
   group_by(Gene) %>%
   summarize(max_blood = max(Blood))
+# A tibble: 4,999 × 2
+   Gene               max_blood
+   <chr>                  <dbl>
+ 1 A2ML1                   2.08
+ 2 A3GALT2                 2.77
+ 3 A4GALT                  2.78
+ 4 AAMDC                  NA   
+ 5 AANAT                   1.71
+ 6 AAR2                    2.52
+ 7 AARSD1                  1.89
+ 8 AB019441.29             2.31
+ 9 ABC7-42389800N19.1      1.98
+10 ABCA5                   2.3 
+# ℹ 4,989 more rows
 ```
 
 
@@ -88,10 +109,26 @@ gtex_data %>%
 Multiple columns can be used to group the data simultaneously
 ===================================================================
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>% 
   group_by(Gene,Ind) %>%
   summarize(max_blood = max(Blood))
+# A tibble: 389,922 × 3
+# Groups:   Gene [4,999]
+   Gene  Ind        max_blood
+   <chr> <chr>          <dbl>
+ 1 A2ML1 GTEX-11DXZ     -0.14
+ 2 A2ML1 GTEX-11GSP     -0.5 
+ 3 A2ML1 GTEX-11NUK     -0.08
+ 4 A2ML1 GTEX-11NV4     -0.37
+ 5 A2ML1 GTEX-11TT1      0.3 
+ 6 A2ML1 GTEX-11TUW      0.02
+ 7 A2ML1 GTEX-11ZUS     -1.07
+ 8 A2ML1 GTEX-11ZVC     -0.27
+ 9 A2ML1 GTEX-1212Z     -0.3 
+10 A2ML1 GTEX-12696     -0.11
+# ℹ 389,912 more rows
 ```
 
 - The result has the summary value for each unique combination of the grouping variables
@@ -100,15 +137,31 @@ Computing the number of rows in each group
 =====================================================================
 - The `n()` function counts the number of rows in each group:
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>% 
   filter(!is.na(Blood)) %>%
   group_by(Gene) %>%
   summarize(how_many = n())
+# A tibble: 4,999 × 2
+   Gene               how_many
+   <chr>                 <int>
+ 1 A2ML1                    78
+ 2 A3GALT2                  78
+ 3 A4GALT                   78
+ 4 AAMDC                    77
+ 5 AANAT                    78
+ 6 AAR2                     78
+ 7 AARSD1                   78
+ 8 AB019441.29              78
+ 9 ABC7-42389800N19.1       78
+10 ABCA5                    78
+# ℹ 4,989 more rows
 ```
 - You can also use `count()`, which is just a shorthand for the same thing
 
-```{r, tidy=F, message=F, eval=F}
+
+```r
 gtex_data %>% 
   filter(!is.na(Blood)) %>%
   group_by(Gene) %>%
@@ -119,10 +172,25 @@ Computing the number of distinct elements in a column, per group
 =====================================================================
 - `n_distinct()` counts the number of unique elements in a column
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>% 
   group_by(Ind) %>%
   summarize(n_genes = n_distinct(Gene))
+# A tibble: 78 × 2
+   Ind        n_genes
+   <chr>        <int>
+ 1 GTEX-11DXZ    4999
+ 2 GTEX-11GSP    4999
+ 3 GTEX-11NUK    4999
+ 4 GTEX-11NV4    4999
+ 5 GTEX-11TT1    4999
+ 6 GTEX-11TUW    4999
+ 7 GTEX-11ZUS    4999
+ 8 GTEX-11ZVC    4999
+ 9 GTEX-1212Z    4999
+10 GTEX-12696    4999
+# ℹ 68 more rows
 ```
 
 
@@ -140,13 +208,28 @@ type:prompt
 - Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex_data` dataset?
 - What about the lowest?
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>% 
   group_by(Gene) %>%
   summarize(
     max_liver = max(Liver, na.rm=T),
     min_liver = min(Liver, na.rm=T)
   )
+# A tibble: 4,999 × 3
+   Gene               max_liver min_liver
+   <chr>                  <dbl>     <dbl>
+ 1 A2ML1                   3.65     -1.94
+ 2 A3GALT2                 3.61     -1.3 
+ 3 A4GALT                  2.22     -1.76
+ 4 AAMDC                   3.43     -2.62
+ 5 AANAT                   3.78     -2.22
+ 6 AAR2                    2.32     -3.23
+ 7 AARSD1                  2.77     -2.75
+ 8 AB019441.29             3.36     -1.53
+ 9 ABC7-42389800N19.1      2.51     -3.2 
+10 ABCA5                   3.27     -3.27
+# ℹ 4,989 more rows
 ```
 
 Exercise: summarize and plot
@@ -155,21 +238,7 @@ type:prompt
 
 Recreate this plot. 
 
-```{r, echo=F, message=F, fig.width=15, fig.height=6}
-size_text = 30
-gtex_data %>% 
-  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
-  group_by(Gene, NTissues) %>%
-  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
-ggplot() +
-  geom_point(aes(y=Gene, x=max_heart), size = 8) + 
-  facet_grid(. ~ NTissues , labeller = label_both) +
-  theme(axis.text = element_text(size = size_text),
-        axis.title = element_text(size = size_text),
-        legend.text = element_text(size = size_text),
-        legend.title = element_text(size = size_text),
-        strip.text = element_text(size = size_text))
-```
+![plot of chunk unnamed-chunk-11](4-adv-tabular-data-figure/unnamed-chunk-11-1.png)
 
 
 Exercise: summarize and plot
@@ -178,24 +247,11 @@ type:prompt
 
 Recreate this plot. 
 
-```{r, echo=F, message=F, fig.width=15, fig.height=6}
-size_text = 30
-gtex_data %>% 
-  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
-  group_by(Gene, NTissues) %>%
-  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
-ggplot() +
-  geom_point(aes(y=Gene, x=max_heart), size = 8) + 
-  facet_grid(. ~ NTissues , labeller = label_both) +
-  theme(axis.text = element_text(size = size_text),
-        axis.title = element_text(size = size_text),
-        legend.text = element_text(size = size_text),
-        legend.title = element_text(size = size_text),
-        strip.text = element_text(size = size_text))
-```
+![plot of chunk unnamed-chunk-12](4-adv-tabular-data-figure/unnamed-chunk-12-1.png)
 
 
-```{r, eval=F, tidy=F}
+
+```r
 gtex_data %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
   group_by(Gene, NTissues) %>%
@@ -215,10 +271,26 @@ Filtering grouped data
 
 - `filter()` is aware of grouping. When used on a grouped dataset, it applies the filtering condition separately in each group
 
-```{r, tidy=F}
+
+```r
 gtex_data %>% 
   group_by(Gene) %>%
   filter(NTissues == max(NTissues))
+# A tibble: 376,883 × 7
+# Groups:   Gene [4,999]
+   Gene  Ind        Blood Heart  Lung Liver NTissues
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+ 1 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+ 2 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
+ 3 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4
+ 4 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4
+ 5 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4
+ 6 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06        4
+ 7 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75        4
+ 8 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48        4
+ 9 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72        4
+10 A2ML1 GTEX-12WSD  0.53  0.36  0.2   0.51        4
+# ℹ 376,873 more rows
 ```
 
 - Why do we get back multiple rows per `class`?
@@ -229,10 +301,26 @@ Exercise: Max expression change in blood and lung
 
 Which are the individual pairs that have both the max blood expression change *and* max lung expression change among all individuals with measurements for the same gene?
 
-```{r, tidy=F}
+
+```r
 gtex_data %>% 
   group_by(Gene) %>%
   filter(Blood == max(Blood), Lung==max(Lung))
+# A tibble: 64 × 7
+# Groups:   Gene [64]
+   Gene        Ind        Blood Heart  Lung Liver NTissues
+   <chr>       <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+ 1 A4GALT      GTEX-12696  2.78 -1.02  2.31 -0.23        4
+ 2 ABHD1       GTEX-VUSG   6.33  0.41  2.04 -0.04        4
+ 3 AL162151.3  GTEX-WZTO   2.37 -0.19  4.23 -1.22        4
+ 4 ANKRD36B    GTEX-12WSD  2.72  0.74  2.66  1.22        4
+ 5 APOA1       GTEX-12WSD  5.45 NA     7     0.67        3
+ 6 C14orf119   GTEX-11ZUS  2.51  0.76  1.85 -0.99        4
+ 7 CD1D        GTEX-1B996  3.05  2.85  2.78  2.1         4
+ 8 CTB-131B5.2 GTEX-1GN73  6.29 -1.17  5.51 -0.96        4
+ 9 CTC-448F2.6 GTEX-131YS  4.1   0.75  2.67 -0.24        4
+10 EVC         GTEX-UPK5   4.31  0.21  2.6  -0.61        4
+# ℹ 54 more rows
 ```
 
 Mutating grouped data
@@ -240,11 +328,27 @@ Mutating grouped data
 
 - `mutate()` is aware of grouping. When used on a grouped dataset, it applies the mutation separately in each group
 
-```{r, tidy=F, message=F}
+
+```r
 gtex_data %>%
   group_by(Gene) %>%
   mutate(blood_diff_from_min = Blood - min(Blood)) %>%
   select(Gene, Ind, Blood, blood_diff_from_min)
+# A tibble: 389,922 × 4
+# Groups:   Gene [4,999]
+   Gene  Ind        Blood blood_diff_from_min
+   <chr> <chr>      <dbl>               <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14                1.26
+ 2 A2ML1 GTEX-11GSP -0.5                 0.9 
+ 3 A2ML1 GTEX-11NUK -0.08                1.32
+ 4 A2ML1 GTEX-11NV4 -0.37                1.03
+ 5 A2ML1 GTEX-11TT1  0.3                 1.7 
+ 6 A2ML1 GTEX-11TUW  0.02                1.42
+ 7 A2ML1 GTEX-11ZUS -1.07                0.33
+ 8 A2ML1 GTEX-11ZVC -0.27                1.13
+ 9 A2ML1 GTEX-1212Z -0.3                 1.1 
+10 A2ML1 GTEX-12696 -0.11                1.29
+# ℹ 389,912 more rows
 ```
 
 - As always, mutate does not change the number of rows in the dataset
@@ -257,40 +361,40 @@ Messy data
 ============================================================
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
-```{r, message = FALSE}
+
+```r
 gtex_time_link = 
   "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_time_tissue.csv"
 
 gtex_time_tissue_data = read_csv(file = gtex_time_link, col_types = cols())
 
 head(gtex_time_tissue_data, 3L)
+# A tibble: 3 × 8
+  tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
+  <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+1 Adipose Tissue     56    107    243    206     84    134      2
+2 Adrenal Gland      28     41     84     65     20     31      0
+3 Bladder             2     18      0      1      0      0      0
 ```
 
 - the values in the table represent how many samples of that tissue were collected during that year.
 - How could I use ggplot to make this plot? It's hard!
 
-```{r, echo = FALSE, warning = FALSE}
-clean = 
-  gtex_time_tissue_data %>%
-  select(-`2017`) %>%
-  pivot_longer(cols = `2011`:`2016`, names_to = "year", values_to = "n") %>%
-  group_by(tissue) %>%
-  mutate(freq = n / sum(n)) %>%
-  ungroup() %>%
-  rename(count = n)
-```
 
-```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 5}
-clean %>% 
-  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) %>%
-  ggplot() +
-  geom_bar(aes(x = year, y = count, fill = tissue), stat = 'identity')
-```
+
+![plot of chunk unnamed-chunk-19](4-adv-tabular-data-figure/unnamed-chunk-19-1.png)
 
 Messy data
 ===
-```{r}
+
+```r
 head(gtex_time_tissue_data, 3L)
+# A tibble: 3 × 8
+  tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
+  <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+1 Adipose Tissue     56    107    243    206     84    134      2
+2 Adrenal Gland      28     41     84     65     20     31      0
+3 Bladder             2     18      0      1      0      0      0
 ```
 - One of the problems with the way these data are formatted is that the year collected, which is a property of the samples, is stuck into the names of the columns. 
 - Because of this, it's also not obvious what the numbers in the table mean (although we know they are counts)
@@ -298,12 +402,17 @@ head(gtex_time_tissue_data, 3L)
 Tidy data
 ===
 - Here's a better way to organize the data:
-```{r, echo = FALSE}
-tidy = 
-  gtex_time_tissue_data %>%
-  pivot_longer(-tissue, names_to="year", values_to="count")
 
-head(tidy)
+```
+# A tibble: 6 × 3
+  tissue         year  count
+  <chr>          <chr> <dbl>
+1 Adipose Tissue 2011     56
+2 Adipose Tissue 2012    107
+3 Adipose Tissue 2013    243
+4 Adipose Tissue 2014    206
+5 Adipose Tissue 2015     84
+6 Adipose Tissue 2016    134
 ```
 
 This data is *tidy*. Tidy data follows three precepts:
@@ -319,21 +428,30 @@ Tidy data
 
 Tidy data is easy to work with.
 
-```{r, tidy = FALSE, warning = FALSE, fig.width = 20, fig.height = 5}
+
+```r
 tidy %>% 
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) %>%
   ggplot() +
   geom_bar(aes(x = year, y = count, fill = tissue), stat = 'identity')
 ```
 
+![plot of chunk unnamed-chunk-22](4-adv-tabular-data-figure/unnamed-chunk-22-1.png)
+
 Tidying data with pivot_longer()
 ===
 
 - `tidyr::pivot_longer()` is the function you will most often want to use to tidy your data
-```{r, tidy = FALSE}
+
+```r
 gtex_time_tissue_data %>%
   pivot_longer(-tissue, names_to = "year", values_to = "count") %>%
   head(2L)
+# A tibble: 2 × 3
+  tissue         year  count
+  <chr>          <chr> <dbl>
+1 Adipose Tissue 2011     56
+2 Adipose Tissue 2012    107
 ```
 
 - the three important arguments are: a) a selection of columns, b) the name of the new key column, and c) the name of the new value column
@@ -344,64 +462,83 @@ Exercise: cleaning GTEX
 ===
 type:prompt
 
-```{r, message = FALSE, warning = FALSE}
+
+```r
 head(gtex_data, 3L)
+# A tibble: 3 × 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
 ```
 
 Use the GTEX data to reproduce the following plot:
 
-```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 6}
-gtex_data %>%
-  filter(
-    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
-    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
-  ) %>%
-  pivot_longer(
-    Blood:Liver, 
-    names_to = "tissue", 
-    values_to = 'expression'
-  ) %>%
-  ggplot() +
-  geom_point(aes(x = Gene, y = expression, color = tissue), size = 10) + 
-  facet_wrap(~Ind)
-```
+![plot of chunk unnamed-chunk-25](4-adv-tabular-data-figure/unnamed-chunk-25-1.png)
 
 The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
 "Messy" data is relative and not always bad
 ===
 
-```{r, echo = FALSE}
-wide_mice = tibble(
-  mouse = c(1, 2, 3, 4),
-  weight_before = rnorm(4, 10, 2),
-  weight_after = rnorm(4, 11, 2),
-)
-wide_mice
+
+```
+# A tibble: 4 × 3
+  mouse weight_before weight_after
+  <dbl>         <dbl>        <dbl>
+1     1          8.88        10.7 
+2     2         10.6          8.65
+3     3          8.09        15.9 
+4     4          7.11        11.9 
 ```
 
-```{r, tidy = FALSE}
+
+```r
 wide_mice %>%
   mutate(weight_gain = weight_after - weight_before) %>%
   select(mouse, weight_gain)
+# A tibble: 4 × 2
+  mouse weight_gain
+  <dbl>       <dbl>
+1     1        1.77
+2     2       -1.96
+3     3        7.77
+4     4        4.75
 ```
 
 ***
 
-```{r, echo = FALSE}
-long_mice = 
-  wide_mice %>%
-  pivot_longer(-mouse, names_to = "time", values_to = "weight", names_prefix = "weight_")
 
-long_mice
+```
+# A tibble: 8 × 3
+  mouse time   weight
+  <dbl> <chr>   <dbl>
+1     1 before   8.88
+2     1 after   10.7 
+3     2 before  10.6 
+4     2 after    8.65
+5     3 before   8.09
+6     3 after   15.9 
+7     4 before   7.11
+8     4 after   11.9 
 ```
 
-```{r, tidy = FALSE}
+
+```r
 long_mice %>%
   group_by(mouse) %>%
   mutate(weight_gain = weight - lag(weight)) %>%
   filter(!is.na(weight_gain)) %>%
   select(mouse, weight_gain)
+# A tibble: 4 × 2
+# Groups:   mouse [4]
+  mouse weight_gain
+  <dbl>       <dbl>
+1     1        1.77
+2     2       -1.96
+3     3        7.77
+4     4        4.75
 ```
 
 Pivoting wider
@@ -410,32 +547,65 @@ Pivoting wider
 - wide data is also often nice to make tables for presentations, or is (unfortunately) sometimes required as input for other software packages
 - To go from long to wide, we use `pivot_wider()`:
 
-```{r, tidy = FALSE}
+
+```r
 long_mice
+# A tibble: 8 × 3
+  mouse time   weight
+  <dbl> <chr>   <dbl>
+1     1 before   8.88
+2     1 after   10.7 
+3     2 before  10.6 
+4     2 after    8.65
+5     3 before   8.09
+6     3 after   15.9 
+7     4 before   7.11
+8     4 after   11.9 
 ```
 
 ***
 
-```{r, tidy = FALSE}
+
+```r
 long_mice %>% 
   pivot_wider(
     names_from = time, 
     values_from = weight
   )
+# A tibble: 4 × 3
+  mouse before after
+  <dbl>  <dbl> <dbl>
+1     1   8.88 10.7 
+2     2  10.6   8.65
+3     3   8.09 15.9 
+4     4   7.11 11.9 
 ```
 
 Names prefix
 ============================================================
 
-```{r, tidy = FALSE}
+
+```r
 long_mice
+# A tibble: 8 × 3
+  mouse time   weight
+  <dbl> <chr>   <dbl>
+1     1 before   8.88
+2     1 after   10.7 
+3     2 before  10.6 
+4     2 after    8.65
+5     3 before   8.09
+6     3 after   15.9 
+7     4 before   7.11
+8     4 after   11.9 
 ```
 
 ***
 
 - you can use `names_prefix` to make variables names that are more clear in the result
 
-```{r, tidy = FALSE}
+
+```r
 long_mice %>% 
   pivot_wider(
     names_from = time, 
@@ -443,11 +613,17 @@ long_mice %>%
     names_prefix = "weight_"
   ) %>% 
   head(2L)
+# A tibble: 2 × 3
+  mouse weight_before weight_after
+  <dbl>         <dbl>        <dbl>
+1     1          8.88        10.7 
+2     2         10.6          8.65
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
 
-```{r, tidy = FALSE, eval = FALSE}
+
+```r
 wide_mice %>% 
   pivot_longer(
     -mouse,
@@ -463,17 +639,15 @@ type: prompt
 
 Use the GTEX data to make the following table:
 
-```{r, echo = FALSE, message = FALSE}
-print("Number of missing tissues:")
-gtex_data %>%
-  filter(
-    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
-    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
-  ) %>% 
-  pivot_longer(Lung:Liver, names_to = 'tissue', values_to = 'expression') %>%
-  group_by(Ind, Gene) %>%
-  summarize(n_missing_tissues = sum(is.na(expression))) %>%
-  pivot_wider(names_from = Gene, values_from = n_missing_tissues)
+
+```
+[1] "Number of missing tissues:"
+# A tibble: 2 × 4
+# Groups:   Ind [2]
+  Ind        A2ML1 A3GALT2 A4GALT
+  <chr>      <int>   <int>  <int>
+1 GTEX-11DXZ     1       0      0
+2 GTEX-11GSP     0       0      0
 ```
 
 The numbers in the table are the number of tissues in each individual for which the gene in question was missing.
@@ -485,7 +659,8 @@ incremental: true
 
 Have a look at the following data. How do you think we might want to make it look?
 
-```{r, tidy = FALSE, message = FALSE}
+
+```r
 gtex_time_chunk_link = 
   "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv"
 
@@ -493,6 +668,16 @@ gtex_samples_time_chunk =
   read_csv(file = gtex_time_chunk_link, col_types = cols())
 
 head(gtex_samples_time_chunk)
+# A tibble: 6 × 9
+  tissue     `Sept-2015` `Sept-2016` `Oct-2015` `Oct-2016` `Nov-2015` `Nov-2016`
+  <chr>            <dbl>       <dbl>      <dbl>      <dbl>      <dbl>      <dbl>
+1 Adipose T…           5          36          4         20         15         16
+2 Adrenal G…           4           5          1          5          2          6
+3 Blood                2           0          6          0         33          0
+4 Blood Ves…           9          24          7         26          9         17
+5 Brain               12           2          3          9         17         24
+6 Breast               9          19          7         20          5          8
+# ℹ 2 more variables: `Dec-2016` <dbl>, `Dec-2015` <dbl>
 ```
 
 The problem here is that the column names contain two pieces of data:
@@ -506,14 +691,28 @@ Multi-pivoting
 ===
 - Turns out this problem can be tackled too:
 
-```{r, tidy = FALSE}
+
+```r
 gtex_samples_time_chunk %>%
   pivot_longer(
     cols=contains("-201"), # selects columns that contain this
     names_pattern = "(\\D+)-(\\d+)", # a "regular expression"- we'll learn about these later
     names_to = c(".value", "year")
   )
-
+# A tibble: 54 × 6
+   tissue         year   Sept   Oct   Nov   Dec
+   <chr>          <chr> <dbl> <dbl> <dbl> <dbl>
+ 1 Adipose Tissue 2015      5     4    15     0
+ 2 Adipose Tissue 2016     36    20    16    15
+ 3 Adrenal Gland  2015      4     1     2     0
+ 4 Adrenal Gland  2016      5     5     6     2
+ 5 Blood          2015      2     6    33    17
+ 6 Blood          2016      0     0     0     0
+ 7 Blood Vessel   2015      9     7     9     0
+ 8 Blood Vessel   2016     24    26    17    12
+ 9 Brain          2015     12     3    17     0
+10 Brain          2016      2     9    24     9
+# ℹ 44 more rows
 ```
 
 - We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
@@ -533,13 +732,19 @@ incremental: true
 - For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix we've been working with. 
 
 
-```{r, message = FALSE}
+
+```r
 gtex_metadata_link = 
   "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_sample_metadata.csv"
 
 gtex_sample_data = read_csv(file = gtex_metadata_link, col_types = cols())
 
 head(gtex_sample_data, 2L)
+# A tibble: 2 × 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
+1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
+2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 ```
 - The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
 
@@ -548,21 +753,33 @@ Relational data
 incremental: true
 
 The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
-```{r, message = FALSE}
+
+```r
 gtex_subject_link = 
   "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_subject_metadata.csv"
 
 gtex_subject_data = read_csv(file = gtex_subject_link, col_types = cols())
 
 head(gtex_subject_data, 2L)
+# A tibble: 2 × 4
+  subject_id sex    age   death                    
+  <chr>      <chr>  <chr> <chr>                    
+1 GTEX-11DXZ male   50-59 ventilator               
+2 GTEX-11GSP female 60-69 sudden but natural causes
 ```
 
 The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
-```{r, message = FALSE}
+
+```r
 gtex_batch_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_batch_metadata.csv"
 gtex_batch_data = read_csv(file = gtex_batch_link, col_types = cols())
 
 head(gtex_batch_data, 2L)
+# A tibble: 2 × 3
+  batch_id batch_type                                         batch_date
+  <chr>    <chr>                                              <chr>     
+1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 05/02/2013
+2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 08/14/2013
 ```
 
 We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
@@ -586,39 +803,73 @@ Relational + tidy data
 ===
 incremental: true
 For the expression data, we have been using the `gtex_data` expression data frame:
-```{r, message = FALSE}
+
+```r
 gtex_data %>% 
   head(2L)
+# A tibble: 2 × 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
 ```
 
 The expression data on the previous slide is formatted slightly differently:
-```{r, message = FALSE}
+
+```r
 gtex_expression_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_expression.csv"
 
 gtex_expression = read_csv(file = gtex_expression_link, col_types = cols())
 
 gtex_expression %>% 
   head(2L) # note: sample_id replaces Ind + tissue
+# A tibble: 2 × 3
+  sample_id     Gene  zscore
+  <chr>         <chr>  <dbl>
+1 0003-SM-58Q7X A2ML1  -0.14
+2 0326-SM-5EGH1 A2ML1  -1.08
 ```
 What makes this data tidy when the other is not? (You'll notice that a `pivot` helped convert between the two.)
-```{r}
+
+```r
 gtex_data %>% 
   pivot_longer(Blood:Liver, names_to = "tissue", values_to = "zscore") %>% 
   head(2L)
+# A tibble: 2 × 5
+  Gene  Ind        NTissues tissue zscore
+  <chr> <chr>         <dbl> <chr>   <dbl>
+1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
+2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
 ```
 
 An example join
 ===
 - Imagine we want to add subject information to the sample data
 - We can accomplish that with a **join**:
-```{r, tidy = FALSE}
+
+```r
 gtex_sample_data %>% 
   inner_join(gtex_subject_data, by = join_by(subject_id))
+# A tibble: 312 × 9
+   subject_id sample_id    batch_id center_id tissue rin_score sex   age   death
+   <chr>      <chr>        <chr>    <chr>     <chr>      <dbl> <chr> <chr> <chr>
+ 1 GTEX-11DXZ 0003-SM-58Q… BP-39216 B1        Blood       NA   male  50-59 vent…
+ 2 GTEX-11DXZ 0126-SM-5EG… BP-44460 B1        Liver        7.9 male  50-59 vent…
+ 3 GTEX-11DXZ 0326-SM-5EG… BP-44460 B1        Heart        8.3 male  50-59 vent…
+ 4 GTEX-11DXZ 0726-SM-5N9… BP-43956 B1        Lung         7.8 male  50-59 vent…
+ 5 GTEX-11GSP 0004-SM-58Q… BP-39412 B1        Blood       NA   fema… 60-69 sudd…
+ 6 GTEX-11GSP 0626-SM-598… BP-44902 B1        Liver        6.2 fema… 60-69 sudd…
+ 7 GTEX-11GSP 0726-SM-598… BP-44902 B1        Lung         6.9 fema… 60-69 sudd…
+ 8 GTEX-11GSP 1226-SM-598… BP-44902 B1        Heart        7.9 fema… 60-69 sudd…
+ 9 GTEX-11NUK 0004-SM-58Q… BP-39723 B1        Blood       NA   male  50-59 sudd…
+10 GTEX-11NUK 0826-SM-5HL… BP-43730 B1        Lung         7.4 male  50-59 sudd…
+# ℹ 302 more rows
 ```
 
 Joins
 ===
-```{r, tidy = FALSE}
+
+```r
 x = tibble(
   key = c(1, 2, 3),
   val_x = c("x1", "x2", "x3")
@@ -636,8 +887,14 @@ y = tibble(
 
 ***
 
-```{r}
+
+```r
 inner_join(x, y, by = join_by(key))
+# A tibble: 2 × 3
+    key val_x val_y
+  <dbl> <chr> <chr>
+1     1 x1    y1   
+2     2 x2    y2   
 ```
 - An inner join matches pairs of observations when their "keys" are equal
 - the column that is joined on is specified as a "key" with the argument `by=join_by(column_name)`
@@ -648,7 +905,8 @@ inner_join(x, y, by = join_by(key))
 
 Duplicate keys
 ===
-```{r}
+
+```r
 x = tibble(
   key = c(1, 2, 2, 3),
   val_x = c("x1", "x2", "x3", "x4")
@@ -666,31 +924,69 @@ y = tibble(
 
 ***
 
-```{r}
+
+```r
 inner_join(x, y, join_by(key))
+Warning in inner_join(x, y, join_by(key)): Detected an unexpected many-to-many relationship between `x` and `y`.
+ℹ Row 2 of `x` matches multiple rows in `y`.
+ℹ Row 2 of `y` matches multiple rows in `x`.
+ℹ If a many-to-many relationship is expected, set `relationship =
+  "many-to-many"` to silence this warning.
+# A tibble: 5 × 3
+    key val_x val_y
+  <dbl> <chr> <chr>
+1     1 x1    y1   
+2     2 x2    y2   
+3     2 x2    y3   
+4     2 x3    y2   
+5     2 x3    y3   
 ```
 
 When keys are duplicated, multiple rows can match multiple rows, so each possible combination is produced
 
 Specifying the keys
 ===
-```{r}
+
+```r
 gtex_sample_data %>% 
   inner_join(gtex_subject_data, join_by(center_id))
+Error in `inner_join()`:
+! Join columns in `y` must be present in the data.
+✖ Problem with `center_id`.
 ```
 - Why does this fail?
 
 Specifying the keys
 ===
 - When keys have different names in different dataframes, the syntax to join is:
-```{r}
+
+```r
 head(gtex_data, 2)
+# A tibble: 2 × 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
 head(gtex_subject_data, 2)
+# A tibble: 2 × 4
+  subject_id sex    age   death                    
+  <chr>      <chr>  <chr> <chr>                    
+1 GTEX-11DXZ male   50-59 ventilator               
+2 GTEX-11GSP female 60-69 sudden but natural causes
 ```
-```{r}
+
+```r
 gtex_data %>% 
   inner_join(gtex_subject_data, join_by(Ind == subject_id)) %>% 
   head(5L)
+# A tibble: 5 × 10
+  Gene  Ind        Blood Heart  Lung Liver NTissues sex    age   death          
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl> <chr>  <chr> <chr>          
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3 male   50-59 ventilator     
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4 female 60-69 sudden but nat…
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4 male   50-59 sudden but nat…
+4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4 male   60-69 sudden but nat…
+5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4 male   20-29 ventilator     
 ```
 Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subject_data`).
 
@@ -706,7 +1002,8 @@ Exercise: finding expression of specific samples
 type: prompt
 
 Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year.
-```{r}
+
+```r
 batch_data_year = 
   gtex_batch_data %>% 
   mutate(
@@ -715,6 +1012,11 @@ batch_data_year =
   ) 
 
 head(batch_data_year, 2L)
+# A tibble: 2 × 4
+  batch_id batch_type                                         batch_date  year
+  <chr>    <chr>                                              <date>     <dbl>
+1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 2013-05-02  2013
+2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 2013-08-14  2013
 ```
 
 Note that you'll have to join to other data frames the `sample` data frame to put this together.
@@ -743,7 +1045,8 @@ Other joins
 Joining on multiple columns
 ===
 Let's read in some more data
-```{r, message = FALSE}
+
+```r
 gtex_samples_time_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/af6056f9a8d999a80fd787f89aa3483157d43681/data/gtex_metadata/gtex_samples_time.csv"
 gtex_tissue_month_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_tissue_month_year.csv"
 
@@ -754,39 +1057,86 @@ gtex_tissue_month =
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
 
 head(gtex_tissue_month, 2L)
+# A tibble: 2 × 4
+  tissue month  year tiss_samples
+  <chr>  <dbl> <dbl>        <dbl>
+1 Blood      1  2012           25
+2 Blood      1  2013           16
 
 gtex_samples_by_month = 
   read_csv(file = gtex_samples_time_link)
 
 head(gtex_samples_by_month, 2L)
+# A tibble: 2 × 3
+  month  year num_samples
+  <dbl> <dbl>       <dbl>
+1     5  2011          20
+2     6  2011          44
 ```
 
 Joining on multiple columns
 ===
 - It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
-```{r, message = FALSE}
+
+```r
 head(gtex_tissue_month, 2L)
+# A tibble: 2 × 4
+  tissue month  year tiss_samples
+  <chr>  <dbl> <dbl>        <dbl>
+1 Blood      1  2012           25
+2 Blood      1  2013           16
 head(gtex_samples_by_month, 2L)
+# A tibble: 2 × 3
+  month  year num_samples
+  <dbl> <dbl>       <dbl>
+1     5  2011          20
+2     6  2011          44
 
 gtex_tissue_month %>% 
   inner_join(gtex_samples_by_month, join_by(month, year)) %>%
   head(5L)
+# A tibble: 5 × 5
+  tissue month  year tiss_samples num_samples
+  <chr>  <dbl> <dbl>        <dbl>       <dbl>
+1 Blood      1  2012           25         208
+2 Blood      1  2013           16          64
+3 Blood      1  2014           26         662
+4 Blood      1  2015           39         263
+5 Blood      2  2012            9          95
 ```
 
 Joining on multiple columns
 ===
 
 This is also possible if the columns have different names:
-```{r}
+
+```r
 gtex_data_long = gtex_data %>% 
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
 head(gtex_data_long, n = 2L)
+# A tibble: 2 × 5
+  Gene  Ind        NTissues tissue zscore
+  <chr> <chr>         <dbl> <chr>   <dbl>
+1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
+2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
 head(gtex_sample_data, n = 2L)
+# A tibble: 2 × 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
+1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
+2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 
 gtex_data_long %>% 
   inner_join(gtex_sample_data, join_by(tissue, Ind == subject_id)) %>%
   head(n = 4L)
+# A tibble: 4 × 9
+  Gene  Ind        NTissues tissue zscore sample_id batch_id center_id rin_score
+  <chr> <chr>         <dbl> <chr>   <dbl> <chr>     <chr>    <chr>         <dbl>
+1 A2ML1 GTEX-11DXZ        3 Blood   -0.14 0003-SM-… BP-39216 B1             NA  
+2 A2ML1 GTEX-11DXZ        3 Heart   -1.08 0326-SM-… BP-44460 B1              8.3
+3 A2ML1 GTEX-11DXZ        3 Lung    NA    0726-SM-… BP-43956 B1              7.8
+4 A2ML1 GTEX-11DXZ        3 Liver   -0.66 0126-SM-… BP-44460 B1              7.9
 ```
 
 Join problems

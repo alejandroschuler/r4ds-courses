@@ -13,14 +13,7 @@ Learning Goals:
 - read some tabluar data into R
 - visualize tabluar data using ggplot geoms, aesthetics, and facets
 
-```{r include=FALSE}
-library(ggplot2)
-theme_set(theme_grey(base_size = 34) )
-update_geom_defaults("point", list(size = 3.5))
-theme_update(legend.title=element_text(size=24))
-opts_chunk$set(collapse=TRUE,tidy=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
-opts_chunk$set(error=TRUE,warning=TRUE,message=TRUE)
-```
+
 <style>
 .small-code pre code {
   font-size: 0.5em;
@@ -45,17 +38,22 @@ called a REPL.
 A simple example in the console
 ========================================================
 - The box contains an expression that will be evaluated by R, followed by the result of evaluating that expression.
-```{r}
+
+```r
 1 + 2
+[1] 3
 ```
 - `3` is the answer
 - Ignore the `[1]` for now. 
 
 - R performs operations (called *functions*) on data and values
 - These can be composed arbitrarily
-```{r}
+
+```r
 log(1+3)
+[1] 1.386294
 paste("The answer is", log(1+3))
+[1] "The answer is 1.38629436111989"
 ```
 
 How do I...
@@ -79,9 +77,7 @@ Solutions to a polynomial equation ax^2 + bx + c = 0 are given by
 
 Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate x given a=3, b=14, c=-5.
 
-```{r, echo=F, eval=F}
-(-14 + sqrt(14^2 - 4*3*(-5)))/(2*3)
-```
+
 
 What did you learn? What did you notice?
 <!-- - Parentheses are used to encapsulate the *arguments* to a function like `sqrt()` -->
@@ -94,7 +90,8 @@ Packages
 - Millions of R users have written their own functions that you can use
 - These are bundled together into *packages*
 - To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
-```{r, eval=F}
+
+```r
 install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
 library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
 ```
@@ -104,20 +101,22 @@ Packages
 - The `tidyverse` package has a function called `read_csv()` that lets you read csv (comma-separated values) files into R. 
 - csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
 
-```{r}
+
+```r
 # I have a file called "lupusGenes.csv" on github that we can read from the URL 
 genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+Error in read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv"): could not find function "read_csv"
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
-```{r, eval=F}
-library(tidyverse)
-```
-```{r, include=F}
+
+```r
 library(tidyverse)
 ```
 
-```{r, eval=F}
+
+
+```r
 genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 ```
 
@@ -127,7 +126,8 @@ Packages
 ===
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
-```{r, eval=F}
+
+```r
 poly = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/poly.csv") # reading another csv file
 ```
 
@@ -146,7 +146,8 @@ Getting your data in R
 ===
 - Getting your data into R is easy. We already saw, for example:
 
-```{r echo = T, results = 'hide', message=FALSE}
+
+```r
 genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
 ```
 
@@ -160,8 +161,24 @@ genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-course
 Looking at data
 ===
 - `genes` is now a dataset loaded into R. To look at it, just type
-```{r}
+
+```r
 genes
+# A tibble: 59 × 11
+   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>      <dbl> <chr>  <chr>     <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA <dbl>
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
@@ -175,8 +192,24 @@ different columns can be of different types.
 
 The Dataset
 ===
-```{r}
+
+```r
 genes
+# A tibble: 59 × 11
+   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
+   <chr>      <dbl> <chr>  <chr>     <chr>      <dbl> <dbl> <dbl> <dbl>  <dbl>
+ 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
+ 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
+ 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
+ 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
+ 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
+ 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
+ 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
+ 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
+ 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
+10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA <dbl>
 ```
 This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
 - 29 SLE Patients, 30 Healthy Controls
@@ -188,10 +221,16 @@ Investigating a relationship
 Let's say we're curious about the relationship between two genes RSAD2 and IFI44.
 - Can we use R to make a plot of these two variables?
 
-```{r, tidy=F, out.height="80%"}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
+
+<div class="figure">
+<img src="1-intro-plotting-figure/unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14" height="80%" />
+<p class="caption">plot of chunk unnamed-chunk-14</p>
+</div>
 
 ***
 - `ggplot(dataset)` says "start a chart with this dataset"
@@ -201,10 +240,13 @@ ggplot(genes) +
 ggplot
 ===
 
-```{r, tidy=F}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = VAPA, y = EIF3L))
 ```
+
+![plot of chunk unnamed-chunk-15](1-intro-plotting-figure/unnamed-chunk-15-1.png)
 
 ***
 
@@ -219,20 +261,13 @@ incremental: false
 
 Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
 
-```{r, tidy=F, echo=F}
-ggplot(genes) + 
-  geom_point(aes(x = phenotype, y = IFI44))
-```
+![plot of chunk unnamed-chunk-16](1-intro-plotting-figure/unnamed-chunk-16-1.png)
 
 Investigating a relationship
 ===
 Let's say we're curious about the relationship between RSAD2 and IFI44.
 
-```{r, tidy=F, echo=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype)) +
-  theme(legend.position = "none")
-```
+![plot of chunk unnamed-chunk-17](1-intro-plotting-figure/unnamed-chunk-17-1.png)
 
 - What's going on here? It seems like there are two clusters. 
 - What is driving this clustering? Age? Sex? Ancestry? Phenotype?
@@ -242,7 +277,8 @@ Aesthetics
 - Aesthetics aren't just for mapping columns to the x- and y-axis
 - You can also use them to assign color, for instance
 
-```{r, tidy=F, eval=F}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, 
                  y = IFI44,
@@ -253,20 +289,15 @@ ggplot(genes) +
 - What did we learn about the genes that we are interested in?
 
 ***
-```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, 
-                 y = IFI44,
-                 color = phenotype)) +
-  theme(legend.position="bottom")
-```
+![plot of chunk unnamed-chunk-19](1-intro-plotting-figure/unnamed-chunk-19-1.png)
 
 Aesthetics
 ===
 - Aesthetics aren't just for mapping columns to the x- and y-axis
 - We could have used a shape
 
-```{r, tidy=F, eval=F}
+
+```r
 ggplot(genes) + 
   geom_point(aes(
     x = RSAD2, 
@@ -278,23 +309,15 @@ ggplot(genes) +
 
 
 ***
-```{r, tidy=F, echo=F,  fig.width=10, fig.height=10}
-ggplot(genes) + 
-  geom_point(aes(
-    x = RSAD2, 
-    y = IFI44, 
-    shape=phenotype
-  )) +
-  theme(legend.position="bottom",
-        legend.title=element_text(size=24))
-```
+![plot of chunk unnamed-chunk-21](1-intro-plotting-figure/unnamed-chunk-21-1.png)
 
 Aesthetics
 ===
 - Aesthetics aren't just for mapping columns to the x- and y-axis
 - Or size
 
-```{r, tidy=F, eval=F}
+
+```r
 ggplot(genes) + 
   geom_point(aes(
     x = RSAD2, 
@@ -305,22 +328,19 @@ ggplot(genes) +
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
 
 ***
-```{r, tidy=F, echo=F,  fig.width=10, fig.height=10}
-ggplot(genes) + 
-  geom_point(aes(
-    x = RSAD2, 
-    y = IFI44, 
-    size=ancestry
-  )) +
-  theme(legend.position="bottom",
-                legend.title=element_text(size=24))
+
 ```
+Warning: Using size for a discrete variable is not advised.
+```
+
+![plot of chunk unnamed-chunk-23](1-intro-plotting-figure/unnamed-chunk-23-1.png)
 
 Aesthetics
 ===
 - If we set a property *outside* of the aesthetic, it no longer maps that property to a column. 
 
-```{r, tidy=F, eval=F}
+
+```r
 ggplot(genes) + 
   geom_point(
     aes(
@@ -333,17 +353,7 @@ ggplot(genes) +
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-```{r, tidy=F, echo=F, fig.width=10, fig.height=10}
-ggplot(genes) + 
-  geom_point(
-    aes(
-      x = RSAD2, 
-      y = IFI44
-    ),
-    color = "blue"
-  ) +
-  theme(legend.title=element_text(size=24))
-```
+![plot of chunk unnamed-chunk-25](1-intro-plotting-figure/unnamed-chunk-25-1.png)
 
 Exercise
 ===
@@ -353,18 +363,10 @@ type: prompt
 Can you recreate this plot?
 
 
-```{r, tidy=F, echo=F, fig.width=16, fig.height=10, fig.align="center"}
-ggplot(genes) + 
-  geom_point(
-    aes(
-      x = RSAD2, 
-      y = IFI44,
-      color = phenotype,
-      size = EIF3L
-    )
-  ) 
-# increase legend and point size
-```
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
+<p class="caption">plot of chunk unnamed-chunk-26</p>
+</div>
 
 Exercise
 ===
@@ -373,7 +375,8 @@ type: prompt
 
 What will this do? Why?
 
-```{r, tidy=F, eval=F}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
@@ -383,38 +386,62 @@ Facets
 - Aesthetics are useful for mapping columns to particular properties of a single plot
 - Use **facets** to generate multiple plots with shared structure
 
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) + 
   facet_wrap(vars(phenotype), nrow = 2)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
+<p class="caption">plot of chunk unnamed-chunk-28</p>
+</div>
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
 ===
 - `facet_grid` is better for ordered categories, and can be used with two variables
 
-```{r, tidy=F, fig.height = 14, fig.width = 14, fig.align = "center"}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) + 
   facet_grid(rows=vars(phenotype), cols=vars(gender))
 ```
 
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
+<p class="caption">plot of chunk unnamed-chunk-29</p>
+</div>
+
 Geoms
 ===
 
-```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center"}
+
+```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
+
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<p class="caption">plot of chunk unnamed-chunk-30</p>
+</div>
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
 ***
-```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center", message=F}
+
+```r
 ggplot(genes) + 
   geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
+
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
+<p class="caption">plot of chunk unnamed-chunk-31</p>
+</div>
 
 Geoms
 ===
@@ -422,37 +449,61 @@ Geoms
 - e.g. you can set the shape of a point, but you can’t set the “shape” of a line.
 - On the other hand, you *can* set the "line type" of a line:
 
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+
+```r
 ggplot(genes) + 
   geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<p class="caption">plot of chunk unnamed-chunk-32</p>
+</div>
+
 Geoms
 ===
 - It's possible to add multiple geoms to the same plot
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+
+```r
 ggplot(genes) + 
   geom_smooth(aes(x = RSAD2, y = IFI44, color = phenotype)) + 
   geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
+<p class="caption">plot of chunk unnamed-chunk-33</p>
+</div>
+
 Geoms
 ===
 - To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+
+```r
 ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) + 
   geom_smooth() + 
   geom_point()
 ```
 
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<p class="caption">plot of chunk unnamed-chunk-34</p>
+</div>
+
 Geoms
 ===
 - You can also use different mappings in different geoms
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+
+```r
 ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) + 
   geom_point(aes(color = ancestry)) + 
   geom_smooth()
 ```
+
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" alt="plot of chunk unnamed-chunk-35"  />
+<p class="caption">plot of chunk unnamed-chunk-35</p>
+</div>
 
 Exercise
 ===
@@ -466,10 +517,10 @@ ggplot(genes) +
   ...
 ```
 
-```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
-```
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<p class="caption">plot of chunk unnamed-chunk-36</p>
+</div>
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?

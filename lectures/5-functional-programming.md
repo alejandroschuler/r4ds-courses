@@ -12,7 +12,6 @@ height: 1050
 - write code that evaluates conditionally
 - create, manipulate, and inspect lists
 - iterate functions over lists of arguments
-- iterate in parallel
 
 Writing functions
 ============================================================
@@ -190,7 +189,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x119fc7150>
+<bytecode: 0x10be7cb50>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
 
@@ -246,7 +245,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
-[1] -0.1533181
+[1] -0.04287048
 ```
 
 Functional programming
@@ -423,7 +422,7 @@ valence(0)
 [1] "zero"
 ```
 
-Exercise: greeting
+Exercise: number of elements
 ===
 type: prompt
 Write a function that takes a vector as input and returns whether or not it has at least 5 elements in it.
@@ -508,10 +507,28 @@ Seeing into lists
 - Use `str()` to dig into nested lists and other complicated objects
 
 ```r
-nested_list = list(a_list, 4, gtex_data)
-Error in eval(expr, envir, enclos): object 'gtex_data' not found
+nested_list = list(a_list, 4, mtcars)
 str(nested_list)
-Error in eval(expr, envir, enclos): object 'nested_list' not found
+List of 3
+ $ :List of 5
+  ..$ : num 1
+  ..$ : num 2
+  ..$ : chr "hello"
+  ..$ : num 5
+  ..$ : logi TRUE
+ $ : num 4
+ $ :'data.frame':	32 obs. of  11 variables:
+  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
+  ..$ disp: num [1:32] 160 160 108 258 360 ...
+  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
+  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
+  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
+  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
+  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
+  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
+  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
 ```
 
 Getting elements from a list
@@ -606,13 +623,11 @@ min_max = function(x) {
 }
 
 library(zeallot)
-Error in library(zeallot): there is no package called 'zeallot'
 c(min_x, max_x) %<-% min_max(rnorm(10))
-Error in c(min_x, max_x) %<-% min_max(rnorm(10)): could not find function "%<-%"
 min_x
-Error in eval(expr, envir, enclos): object 'min_x' not found
+[1] -1.466663
 max_x
-Error in eval(expr, envir, enclos): object 'max_x' not found
+[1] 1.363967
 ```
 
 Dots
@@ -653,30 +668,20 @@ x = c(rnorm(100), NA)
 mean(x)
 [1] NA
 mean_no_na(x)
-[1] 0.01344655
+[1] -0.03458285
 mean_no_na(x, trim=0.5)
-[1] 0.01756683
+[1] -0.05075987
 mean(x, trim=0.5, na.rm=T)
-[1] 0.01756683
+[1] -0.05075987
 ```
 - Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
 
-Exercise: ggplot with 
+Exercise: ggplot with red dots
 ===
 type: prompt
 - Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
 - Test it out using data of your choice
 
-
-Example: 
-
-```r
-# similarity between expression of genes in blood and lung 
-gtex_data %>%
-  filter(Ind=="GTEX-11DXZ") %>% # look at one person
-ggplot_redpoint(aes(Blood, Lung)) 
-Error in eval(expr, envir, enclos): object 'gtex_data' not found
-```
 
 Iteration
 ===
@@ -840,11 +845,11 @@ a = c(1,2,3)
 b = c(2,3,4)
 
 runif(1, a[1], b[1])
-[1] 1.378294
+[1] 1.578026
 runif(1, a[2], b[2])
-[1] 2.636525
+[1] 2.467262
 runif(1, a[3], b[3])
-[1] 3.607102
+[1] 3.875027
 ```
 
 ***
@@ -858,13 +863,13 @@ list(
   \(a,b) runif(1,a,b)
 )
 [[1]]
-[1] 1.276116
+[1] 1.046799
 
 [[2]]
-[1] 2.998924
+[1] 2.919092
 
 [[3]]
-[1] 3.008604
+[1] 3.88736
 ```
 
 
