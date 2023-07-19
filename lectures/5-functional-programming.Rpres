@@ -739,54 +739,51 @@ expand_grid(
 Exercise: reading files in multiple directories 
 ===
 type: prompt
-My collaborator has an online folder of experimental results named `results` that can be found at . In that folder, there are 100 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_22` would be one sub-folder. Within each sub-folder, there are 6 csv files called `a.csv`, `b.csv` ... `f.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_22/c.csv`.
+My collaborator has an online folder of experimental results named `results` that can be found at `"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"`. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_14` would be one sub-folder. Within each sub-folder, there are 3 csv files called `a.csv`, `b.csv` `c.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_14/c.csv`.
 
-```{r}
-data_dir = '~/Desktop/results'
-dir.create(data_dir)
+1. write code to read these all into one long list of data frames. `str_c()` or `glue()` will be helpful.
+```{r, include=F, eval=F}
+library(glue)
+url = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"
 
-reps = 1:100
-files = c('a','b','c','d','e','f')
-
-reps %>%
-  walk(~dir.create(str_c(data_dir,'/rep_',.)))
-
-gen_file = function(r,f,p) {
-  n = sample.int(100, size=1)
-  
-  runif(n*p) %>%
-    matrix(n,p) %>%
-    as_tibble() %>%
-    write_csv(
-      str_c(data_dir,'/rep_',r,'/',f,'.csv')
-    )
-}
-
-files %>%
-  map(\(f){
-    p = sample.int(10,size=1)
-    
-    reps %>%
-      map(gen_file, f, p)
+dfs = expand_grid(
+  r = 1:20,
+  f = c('a','b','c','d','e','f')
+) %>% 
+  pmap(\(r,f){
+    glue("{url}/rep_{r}/{f}.csv") %>%
+      read_csv(col_types = cols())
   })
 ```
 
-1. write code to read these all into one long list of data frames. `str_c()` will be helpful.
-```{r, include=F}
-dfs = expand_grid(
-  reps = 1:100,
-  files = c('a','b','c','d','e','f')
-) %>%
-  pmap(\(r,f))
+2. Unfortunately, that wasn't helpful because now you don't know what data frames are what results. Consider just the `a` files. Write code that reads in all of the `a` files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from.
+```{r, include=F, eval=F}
+f = 'a'
+df_a = 1:20 %>%
+  map_df(\(r){
+    glue("{url}/rep_{r}/{f}.csv") %>%
+      read_csv(col_types = cols()) %>%
+      mutate(rep = r)
+  })
 ```
 
-That wasn't helpful because now you don't know what data frames are what results. 
-2. Consider just the `a` files. Write code that reads in all of the `a` files and concatenates them into one data frame. Include a column in this data frame that indicates 
+3. Turn your code from above into a function that takes as input the file name (`'a'`, for example) and returns the single concatenated file. Iterate that function over the different file names to output three master data frames corresponding to the file types `'a'`, `'b'`, and `'c'`.
+```{r, include=F, eval=F}
+dfs = c('a','b','c') %>% 
+map(\(f){
+  1:20 %>%
+  map_df(\(r){
+    glue("{url}/rep_{r}/{f}.csv") %>%
+      read_csv(col_types = cols()) %>%
+      mutate(rep = r)
+  })
+})
+```
 
 Why not for loops?
 ===
 - R also provides something called a `for` loop, which is common to many other languages as well. It looks like this:
-```{r}
+```{r, eval=F}
 data_frames = list(NA, NA, NA)
 for (i in 1:3) {
   data_frames[[i]] = read_csv(urls[[i]])
@@ -798,8 +795,8 @@ for (i in 1:3) {
 ***
 
 - Compare to the `map()`-style solution:
-```{r}
-urls %>%
+```{r, eval=F}
+data_frames = urls %>%
   map(read_csv)
 ```
 - Compared to the `for` loop, the `map()` syntax is much more concise and eliminates much of the "admin" code in the loop (setting up indices, initializing the list that will be filled in, indexing into the data structures)
