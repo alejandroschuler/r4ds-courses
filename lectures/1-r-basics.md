@@ -1,7 +1,7 @@
 Programming Basics
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
-date: 2019
+date: 2022
 transition: none
 width: 1680
 height: 1050
@@ -265,11 +265,14 @@ Why does this code generate errors?
 ```r
 ggplot(the_data=genes) + 
   geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
-Warning: Ignoring unknown aesthetics: y_axis, x_axis
-Error in FUN(X[[i]], ...): object 'EIF3L' not found
+Warning in geom_point(mapping = aes(y_axis = EIF3L, x_axis = VAPA)): Ignoring
+unknown aesthetics: y_axis and x_axis
+Error in `geom_point()`:
+! Problem while computing aesthetics.
+ℹ Error occurred in the 1st layer.
+Caused by error:
+! object 'EIF3L' not found
 ```
-
-![plot of chunk unnamed-chunk-18](1-r-basics-figure/unnamed-chunk-18-1.png)
 
 Exercise
 ========================================================

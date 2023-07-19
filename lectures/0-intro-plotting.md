@@ -1,4 +1,4 @@
-R for Data Science
+Basics and Plotting
 ========================================================
 author: Alejandro Schuler, adapted from Steve Bagley and based on R for Data Science by Hadley Wickham
 date: 2022
@@ -6,57 +6,19 @@ transition: none
 width: 1680
 height: 1050
 
-
-<style>
-.small-code pre code {
-  font-size: 0.5em;
-}
-</style>
-
-Goals of this course
-========================================================
-By the end of the course you should be able to...
-
-- comfortably use R through the Rstudio interface
-- read and write tabular data between R and flat files
-- subset, transform, summarize, join, and plot data
-- write reusable and readable programs
-- seek out, learn, and integrate new packages into your analyses
-
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" width=800 height=300>
-</div>
-
-Tidyverse
-========================================================
-<div align="center">
-<img src="https://pbs.twimg.com/media/DuRP1tVVAAEcpxO.jpg">
-</div>
-
-Resources for this course
-========================================================
-
-R for Data Science (R4DS): https://r4ds.had.co.nz
-<div align="center">
-<img src="https://r4ds.had.co.nz/cover.png">
-</div>
-
-***
-
-Cheatsheets: https://www.rstudio.com/resources/cheatsheets/
-
-Website: https://github.com/alejandroschuler/r4ds-courses/tree/advance-2021
-
-Basics and Plotting
-========================================================
-type:section
-
 Learning Goals:
 
 - issue commands to R using the Rstudio REPL interface
 - load a package into R
 - read some tabluar data into R
 - visualize tabluar data using ggplot geoms, aesthetics, and facets
+
+
+<style>
+.small-code pre code {
+  font-size: 0.5em;
+}
+</style>
 
 Basics
 ========================================================
@@ -215,7 +177,8 @@ genes
  8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
  9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
 10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# … with 49 more rows, and 1 more variable: VAPA <dbl>
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA <dbl>
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
@@ -245,7 +208,8 @@ genes
  8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
  9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
 10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# … with 49 more rows, and 1 more variable: VAPA <dbl>
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA <dbl>
 ```
 This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
 - 29 SLE Patients, 30 Healthy Controls
@@ -263,7 +227,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" height="80%" />
+<div class="figure">
+<img src="0-intro-plotting-figure/unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14" height="80%" />
+<p class="caption">plot of chunk unnamed-chunk-14</p>
+</div>
 
 ***
 - `ggplot(dataset)` says "start a chart with this dataset"
@@ -396,7 +363,10 @@ type: prompt
 Can you recreate this plot?
 
 
-<img src="0-intro-plotting-figure/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
+<p class="caption">plot of chunk unnamed-chunk-26</p>
+</div>
 
 Exercise
 ===
@@ -420,10 +390,13 @@ Facets
 ```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_wrap(~ phenotype, nrow = 2)
+  facet_wrap(vars(phenotype), nrow = 2)
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
+<p class="caption">plot of chunk unnamed-chunk-28</p>
+</div>
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
@@ -434,25 +407,13 @@ Facets
 ```r
 ggplot(genes) + 
   geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_grid(phenotype ~ gender)
+  facet_grid(rows=vars(phenotype), cols=vars(gender))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
-
-Exercise
-===
-type:prompt
-incremental: false
-
-Run this code and comment on what role `.` plays:
-
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) +
-  facet_grid(ancestry ~ .)
-```
-
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
+<p class="caption">plot of chunk unnamed-chunk-29</p>
+</div>
 
 Geoms
 ===
@@ -463,7 +424,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<p class="caption">plot of chunk unnamed-chunk-30</p>
+</div>
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 
@@ -474,7 +438,10 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
+<p class="caption">plot of chunk unnamed-chunk-31</p>
+</div>
 
 Geoms
 ===
@@ -488,7 +455,10 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<p class="caption">plot of chunk unnamed-chunk-32</p>
+</div>
 
 Geoms
 ===
@@ -500,7 +470,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
+<p class="caption">plot of chunk unnamed-chunk-33</p>
+</div>
 
 Geoms
 ===
@@ -512,7 +485,10 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
   geom_point()
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<p class="caption">plot of chunk unnamed-chunk-34</p>
+</div>
 
 Geoms
 ===
@@ -524,7 +500,10 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-35-1.png" alt="plot of chunk unnamed-chunk-35"  />
+<p class="caption">plot of chunk unnamed-chunk-35</p>
+</div>
 
 Exercise
 ===
@@ -538,7 +517,10 @@ ggplot(genes) +
   ...
 ```
 
-<img src="0-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="0-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<p class="caption">plot of chunk unnamed-chunk-36</p>
+</div>
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?

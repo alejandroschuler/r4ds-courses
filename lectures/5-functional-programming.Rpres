@@ -74,16 +74,23 @@ df$d = (df$d - min(df$d, na.rm = TRUE)) /
 
 Example
 ===
-We already know a better way to do this:
-
 ```{r, eval=F}
+rescale_0_1 = function(vec) {
+  (vec - min(vec))/(max(vec) - min(vec))
+}
+
 df2 = df %>%
-  mutate(across(
-    a:d, 
-    ~ (.- min(.,na.rm=T)) / (max(.,na.rm=T) - min(.,na.rm=T))
-  ))
+  mutate(
+    a= rescale_0_1(a),
+    b= rescale_0_1(b),
+    c= rescale_0_1(c),
+    d= rescale_0_1(d),
+  )
 ```
-- but it's still ugly and hard to read, especially with all the periods and parentheses
+- Much improved!
+- The last two lines clearly say: replace all the columns with their rescaled versions
+  - This is because the function name `rescale_0_1()` is informative and communicates what it does
+  - If a user (or you a few weeks later) is curious about the specifics, they can check the function body
 
 Example
 ===
@@ -93,12 +100,11 @@ rescale_0_1 = function(vec) {
 }
 
 df2 = df %>%
-  mutate(across(a:d, rescale_0_1))
+  mutate(
+    across(a:d, rescale_0_1)
+  ) # see ?across
 ```
-- Much improved!
-- The last two lines clearly say: replace all the columns with their rescaled versions
-  - This is because the function name `rescale_0_1()` is informative and communicates what it does
-  - If a user (or you a few weeks later) is curious about the specifics, they can check the function body
+- Even better.
 - ... now we notice that `min()` is being computed twice in the function body, which is inefficient
 - We are also not accounting for NAs
 
@@ -306,113 +312,8 @@ data %>% shuffle_col(number)
 ```
 - This tells R not to look for that object in the global environment.
 - Called "embracing"
-
-Passing column names to tidyverse within functions
-===
-- The last thing we need to resolve is how to specify the naming of the new column. 
-- You may think this would work:
-
-```{r}
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate({{col}} = sample(
-      {{col}}, 
-      nrow(data)
-    ))
-}
-```
-- But unfortunately this doesn't even parse as valid R code
-
-***
-
-- For arcane technical reasons, the right way to do this is to use the Walrus operator `:=`
-```{r}
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate({{col}} := sample(
-      {{col}}, 
-      nrow(data)
-    ))
-}
-
-data %>% shuffle_col(number)
-```
-
-Passing column names to tidyverse within functions as strings
-===
-- What if we wanted our function to work with character vectors so it could ingest the output of other code? For instance:
-```{r}
-col_to_shuffle = names(data)[1] # whatever the name of the first column is
-col_to_shuffle
-```
-```{r}
-data %>% shuffle_col(col_to_shuffle)
-```
-- This fails because now that we've embraced the argument R expects it to be a bare column name that it will parse in the context of the data, not a string.
-- The un-embraced version also fails (why?):
-```{r}
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate(col = sample(
-      col, 
-      nrow(data)
-    ))
-}
-data %>% shuffle_col(col_to_shuffle)
-```
-
-
-Passing column names to tidyverse within functions as strings
-===
-- To get this to work you have to use the special `.data` pronoun within the tidyverse function and index into that dataframe using the string column name:
-```{r}
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate(col = sample(
-      .data[[col]], 
-      nrow(data)
-    ))
-}
-data %>% shuffle_col(col_to_shuffle)
-```
-
-***
-- If you want to use the arguments to assign new column names inside tidyverse functions you  need to use single braces inside a string along with the Walrus operator:
-```{r}
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate("{col}" := sample(
-      .data[[col]], 
-      nrow(data)
-    ))
-}
-data %>% shuffle_col(col_to_shuffle)
-```
-- Is this hideous? Yes. Confusing? Yes.
-- This is the price you pay for being able to write beautiful, concise tidyverse code outside of functions!
-
-Exercise: mean-by
-===
-type: prompt
-
-1. Write a function that takes a dataframe and two bare (unquoted) column names as arguments. Your function should return the result of grouping the dataframe by the first column and then taking the mean of the second column by the groups defined by the first. Name the resulting column `"mean_by_grp"`.
-
-For an example, try using this toy data:
-```{r}
-data = tibble(
-  grp = c("a", "a", "b", "b", "b"),
-  val = c(1, 3, 5, 2, 2))
-```
-
-Then try your function on the GTEx data to get the average expression of each gene in Blood. (Hint: how do you deal with NAs?)
-```{r}
-gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex.tissue.zscores.advance2020.txt')
-```
-Try different sets of columns and modifying the toy data to make sure it works.
-
-2. Modify your function so that the user must pass in a string as a fourth argument. This string should be the name of the resulting summary column in the resulting dataframe.
-
-3. Modify your function so that the summarizing function (e.g. `mean`) can be passed in by the user as an argument. Hint: first try functions like `min` and `max`, and then think about other functions to play with.
+- More on this: see https://dplyr.tidyverse.org/articles/programming.html
+- It gets complicated but this is the price to be paid for nice tidyverse syntax
 
 Conditional Evaluation
 === 
@@ -478,49 +379,43 @@ valence(0)
 Exercise: greeting
 ===
 type: prompt
-Write a greeting function that says “good morning”, “good afternoon”, or “good evening”, depending on the  time of day of a `dttm` that the user passes in. (*Hint*: use an argument that defaults to `lubridate::now()`. That will make it easier to test your function. `lubridate::hour()` and `print()` may also be useful.)
+Write a function that takes a vector as input and returns whether or not it has at least 5 elements in it.
 
 
 Conditions
 ===
 - Conditions can be anything that evaluates to a single `TRUE` or `FALSE`
 ```{r}
-library(lubridate)
-
-sun_or_moon = function(time = now()) {
-  this_hour = hour(time)
-  if (this_hour < 6 | this_hour > 18) {
-      "moon in the sky"
+in_0_1 = function(number) {
+  if (0 <= number & number <=1) {
+      "in [0,1]"
   } else {
-      "sun in the sky"
+      "not in [0,1]"
   }
 }
-sun_or_moon(mdy_hm("Jan 2, 2000, 10:55pm"))
-sun_or_moon(mdy_hm("Sept 10, 1990, 09:12am"))
+in_0_1(0.3)
+in_0_1(-1.1)
 ```
 - but not a logical vector or an NA
 ```{r}
-sun_or_moon(c(
-  mdy_hm("Jan 2, 2000, 10:55pm"), 
-  mdy_hm("Sept 10, 1990, 09:12am")))
+in_0_1(
+  c(0.3, -1.1)
+)
 ```
 
-Motivation for lists and iteration
+if_else
 ===
+- `if_else` is a vectorized if-else statement
 ```{r}
-sun_or_moon(c(
-  mdy_hm("Jan 2, 2000, 10:55pm"), 
-  mdy_hm("Sept 10, 1990, 09:12am")))
+in_0_1 = function(x) if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
 ```
-- We see this doesn't work. How can we tell the function to iterate over multiple sets of arguments?
+
 ```{r}
-list(mdy_hm("Jan 2, 2000, 10:55pm"), 
-     mdy_hm("Sept 10, 1990, 09:12am")) %>%
-map(sun_or_moon)
+in_0_1(
+  c(0.3, -1.1)
+)
 ```
-- To do this, we need to understand:
-  - how to build and manipulate `list`s 
-  - how to iterate with `purrr::map()` and its friends
+
 
 Lists
 ===
@@ -697,265 +592,204 @@ Map
 - Map then runs that function on each element of the first argument, slaps 
 the results together into a list, and returns that
 ```{r}
-times = list(mdy_hm("Jan 2, 2000, 10:55pm"), 
-             mdy_hm("Sept 10, 1990, 09:12am"))
-map(times, sun_or_moon)
+numbers = rnorm(3)
+map(numbers, in_0_1)
 ```
 - Equivalently:
 ```{r}
-list(mdy_hm("Jan 2, 2000, 10:55pm"), 
-     mdy_hm("Sept 10, 1990, 09:12am")) %>%
-map(sun_or_moon)
+numbers %>%
+  map(in_0_1)
+```
+- this is really only useful when your function isn't already vectorized
+```{r}
+in_0_1(numbers)
+```
+
+Map 
+===
+- for example, let's say you want to read in multiple files:
+```{r}
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+files = list(
+  samples = "gtex_samples_time.csv",
+  tissues = "gtex_tissue_month_year.csv",
+  dates = "gtex_dates_clean.csv"
+)
+
+urls = str_c(url_start, files)
+```
+
+```{r}
+data_frames = urls %>%
+  map(read_csv)
 ```
 
 Names are preserved through map
 ===
 - If the input list (or vector) has names, the output will have elements with the same names
 ```{r}
-list(
-  random_day = mdy_hm("Jan 2, 2000, 10:55pm"), 
-  my_birthday = mdy_hm("Sept 10, 1990, 09:12am")) %>%
-map(sun_or_moon)
-```
-- You can also dynamically set names in a list using `set_names()`
-```{r}
-list(
-  mdy_hm("Jan 2, 2000, 10:55pm"), 
-  mdy_hm("Sept 10, 1990, 09:12am")) %>%
-set_names(c("random_day", "my_birthday")) %>%
-map(sun_or_moon)
-```
-
-Returning vectors
-===
-- `map()` typically returns a list (why?)
-- But there are variants that return vectors of different types
-```{r}
-list(mdy_hm("Jan 2, 2000, 10:55pm"), 
-     mdy_hm("Sept 10, 1990, 09:12am")) %>%
-map_chr(sun_or_moon)
-```
-
-```{r}
-harmonic_sum = function(n) {
-  sum(1/(1:n)) # 1/1 + 1/2 + ... 1/n
+read_gtex = function(file) {
+  str_c(url_start, file) %>%
+    read_csv()
 }
 
-1:10 %>%
-  map_dbl(harmonic_sum)
+data_frames = files %>%
+  map(read_gtex)
+
+names(data_frames)
 ```
 
-Returning a data frame
+
+Returning other data types
 ===
+- `map()` typically returns a list (why?)
+- But there are variants that return different data types
+
 ```{r}
-df <- tibble::tibble(
-  a = rnorm(10), 
-  b = rnorm(10),
-  c = rnorm(10),
-  d = rnorm(10)
-) %>%
-  mutate(d = if_else(row_number()==6, NA_real_, d)) # makes an element an NA
+data_frames %>%
+  map_dbl(nrow)
 ```
 
 ```{r}
-df %>%
-  map_df(mean)
-```
-- Why can we feed a data frame into `map()`?
-- Notice the `c` column's mean is NA because we don't have a way to specify `na.rm=TRUE` to `mean()`
+count_rc = function(df) {
+  tibble(
+    n_rows = nrow(df),
+    n_cols = ncol(df)
+  )
+}
 
-Composing functions inside map()
+data_frames %>%
+  map_df(count_rc)
+```
+
+Anonymous function syntax
 ===
-- How can we pass na.rm=TRUE to mean() inside of map?
+- up until now we had to define our functions outside of map and then pass them in as an argument:
+```{r, eval=F}
+count_rc = function(df) {
+  tibble(
+    n_rows = nrow(df),
+    n_cols = ncol(df)
+  )
+}
 
-- Define a new function with `na.rm=T` hardcoded in
-```{r}
-mean_no_rm = function(x) mean(x, na.rm=TRUE)
-df %>% map_df(mean_no_rm)
-```
-
-- **Better**: define an anonymous function inside of map
-```{r}
-df %>% map_df(function(x) mean(x, na.rm=TRUE))
+data_frames %>%
+  map_df(count_rc)
 ```
 
 ***
+- Instead, we can define a function inside of another function call.
+- These functions are "anonymous" because they are never assigned a name and will not be used again
 
-- **Better**: use the `~ .` syntax to create an "anonymous" function inside of map. The `~` tells map that what follows is the body of a function (with no name) and a single argument called `.`
-```{r}
-df %>% map_df(~ mean(., na.rm=TRUE))
+```{r, eval=F}
+data_frames %>%
+  map_df(\(df) tibble(
+    n_rows = nrow(df),
+    n_cols = ncol(df)
+  ))
 ```
 
-- **Best**: any additional named arguments to map get passed on as named arguments to the function you want to call!
-```{r}
-df %>% map_df(mean, na.rm=TRUE)
-```
-
-- In this case, the last option is the clearest, but in others it maybe a good idea to define a function outside of map or explicitly inside of map with the `function` syntax. It all depends on what makes the most sense for the situation.
+- the syntax is `\(ARGUMENTS) BODY`
+- just an abbreviation for `function(ARGUMENTS) {BODY}`
 
 Exercise: map practice
 ===
 type: prompt
-- Determine the type of each column in `gtex_data` (`?typeof`). Return the result as a vector of strings
-- Generate 10 normally-distributed random numbers for each of `mean`=-10, 0, 10, and 100 (?rnorm). Use the default value of `sd`. 
-
-Exercise: partial harmonic sum
-===
-type:prompt
-```{r}
-harmonic_sum = function(n) {
-  sum(1/(1:n)) # 1/1 + 1/2 + ... 1/n
-}
-```
-- Combine the harmonic sum function with `map_dbl()` to create a new function that takes the same arguments but returns a vector of partial sums up to the full sum. i.e. instead of returning `1 + 1/2 + 1/3 ... + 1/n`, it returns `c(1, 1+1/2, 1+1/2,...1+1/2+...1/n)`. 
-- Accomplish the same thing by modifying the harmonic sum function. Do not use `map()`. The function `cumsum()` will be useful.
-- Both of these give the same answer. Make an argument for which is better.
-
-Exercise: partial harmonic sum
-===
-type:prompt
-- Now use map() with `harmonic_partial_sum()` (your function from the previous exercise) to make a list where each element is a vector of partial sums from 1 to 100, but for values of `r=1`, `r=2` and `r=3` (each element of the list corresponds to the partial sums for a different value of r when `n=100`).
+- Determine the type of each column in `gtex_data` (`?typeof`). Return the result as a vector of strings (note: a data frame is a list of columns)
+- For each value of x in [1, 5, 10] Generate 10 random numbers between 0 and x (see: `?runif`).
 
 Mapping over multiple inputs
 ===
-- So far we’ve mapped along a single input. But often you have multiple related inputs that you need iterate along in parallel. That’s the job of `pmap()`. For example, imagine you want to simulate some random normals with different means. You know how to do that with `map()`:
+- So far we’ve mapped along a single input. But often you have multiple related inputs that you need iterate along in parallel. That’s the job of `pmap()`. For example, imagine you want to draw a random numbers between `a` and `b` as both of those vary:
 ```{r}
-means <- list(5, 10, -3)
-means %>% 
-  map(rnorm, n = 5) %>%
-  glimpse()
+a = c(1,2,3)
+b = c(2,3,4)
+
+runif(1, a[1], b[1])
+runif(1, a[2], b[2])
+runif(1, a[3], b[3])
 ```
 
-Mapping over multiple inputs
-===
-- What if you also want to vary the standard deviation and `n`? One way to do that would be to iterate over the indices and index into vectors of means and sds:
-```{r}
-mean = list(5, 10, -3)
-sd = list(1, 5, 10)
-n = list(1, 3, 5)
-1:3 %>%
-  map(~rnorm(n[[.]], mean[[.]], sd[[.]])) %>% 
-  glimpse()
-```
-- This looks like `C++`, not `R`. It's better to use `pmap()`
-
-Mapping over multiple inputs
-===
+***
+- `pmap` makes this easier:
 ```{r}
 list(
-  n = list(1, 3, 5),
-  mean = list(5, 10, -3),
-  sd = list(1, 5, 10)
-) %>%
-pmap(rnorm) %>% 
-glimpse()
+  a = c(1,2,3),
+  b = c(2,3,4)
+) %>% pmap(
+  \(a,b) runif(1,a,b)
+)
 ```
+
 
 <div align="center">
-<img src="http://r4ds.had.co.nz/diagrams/lists-pmap-named.png">
+<img src="https://dcl-prog.stanford.edu/images/pmap-flipped.png">
 </div>
 
-Mapping over multiple inputs
-===
-- If you name the elements of the list, `pmap()` will match them to named arguments of the function you are calling
-```{r, eval=F}
-list(
-    to = c(1,2,3),
-    from = c(10,11,12)
-  ) %>%
-  pmap(seq) %>%
-  glimpse()
-```
-- Otherwise arguments will be passed positionally
-```{r, eval=F}
-list(
-    c(1,2,3),
-    c(10,11,12)
-  ) %>%
-  pmap(seq) %>%
-  glimpse()
+Creating a grid of values
+=== 
+- `expand_grid()` gives you every combination of the items in the list you pass it
+```{r}
+expand_grid(
+    a = c(1,2,3),
+    b = c(10,11)
+  )
 ```
 
-Mapping over multiple inputs
+Exercise: reading files in multiple directories 
 ===
-- You can and should sometimes write functions inside of `pmap()`
-- The same variants (e.g. `pmap_dbl()`) exist for `pmap()` as for `map()`
+type: prompt
+My collaborator has an online folder of experimental results named `results` that can be found at . In that folder, there are 100 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_22` would be one sub-folder. Within each sub-folder, there are 6 csv files called `a.csv`, `b.csv` ... `f.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_22/c.csv`.
+
 ```{r}
-list(
-    c(1,2,3),
-    c(10,11,12)
-  ) %>%
-  pmap_dbl(function(x,y) {
-    seq(x,y) %>%
-      median()
+data_dir = '~/Desktop/results'
+dir.create(data_dir)
+
+reps = 1:100
+files = c('a','b','c','d','e','f')
+
+reps %>%
+  walk(~dir.create(str_c(data_dir,'/rep_',.)))
+
+gen_file = function(r,f,p) {
+  n = sample.int(100, size=1)
+  
+  runif(n*p) %>%
+    matrix(n,p) %>%
+    as_tibble() %>%
+    write_csv(
+      str_c(data_dir,'/rep_',r,'/',f,'.csv')
+    )
+}
+
+files %>%
+  map(\(f){
+    p = sample.int(10,size=1)
+    
+    reps %>%
+      map(gen_file, f, p)
   })
 ```
 
-Cross
-=== 
-- `cross()` gives you every combintion of the items in the list you pass it
-```{r}
-list(
-    a = c(1,2,3),
-    b = c(10,11)
-  ) %>%
-  cross() %>%
-  glimpse()
+1. write code to read these all into one long list of data frames. `str_c()` will be helpful.
+```{r, include=F}
+dfs = expand_grid(
+  reps = 1:100,
+  files = c('a','b','c','d','e','f')
+) %>%
+  pmap(\(r,f))
 ```
 
-Cross
-=== 
-- `cross_df()` returns the result as a data frame
-```{r}
-list(
-    a = c(1,2,3),
-    b = c(10,11)
-  ) %>%
-  cross_df()
-```
-
-Binding rows
-===
-- `map()` and `pmap()` sometimes give you back a list of data frames. To glue them all together you will need `bind_rows()`:
-```{r}
-1:3 %>%
-  map(~tibble(
-    rep = .,
-    sample = rnorm(5)
-  )) %>%
-  bind_rows()
-```
-
-Exercise: 
-===
-type: prompt
-
-Generate a table like the one shown here by drawing 3 normally-distributed random numbers from every combination of the following parameters: `mean = c(-1, 0, 1)`, `sd = c(1,2)`.
-
-```{r, echo=F}
-list(
-    mean = c(-1, 0, 1),
-    sd = c(1,2)
-  ) %>%
-  cross_df() %>%
-  pmap(function(mean, sd){
-    tibble(
-      sample = rnorm(mean=mean, sd=sd, n=3),
-      mean = mean,
-      sd = sd)
-  }) %>%
-  bind_rows()
-```
+That wasn't helpful because now you don't know what data frames are what results. 
+2. Consider just the `a` files. Write code that reads in all of the `a` files and concatenates them into one data frame. Include a column in this data frame that indicates 
 
 Why not for loops?
 ===
 - R also provides something called a `for` loop, which is common to many other languages as well. It looks like this:
 ```{r}
-## generate 5 random numbers each from 3 normal distributions with different means
-samples = list(NA, NA, NA)
-means = c(1,10,100)
+data_frames = list(NA, NA, NA)
 for (i in 1:3) {
-  samples[[i]] = rnorm(5, means[i])
+  data_frames[[i]] = read_csv(urls[[i]])
 }
 ```
 - The `for` loop is very flexible and you can do a lot with it
@@ -965,9 +799,8 @@ for (i in 1:3) {
 
 - Compare to the `map()`-style solution:
 ```{r}
-## generate 5 random numbers each from 3 normal distributions with different means
-samples = c(1,10,100) %>%
-  map(~rnorm(5,.))
+urls %>%
+  map(read_csv)
 ```
 - Compared to the `for` loop, the `map()` syntax is much more concise and eliminates much of the "admin" code in the loop (setting up indices, initializing the list that will be filled in, indexing into the data structures)
 - The `map()` syntax also encourages you to write a function for whatever is happening inside the loop. This means you have something that's reusable and easily testable, and your code will look cleaner
@@ -979,132 +812,3 @@ purrr Cheatsheet
 <img src="https://rstudio.com/wp-content/uploads/2018/08/purrr.png"
 </div>
 
-
-R in Parallel
-===
-type: section
-
-Motivation
-===
-- Computers run programmers on processors
-- Each processor can only do one thing at a time
-- If there are many things to do, it will take a long time
-- If the tasks are independent of each other, we can use multiple processors operating in *parallel* 
-- Parallel maps are implemented in the `furrr` package
-
-Example: Permutation test of a regression coefficient
-===
-- Let's say we're interested in the association of two genes in the shortened GTEx dataset (adjusted for other variables). [Try visualizing the relationship between these two genes first!]
-- We can run a linear model to estimate that association, assuming a linear trend
-```{r}
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
-genes2 = genes %>% 
-  drop_na() %>% # remove NAs
-  select(age, gender, ancestry, phenotype, VAPA, EIF3L) # select th variables we want to include
-lm(VAPA~., data=genes2) %>%
-  broom::tidy() %>%
-  filter(term=="EIF3L")
-```
-- Here we've used `lm()` to run a linear model- you can learn more about `lm()` and the formula interface it uses by looking at the help page
-- We've also used `tidy()` from the `broom` package to clean up the output into a tibble.
-- We could use this p-value, but since this is from the output of `lm()`, it is only valid if we believe that the noise in the model is actually normally distributed
-- We can use a **permutation test** to get an estimate that does not rely on this assumption
-
-Example: Permutation test of a regression coefficient
-===
-- The idea of the permutation test is that you shuffle the outcome differently to produce many different permutations of the data
-- This destroys any associations with the outcome in the permuted datasets, but preserves the correlations within the covariates
-- The analysis is then performed on the permuted data to get a set of coefficients that might have been estimated, given that there is no association
-- The true estimated coefficient is thus compared to these. If it is of the same magnitude, we can say we are likely to have gotten such a value by chance even if there was no association
-
-Example: Permutation test of a regression coefficient
-===
-- These are the functions we'll need
-```{r}
-shuffle_row = function(data, row) {
-  data %>% mutate({{row}} := sample({{row}}, nrow(data)))
-}
-
-analyze = function(data) {
-  lm(VAPA~., data=data) %>%
-    broom::tidy() %>%
-    filter(term=="EIF3L") %>%
-    pull(estimate)
-}
-```
-
-```{r}
-genes2 %>%
-  shuffle_row(VAPA) %>% 
-  analyze()
-
-genes2 %>%
-  shuffle_row(VAPA) %>% 
-  analyze()
-```
-
-Example: Permutation test of a regression coefficient
-===
-```{r, messages=FALSE, warning=FALSE}
-#install.packages('tictoc')
-library(tictoc) # for timing things easily
-```
-
-```{r, messages=FALSE, warning=FALSE}
-tic()
-perm_distribution = 1:1000 %>%
-  map_dbl(~
-    genes2 %>%
-      shuffle_row(VAPA) %>% 
-      analyze()
-  )
-toc()
-```
-- We made 1000 coefficients, but it's slow!
-
-Example: Permutation test of a regression coefficient
-===
-- If we parallelize across CPUs, we can go faster
-```{r, warning=F, message=F}
-#install.packages('furrr')
-library(furrr) # parallel maps
-plan(multiprocess(workers=4)) # turns on parallel processing 
-```
-```{r, warning=F, message=F}
-tic()
-perm_distribution = 1:1000 %>%
-  future_map_dbl(~
-    genes2 %>%
-      shuffle_row(VAPA) %>% 
-      analyze()
-  )
-toc()
-```
-
-Example: Permutation test of a regression coefficient
-===
-```{r}
-beta = analyze(genes2)
-
-p_empirical = mean(abs(perm_distribution) >= abs(beta))
-
-p_parametric = lm(VAPA~., data=genes2) %>%
-  broom::tidy() %>%
-  filter(term=="EIF3L") %>%
-  pull(p.value)
-```
-
-```{r}
-p_empirical
-p_parametric
-```
-- Under the assumptions of the permutation test, we can be even less sure there is an association.
-
-Using future_map()
-===
-- `furrr` implements all of the functions from `purrr` with a prefix `future_` that allows them to be used in parallel. 
-  - A "future" is a programming abstraction for a value that will be available in the future, which is one way of allowing for asynchronous (parallel) processes.
-  - `furrr` uses futures under the hood to do what it does, therefore the naming convention
-- The `future_` versions of `map()` work exactly the same as the standard `map()` versions.
-- To turn on parallelism, simply put `plan(multiprocess(workers=K))` at the top of your script and all `future_` maps will be run in parallel across the number of workers that you specify
-  - You can't exceed the number of available cores
