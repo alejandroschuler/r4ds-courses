@@ -84,6 +84,7 @@ By the end of the course, you will be able to:
             <li>arrange rows of a dataset based on one or more columns</li>
             <li>select columns of a dataset</li>
             <li>mutate existing columns to create new columns</li>
+            <li>use the pipe to combine multiple operations</li>          
         </ul></td>
         <td><ul>
             <li><code>dplyr</code></li>
@@ -96,7 +97,6 @@ By the end of the course, you will be able to:
       <td>
         <ul>
             <li>group and summarize data by one or more columns</li>
-            <li>use the pipe to combine multiple operations</li>          
             <li>transform between long and wide data formats</li>
             <li>combine multiple data frames using joins on one or more columns</li>
         </ul></td>
