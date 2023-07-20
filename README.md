@@ -101,7 +101,6 @@ By the end of the course, you will be able to:
             <li>combine multiple data frames using joins on one or more columns</li>
         </ul></td>
         <td><ul>
-            <li><code>slider</code></li>
             <li><code>dplyr</code></li>
             <li><code>tidyr</code></li>
         </ul></td>
