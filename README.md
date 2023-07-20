@@ -71,9 +71,10 @@ By the end of the course, you will be able to:
             <li>recognize vectors and vectorized functions</li>
             <li>recognize, inspect, and import data frames</li>
             <li>issue commands to R using the Rstudio script pane</li>
-        </ul>
-      </td>
-        <td></td>
+        </ul></td>
+        <td><ul>
+            <li><code>readr, tibble</code></li>
+        </ul></td>
         <td>R4DS ch. 3, 5, 7, 8, 13-19</td>
     </tr>
     <tr>
