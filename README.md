@@ -73,7 +73,8 @@ By the end of the course, you will be able to:
             <li>issue commands to R using the Rstudio script pane</li>
         </ul></td>
         <td><ul>
-            <li><code>readr, tibble</code></li>
+            <li><code>tibble</code></li>
+            <li><code>readr</code></li>
         </ul></td>
         <td>R4DS ch. 3, 5, 7, 8, 13-19</td>
     </tr>
