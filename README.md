@@ -19,13 +19,13 @@ We also will not cover statistical analysis of data in this course, but the curr
 This course is not graded, nor are there any assignments or homework. The lectures are just to get you started- they will be frequently interrupted by active learning exercises that you will be asked to complete in pairs or small groups. That's where the real learning will happen!
 
 ### Prerequisites
-No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has only recently gained traction.
+No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has gained traction in the past decade.
 
-We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: https://rstudio.cloud. It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
+We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: [posit.cloud](posit.cloud). It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
 
 Alternatively, you can install R and RStudio on your own computer: 
 [Follow this link](https://cran.rstudio.com/) and click on the appropriate options for your operating system to install R, 
-then do the same to [install RStudio](https://rstudio.com/products/rstudio/download/#download).
+then do the same to [install RStudio](https://posit.co/download/rstudio-desktop/#download).
 
 ### Learning Goals
 By the end of the course, you will be able to:
@@ -69,12 +69,12 @@ By the end of the course, you will be able to:
             <li>save values to variables</li>
             <li>find and call R functions with multiple arguments by position and name</li>
             <li>recognize vectors and vectorized functions</li>
-            <li>recognize and inspect data frames</li>
+            <li>recognize, inspect, and import data frames</li>
             <li>issue commands to R using the Rstudio script pane</li>
         </ul>
       </td>
         <td></td>
-        <td>R4DS ch. 4</td>
+        <td>R4DS ch. 3, 5, 7, 8, 13-19</td>
     </tr>
     <tr>
       <td>3</td>
@@ -89,7 +89,7 @@ By the end of the course, you will be able to:
         <td><ul>
             <li><code>dplyr</code></li>
         </ul></td>
-        <td>R4DS ch. 5</td>
+        <td>R4DS ch. 4</td>
     </tr>
     <tr>
       <td>4</td>
@@ -105,7 +105,7 @@ By the end of the course, you will be able to:
             <li><code>dplyr</code></li>
             <li><code>tidyr</code></li>
         </ul></td>
-        <td>R4DS ch. 12,13</td>
+        <td>R4DS ch. 4, 6, 20, </td>
     </tr>
     <tr>
       <td>5</td>
@@ -120,7 +120,7 @@ By the end of the course, you will be able to:
             <li><code>purrr</code></li>
             <li><code>zeallot</code></li>
         </ul></td>
-        <td>R4DS ch. 17-21</td>
+        <td>R4DS ch. 26, 27</td>
     </tr>
   </tbody>
 </table>
@@ -134,10 +134,10 @@ Programming, like all things, is something you learn by doing. The lectures incl
 - **contributor** (0+): Contributors are responsible for generating ideas and code for the exercise.
 
 ### Textbook
-We will be using parts of the fantastic book [R for Data Science](http://r4ds.had.co.nz/) (R4DS) by [Hadley Wickham](http://hadley.nz/) and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
+We will be using parts of the fantastic book [R for Data Science]([http://r4ds.had.co.nz/](https://r4ds.hadley.nz/)) (R4DS:2e) by [Hadley Wickham](http://hadley.nz/), Mine Çetinkaya-Rundel, and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser but to see plots you should open the `.pdf` versions. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
+Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
@@ -167,8 +167,8 @@ You can find many hilarious takes on R's idiosyncrasies and problems scattered a
 Some of my favorites are:
 - [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf): a detailed guide to the base language, written partially in the style of *Dante's Inferno*.
 - [aRrgh: a newcomer's (angry) guide to R](http://arrgh.tim-smith.us/): an experienced software engineer rants about R's quirks
-- [Rbitrary standards](https://ironholds.org/projects/rbitrary/): a little about the history of R's strangest features
-- [Evaluating the design of the R language](https://haben-michael.github.io/stats195/Morendat%20et%20al.%20--%20Evaluating%20the%20design%20of%20the%20R%20language.pdf): academic computer scientists dissect R in this peer-reviewed paper. Highly technical.
+- [Rbitrary standards](https://ironholds.org/resources/misc/rbitrary/): a little about the history of R's strangest features
+- [Evaluating the design of the R language](http://janvitek.org/pubs/ecoop12.pdf): academic computer scientists dissect R in this peer-reviewed paper. Highly technical.
 
 Although some of the odd design choices are precisely what enable its most powerful features, 
 [there are certainly improvements that could be made](http://adv-r.had.co.nz/Performance.html#language-performance).
