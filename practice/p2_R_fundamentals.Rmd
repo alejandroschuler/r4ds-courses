@@ -1,0 +1,194 @@
+---
+title: "Practice 2: R Fundamentals"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The below commands toggle scrolling in outputs.
+# Please do not adjust this code!
+options(width = 60)
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
+```
+
+This notebook provides the opportunity to practice loading and manipulating data from yesterday's healthcare data set.
+
+#### Instructions
+
+This notebook includes a framework for inspecting data in the example healthcare data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 1: Programming Basics. You will have a chance to...
+
+1. Assign variables
+2. Load and inspect data frames
+
+#### Data Description
+
+We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+
+>Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+
+The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+
+#### Import Modules
+
+```{r}
+library(ggplot2)
+```
+
+#### Specify Data
+
+During the first demonstration, we loaded patient data into a data frame. Please load the table below using the `read.csv` function. If you are stumped, please look back at the first demonstration or review the documentation [here](https://www.rdocumentation.org/packages/qtl2/versions/0.32/topics/read_csv).
+
+```{r}
+# TODO: Assign the value "data/patients.csv" to the variable `path`
+path <- ...
+
+# TODO: Load the table using read.csv
+df_patient <- ...
+```
+
+#### Load Column Names
+
+A data frame includes columns of fixed data types that are labeled with headers. You can identify the headers in a data frame using the `colnames` function. After reviewing the documentation for this function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/row%2Bcolnames), please use the `colnames` function to extract the column names in the `df_patient` data frame.
+
+```{r}
+# TODO: Extract the column names of the `df_patient` table using the `colnames` function
+col_names <- ...
+
+# Print the column names
+print(col_names)
+```
+
+#### Identify Unique Patients
+
+The built-in `unique` function is used to identify unique values in a data set. If the function is applied to a data frame, then unique rows will be returned. If the function is applied to a vector, then unique elements will be returned. Please review the documentation for the `unique` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unique), then use the function to identify the unique values in the `Id` column of `df_patient`.
+
+```{r, max.height='200px'}
+# TODO: Identify the unique values in the `Id` column of `df_patient`
+# Store the unique patient IDs in a vector
+unique_patients <- ...
+
+# Print the unique patients
+print(unique_patients)
+```
+
+#### Count Unique Patients
+
+The built-in `length` function can be used to identify the number of elements in a vector. Please review the documentation for the `length` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/length), then use the function to identify the number of unique patients in `df_patient`.
+
+```{r}
+# TODO: Use the `length` function to identify the number of unique patients in `df_patient`
+n_patients <- ...
+
+# Print the number of patients (There should be 1171 unique patients)
+print(n_patients)
+```
+
+#### Sort Patient Identifiers
+
+The built-in `sort` function can be used to sort values in a vector. When the values in a vector are alphanumeric, they are sorted in alphabetical order with numbers coming first. Please review the documentation for the `sort` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sort), then use the function to sort the unique patient identifiers.
+
+```{r, max.height='200px'}
+# TODO: Sort the patients listed in `unique_patients` by their identifiers
+unique_patients_sorted <- ...
+
+# Print the sorted patient identifiers
+print(unique_patients_sorted)
+```
+
+#### Load Patient Encounters
+
+Now, we will open a second table from our data set to inspect encounters with patients. Again using the `read.csv` function, please load the encounters data stored in `data/encounters.csv`.
+
+```{r, max.height='200px'}
+# Specify the path to the encounters data
+encounters_path <- "data/encounters.csv"
+
+# TODO: Use the `read.csv`function to load the patient encounters into a data frame
+df_encounters <- ...
+```
+
+#### Define a Vector
+
+We will use this notebook to inspect the number of patient encounters in each month. Please define a vector specifying the twelve months of the year ("January" through "December") as strings values.
+
+```{r}
+# TODO: Generate a vector of strings specifying the twelve months of the year
+months <- ...
+```
+
+#### Extract Encounter Dates
+
+Using the code provided below, we will extract the date of each encounter. We will get this information from the `START` column of the `encounters` table. We will format the encounter dates as POSIXct (date and time) information. POSIXct internally represents date and time as seconds since Junuary 1, 1970. We use the `as.POSIXct` function (with documentation [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/as.POSIX*)) to convert string timestamps into POSIXct format. You have no task in the subsequent code block.
+
+```{r, max.height='200px'}
+# Extract encounters for each patient
+encounters <- df_encounters[, c("PATIENT", "START")]
+
+# Reformat `START` column as `POSIXct` (datetime) information
+encounters$START <- as.POSIXct(encounters$START)
+
+# Print the encounter start times
+print(encounters)
+```
+
+#### Identify the Month of Each Encounter
+
+For each of the patient encounters, we will identify the month of that encounter. We will do so by reformatting the data in the `START` column using the `format` function (with documentation found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/format)). The "%B" identifier specifies unabbreviated months (as noted [here](https://www.statmethods.net/input/dates.html). We will store the month in a new column. You have no task in the subsequent code block.
+
+```{r, max.height='200px'}
+# Extract the month for each encounter
+encounters$MONTH <- format(encounters$START, "%B")
+
+# Display the resulting table
+print(encounters)
+```
+
+#### Count Month Frequencies
+
+We will loop through each month in the `months` vector. For each month, we will do the following:
+
+1. Filter the rows in `encounters` to those with a corresponding value in the `MONTH` column
+2. Count the number of rows in the filtered table
+3. Store the row count in a dictionary called `n_encounters_by_month`
+
+This will give us the number of encounters in each month. You have no task in the subsequent code block.
+
+```{r}
+# Initialize a list for encounter counts associated with each month
+n_encounters_by_month <- list()
+
+# Loop over months
+for (month in months) {
+  
+  # Filter rows in `encounters` matching month
+  encounters_filtered <- encounters[encounters$MONTH == month, ]
+  
+  # Count the number of rows in `encounters_filtered`
+  nrows <- nrow(encounters_filtered)
+  
+  # Store the row count in `n_encounters_by_month`
+  n_encounters_by_month[[month]] <- nrows
+  
+  # Print the number of encounters associated with the month
+  cat("Month:", month, "\n")
+  cat("Number of encounters:", nrows, "\n\n")
+}
+```
+
+#### Summary
+
+In this notebook, we loaded patient records into a data frame. We identified and sorted the unique patient IDs in our records. We also identified and plotted the number of patient encounters by month.
