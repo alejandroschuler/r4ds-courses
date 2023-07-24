@@ -82,7 +82,7 @@ Below we use ggplot2 to plot a histogram of the healthcare expenses, which are s
 
 ```{r}
 # Plot a histogram of healthcare expenses
-# TODO: Provide an appropriate x and y labels for the histogram
+# TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
 ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
   geom_histogram(fill = "steelblue", color = "white", bins = 20) +
@@ -99,7 +99,7 @@ We can simplify the theme of our figure by adding `theme_minimal()` to our plott
 
 ```{r}
 # Plot a histogram of healthcare expenses using a simple theme
-# TODO: Provide an appropriate x and y labels for the histogram
+# TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
 ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
   geom_histogram(fill = "steelblue", color = "white", bins = 20) +
@@ -133,7 +133,7 @@ print(counts)
 
 ```{r}
 # Plot a bar chart to visualize the distribution of races
-# TODO: Provide an appropriate x and y labels for the bar chart
+# TODO: Provide appropriate x and y labels for the bar chart
 # TODO: Provide an appropriate title for the bar chart
 ggplot(counts, aes(x = race, y = count)) +
   geom_col(fill = "steelblue") +

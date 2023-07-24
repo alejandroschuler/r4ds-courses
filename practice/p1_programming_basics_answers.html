@@ -10945,7 +10945,7 @@ print(df_patient)</code></pre>
 <h4>Visualize the Data Set</h4>
 <p>Let’s start by inspecting the distribution of healthcare expenses among patients. Below we use ggplot2 to plot a histogram of the healthcare expenses, which are stored in the <code>HEALTHCARE_EXPENSES</code> column of <code>df_patient</code>.</p>
 <pre class="r"><code># Plot a histogram of healthcare expenses
-# TODO: Provide an appropriate x and y labels for the histogram
+# TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
 ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
   geom_histogram(fill = &quot;steelblue&quot;, color = &quot;white&quot;, bins = 20) +
@@ -10957,7 +10957,7 @@ ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
 <p><strong>POSSIBLE ANS.</strong> Generally speaking, healthcare expenses appear to have a rightward skew. Few patients appear to have particularly high expenses. The distribution of healthcare expenses also appears to be bimodal, with peaks near $100,000 and $1.3M.</p>
 <p>We can simplify the theme of our figure by adding <code>theme_minimal()</code> to our plotting code.</p>
 <pre class="r"><code># Plot a histogram of healthcare expenses using a simple theme
-# TODO: Provide an appropriate x and y labels for the histogram
+# TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
 ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
   geom_histogram(fill = &quot;steelblue&quot;, color = &quot;white&quot;, bins = 20) +
@@ -10992,7 +10992,7 @@ print(counts)</code></pre>
 ## 4  other     2
 ## 5  white   965</code></pre>
 <pre class="r"><code># Plot a bar chart to visualize the distribution of races
-# TODO: Provide an appropriate x and y labels for the bar chart
+# TODO: Provide appropriate x and y labels for the bar chart
 # TODO: Provide an appropriate title for the bar chart
 ggplot(counts, aes(x = race, y = count)) +
   geom_col(fill = &quot;steelblue&quot;) +
