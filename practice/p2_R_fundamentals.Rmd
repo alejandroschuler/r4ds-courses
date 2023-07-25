@@ -29,7 +29,7 @@ This notebook includes a framework for inspecting data in the example healthcare
 
 #### Scope
 
-This notebook includes material covered in Lecture 1: Programming Basics. You will have a chance to...
+This notebook includes material covered in Lecture 2: R Fundamentals. You will have a chance to...
 
 1. Assign variables
 2. Load and inspect data frames
@@ -48,7 +48,7 @@ The data may be downloaded by clicking [this](https://synthetichealth.github.io/
 library(ggplot2)
 ```
 
-#### Specify Data
+#### Specify and Load Data
 
 During the first demonstration, we loaded patient data into a data frame. Please load the table below using the `read.csv` function. If you are stumped, please look back at the first demonstration or review the documentation [here](https://www.rdocumentation.org/packages/qtl2/versions/0.32/topics/read_csv).
 
