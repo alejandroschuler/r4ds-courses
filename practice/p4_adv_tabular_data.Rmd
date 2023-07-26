@@ -1,0 +1,259 @@
+---
+title: "Practice 4: Advanced Tabular Data Manipulation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The below commands toggle scrolling in outputs
+options(width = 60)
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
+```
+
+This demonstration combines information from multiple tables using the `dplyr` package to gain insight into patient health records.
+
+#### Instructions
+
+This notebook includes a framework for inspecting data in the example healthcare data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 4: Advanced Tabular Data Manipulation. You will practice the following...
+
+1. Identify and impute missing values
+2. Pivot a table
+3. Join multiple tables
+4. Draw information from multiple tables to complete desired tasks
+
+#### Data Description
+
+We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+
+>Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+
+The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+
+#### Import Modules
+
+```{r}
+library(tidyverse)
+```
+
+#### Specify and Load Data
+
+This demonstration will make use of data in the `data/patients.csv` and `data/medications.csv` files.
+Please use the `read.csv` function to load each table into its own data frame.
+
+```{r}
+# TODO: Specify the path to the `patients` table
+path_patient <- ...
+
+# TODO: Load the patients table using the `read.csv` function
+df_patient <- ...
+
+# TODO: Specify the path to the `medications` table
+path_medication <- ...
+
+# TODO: Load the medications table using the `read.csv` function
+df_medication <- ...
+```
+
+#### Load Column Names
+
+We've worked with the `data/patients.csv` table during previous examples, but we have not worked with the `data/medications.csv` table.
+Let's extract the column names of `df_medications` to gain some insight into what data is represented.
+
+```{r}
+# Load the column names in `df_medication`
+cols_medication <- colnames(df_medication)
+
+# Print the column names
+print(cols_medication)
+```
+
+Notice, the medications table includes start and stop time points, encounter identifiers, payment information, and reasons for the medication.
+
+#### Inspect the Distribution of Medication Counts by Patient
+
+We will use information from the `medications` and `patients` tables to generate a distribution of medication counts per unique patient. We will begin working with the `medications` table, with which we will group rows by the `PATIENT` column, taking the size of each grouping. For this analysis, we will focus on the number of unique medications taken by each patient; even if the same medication is taken more than once, that medication will be counted only once.
+
+```{r}
+# To identify the number of medications taken by each patient, we only need the `PATENT` and `CODE` columns of the `medications` table
+# For convenience, let's store those columns in their own data frame
+med_patient_codes <- df_medication %>%
+  select(PATIENT, CODE)
+
+# Remove duplicate records with same values in `PATIENT` and `CODE` columns
+med_patient_codes <- med_patient_codes %>%
+  distinct()
+
+# TODO: Group the medications table by the `PATIENT` column, and take the size of each group
+# This will return the number of distinct medications that each patient is taking
+med_patient_codes_grouped <- ...
+```
+
+Keep in mind, patients with zero medications will not appear in the `med_patient_codes_grouped` table.
+Recall that the `df_patient` table includes all patients.
+We can use the `df_patient` table to fill in missing patient identifiers in the `med_patient_codes_grouped` table.
+Below, we select the patient identifiers from the `Id` column of the `df_patient` table and merge them with the `med_patient_codes_grouped` table to create a row for all patients.
+
+```{r, max.height='200px'}
+# Isolate the `Id` column of the `df_patient` table, and merge the column with the `med_patient_codes_grouped` table.
+med_counts <- df_patient %>%
+  select(Id) %>%
+  merge(med_patient_codes_grouped, by.x = "Id", by.y = "PATIENT", all = TRUE)
+
+# Print the result of the merged table
+print(med_counts)
+```
+You may notice that some rows have a missing value (`NA`) in the `med_count` column.
+These rows correspond to patients without medications, who do not appear in the `med_patient_codes_grouped` table.
+When we merged the `df_patient` and `med_patient_codes_grouped` tables, the `med_count` was not available for these rows. 
+We will replace the missing values with zero.
+
+```{r}
+# Replace missing values with zero in the `med_count` column of the `med_counts` table
+med_counts <- med_counts %>%
+  mutate(med_count = replace_na(med_count, 0))
+```
+
+Finally, we can plot the medication counts from all patients using a histogram.
+
+```{r}
+# Specify appropriate bin edges for the histogram
+bin_edges <- seq(0, 20, by = 1)
+
+# Plot a histogram giving the medication counts
+ggplot(med_counts, aes(x = med_count)) +
+  geom_histogram(breaks = bin_edges, fill = "steelblue", color = "black") +
+  labs(x = "Number of Medications", y = "Frequency") +
+  geom_vline(aes(xintercept = mean(med_count)), color = "red", linetype = "dashed", size = 1) +
+  xlim(0, 20) +
+  theme_minimal()
+```
+
+#### Pivot the Medication Table
+
+Assume we are interested in knowing which patients are taking a particular medication.
+We could filter the medications table on the `CODE` column to isolate records where the code matches the medication of interest.
+For practice, filter the `df_medication` table to rows where the `CODE` is `389221`.
+
+```{r}
+# TODO: Filter the `df_medication` table to rows where `CODE` is 389221
+taking_med_389221 <- ...
+
+# TODO: Identify the number of distinct patients taking medication 389221
+# Hint: Start by isolating the `PATIENT` column, then filter to distinct patient identifiers and count the number of rows remaining
+n_taking_med_389221 <- ...
+
+# Print the number of patients taking medicine 389221
+print(paste(n_taking_med_389221, "patients are taking medication 389221."))
+```
+
+Alternatively, we could pivot the `df_medications` table so that each column corresponds to a medication `CODE` and each row corresponds to a different patient.
+In this table, use a value of `1` to indicate that the patient corresponding to the row takes the medication corresponding to the column.
+Use a value of `0` to indicate that the patient corresponding to the row does not take the medication corresponding to the column.
+
+```{r, max.height='200px'}
+# TODO: Pivot the 'df_medication' table so that rows correspond to patients and columns correspond to codes
+medications_pivot <- ...
+
+# Display the pivoted medications table
+print(medications_pivot)
+```
+
+Now, you can identify the number of patients taking each medication by taking sums down the columns.
+
+```{r}
+# Take a sum down the column of the pivot table to identify the number of patients taking each medication
+# This will yield a named vector
+n_taking_each_med <- colSums(medications_pivot[, -1])
+
+# Convert the named vector into a data frame
+n_taking_each_med <- data.frame(medication = names(n_taking_each_med), n_patients = n_taking_each_med)
+
+# Identify the number of patients taking medication 389221
+n_taking_med_389221_from_pivot <- n_taking_each_med %>%
+  filter(medication == "389221") %>%
+  select(n_patients)
+
+# Print the number of patients taking medicine 389221
+print(paste(n_taking_med_389221_from_pivot, "patients are taking medication 389221."))
+```
+
+Sort the medication codes by the number of patients taking them. Then, plot a bar chart indicating the number of patients taking each of the top 10 most common medications.
+
+```{r}
+# TODO: Sort the medication codes by the number of patients taking them
+# Hint: Use the `arrange` function on the `n_taking_each_med` table
+n_taking_each_med_sorted <- ...
+
+# TODO: Isolate the top 10 rows in `n_taking_each_med_sorted`
+n_taking_top_10_meds <- ...
+
+# TODO: Generate a bar chart indicating the number of patients taking each of the top 10 most common medications
+...
+
+```
+
+#### Identify Minors Taking Many Medications
+
+Our task is to identify patients under 18 years old who are taking "many" medications. We will define "many" medications as eight or more medications.
+This task could be used to identify eligible patients for a clinical trial using existing medical records.
+We will break the task down into four steps.
+
+**STEP 1.** Using the `BIRTHDATE` column of the `df_patient` table, identify the age of each patient (in years) on a provided reference date. For help, review the `p3_basic_tabular_manipulation` notebook.
+
+```{r}
+# Age will be evaluated at January 1, 2023
+ref_date <- as.Date("2023-01-01")
+
+# Convert the `BIRTHDATE` column in the `df_patient` table to date format
+df_patient <- df_patient %>%
+  mutate(BIRTHDATE = as.Date(BIRTHDATE))
+
+# TODO: Create a column called `age (years)` in the `df_patient` table indicating the age of each patient
+df_patient <- ...
+```
+
+**STEP 2.** Filter the patients table to include only rows associated with patients under 18 years old. Store this in a data frame called `under_18`
+
+```{r}
+# TODO: Filter the `patients` table to include only rows associated with minors
+under_18 <- ...
+```
+
+**STEP 3.** Left-merge the `under_18` table with the `med_counts` table generated earlier in this notebook. Merge the two tables in the `Id` column.
+
+```{r}
+# TODO: Left-merge the `under_18` table with the `med_counts` table on the `Id` column
+med_counts_under_18 <- ...
+```
+
+**STEP 4.** Filter rows to include only those with medication counts greater than or equal to 8.
+
+```{r}
+# TODO: Filter the rows in `med_counts_under_18` to minors taking over 8 medications
+highly_medicated_minors <- ...
+
+# TODO: Count the number of minors taking at least 8 medications
+n_highly_medicated_minors <- ...
+
+# Report the number of minors taking over 8 medications
+cat(paste(n_highly_medicated_minors, "minors are taking 8 or more medications."))
+```
+
+#### Summary
+
+As demonstrated by these examples, it is often necessary to combine information from multiple tables when analyzing a data set. In this notebook, we used information in the `patients` and `medications` tables to: (1) plot a distribution of the number of medications taken by each patient, (2) plot the number of patients taking the ten most common medications, and (3) identify the number of minors taking eight or more medications.
+

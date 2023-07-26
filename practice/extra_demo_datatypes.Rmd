@@ -1,0 +1,218 @@
+---
+title: "Extra Demonstration: Datatypes and I/O"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The below commands toggle scrolling in outputs
+options(width = 60)
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
+```
+
+In this demonstration we will practice with data formats encountered in medical records.
+
+#### Scope
+
+This example includes extra material that we did not cover during this iteration of the course. We will demonstrate the following...
+
+1. Loading data into data frames
+2. Formatting time stamps
+3. Performing duration arithmetic
+4. Writing outputs to a CSV file
+
+Since this material was not covered in the course, there are no fill-in-the-blanks associated with this notebook.
+
+#### Data Description
+
+We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+
+>Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+
+The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+
+#### Import Modules
+
+```{r}
+library(tidyverse)
+```
+
+#### Specify and Load Data
+
+In this demonstration, we will be working with just one data table containing patient encounters. This data file is located at `data/encounters.csv`, relative to the directory containing this notebook. Below, we load this table from the CSV file into a data frame.
+
+```{r, max.height='200px'}
+# Specify the path to the file containing patient encounters
+encounters_path <- "data/encounters.csv"
+
+# Load the encounters data into a data frame
+encounters <- read.csv(encounters_path, header = TRUE, stringsAsFactors = FALSE)
+
+# Display the table
+print(encounters)
+```
+
+#### Format Date/Time information
+
+The `encounters` table includes `START` and `STOP` timestamps denoting the start and end times of each encounter. We format these columns into date/time format using the `POSIXct` package.
+
+```{r}
+# Convert `START` and `STOP` columns to date
+encounters = encounters %>%
+  mutate(START = as.POSIXct(START, format = "%Y-%m-%dT%H:%M:%SZ")) %>%
+  mutate(STOP = as.POSIXct(STOP, format = "%Y-%m-%dT%H:%M:%SZ"))
+```
+
+#### Task 3: Identify the Duration of Each Encounter
+
+For each encounter, we take the difference between the values in the `STOP` and `START` columns and express the result in units of hours. We store the results in a new column of the `encounters` table called `duration (hr)`.
+
+```{r, max.height='200px'}
+# We take the difference between the `STOP` and `START` columns and store the result in a `duration column
+# We then convert the duration to units of hours
+encounters = encounters %>%
+  mutate(duration = difftime(STOP, START, units="secs")) %>%
+  mutate(duration_hr = as.numeric(duration) / 3600)
+print(encounters)
+```
+
+#### Plot a Histogram of Encounter Durations
+
+We visualize the distribution of encounter durations. Notice, there will be some outliers. To address outliers, we exclude durations greater than four hours from your histogram.
+
+```{r}
+# Isolate the `duration_hr` column in its own vector and remove values greater than 4
+durations_hr_vec <- encounters %>%
+  select(duration_hr) %>%
+  filter(duration_hr <= 4) %>%
+  pull()
+
+# Plot a histogram of the encounter durations
+bin_edges <- seq(0, 4, length.out = 41)
+ggplot(data = data.frame(durations_hr_vec), aes(x = durations_hr_vec)) +
+  geom_histogram(binwidth = 0.1, color = "black", fill = "steelblue", breaks = bin_edges) +
+  xlab("Encounter Duration (hrs)") +
+  ylab("Frequency")
+```
+
+It appears that the durations are often recorded in 15 minute intervals, with a minimum encounter duration of 15 minutes.
+
+#### Isolate the Encounters for a Single Patient
+
+We isolate the encounters associated with patient `034e9e3b-2def-4559-bb2a-7850888ae060`. To do so, we filter the rows in the `encounters` table to those associated with our patient of interest.
+
+```{r}
+# Specify a patient of interest
+patient <- "034e9e3b-2def-4559-bb2a-7850888ae060"
+
+# Filter the `encounters` table to rows with `034e9e3b-2def-4559-bb2a-7850888ae060` in the `PATIENT` column
+patient_encounters <- encounters %>%
+  filter(PATIENT == patient)
+
+# Sort the patient encounters by the `START` times
+patient_encounters <- patient_encounters %>%
+  arrange(START)
+```
+
+```{r}
+# How many encounters did the patient of interest have
+n_encounters <- nrow(patient_encounters)
+
+# Print the number of encounters associated with the patient
+cat(paste0("The patient had ", n_encounters, " encounters."))
+```
+
+#### Identify Medical Costs Following an Encounter
+
+Medical follow-up can be costly! We will work through an analysis of the six-month follow-up costs after each procedure. Given an encounter, we will implement a function to do the following:
+
+1. Identify the date six months after the `STOP` of the encounter
+2. Identify all subsequent encounters for the same patient during the six-month follow-up period
+3. Calculate the total medical cost associated with the follow-up period
+
+```{r}
+# Create a function to identify the cost of follow-up encounters during a six-month period following an encounter
+cost_of_follow_ups <- function(encounter) {
+  
+  # Identify the STOP time of the encounter
+  encounter_stop_time <- as.POSIXlt(encounter$STOP)
+  
+  # Identify the time six months (~182 days) following the encounter
+  six_months_later <- encounter_stop_time + as.difftime(182, units = "days")
+  
+  # Identify the patient associated with the encounter
+  patient_id <- encounter$PATIENT
+  
+  # Filter the `encounters` table to rows matching the patient
+  patient_specific_encounters <- encounters %>%
+    filter(PATIENT == patient_id)
+  
+  # Filter the `patient_specific_encounters` to encounters with START times in the six-month period
+  patient_specific_encounters <- patient_specific_encounters %>%
+    filter(START > encounter_stop_time, START < six_months_later)
+  
+  # Evaluate the total cost of the follow-ups
+  tot_cost <- sum(patient_specific_encounters$TOTAL_CLAIM_COST)
+  return(tot_cost)
+}
+```
+
+```{r}
+# Test the `cost_of_follow_ups` on specific encounters
+n_eval <- 10
+for (i in 1:n_eval) {
+  encounter <- encounters[sample(nrow(encounters), 1), ]
+  
+  patient_id <- encounter$PATIENT
+  code <- encounter$CODE
+  follow_up_costs <- cost_of_follow_ups(encounter)
+  
+  cat("Patient:", patient_id, "\n")
+  cat("Encounter Code:", code, "\n")
+  cat("Follow-up Costs:", follow_up_costs, "\n\n")
+}
+```
+
+#### Task 8: Summarize the Costs of Patient Encounters and Export to CSV
+
+We generate descriptive statistics summarizing the costs associated with encounters, and export those summary statistics to a CSV file.
+
+```{r}
+# List the columns associated with some cost
+cost_cols <- c("BASE_ENCOUNTER_COST", "TOTAL_CLAIM_COST", "PAYER_COVERAGE")
+
+# Isolate the costs associated with patient encounters
+encounter_costs <- encounters[cost_cols]
+
+# Generate a table summarizing each of the costs columns with descriptive statistics
+encounter_cost_summaries <- summary(encounter_costs)
+print(encounter_cost_summaries)
+```
+
+```{r}
+# Specify a path at which to save the encounter summaries
+save_path <- "data/encounter_cost_summaries.csv"
+
+# Save the `encounter_cost_summaries` to a CSV file
+write.csv(encounter_cost_summaries, file = save_path, row.names = FALSE)
+
+# Read the CSV file that you just saved
+encounter_cost_summaries_reloaded <- read.csv(save_path, header = TRUE)
+
+# Display the reloaded table summarizing the costs of encounters
+print(encounter_cost_summaries_reloaded)
+```
+
+#### Summary
+
+In this notebook, we worked with date/time data to summarize patient encounters reported in medical records. After loading and formatting the data, we calculated the duration of encounters and plotted the distribution of encounter durations. Given a specific encounter, we implemented a function to identify follow-up encounters and calculate the total cost of those follow-ups. Finally, we generated summary statistics that describe the cost of encounters, and we exported those summary statistics to a CSV file.
