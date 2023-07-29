@@ -391,13 +391,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 7
-  Gene          Ind        Blood Heart  Lung Liver NTissues
-  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 RP11-254F19.4 GTEX-1AX9I -0.15  0.74  1.06  0.76        4
-2 GGPS1         GTEX-XBEC  -0.7  -2.05 -0.36  0.95        4
-3 LCMT1-AS1     GTEX-12WSD  0.05  1.62 -1.7  -1.96        4
-4 TATDN2        GTEX-X3Y1   0.01  0.26 -0.79 -0.26        4
-5 ABHD5         GTEX-1GF9V  1.45 -1.42  0.52 -0.33        4
+  Gene             Ind        Blood Heart  Lung Liver NTissues
+  <chr>            <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 AC007193.9       GTEX-X261   1.68  1.3  -0.6  -0.52        4
+2 APOL6            GTEX-ZPU1  -0.84 -1.12 -1.09 -0.59        4
+3 AL022341.3       GTEX-11NV4  0.03  0.11  0.27 -1.03        4
+4 FAM20C           GTEX-1BAJH  0.71 -0.69 -0.21  0.9         4
+5 XXbac-B444P24.13 GTEX-147JS  2.08  3.19 -0.78 -0.97        4
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
