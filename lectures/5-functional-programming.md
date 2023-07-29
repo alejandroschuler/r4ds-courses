@@ -189,7 +189,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x10be7cb50>
+<bytecode: 0x10d127350>
 ```
 - As we've seen, they themselves can be passed as arguments to other functions
 
@@ -245,7 +245,7 @@ mean_na.rm = set_na.rm(mean, na.rm=T)
 
 x = c(rnorm(100), NA)
 mean_na.rm(x)
-[1] -0.04287048
+[1] -0.1291581
 ```
 
 Functional programming

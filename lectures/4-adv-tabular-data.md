@@ -36,7 +36,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 ```r
 # Read subsetted data from online file - make sure there are no spaces
-gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+gtex_data = read_tsv('https://tinyurl.com/mwrvahjz')
 
 # Check number of rows
 nrow(gtex_data)
@@ -363,10 +363,7 @@ Messy data
 
 
 ```r
-gtex_time_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_time_tissue.csv"
-
-gtex_time_tissue_data = read_csv(file = gtex_time_link, col_types = cols())
+gtex_time_tissue_data = read_csv("https://tinyurl.com/3wd4dcsf")
 
 head(gtex_time_tissue_data, 3L)
 # A tibble: 3 × 8
@@ -487,10 +484,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          8.88        10.7 
-2     2         10.6          8.65
-3     3          8.09        15.9 
-4     4          7.11        11.9 
+1     1         11.4          9.44
+2     2         13.0         12.8 
+3     3          6.11         8.76
+4     4          9.09         8.30
 ```
 
 
@@ -501,10 +498,10 @@ wide_mice %>%
 # A tibble: 4 × 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1        1.77
-2     2       -1.96
-3     3        7.77
-4     4        4.75
+1     1      -1.99 
+2     2      -0.142
+3     3       2.65 
+4     4      -0.785
 ```
 
 ***
@@ -514,14 +511,14 @@ wide_mice %>%
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.88
-2     1 after   10.7 
-3     2 before  10.6 
-4     2 after    8.65
-5     3 before   8.09
-6     3 after   15.9 
-7     4 before   7.11
-8     4 after   11.9 
+1     1 before  11.4 
+2     1 after    9.44
+3     2 before  13.0 
+4     2 after   12.8 
+5     3 before   6.11
+6     3 after    8.76
+7     4 before   9.09
+8     4 after    8.30
 ```
 
 
@@ -535,10 +532,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1        1.77
-2     2       -1.96
-3     3        7.77
-4     4        4.75
+1     1      -1.99 
+2     2      -0.142
+3     3       2.65 
+4     4      -0.785
 ```
 
 Pivoting wider
@@ -553,14 +550,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.88
-2     1 after   10.7 
-3     2 before  10.6 
-4     2 after    8.65
-5     3 before   8.09
-6     3 after   15.9 
-7     4 before   7.11
-8     4 after   11.9 
+1     1 before  11.4 
+2     1 after    9.44
+3     2 before  13.0 
+4     2 after   12.8 
+5     3 before   6.11
+6     3 after    8.76
+7     4 before   9.09
+8     4 after    8.30
 ```
 
 ***
@@ -575,10 +572,10 @@ long_mice %>%
 # A tibble: 4 × 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1   8.88 10.7 
-2     2  10.6   8.65
-3     3   8.09 15.9 
-4     4   7.11 11.9 
+1     1  11.4   9.44
+2     2  13.0  12.8 
+3     3   6.11  8.76
+4     4   9.09  8.30
 ```
 
 Names prefix
@@ -590,14 +587,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.88
-2     1 after   10.7 
-3     2 before  10.6 
-4     2 after    8.65
-5     3 before   8.09
-6     3 after   15.9 
-7     4 before   7.11
-8     4 after   11.9 
+1     1 before  11.4 
+2     1 after    9.44
+3     2 before  13.0 
+4     2 after   12.8 
+5     3 before   6.11
+6     3 after    8.76
+7     4 before   9.09
+8     4 after    8.30
 ```
 
 ***
@@ -616,8 +613,8 @@ long_mice %>%
 # A tibble: 2 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          8.88        10.7 
-2     2         10.6          8.65
+1     1          11.4         9.44
+2     2          13.0        12.8 
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -652,71 +649,6 @@ Use the GTEX data to make the following table:
 
 The numbers in the table are the number of tissues in each individual for which the gene in question was missing.
 
-Multi-pivoting
-===
-incremental: true
-
-
-Have a look at the following data. How do you think we might want to make it look?
-
-
-```r
-gtex_time_chunk_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv"
-
-gtex_samples_time_chunk = 
-  read_csv(file = gtex_time_chunk_link, col_types = cols())
-
-head(gtex_samples_time_chunk)
-# A tibble: 6 × 9
-  tissue     `Sept-2015` `Sept-2016` `Oct-2015` `Oct-2016` `Nov-2015` `Nov-2016`
-  <chr>            <dbl>       <dbl>      <dbl>      <dbl>      <dbl>      <dbl>
-1 Adipose T…           5          36          4         20         15         16
-2 Adrenal G…           4           5          1          5          2          6
-3 Blood                2           0          6          0         33          0
-4 Blood Ves…           9          24          7         26          9         17
-5 Brain               12           2          3          9         17         24
-6 Breast               9          19          7         20          5          8
-# ℹ 2 more variables: `Dec-2016` <dbl>, `Dec-2015` <dbl>
-```
-
-The problem here is that the column names contain two pieces of data:
-
-1. the year 
-2. the month it came from
-
-Our use of `pivot_longer` has so far been to extract a single piece of information from the column name
-
-Multi-pivoting
-===
-- Turns out this problem can be tackled too:
-
-
-```r
-gtex_samples_time_chunk %>%
-  pivot_longer(
-    cols=contains("-201"), # selects columns that contain this
-    names_pattern = "(\\D+)-(\\d+)", # a "regular expression"- we'll learn about these later
-    names_to = c(".value", "year")
-  )
-# A tibble: 54 × 6
-   tissue         year   Sept   Oct   Nov   Dec
-   <chr>          <chr> <dbl> <dbl> <dbl> <dbl>
- 1 Adipose Tissue 2015      5     4    15     0
- 2 Adipose Tissue 2016     36    20    16    15
- 3 Adrenal Gland  2015      4     1     2     0
- 4 Adrenal Gland  2016      5     5     6     2
- 5 Blood          2015      2     6    33    17
- 6 Blood          2016      0     0     0     0
- 7 Blood Vessel   2015      9     7     9     0
- 8 Blood Vessel   2016     24    26    17    12
- 9 Brain          2015     12     3    17     0
-10 Brain          2016      2     9    24     9
-# ℹ 44 more rows
-```
-
-- We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
-- See the online [docs and vignettes](https://tidyr.tidyverse.org/articles/pivot.html) for more info
 
 Combining multiple tables with joins
 ===
@@ -735,11 +667,11 @@ incremental: true
 
 ```r
 gtex_metadata_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_sample_metadata.csv"
+  "https://tinyurl.com/2hy9awda"
 
-gtex_sample_data = read_csv(file = gtex_metadata_link, col_types = cols())
+gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
 
-head(gtex_sample_data, 2L)
+head(gtex_samples, 2L)
 # A tibble: 2 × 6
   subject_id sample_id     batch_id center_id tissue rin_score
   <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
@@ -755,12 +687,8 @@ incremental: true
 The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
 
 ```r
-gtex_subject_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_subject_metadata.csv"
-
-gtex_subject_data = read_csv(file = gtex_subject_link, col_types = cols())
-
-head(gtex_subject_data, 2L)
+gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
+head(gtex_subjects, 2L)
 # A tibble: 2 × 4
   subject_id sex    age   death                    
   <chr>      <chr>  <chr> <chr>                    
@@ -771,10 +699,9 @@ head(gtex_subject_data, 2L)
 The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
 
 ```r
-gtex_batch_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_batch_metadata.csv"
-gtex_batch_data = read_csv(file = gtex_batch_link, col_types = cols())
+gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
 
-head(gtex_batch_data, 2L)
+head(gtex_batches, 2L)
 # A tibble: 2 × 3
   batch_id batch_type                                         batch_date
   <chr>    <chr>                                              <chr>     
@@ -799,57 +726,14 @@ Relational data
 - `sample` connects to `batch` through the `batch_id` variable.
 
 
-Relational + tidy data
-===
-incremental: true
-For the expression data, we have been using the `gtex_data` expression data frame:
-
-```r
-gtex_data %>% 
-  head(2L)
-# A tibble: 2 × 7
-  Gene  Ind        Blood Heart  Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
-```
-
-The expression data on the previous slide is formatted slightly differently:
-
-```r
-gtex_expression_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_expression.csv"
-
-gtex_expression = read_csv(file = gtex_expression_link, col_types = cols())
-
-gtex_expression %>% 
-  head(2L) # note: sample_id replaces Ind + tissue
-# A tibble: 2 × 3
-  sample_id     Gene  zscore
-  <chr>         <chr>  <dbl>
-1 0003-SM-58Q7X A2ML1  -0.14
-2 0326-SM-5EGH1 A2ML1  -1.08
-```
-What makes this data tidy when the other is not? (You'll notice that a `pivot` helped convert between the two.)
-
-```r
-gtex_data %>% 
-  pivot_longer(Blood:Liver, names_to = "tissue", values_to = "zscore") %>% 
-  head(2L)
-# A tibble: 2 × 5
-  Gene  Ind        NTissues tissue zscore
-  <chr> <chr>         <dbl> <chr>   <dbl>
-1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
-2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
-```
-
 An example join
 ===
 - Imagine we want to add subject information to the sample data
 - We can accomplish that with a **join**:
 
 ```r
-gtex_sample_data %>% 
-  inner_join(gtex_subject_data, by = join_by(subject_id))
+gtex_samples %>% 
+  inner_join(gtex_subjects, by = join_by(subject_id))
 # A tibble: 312 × 9
    subject_id sample_id    batch_id center_id tissue rin_score sex   age   death
    <chr>      <chr>        <chr>    <chr>     <chr>      <dbl> <chr> <chr> <chr>
@@ -948,8 +832,8 @@ Specifying the keys
 ===
 
 ```r
-gtex_sample_data %>% 
-  inner_join(gtex_subject_data, join_by(center_id))
+gtex_samples %>% 
+  inner_join(gtex_subjects, join_by(center_id))
 Error in `inner_join()`:
 ! Join columns in `y` must be present in the data.
 ✖ Problem with `center_id`.
@@ -967,7 +851,7 @@ head(gtex_data, 2)
   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
-head(gtex_subject_data, 2)
+head(gtex_subjects, 2)
 # A tibble: 2 × 4
   subject_id sex    age   death                    
   <chr>      <chr>  <chr> <chr>                    
@@ -977,7 +861,7 @@ head(gtex_subject_data, 2)
 
 ```r
 gtex_data %>% 
-  inner_join(gtex_subject_data, join_by(Ind == subject_id)) %>% 
+  inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
   head(5L)
 # A tibble: 5 × 10
   Gene  Ind        Blood Heart  Lung Liver NTissues sex    age   death          
@@ -988,7 +872,7 @@ gtex_data %>%
 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4 male   60-69 sudden but nat…
 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4 male   20-29 ventilator     
 ```
-Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subject_data`).
+Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
 
 Exercise: join vs. concatenation
 ===
@@ -1005,7 +889,7 @@ Use joins to find the samples collected in 2015 with high blood expression (Z>3)
 
 ```r
 batch_data_year = 
-  gtex_batch_data %>% 
+  gtex_batches %>% 
   mutate(
     batch_date = lubridate::mdy(batch_date), 
     year = lubridate::year(batch_date)
@@ -1047,54 +931,34 @@ Joining on multiple columns
 Let's read in some more data
 
 ```r
-gtex_samples_time_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/af6056f9a8d999a80fd787f89aa3483157d43681/data/gtex_metadata/gtex_samples_time.csv"
-gtex_tissue_month_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_tissue_month_year.csv"
-
-gtex_samples_by_month = read_csv(file = gtex_samples_time_link)
-
-gtex_tissue_month = 
-  read_csv(file = gtex_tissue_month_link) %>%
+gtex_monthly_tissues = 
+  read_csv("https://tinyurl.com/nze7rz7a") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
-
-head(gtex_tissue_month, 2L)
+head(gtex_monthly_tissues, 2L)
 # A tibble: 2 × 4
   tissue month  year tiss_samples
   <chr>  <dbl> <dbl>        <dbl>
 1 Blood      1  2012           25
 2 Blood      1  2013           16
 
-gtex_samples_by_month = 
-  read_csv(file = gtex_samples_time_link)
-
-head(gtex_samples_by_month, 2L)
+gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
+head(gtex_monthly_samples, 2L)
 # A tibble: 2 × 3
   month  year num_samples
   <dbl> <dbl>       <dbl>
 1     5  2011          20
 2     6  2011          44
 ```
-
-Joining on multiple columns
-===
+*** 
 - It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
 
 ```r
-head(gtex_tissue_month, 2L)
-# A tibble: 2 × 4
-  tissue month  year tiss_samples
-  <chr>  <dbl> <dbl>        <dbl>
-1 Blood      1  2012           25
-2 Blood      1  2013           16
-head(gtex_samples_by_month, 2L)
-# A tibble: 2 × 3
-  month  year num_samples
-  <dbl> <dbl>       <dbl>
-1     5  2011          20
-2     6  2011          44
-
-gtex_tissue_month %>% 
-  inner_join(gtex_samples_by_month, join_by(month, year)) %>%
-  head(5L)
+inner_join(
+  gtex_monthly_tissues,
+  gtex_monthly_samples, 
+  join_by(month, year)
+) %>%
+head(5L)
 # A tibble: 5 × 5
   tissue month  year tiss_samples num_samples
   <chr>  <dbl> <dbl>        <dbl>       <dbl>
@@ -1120,7 +984,7 @@ head(gtex_data_long, n = 2L)
   <chr> <chr>         <dbl> <chr>   <dbl>
 1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
 2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
-head(gtex_sample_data, n = 2L)
+head(gtex_samples, n = 2L)
 # A tibble: 2 × 6
   subject_id sample_id     batch_id center_id tissue rin_score
   <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
@@ -1128,7 +992,7 @@ head(gtex_sample_data, n = 2L)
 2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 
 gtex_data_long %>% 
-  inner_join(gtex_sample_data, join_by(tissue, Ind == subject_id)) %>%
+  inner_join(gtex_samples, join_by(tissue, Ind == subject_id)) %>%
   head(n = 4L)
 # A tibble: 4 × 9
   Gene  Ind        NTissues tissue zscore sample_id batch_id center_id rin_score
@@ -1145,9 +1009,7 @@ Join problems
 - check for `NA`s in variables you are going to join on
 - make sure rows aren't being dropped if you don't intend to drop rows
   - checking the number of rows before and after the join is not sufficient. If you have an inner join with duplicate keys in both tables, you might get unlucky as the number of dropped rows might exactly equal the number of duplicated rows
-- `anti_join()` and `semi_join()` are useful tools (filtering joins) to diagnose problems
-  - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
-  - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
+
 
 Exercise: Looking for variables related to data missingness
 ====

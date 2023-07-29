@@ -41,7 +41,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+gtex_data = read_tsv('https://tinyurl.com/mwrvahjz')
 
 # Check number of rows
 nrow(gtex_data)
@@ -258,10 +258,7 @@ Messy data
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
 ```{r, message = FALSE}
-gtex_time_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_time_tissue.csv"
-
-gtex_time_tissue_data = read_csv(file = gtex_time_link, col_types = cols())
+gtex_time_tissue_data = read_csv("https://tinyurl.com/3wd4dcsf")
 
 head(gtex_time_tissue_data, 3L)
 ```
@@ -478,46 +475,6 @@ gtex_data %>%
 
 The numbers in the table are the number of tissues in each individual for which the gene in question was missing.
 
-Multi-pivoting
-===
-incremental: true
-
-
-Have a look at the following data. How do you think we might want to make it look?
-
-```{r, tidy = FALSE, message = FALSE}
-gtex_time_chunk_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_samples_tiss_time_chunk.csv"
-
-gtex_samples_time_chunk = 
-  read_csv(file = gtex_time_chunk_link, col_types = cols())
-
-head(gtex_samples_time_chunk)
-```
-
-The problem here is that the column names contain two pieces of data:
-
-1. the year 
-2. the month it came from
-
-Our use of `pivot_longer` has so far been to extract a single piece of information from the column name
-
-Multi-pivoting
-===
-- Turns out this problem can be tackled too:
-
-```{r, tidy = FALSE}
-gtex_samples_time_chunk %>%
-  pivot_longer(
-    cols=contains("-201"), # selects columns that contain this
-    names_pattern = "(\\D+)-(\\d+)", # a "regular expression"- we'll learn about these later
-    names_to = c(".value", "year")
-  )
-
-```
-
-- We won't dig into this, but you should know that almost any kind of data-tidying problem can be solved with some combination of the functions in the `tidyr` package. 
-- See the online [docs and vignettes](https://tidyr.tidyverse.org/articles/pivot.html) for more info
 
 Combining multiple tables with joins
 ===
@@ -535,11 +492,11 @@ incremental: true
 
 ```{r, message = FALSE}
 gtex_metadata_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/gtex_metadata/gtex_sample_metadata.csv"
+  "https://tinyurl.com/2hy9awda"
 
-gtex_sample_data = read_csv(file = gtex_metadata_link, col_types = cols())
+gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
 
-head(gtex_sample_data, 2L)
+head(gtex_samples, 2L)
 ```
 - The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
 
@@ -549,20 +506,15 @@ incremental: true
 
 The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
 ```{r, message = FALSE}
-gtex_subject_link = 
-  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_subject_metadata.csv"
-
-gtex_subject_data = read_csv(file = gtex_subject_link, col_types = cols())
-
-head(gtex_subject_data, 2L)
+gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
+head(gtex_subjects, 2L)
 ```
 
 The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
 ```{r, message = FALSE}
-gtex_batch_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_batch_metadata.csv"
-gtex_batch_data = read_csv(file = gtex_batch_link, col_types = cols())
+gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
 
-head(gtex_batch_data, 2L)
+head(gtex_batches, 2L)
 ```
 
 We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
@@ -582,38 +534,13 @@ Relational data
 - `sample` connects to `batch` through the `batch_id` variable.
 
 
-Relational + tidy data
-===
-incremental: true
-For the expression data, we have been using the `gtex_data` expression data frame:
-```{r, message = FALSE}
-gtex_data %>% 
-  head(2L)
-```
-
-The expression data on the previous slide is formatted slightly differently:
-```{r, message = FALSE}
-gtex_expression_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_expression.csv"
-
-gtex_expression = read_csv(file = gtex_expression_link, col_types = cols())
-
-gtex_expression %>% 
-  head(2L) # note: sample_id replaces Ind + tissue
-```
-What makes this data tidy when the other is not? (You'll notice that a `pivot` helped convert between the two.)
-```{r}
-gtex_data %>% 
-  pivot_longer(Blood:Liver, names_to = "tissue", values_to = "zscore") %>% 
-  head(2L)
-```
-
 An example join
 ===
 - Imagine we want to add subject information to the sample data
 - We can accomplish that with a **join**:
 ```{r, tidy = FALSE}
-gtex_sample_data %>% 
-  inner_join(gtex_subject_data, by = join_by(subject_id))
+gtex_samples %>% 
+  inner_join(gtex_subjects, by = join_by(subject_id))
 ```
 
 Joins
@@ -675,8 +602,8 @@ When keys are duplicated, multiple rows can match multiple rows, so each possibl
 Specifying the keys
 ===
 ```{r}
-gtex_sample_data %>% 
-  inner_join(gtex_subject_data, join_by(center_id))
+gtex_samples %>% 
+  inner_join(gtex_subjects, join_by(center_id))
 ```
 - Why does this fail?
 
@@ -685,14 +612,14 @@ Specifying the keys
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
 head(gtex_data, 2)
-head(gtex_subject_data, 2)
+head(gtex_subjects, 2)
 ```
 ```{r}
 gtex_data %>% 
-  inner_join(gtex_subject_data, join_by(Ind == subject_id)) %>% 
+  inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
   head(5L)
 ```
-Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subject_data`).
+Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
 
 Exercise: join vs. concatenation
 ===
@@ -708,7 +635,7 @@ type: prompt
 Use joins to find the samples collected in 2015 with high blood expression (Z>3) of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year.
 ```{r}
 batch_data_year = 
-  gtex_batch_data %>% 
+  gtex_batches %>% 
   mutate(
     batch_date = lubridate::mdy(batch_date), 
     year = lubridate::year(batch_date)
@@ -744,33 +671,23 @@ Joining on multiple columns
 ===
 Let's read in some more data
 ```{r, message = FALSE}
-gtex_samples_time_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/af6056f9a8d999a80fd787f89aa3483157d43681/data/gtex_metadata/gtex_samples_time.csv"
-gtex_tissue_month_link = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/9e4fb21ccf93a83e2b6004b9aa467426806f8589/data/gtex_metadata/gtex_tissue_month_year.csv"
-
-gtex_samples_by_month = read_csv(file = gtex_samples_time_link)
-
-gtex_tissue_month = 
-  read_csv(file = gtex_tissue_month_link) %>%
+gtex_monthly_tissues = 
+  read_csv("https://tinyurl.com/nze7rz7a") %>%
   filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
+head(gtex_monthly_tissues, 2L)
 
-head(gtex_tissue_month, 2L)
-
-gtex_samples_by_month = 
-  read_csv(file = gtex_samples_time_link)
-
-head(gtex_samples_by_month, 2L)
+gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
+head(gtex_monthly_samples, 2L)
 ```
-
-Joining on multiple columns
-===
+*** 
 - It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
 ```{r, message = FALSE}
-head(gtex_tissue_month, 2L)
-head(gtex_samples_by_month, 2L)
-
-gtex_tissue_month %>% 
-  inner_join(gtex_samples_by_month, join_by(month, year)) %>%
-  head(5L)
+inner_join(
+  gtex_monthly_tissues,
+  gtex_monthly_samples, 
+  join_by(month, year)
+) %>%
+head(5L)
 ```
 
 Joining on multiple columns
@@ -782,10 +699,10 @@ gtex_data_long = gtex_data %>%
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
 head(gtex_data_long, n = 2L)
-head(gtex_sample_data, n = 2L)
+head(gtex_samples, n = 2L)
 
 gtex_data_long %>% 
-  inner_join(gtex_sample_data, join_by(tissue, Ind == subject_id)) %>%
+  inner_join(gtex_samples, join_by(tissue, Ind == subject_id)) %>%
   head(n = 4L)
 ```
 
@@ -795,9 +712,7 @@ Join problems
 - check for `NA`s in variables you are going to join on
 - make sure rows aren't being dropped if you don't intend to drop rows
   - checking the number of rows before and after the join is not sufficient. If you have an inner join with duplicate keys in both tables, you might get unlucky as the number of dropped rows might exactly equal the number of duplicated rows
-- `anti_join()` and `semi_join()` are useful tools (filtering joins) to diagnose problems
-  - `anti_join()` keeps only the rows in `x` that *don't* have a match in `y`
-  - `semi_join()` keeps only the rows in `x` that *do* have a match in `y`
+
 
 Exercise: Looking for variables related to data missingness
 ====
