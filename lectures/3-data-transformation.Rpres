@@ -92,10 +92,10 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex_data = read_tsv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/gtex.tissue.zscores.advance2020.txt')
+gtex = read_tsv('https://tinyurl.com/mwrvahjz')
 
 # Check number of rows
-nrow(gtex_data)
+nrow(gtex)
 ```
 
 Filter rows with filter()
@@ -108,65 +108,8 @@ Filter rows with filter()
 - It takes two arguments: the dataset and the condition
 
 ```{r, message=F}
-filter(gtex_data, Blood >= 12)
+filter(gtex, Blood >= 12)
 ```
-
-
-Exercise
-========================================================
-type:prompt
-
-- What is the result of running this code?
-
-```{r}
-nrow(gtex_data)
-```
-
-```{r, eval=F}
-filter(gtex_data, NTissues <= 2)
-filter(gtex_data, Heart <= -5)
-nrow(gtex_data)
-```
-
-Exercise
-========================================================
-type:prompt
-
-- What is the result of running this code?
-
-```{r}
-nrow(gtex_data)
-```
-
-```{r, eval=F}
-filter(gtex_data, NTissues <= 2)
-filter(gtex_data, Heart <= -5)
-nrow(gtex_data)
-```
-
-- Remember, functions usually do not change their arguments!
-
-```{r}
-low_expression_blood = filter(gtex_data, Blood <= -5)
-low_expression_blood_heart = filter(low_expression_blood, Heart <= -5)
-nrow(low_expression_blood_heart)
-```
-
-Combining constraints in filter
-========================================================
-```{r}
-filter(gtex_data, Blood <= -5, Heart <= -5)
-```
-- This filters by the **conjunction** of the two constraints---both must be satisfied.
-- Constraints appear as second (and third...) arguments, separated by commas.
-
-
-Filtering out all rows
-=========================================================
-```{r}
-filter(gtex_data, NTissues > 5)
-```
-- If the constraint is too severe, then you will select **no** rows, and produce a zero row sized tibble.
 
 Comparison operators
 =========================================================
@@ -205,70 +148,121 @@ x = NA
 is.na(x)
 ```
 
-Logical conjunctions
+Filtering on
+========================================================
+- the condition can contain computed values
+
+```{r, message=F}
+filter(gtex, exp(Blood) > 1)
+```
+- note that we didn't actually do anything to the values in the blood column
+
+
+Filtering out all rows
 =========================================================
 ```{r}
-filter(gtex_data, Lung > 6 | Liver < -6)
+filter(gtex, NTissues > 5)
+```
+- If you ever get a data frame of length zero, it's because no rows satisfy the condition you asked for
+
+
+Exercise
+========================================================
+type:prompt
+
+- What is the result of running this code?
+
+```{r}
+nrow(gtex)
+```
+
+```{r, eval=F}
+filter(gtex, NTissues == 2)
+filter(gtex, Heart <= -5)
+nrow(gtex)
+```
+
+Exercise
+========================================================
+type:prompt
+
+- What is the result of running this code?
+
+```{r}
+nrow(gtex)
+```
+
+```{r, eval=F}
+filter(gtex, NTissues <= 2)
+filter(gtex, Heart <= -5)
+nrow(gtex)
+```
+
+- Remember, functions usually do not change their arguments!
+
+```{r}
+low_expression_blood = filter(gtex, Blood <= -5)
+low_expression_blood_heart = filter(low_expression_blood, Heart <= -5)
+nrow(low_expression_blood_heart)
+```
+
+Exercise
+========================================================
+type:prompt
+
+- Without using the internet, think of how you can use `filter` to create a dataset
+where blood expression is positive (>0) **and** heart expression is negative (<0)
+
+- Using any resources you like, figure out how to use `filter` to create a dataset
+where **either** blood expression is positive (>0) **or** heart expression is negative (<0)
+
+Logical conjunctions (AND)
+========================================================
+```{r}
+filter(gtex, Blood <= -5 & Heart <= -5)
+```
+- This filters by the **conjunction** of the two constraints---both must be satisfied.
+- The ampersand sign ` & ` stands for "AND"
+
+```{r}
+filter(gtex, Blood <= -5, Heart <= -5)
+```
+- For filter, you can do "AND" by passing in two separate conditions as two different arguments, but the comma and ampersand are not generally interchangeable
+
+Logical conjunctions (OR)
+=========================================================
+```{r}
+filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
 ```
 - The pipe sign ` | ` stands for "OR" 
-- The ampersand sign ` & ` stands for "AND"
-- As we have seen, separating conditions by a comma is the same as using ` & ` inside `filter()`
 - Multiple conjunctions can describe complex logical conditions
 
-Logical conjunctions
+Logical conjunctions (OR)
 =========================================================
 ```{r}
-filter(gtex_data, !(Blood < 6 | Lung < 6))
-```
-- The exclamation point ` ! ` means "NOT", which negates the logical condition
-
-Logical conjunctions
-=========================================================
-```{r}
-filter(gtex_data, NTissues %in% c(1,2)) # equivalent to filter(gtex_data, NTissues==1 | NTissues==2)
+filter(gtex, NTissues %in% c(1,2)) # equivalent to filter(gtex, NTissues==1 | NTissues==2)
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
-
-**Caution!** `in` (without the flanking percent signs) has a different meaning - it is used to iterate through a sequence rather than as a matching function. For example, to loop through and print all numbers from 1 to 10 we would do the following:
-
-```
-for(x in seq(1,10)){ print x }
-``` 
-
-
-Exercise: Low expression
-==========================================================
-type: prompt
-
-- Create a dataset of all individual-gene pairs with low expression (Z < -3) in blood and heart tissues
-
-Exercise: Low expression
-==========================================================
-type: prompt
-
-- Create a dataset of all individual-gene pairs with low expression (Z < -3) in blood and heart tissues
-
+Logical conjunctions (NOT)
+=========================================================
 ```{r}
-filter(gtex_data, Blood < -3, Heart < -3)
+filter(gtex, !(Gene=="A2ML1"))
 ```
+- The exclamation point ` ! ` means "NOT", which negates the logical condition
+- sometimes it's easier to say what you *don't* want!
 
-Exercise: High and low expression events
+Exercise: conjunctions
 ==========================================================
 type: prompt
 
-- Create a dataset of all high and low expression instances (Z > 3 or < -3) in any tissue (`?abs` may be helpful)
+- Filter the GTEX data to keep just the rows corresponding to all genes except CTLA4 and CTDP1 where blood expression is positive.
 
-Exercise: High and low expression events
+Exercise: computed conditions
 ==========================================================
 type: prompt
 
-- Create a dataset of all high and low expression instances (Z > 3 or < -3) in any tissue (`?abs` may be helpful)
-
-```{r}
-filter(gtex_data, abs(Blood) > 3 | abs(Heart) > 3 | abs(Lung) > 3 | abs(Liver) > 3)
-```
-
+- Filter the GTEX data to keep just the rows where the product of Blood and Heart expression is between 0 and 1.
 
 Exercise: getting rid of NAs
 ==========================================================
@@ -283,17 +277,7 @@ type: prompt
 - Filter out any rows where the value for `Heart` is missing (value is `NA`) 
 
 ```{r}
-filter(gtex_data, !is.na(Heart))
-```
-
-
-Filtering by row number
-==========================================================
-
-- Use `row_number()` to filter specific rows. This is more useful once you have sorted the data in a particular order, which we will soon see how to do.
-
-```{r}
-filter(gtex_data, row_number()<=3)
+filter(gtex, !is.na(Heart))
 ```
 
 
@@ -302,11 +286,20 @@ Sampling rows
 - You can use `slice_sample()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 
 ```{r}
-slice_sample(gtex_data, n=5)
+slice_sample(gtex, n=5)
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
 - Do `?slice_sample()` to see how you can sample with replacement or with weights
+
+Filtering by row number
+==========================================================
+
+- Use `row_number()` to filter specific rows. This is more useful once you have sorted the data in a particular order, which we will soon see how to do.
+
+```{r}
+filter(gtex, row_number()<=3)
+```
 
 Sort rows by a column with arrange()
 ===
@@ -317,7 +310,7 @@ Arrange rows with arrange()
 - `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
 - Again, the first argument is the data frame and the other arguments tell the function what to do with it
 ```{r}
-arrange(gtex_data, Blood)
+arrange(gtex, Blood)
 ```
 
 Arrange can sort by more than one column
@@ -325,7 +318,7 @@ Arrange can sort by more than one column
 - This is useful if there is a tie in sorting by the first column.
 
 ```{r}
-arrange(gtex_data, NTissues, Blood)
+arrange(gtex, NTissues, Blood)
 ```
 
 
@@ -333,39 +326,31 @@ Use the desc function to arrange by descending values
 ===========================================================
 
 ```{r}
-arrange(gtex_data, desc(Blood))
+arrange(gtex, desc(Blood))
 ```
 
 Exercise: top 5 high expression instances
 ===========================================================
 type:prompt
 
-Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
+Use `arrange()` and `filter()` to get the data for the 5 rows with the highest expression values in blood
 
 Exercise: top 5 high expression instances
 ===========================================================
 type:prompt
 
-Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
+Use `arrange()` and `filter()` to get the data for the 5 rows with the highest expression values in blood
 
 ```{r}
-filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
-```
-
-Exercise: top 5 high expression instances
-===========================================================
-type:prompt
-
-Use `arrange()` and `filter()` to get the data for the 5 individual-gene pairs with the most extreme expression changes in blood
-
-```{r}
-filter(arrange(gtex_data, desc(abs(Blood))), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(gtex, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 or
 ```{r}
-gtex_by_blood = arrange(gtex_data, desc(abs(Blood))) # using a temporary variable
+gtex_by_blood = arrange(gtex, desc(Blood)) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
 ```
+
+- what happens if we reverse the order in which we did `filter` and `arrange`? Does it still work?
 
 Select columns with select()
 ===
@@ -374,7 +359,7 @@ type:section
 Select columns with select()
 =========================================================
 ```{r}
-select(gtex_data, Gene, Ind, Blood)
+select(gtex, Gene, Ind, Blood)
 ```
 - The select function will return a subset of the tibble, using only the requested columns in the order specified.
 
@@ -383,14 +368,14 @@ Select columns with select()
 - `select()` can also be used with handy helpers like `starts_with()` and `contains()`
 
 ```{r}
-select(gtex_data, starts_with("L"))
+select(gtex, starts_with("L"))
 ```
 - Use `?select` to see all the possibilities
 
-Select columns with select()
-=========================================================
+***
+
 ```{r}
-select(gtex_data, contains("N"))
+select(gtex, contains("N"))
 ```
 - The quotes around the letter `"N"` make it a string. If we did not do this, `R` would think it was looking for a variable called `N` and not just the plain letter.
 - We don't have to quote the names of columns (like `Ind`) because the `tidyverse` functions know that we are working within the dataframe and thus treat the column names like they are variables in their own right
@@ -399,26 +384,40 @@ select() subsets columns by name
 =========================================================
 - `select()` can also be used to select everything **except for** certain columns
 ```{r}
-select(gtex_data, -starts_with("L"), -Ind)
+select(gtex, -starts_with("L"), -Ind)
 ```
 
-select() subsets columns by name
-=========================================================
+***
+
 - or even to select only columns that match a certain condition
 
 ```{r}
-select(gtex_data, where(is.numeric))
+select(gtex, where(is.numeric))
 ```
+
+Exercise: select and filter
+===
+type:prompt
+
+- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex` dataset.
+
+Exercise: select text columns
+===
+type:prompt
+
+- Use select to subset the `gtex` dataframe to just those columns that contain text data. 
+- Can you do this programmatically without specifying the names of each of the desired columns? 
+- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
 
 pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
 ```{r}
-select(gtex_data, Gene)
+select(gtex, Gene)
 ```
 
 ```{r max.lines = 5}
-pull(gtex_data, Gene)
+pull(gtex, Gene)
 ```
 
 
@@ -426,69 +425,16 @@ Rename column names with rename()
 =========================================================
 - `select()` can be used to rename variables, but it drops all variables not selected
 ```{r max.lines = 6}
-select(gtex_data, number_tissues = NTissues)
+select(gtex, number_tissues = NTissues)
 ```
 
 - `rename()` is better suited for this because it keeps all the columns
 ```{r max.lines = 6}
-rename(gtex_data, number_tissues = NTissues)
+rename(gtex, number_tissues = NTissues)
 ```
 
 Note: `mutate()`, can also change a column name (more on `mutate()` soon)
 
-
-Exercise: select and filter
-===
-type:prompt
-
-- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
-
-Exercise: select and filter
-===
-type:prompt
-
-- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
-
-```{r max.lines = 10}
-select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
-```
-
-Exercise: select and filter
-===
-type:prompt
-
-- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex_data` dataset.
-
-```{r max.lines = 10}
-select(filter(gtex_data, Gene == "WDR34", !is.na(Heart)), Heart)
-```
-
-- What is wrong with this?
-
-```{r, eval=F, max.lines = 10}
-filter(select(gtex_data, Heart), Gene == "WDR34")
-```
-
-
-Exercise: select text columns
-===
-type:prompt
-
-- Use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
-- Can you do this programmatically without specifying the names of each of the desired columns? 
-- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
-
-Exercise: select text columns
-===
-type:prompt
-
-- Use select to subset the `gtex_data` dataframe to just those columns that contain text data. 
-- Can you do this programmatically without specifying the names of each of the desired columns? 
-- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
-
-```{r}
-select(gtex_data, where(is.character))
-```
 
 Add new variables with mutate()
 ===
@@ -497,14 +443,14 @@ type:section
 Add new variables with mutate()
 ================================================================
 ```{r, max.lines = 5}
-mutate(gtex_data, abs_blood = abs(Blood))
+mutate(gtex, abs_blood = abs(Blood))
 ```
 - This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
 - The thing on the left of the `=` is a new name that you make up which you would like the new column to be called
 - The expresssion on the right of the `=` defines what will go into the new column
 - **Warning!** If the new variable name already exists, `mutate()` will overwrite the existing one
 ```{r, max.lines = 5}
-mutate(gtex_data, Blood = Blood *1000)
+mutate(gtex, Blood = Blood *1000)
 ```
 
 mutate() can create multiple new columns at once
@@ -512,7 +458,7 @@ mutate() can create multiple new columns at once
 - `mutate()` can create multiple columns at the same time and use multiple columns to define a single new one
 
 ```{r, tidy=F}
-mutate(gtex_data, # the newlines make it more readable
+mutate(gtex, # the newlines make it more readable
       abs_blood = abs(Blood),
       abs_heart = abs(Heart),
       blood_heart_dif = abs_blood - abs_heart
@@ -538,33 +484,17 @@ Exercise: mutate()
 ===
 type:prompt
 
-I want to identify genes that have large average expression changes across blood and liver. Can you compute the average of blood and liver expression changes across all gene-individual pairs? Compute the average manually (i.e. don't use the mean function).
-
-Exercise: mutate()
-===
-type:prompt
-
-I want to identify genes that have large average expression changes across blood and liver. Can you compute the average of blood and liver expression changes across all gene-individual pairs? Compute the average manually (i.e. don't use the mean function).
-
-```{r}
-mutate(gtex_data, avg_blood_liver = (Blood+Liver)/2)
-```
-
-Exercise: mutate() and ggplot
-===
-type:prompt
-
-Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
+I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. Using the GTEX data, create a new column containing the average of the four expression measurements in the different tissues.
 
 
 Exercise: mutate() and ggplot
 ===
 type:prompt
 
-Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
+Filter `gtex` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
 ```{r, echo=F, fig.width=15}
-gene_data = filter(gtex_data, Gene == 'MYL1')
+gene_data = filter(gtex, Gene == 'MYL1')
 blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
 ggplot(blood_outliers) +
   geom_point(aes(x=Blood, y=Heart, color=blood_outlier),
@@ -576,60 +506,13 @@ ggplot(blood_outliers) +
 ```
 
 
-Exercise: mutate() and ggplot
-===
-type:prompt
-
-Filter `gtex_data` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
-
-```{r, echo=F, fig.width=15}
-gene_data = filter(gtex_data, Gene == 'MYL1')
-blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
-ggplot(blood_outliers) +
-  geom_point(aes(x=Blood, y=Heart, color=blood_outlier),
-             size = 3) +
-  theme(axis.text = element_text(size = 15),
-        axis.title = element_text(size = 20),
-        legend.text = element_text(size = 20),
-        legend.title = element_text(size = 20))
-```
-
-
-```{r, eval=F}
-gene_data = filter(gtex_data, Gene == 'MYL1')
-blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
-ggplot(blood_outliers) +
-  geom_point(aes(x=Blood, y=Heart, color=blood_outlier))
-```
-
 Exercise: putting it together
 ===
 type:prompt
 
-I am interested in identifying individuals that have a large change in gene expression change for any gene between lung tissue and blood tissue, with higher expression in lung. 
+Produce a vector containing the ten individual IDs (`Ind`) with the biggest absolute difference in their heart and lung expression for the A2ML1 gene.
 
-1. Produce a list of top 10 individual-gene pairs arranged by the expression change for lung compared to blood
-2. Only consider individual-gene pairs measured in all four tissues
-3. In the output, just show the gene, individual, lung expression, blood expression, and lung-blood differences
-
-
-Exercise: putting it together
-===
-type:prompt
-
-I am interested in identifying individuals that have a large change in gene expression change for any gene between lung tissue and blood tissue, with higher expression in lung. 
-
-1. Produce a list of top 10 individual-gene pairs arranged by the expression change for lung compared to blood
-2. Only consider individual-gene pairs measured in all four tissues
-3. In the output, just show the gene, individual, lung expression, blood expression, and lung-blood differences
-
-```{r}
-gtex_data_no_change = filter(gtex_data, NTissues == 4)
-gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
-sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
-top_10 = filter(sorted, row_number()<=10)
-select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
-```
+Before writing any code, break the problem down conceptually into steps. Do you have to create new columns? Filter the rows of a dataset? Arrange rows? Select certain columns? In what order? Once you have a plan, write code, one step at a time.
 
 
 Piping
@@ -642,39 +525,26 @@ Why pipe?
 - In our last exercise, we used a number of different function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
 
 ```{r, eval=F, tidy=F}
-gtex_data_no_change = filter(gtex_data, NTissues == 4)
-gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
-sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
-top_10 = filter(sorted, row_number()<=10)
-select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
-```
-
-Why pipe?
-===
-
-- In our last exercise, we used a number of different function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
-
-```{r, eval=F, tidy=F}
-gtex_data_no_change = filter(gtex_data, NTissues == 4)
-gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
-sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
-top_10 = filter(sorted, row_number()<=10)
-select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
+gtex_A2ML1 = filter(gtex, Gene=="A2ML1")
+gtex_diff = mutate(gtex_A2ML1, diff = abs(Heart-Lung))
+gtex_sort = arrange(gtex_diff, desc(diff))
+gtex_top = filter(gtex_sort, row_number()<=10)
+pull(gtex_top, Ind)
 ```
 
 - Compare that to the same code using nested calls (instead of storing in temporary variables):
 
 ```{r, eval=F, tidy=F}
-select(
+pull(
   filter(
     arrange(
       mutate(
         filter(
-          gtex_data, NTissues == 4),
-        lung_blood_dif = Lung - Blood),
-      desc(lung_blood_dif)),
+          gtex, Gene=="A2ML1"),
+        diff = abs(Heart-Lung)),
+      desc(diff)),
     row_number()<=10),
-  Gene, Ind, Lung, Blood, lung_blood_dif
+  Ind
 )
 ```
 
@@ -686,12 +556,12 @@ The pipe operator
 - Tidyverse solves these problems with the pipe operator `%>%`
 
 ```{r, eval=F, tidy=F}
-gtex_data %>%
-  filter(NTissues == 4) %>%
-  mutate(lung_blood_dif = Lung - Blood) %>%
-  arrange(desc(lung_blood_dif)) %>%
-  filter(row_number()<=10) %>%
-  select(Gene, Ind, Lung, Blood, lung_blood_dif)
+gtex %>% 
+    filter(Gene == 'A2ML1') %>%
+    mutate(diff = abs(Heart-Lung)) %>%
+    arrange(desc(diff)) %>%
+    filter(row_number() <= 10) %>%
+    pull(Ind)
 ```
 
 
@@ -701,22 +571,22 @@ The pipe operator
 - Tidyverse solves these problems with the pipe operator `%>%`
 
 ```{r, eval=F, tidy=F}
-gtex_data %>%
-  filter(NTissues == 4) %>%
-  mutate(lung_blood_dif = Lung - Blood) %>%
-  arrange(desc(lung_blood_dif)) %>%
-  filter(row_number()<=10) %>%
-  select(Gene, Ind, Lung, Blood, lung_blood_dif)
+gtex %>% 
+    filter(Gene == 'A2ML1') %>%
+    mutate(diff = abs(Heart-Lung)) %>%
+    arrange(desc(diff)) %>%
+    filter(row_number() <= 10) %>%
+    pull(Ind)
 ```
 
 - How does this compare with our code before? What do you notice?
 
 ```{r, eval=F, tidy=F}
-gtex_data_no_change = filter(gtex_data, NTissues == 4)
-gtex_data_ratio = mutate(gtex_data_no_change, lung_blood_dif = Lung - Blood)
-sorted = arrange(gtex_data_ratio, desc(lung_blood_dif))
-top_10 = filter(sorted, row_number()<=10)
-select(top_10, Gene, Ind, Lung, Blood, lung_blood_dif)
+gtex_A2ML1 = filter(gtex, Gene=="A2ML1")
+gtex_diff = mutate(gtex_A2ML1, diff = abs(Heart-Lung))
+gtex_sort = arrange(gtex_diff, desc(diff))
+gtex_top = filter(gtex_sort, row_number()<=10)
+pull(gtex_top, Ind)
 ```
 
 
@@ -742,7 +612,7 @@ Pipe details: What objects can be piped?
 =================================================================
 - The pipe works for all variables and functions (not just tidyverse functions)
 
-Piping with an array
+Piping with a vector
 
 ```{r}
 c(1,44,21,0,-4) %>%
@@ -758,36 +628,11 @@ Piping with a scalar
 Piping with a data frame
 
 ```{r}
-tibble(name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
-           age = c(10,54,21,99,96)) %>%
-    filter(age > 30) 
-```
-
-Piping to another position
-===
-- The pipe typically pipes into the first argument of a function, but you can use `.` to represent the object you're piping into the function
-```{r}
-# install.packages("slider")
-library(slider)
-mean %>%
-  slide_vec(1:10, ., .before=2)
-```
-- Also notice how I've piped in a *function* to a function! (yes, functions are just objects like anything else in R)
-- More about this in the functional programming section
-
-Exercise: Pipe to ggplot
-===
-type:prompt
-
-- Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
-
-```{r, eval=F, tidy=F}
-gene_data = filter(gtex_data, Gene == 'MYBL2')
-outliers = mutate(gene_data, blood_outlier = abs(Blood) > 2)
-ggplot(outliers) +
-  geom_bar(aes(x=blood_outlier)) +
-  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
-  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
+tibble(
+  name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
+  age = c(10,54,21,99,96)
+) %>%
+filter(age > 30) 
 ```
 
 Exercise: Pipe to ggplot
@@ -797,24 +642,13 @@ type:prompt
 - Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
 
 ```{r, eval=F, tidy=F}
-gene_data = filter(gtex_data, Gene == 'MYBL2')
+gene_data = filter(gtex, Gene == 'MYBL2')
 outliers = mutate(gene_data, blood_outlier = abs(Blood) > 2)
 ggplot(outliers) +
   geom_bar(aes(x=blood_outlier)) +
   scale_x_discrete("Class", labels=c("Other", "Outlier")) +
   ggtitle("How many individuals have outlier MYBL2 expression in blood?")
 ```
-
-```{r, eval=F, tidy=F}
-gtex_data %>%
-  filter(Gene == 'MYBL2') %>%
-  mutate(blood_outlier = abs(Blood) > 2) %>%
-ggplot() +
-  geom_bar(aes(x=blood_outlier)) +
-  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
-  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
-```
-
 
 ============================================================
 <div align="center">

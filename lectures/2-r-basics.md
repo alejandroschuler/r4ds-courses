@@ -27,7 +27,7 @@ Programming Basics
 
 
 ```r
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv")
+genes = read_csv("https://tinyurl.com/cjkuecnc")
 ```
 
 - We know this reads a .csv from a file and creates something called a "data frame" 
@@ -50,9 +50,9 @@ Assignment
 names to things.
 
 ```r
-mpg = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/mpg.csv")
+genes = read_csv("https://tinyurl.com/cjkuecnc")
 ```
-- This code *assigns* the result of running `read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/mpg.csv")` to the name `mpg`
+- This code *assigns* the result of running `read_csv("https://tinyurl.com/cjkuecnc")` to the name `gene`
 - You can do this with any values and/or functions
 
 ```r
@@ -244,7 +244,7 @@ Optional arguments
 - Many R functions have arguments that you don't always have to specify. For example:
 
 ```r
-file_name = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/data/lupusGenes.csv"
+file_name = "https://tinyurl.com/cjkuecnc"
 genes_10 = read_csv(file_name, n_max=10) # only read in 10 rows
 genes = read_csv(file_name) 
 ```
@@ -341,8 +341,8 @@ Let's say I have these variables and I want to add 1 to all of them and save the
 
 ```r
 y1 = 1 + x1
-y2 = 2 + x2
-y3 = 3 + x3
+y2 = 1 + x2
+y3 = 1 + x3
 ```
 
 This does the trick but it's a lot of copy-paste
@@ -437,7 +437,32 @@ the original vector. Assign the result to a new variable to save it if you neeed
 - You can index using a multi-element index vector.
 - You can repeat index positions
 
+Changing values with indexing
+========================================================
+- you can assign _into_ an indexed position
 
+
+```r
+x
+[1] 1 2 3
+x[1] = 100
+x
+[1] 100   2   3
+```
+
+- or multiple
+
+
+```r
+x
+[1] 100   2   3
+x[c(1,2)] = c(100, 200)
+x
+[1] 100 200   3
+x[c(1,2)] = -1
+x
+[1] -1 -1  3
+```
 
 Strings
 ===
@@ -461,6 +486,10 @@ paste(words, collapse=" ")
 
 Factors
 ===
+
+```r
+library(forcats)
+```
 - factors represent categorical data
 
 ```r
@@ -553,6 +582,7 @@ x = c(7, 3, 1, 9)
 
 Exercise: a vector of variables
 ===
+type: prompt
 
 - Predict the output of the following code:
 
@@ -656,85 +686,6 @@ Data import
 ===
 type:section
 
-Rationale
-===
-- Sometimes R fails to read in the data from a file
-- Or you will read data into R and find strange errors when you try to manipulate it
-- This is often caused by type mismatches- e.g. you expected a column to have been read in as a factor, but it was actually read in as a logical.
-
-```r
-file = readr_example("challenge.csv")
-challenge = read_csv(file)
-Rows: 2000 Columns: 2
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-dbl  (1): x
-date (1): y
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-Diagnosing intake errors
-===
-- Use `readr::problems()` on the returned object to learn more about the errors
-
-```r
-problems(challenge)
-# A tibble: 0 × 5
-# ℹ 5 variables: row <int>, col <int>, expected <chr>, actual <chr>, file <chr>
-```
-- This tells us that `read_csv()` was expecting the `y` column to be logical, but when we look at what was actually in the file at rows 1001+, there are what appear to be dates!
-- This happens because `read_csv()` does not know what type of data are in the file- you haven't told it, so it has to guess. 
-- The way it guesses is by checking the first 1000 rows of each column and picking the most likely data type.
-- You can tell `read_csv()` to check more rows before guessing by using the `guess_max` argument
-
-Specifying data types
-===
-- In general, you may already know what types the columns should be, so you can provide those to `read_csv()`. 
-
-```r
-challenge = read_csv(file,
-   col_types = cols(
-     y = col_date()
-   ))
-head(challenge)
-# A tibble: 6 × 2
-      x y     
-  <dbl> <date>
-1   404 NA    
-2  4172 NA    
-3  3004 NA    
-4   787 NA    
-5    37 NA    
-6  2332 NA    
-```
-- This is a more robust solution than using more rows to guess
-- Now we see that the problem was caused because the first 1000 rows of `y` are NAs
-- Column types are provided to read_csv as named arguments to `cols()`, which itself is a named argument to `col_types`. 
-- You do not need to specify all columns (here we let it guess what `x` is) but it is often good practice to do so if possible
-
-
-Specifying data types
-===
-- Factors can be read in with a high level of control
-
-```r
-df = readr_example("mtcars.csv")  %>%
-read_csv(col_types = cols(
-  cyl = col_factor(levels=c("4", "6", "8"))
-))
-```
-- This will let you catch unexpected factor levels and set the proper order up-front! 
-- To allow all levels, don't use the `levels` argument
-
-```r
-df = readr_example("mtcars.csv")  %>%
-read_csv(col_types = cols(
-  cyl = col_factor()
-))
-```
-- There are many more options and choices, see the documentation and cheat sheet!
 
 Non-csv flat files
 ===
@@ -807,20 +758,6 @@ write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
 write_rds(challenge, "/Users/c242587/Desktop/challenge.rds")
 ```
 
-Exercise: Reading a file
-===
-type: prompt
-
-Identify what is wrong with each of the following inline CSV files. What happens when you run the code?
-
-```r
-read_csv("a,b\n1,2,3\n4,5,6")
-read_csv("a,b,c\n1,2\n1,2,3,4")
-read_csv("a,b\n\"1")
-read_csv("a,b\n1,2\na,b")
-read_csv("a;b\n1;3")
-```
-
 readr cheat sheet
 ===
 <div align="center">
@@ -865,6 +802,18 @@ Adding comments
 - A comment extends to the end of the
 line and is ignored by R.
 
+
+RStudio Pro-tip: multicursors
+===
+
+- RStudio's script pane supports multi-cursors! Hold `alt` and drag your mouse up and down 
+- You can also set a keyboard shortcut for `quick add next`
+- These features make it much easier to rename variables, etc.
+- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
+- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
+
+
+
 Exercise: Plotting a parabola
 ===
 type: prompt
@@ -891,14 +840,4 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-66](2-r-basics-figure/unnamed-chunk-66-1.png)
-
-RStudio Pro-tip: multicursors
-===
-
-- RStudio's script pane supports multi-cursors! Hold `alt` and drag your mouse up and down 
-- You can also set a keyboard shortcut for `quick add next`
-- These features make it much easier to rename variables, etc.
-- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
-- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
-
+![plot of chunk unnamed-chunk-63](2-r-basics-figure/unnamed-chunk-63-1.png)

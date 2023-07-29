@@ -67,6 +67,7 @@ How do I...
 gives you information about what the function does
 - Google is your friend. Try "function_name R language" or "how do I X in R?". I also strongly recommend using "tidyverse" in your queries or the name of a tidyverse package (more in a moment) that has related functions
 - stackoverflow is your friend. It might take some scrolling, but you will eventually find what you need
+- ChatGPT!
 
 Quadratic Equation
 ===
@@ -106,7 +107,7 @@ Packages
 
 ```{r}
 # I have a file called "lupusGenes.csv" on github that we can read from the URL 
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+genes = read_csv("https://tinyurl.com/4vjrbwce")
 ```
 
 - This fails because I haven't yet loaded the `tidyverse` package
@@ -118,7 +119,7 @@ library(tidyverse)
 ```
 
 ```{r, eval=F}
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+genes = read_csv("https://tinyurl.com/4vjrbwce")
 ```
 
 - Now there is no error message
@@ -128,7 +129,7 @@ Packages
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
 ```{r, eval=F}
-poly = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/poly.csv") # reading another csv file
+poly = read_csv("https://tinyurl.com/y22p5j6j") # reading another csv file
 ```
 
 
@@ -147,7 +148,7 @@ Getting your data in R
 - Getting your data into R is easy. We already saw, for example:
 
 ```{r echo = T, results = 'hide', message=FALSE}
-genes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2021/data/lupusGenes.csv")
+genes = read_csv("https://tinyurl.com/4vjrbwce")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
