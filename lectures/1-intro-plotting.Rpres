@@ -95,9 +95,14 @@ Packages
 - Millions of R users have written their own functions that you can use
 - These are bundled together into *packages*
 - To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
+
+
 ```{r, eval=F}
-install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
-library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
+install.packages("QuadRoot")
+```
+```{r}
+library(QuadRoot)
+QuadRoot(c(3,14,-5))
 ```
 
 Packages
@@ -110,9 +115,10 @@ Packages
 genes = read_csv("https://tinyurl.com/4vjrbwce")
 ```
 
-- This fails because I haven't yet loaded the `tidyverse` package
+- This fails because I haven't yet installed and loaded the `tidyverse` package
 ```{r, eval=F}
-library(tidyverse)
+install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
+library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
 ```
 ```{r, include=F}
 library(tidyverse)
@@ -379,28 +385,6 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
 
-Facets
-===
-- Aesthetics are useful for mapping columns to particular properties of a single plot
-- Use **facets** to generate multiple plots with shared structure
-
-```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_wrap(vars(phenotype), nrow = 2)
-```
-- `facet_wrap` is good for faceting according to unordered categories
-
-Facets
-===
-- `facet_grid` is better for ordered categories, and can be used with two variables
-
-```{r, tidy=F, fig.height = 14, fig.width = 14, fig.align = "center"}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_grid(rows=vars(phenotype), cols=vars(gender))
-```
-
 Geoms
 ===
 
@@ -410,6 +394,7 @@ ggplot(genes) +
 ```
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
+- R graph gallery is a great resource to help you design your plot and pick the right geom: r-graph-gallery.com
 
 ***
 ```{r, tidy=F, fig.height = 8, fig.width = 8, fig.align = "center", message=F}
@@ -455,6 +440,29 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
+Facets
+===
+- Aesthetics are useful for mapping columns to particular properties of a single plot
+- Use **facets** to generate multiple plots with shared structure
+
+```{r, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center"}
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_wrap(vars(phenotype), nrow = 2)
+```
+- `facet_wrap` is good for faceting according to unordered categories
+
+Facets
+===
+- `facet_grid` is better for ordered categories, and can be used with two variables
+
+```{r, tidy=F, fig.height = 14, fig.width = 14, fig.align = "center"}
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_grid(rows=vars(phenotype), cols=vars(gender))
+```
+
+
 Exercise
 ===
 type: prompt
@@ -475,16 +483,20 @@ ggplot(genes) +
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
-Learning More
+Exercise
 ===
+type: prompt
+incremental: false
 
-From **R for Data Science**:
+Use ggplot to investigate the relationship between gene expression and lupus using any combination of any kinds of plots that you like. Which genes are most associated with lupus? Does this vary by ancestry, age, or assigned sex at birth?
 
->If you want to learn more about the mechanics of ggplot2, I’d highly recommend grabbing a copy of the ggplot2 book: https://amzn.com/331924275X. It’s been recently updated, so it includes dplyr and tidyr code, and has much more space to explore all the facets of visualisation. Unfortunately the book isn’t generally available for free, but if you have a connection to a university you can probably get an electronic version for free through SpringerLink.
+For some plots it may be helpful to reformat your data using this code (we'll learn how to do this on day 4):
+```{r}
 
-> Another useful resource is the R Graphics Cookbook by Winston Chang. Much of the contents are available online at http://www.cookbook-r.com/Graphs/.
-
-> I also recommend Graphical Data Analysis with R, by Antony Unwin. This is a book-length treatment similar to the material covered in this chapter, but has the space to go into much greater depth.
+gene_names = names(genes)[6:11]
+reformatted_genes = pivot_longer(genes, all_of(gene_names), names_to='gene', values_to='expression')
+reformatted_genes
+```
 
 ===
 <div align="center">

@@ -92,9 +92,16 @@ Packages
 - These are bundled together into *packages*
 - To use functions that aren't built into the "base" language, you have to tell R to first go download the relevant code, and then to load it in the current session
 
+
+
 ```r
-install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
-library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
+install.packages("QuadRoot")
+```
+
+```r
+library(QuadRoot)
+QuadRoot(c(3,14,-5))
+[1] "The two x-intercepts for the quadratic equation are 0.3333 and -5.0000."
 ```
 
 Packages
@@ -109,10 +116,11 @@ genes = read_csv("https://tinyurl.com/4vjrbwce")
 Error in read_csv("https://tinyurl.com/4vjrbwce"): could not find function "read_csv"
 ```
 
-- This fails because I haven't yet loaded the `tidyverse` package
+- This fails because I haven't yet installed and loaded the `tidyverse` package
 
 ```r
-library(tidyverse)
+install.packages("tidyverse") # go download the package called "tidyverse"- only have to do this once
+library("tidyverse") # load the package into the current R session - do this every time you use R and need functions from this package
 ```
 
 
@@ -229,8 +237,8 @@ ggplot(genes) +
 ```
 
 <div class="figure">
-<img src="1-intro-plotting-figure/unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14" height="80%" />
-<p class="caption">plot of chunk unnamed-chunk-14</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15" height="80%" />
+<p class="caption">plot of chunk unnamed-chunk-15</p>
 </div>
 
 ***
@@ -247,7 +255,7 @@ ggplot(genes) +
   geom_point(aes(x = VAPA, y = EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-15](1-intro-plotting-figure/unnamed-chunk-15-1.png)
+![plot of chunk unnamed-chunk-16](1-intro-plotting-figure/unnamed-chunk-16-1.png)
 
 ***
 
@@ -262,13 +270,13 @@ incremental: false
 
 Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
 
-![plot of chunk unnamed-chunk-16](1-intro-plotting-figure/unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-17](1-intro-plotting-figure/unnamed-chunk-17-1.png)
 
 Investigating a relationship
 ===
 Let's say we're curious about the relationship between RSAD2 and IFI44.
 
-![plot of chunk unnamed-chunk-17](1-intro-plotting-figure/unnamed-chunk-17-1.png)
+![plot of chunk unnamed-chunk-18](1-intro-plotting-figure/unnamed-chunk-18-1.png)
 
 - What's going on here? It seems like there are two clusters. 
 - What is driving this clustering? Age? Sex? Ancestry? Phenotype?
@@ -290,7 +298,7 @@ ggplot(genes) +
 - What did we learn about the genes that we are interested in?
 
 ***
-![plot of chunk unnamed-chunk-19](1-intro-plotting-figure/unnamed-chunk-19-1.png)
+![plot of chunk unnamed-chunk-20](1-intro-plotting-figure/unnamed-chunk-20-1.png)
 
 Aesthetics
 ===
@@ -310,7 +318,7 @@ ggplot(genes) +
 
 
 ***
-![plot of chunk unnamed-chunk-21](1-intro-plotting-figure/unnamed-chunk-21-1.png)
+![plot of chunk unnamed-chunk-22](1-intro-plotting-figure/unnamed-chunk-22-1.png)
 
 Aesthetics
 ===
@@ -334,7 +342,7 @@ ggplot(genes) +
 Warning: Using size for a discrete variable is not advised.
 ```
 
-![plot of chunk unnamed-chunk-23](1-intro-plotting-figure/unnamed-chunk-23-1.png)
+![plot of chunk unnamed-chunk-24](1-intro-plotting-figure/unnamed-chunk-24-1.png)
 
 Aesthetics
 ===
@@ -354,7 +362,7 @@ ggplot(genes) +
 - However, we can use this to assign fixed properties to the plot that don't depend on the data
 
 ***
-![plot of chunk unnamed-chunk-25](1-intro-plotting-figure/unnamed-chunk-25-1.png)
+![plot of chunk unnamed-chunk-26](1-intro-plotting-figure/unnamed-chunk-26-1.png)
 
 Exercise
 ===
@@ -365,8 +373,8 @@ Can you recreate this plot?
 
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
-<p class="caption">plot of chunk unnamed-chunk-26</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-27-1.png" alt="plot of chunk unnamed-chunk-27"  />
+<p class="caption">plot of chunk unnamed-chunk-27</p>
 </div>
 
 Exercise
@@ -382,40 +390,6 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
 ```
 
-Facets
-===
-- Aesthetics are useful for mapping columns to particular properties of a single plot
-- Use **facets** to generate multiple plots with shared structure
-
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_wrap(vars(phenotype), nrow = 2)
-```
-
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
-<p class="caption">plot of chunk unnamed-chunk-28</p>
-</div>
-- `facet_wrap` is good for faceting according to unordered categories
-
-Facets
-===
-- `facet_grid` is better for ordered categories, and can be used with two variables
-
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_grid(rows=vars(phenotype), cols=vars(gender))
-```
-
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
-<p class="caption">plot of chunk unnamed-chunk-29</p>
-</div>
-
 Geoms
 ===
 
@@ -426,11 +400,12 @@ ggplot(genes) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
-<p class="caption">plot of chunk unnamed-chunk-30</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
+<p class="caption">plot of chunk unnamed-chunk-29</p>
 </div>
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
+- R graph gallery is a great resource to help you design your plot and pick the right geom: r-graph-gallery.com
 
 ***
 
@@ -440,8 +415,8 @@ ggplot(genes) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
-<p class="caption">plot of chunk unnamed-chunk-31</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<p class="caption">plot of chunk unnamed-chunk-30</p>
 </div>
 
 Geoms
@@ -457,8 +432,8 @@ ggplot(genes) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
-<p class="caption">plot of chunk unnamed-chunk-32</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
+<p class="caption">plot of chunk unnamed-chunk-31</p>
 </div>
 
 Geoms
@@ -472,8 +447,8 @@ ggplot(genes) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
-<p class="caption">plot of chunk unnamed-chunk-33</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<p class="caption">plot of chunk unnamed-chunk-32</p>
 </div>
 
 Geoms
@@ -487,8 +462,8 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
-<p class="caption">plot of chunk unnamed-chunk-34</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
+<p class="caption">plot of chunk unnamed-chunk-33</p>
 </div>
 
 Geoms
@@ -502,9 +477,44 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
 ```
 
 <div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<p class="caption">plot of chunk unnamed-chunk-34</p>
+</div>
+
+Facets
+===
+- Aesthetics are useful for mapping columns to particular properties of a single plot
+- Use **facets** to generate multiple plots with shared structure
+
+
+```r
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_wrap(vars(phenotype), nrow = 2)
+```
+
+<div class="figure" style="text-align: center">
 <img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" alt="plot of chunk unnamed-chunk-35"  />
 <p class="caption">plot of chunk unnamed-chunk-35</p>
 </div>
+- `facet_wrap` is good for faceting according to unordered categories
+
+Facets
+===
+- `facet_grid` is better for ordered categories, and can be used with two variables
+
+
+```r
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_grid(rows=vars(phenotype), cols=vars(gender))
+```
+
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<p class="caption">plot of chunk unnamed-chunk-36</p>
+</div>
+
 
 Exercise
 ===
@@ -519,23 +529,42 @@ ggplot(genes) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
-<p class="caption">plot of chunk unnamed-chunk-36</p>
+<img src="1-intro-plotting-figure/unnamed-chunk-37-1.png" alt="plot of chunk unnamed-chunk-37"  />
+<p class="caption">plot of chunk unnamed-chunk-37</p>
 </div>
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
-Learning More
+Exercise
 ===
+type: prompt
+incremental: false
 
-From **R for Data Science**:
+Use ggplot to investigate the relationship between gene expression and lupus using any combination of any kinds of plots that you like. Which genes are most associated with lupus? Does this vary by ancestry, age, or assigned sex at birth?
 
->If you want to learn more about the mechanics of ggplot2, I’d highly recommend grabbing a copy of the ggplot2 book: https://amzn.com/331924275X. It’s been recently updated, so it includes dplyr and tidyr code, and has much more space to explore all the facets of visualisation. Unfortunately the book isn’t generally available for free, but if you have a connection to a university you can probably get an electronic version for free through SpringerLink.
+For some plots it may be helpful to reformat your data using this code (we'll learn how to do this on day 4):
 
-> Another useful resource is the R Graphics Cookbook by Winston Chang. Much of the contents are available online at http://www.cookbook-r.com/Graphs/.
+```r
 
-> I also recommend Graphical Data Analysis with R, by Antony Unwin. This is a book-length treatment similar to the material covered in this chapter, but has the space to go into much greater depth.
+gene_names = names(genes)[6:11]
+reformatted_genes = pivot_longer(genes, all_of(gene_names), names_to='gene', values_to='expression')
+reformatted_genes
+# A tibble: 354 × 7
+   sampleid     age gender ancestry  phenotype gene   expression
+   <chr>      <dbl> <chr>  <chr>     <chr>     <chr>       <dbl>
+ 1 GSM3057239    70 F      Caucasian SLE       FAM50A      18.6 
+ 2 GSM3057239    70 F      Caucasian SLE       ERCC2        4.28
+ 3 GSM3057239    70 F      Caucasian SLE       IFI44       18.0 
+ 4 GSM3057239    70 F      Caucasian SLE       EIF3L      182.  
+ 5 GSM3057239    70 F      Caucasian SLE       RSAD2       25.5 
+ 6 GSM3057239    70 F      Caucasian SLE       VAPA       159.  
+ 7 GSM3057241    78 F      Caucasian SLE       FAM50A      20.3 
+ 8 GSM3057241    78 F      Caucasian SLE       ERCC2        3.02
+ 9 GSM3057241    78 F      Caucasian SLE       IFI44       21.1 
+10 GSM3057241    78 F      Caucasian SLE       EIF3L      157.  
+# ℹ 344 more rows
+```
 
 ===
 <div align="center">
