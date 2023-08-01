@@ -196,6 +196,10 @@ sqrt(x)
 [1] 2
 x
 [1] 4
+```
+
+
+```r
 y = sqrt(x)
 y
 [1] 2
@@ -208,8 +212,6 @@ y
 Functions and variable assignment
 ========================================================
 - functions generally do not affect the variables you pass to them (`x` remains the same after `sqrt(x)`)
-- The results of a function call will simply be printed out if you do not save the result to a variable
-- Saving the result to a variable lets you use it later, like any other variable you define manually
 - Once a variable has been assigned (`y`), it keeps its value until updated, even if you change other variables (`x`) that went into the original assignment of that variable
 
 Arguments by position vs. name
@@ -223,7 +225,7 @@ ggplot(genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-16](2-r-basics-figure/unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-17](2-r-basics-figure/unnamed-chunk-17-1.png)
 
 ***
 
@@ -237,7 +239,7 @@ ggplot(data=genes) +
   geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
-![plot of chunk unnamed-chunk-17](2-r-basics-figure/unnamed-chunk-17-1.png)
+![plot of chunk unnamed-chunk-18](2-r-basics-figure/unnamed-chunk-18-1.png)
 
 Optional arguments
 ===
@@ -250,10 +252,6 @@ genes = read_csv(file_name)
 ```
 - `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
 - If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
-
-Why?
-========================================================
-- What are the benefits/drawbacks of using positional vs. named arguments?
 
 Exercise
 ========================================================
@@ -280,7 +278,7 @@ type: prompt
 
 I'm trying to generate this plot:
 
-![plot of chunk unnamed-chunk-19](2-r-basics-figure/unnamed-chunk-19-1.png)
+![plot of chunk unnamed-chunk-20](2-r-basics-figure/unnamed-chunk-20-1.png)
 
 ***
 
@@ -292,7 +290,7 @@ ggplot(data=genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-20](2-r-basics-figure/unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-21](2-r-basics-figure/unnamed-chunk-21-1.png)
 
 What am I doing wrong?
 
@@ -301,26 +299,9 @@ Finding the names of a function's arguments
 incremental: true
 type: prompt
 
-`read_csv()` takes a number of optional named arguments. What are some of them?
+What does the optional `na` argument do in `read_csv()`? Ask ChatGPT to give you some examples of how you would use it.
 
-
-Calling functions from a package
-============================================================
-- Sometimes packages introduce name conflicts, which is when the pacakge loads a function that is named the same thing as a function that's already in the environment
-- Typically, the package being loaded will take precedence over what is already loaded.
-- For instance:
-
-```r
-?filter # returns documentation for a function called filter in the stats package
-library(dplyr)
-?filter # now returns documentation for a function called filter in the dplyr package!
-```
-- You can tell R which function you want by specifying the package name and then `::` before the function name
-
-```r
-?stats::filter
-?dplyr::filter
-```
+How can you use `read_csv` to only read in the *last* 5 rows of a data frame?
 
 Vectors
 ========================================================
@@ -362,43 +343,24 @@ y
 - Many R functions and operators (like `+`) automatically work with
 multi-element vector arguments.
 
-Ranges
-===
-
-```r
-1:50
- [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
-[26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
-```
-- The colon `:` is a handy shortcut to create a vector that is
-a sequence of integers from the first number to the second number
-(inclusive).
-- Long vectors wrap around. (Your screen may have a different width than what is shown here.)
-- Look at the `[ ]` notation. The second output line starts
-with 23, which is the 24^th element of the vector.
-- This notation will help you figure out where you are in a long vector.
-
 Elementwise operations on a vector
 ========================================================
 - This multiplies each element of `1:10` by the corresponding element of `1:10`, that is, it squares each element.
 
 ```r
-(1:10)*(1:10)
- [1]   1   4   9  16  25  36  49  64  81 100
-```
-- Equivalently, we could use exponentiation:
-
-```r
-(1:10)^2
- [1]   1   4   9  16  25  36  49  64  81 100
+c(1,2,3) * c(4,5,6)
+[1]  4 10 18
 ```
 - Many basic R functions operate on multi-element vectors as
 easily as on vectors containing a single number.
 
 ```r
-sqrt(0:10)
- [1] 0.000000 1.000000 1.414214 1.732051 2.000000 2.236068 2.449490 2.645751
- [9] 2.828427 3.000000 3.162278
+sqrt(c(1,2,3))
+[1] 1.000000 1.414214 1.732051
+c(1,2,3)^3
+[1]  1  8 27
+log(c(1,2,3))
+[1] 0.0000000 0.6931472 1.0986123
 ```
 
 Some functions operate on vectors and give back a single number
@@ -416,26 +378,83 @@ mean(numbers)
 [1] 9.375
 ```
 
+
+Exercise: subtract the mean
+========================================================
+type: prompt
+
+
+```r
+x = c(7, 3, 1, 9)
+```
+- Subtract the mean of `x` from `x`, and then `sum` the result.
+
+Exercise: a vector of variables
+===
+type: prompt
+
+- Predict the output of the following code:
+
+```r
+a = 1
+b = 2
+x = c(a,b)
+
+a = 3
+print(x)
+```
+
+Ranges
+===
+
+```r
+1:50
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+[26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+```
+- The colon `:` is a handy shortcut to create a vector that is
+a sequence of integers from the first number to the second number
+(inclusive).
+- Long vectors wrap around. (Your screen may have a different width than what is shown here.)
+- Look at the `[ ]` notation. The second output line starts
+with 23, which is the 24^th element of the vector.
+- This notation will help you figure out where you are in a long vector.
+
+
 Indexing
 ========================================================
 
 ```r
 x
-[1] 1 2 3
+[1] 7 3 1 9
 x[1] # same as x[c(1)] since 1 is already a vector (of length 1)
-[1] 1
+[1] 7
 x[2:4]
-[1]  2  3 NA
+[1] 3 1 9
 x[c(3, 1)]
-[1] 3 1
+[1] 1 7
 x[c(1,1,1,1,1,1,4)]
-[1]  1  1  1  1  1  1 NA
+[1] 7 7 7 7 7 7 9
 ```
 - Indexing returns a subsequence of the vector. It does not change
 the original vector. Assign the result to a new variable to save it if you neeed it later.
 - R starts counting vector indices from 1.
 - You can index using a multi-element index vector.
 - You can repeat index positions
+
+Exercise
+===
+type:prompt
+What does this code do?
+
+```r
+x = ... # some vector
+x[length(x):1]
+```
+
+Hints:
+- assign `x` some values and try it to see!
+- read inside out: first figure out what `length(x)` does, then think about what the output of `length(x):1` should do, and then finally `x[length(x):1]`
 
 Changing values with indexing
 ========================================================
@@ -444,10 +463,10 @@ Changing values with indexing
 
 ```r
 x
-[1] 1 2 3
+[1] 7 3 1 9
 x[1] = 100
 x
-[1] 100   2   3
+[1] 100   3   1   9
 ```
 
 - or multiple
@@ -455,14 +474,18 @@ x
 
 ```r
 x
-[1] 100   2   3
+[1] 100   3   1   9
 x[c(1,2)] = c(100, 200)
 x
-[1] 100 200   3
+[1] 100 200   1   9
 x[c(1,2)] = -1
 x
-[1] -1 -1  3
+[1] -1 -1  1  9
 ```
+
+Data Types
+========================================================
+type: section
 
 Strings
 ===
@@ -570,32 +593,6 @@ v3 + 1
 v4 + 1
 ```
 
-Exercise: subtract the mean
-========================================================
-type: prompt
-
-
-```r
-x = c(7, 3, 1, 9)
-```
-- Subtract the mean of `x` from `x`, and then `sum` the result.
-
-Exercise: a vector of variables
-===
-type: prompt
-
-- Predict the output of the following code:
-
-```r
-a = 1
-b = 2
-x = c(a,b)
-
-a = 3
-print(x)
-```
-
-
 NA
 ===
 - R has a special value that represents missing data- it's called `NA`
@@ -681,82 +678,15 @@ head(my_data, n=2)
 2 nathalie    48
 ```
 
-
-Data import
-===
-type:section
-
-
-Non-csv flat files
-===
-- Besides .csv, you may find data in .tsv (tab-separated values) and other more exotic formats. 
-- Many of these are still delimited text files ("flat files"), which means that the data are stored as text with special characters between new lines and columns. This is an exmaple .csv:
-
-```r
-toy_csv = "1,2,3\n4,5,6"
-```
-- This is an example .tsv
-
-```r
-toy_tsv = "1\t2\t3\n4\t5\t6"
-```
-- The only difference is the **delimiter** which is the character that breaks up columns. 
-
-Non-csv flat files
-===
-- Both can be read in using `read_delim()`
-
-```r
-read_delim("1,2,3\n4,5,6", delim=",", col_names = c("x","y","z"))
-Rows: 2 Columns: 3
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-dbl (3): x, y, z
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-# A tibble: 2 × 3
-      x     y     z
-  <dbl> <dbl> <dbl>
-1     1     2     3
-2     4     5     6
-read_delim("1\t2\t3\n4\t5\t6", delim="\t", col_names = c("x","y","z"))
-Rows: 2 Columns: 3
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: "\t"
-dbl (3): x, y, z
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-# A tibble: 2 × 3
-      x     y     z
-  <dbl> <dbl> <dbl>
-1     1     2     3
-2     4     5     6
-```
-- `read_csv()` is just a shortcut to `read_delim()` that has `delim=","` hardcoded in.
-
-Non-flat files
-===
-- There are also other packages that let you read in from other formats
-  - `haven` reads in SPSS, Stata, and SAS files
-  - `readxl` reads in `.xls` and `.xlsx`
-  - `DBI` with a database backend (e.g. `odbc`) reads in from databases
-  - `jsonlite` and `xml2` for heirarchical data
-  - `rio` for more esoteric formats
-  
-Writing files
+Writing data frames
 ===
 
 ```r
-write_csv(challenge, "/Users/c242587/Desktop/challenge.csv")
+write_csv(my_data, "~/Desktop/my_data.csv")
 ```
-- metadata about column types is lost when writing to .csv
-- use `write_rds()` (and `read_rds()`) to save to a binary R format that preserves column types
-
-```r
-write_rds(challenge, "/Users/c242587/Desktop/challenge.rds")
-```
+- after running this, you'll see a new file called `my_data.csv` (or whatever you chose to name it) appear in the specified location on your computer (e.g. `Desktop`)
+- you can read and write `.csv` files in lots of programs (e.g. google sheets)
+- to read and write other formats look at documentation and use google + chatGPT!
 
 readr cheat sheet
 ===
@@ -780,11 +710,11 @@ contents to a .R file for later use.
 - Look at the RStudio ``Code'' menu for some useful keyboard
 commands.
 
-Script pane example
-============================================================
+***
+
 - Create a script pane: File > New File > R Script
 - Put your cursor in the script pane.
-- Type: `factorial(1:10)`
+- Type: `1:10^2`
 - Then hit `Command-RETURN` (Mac), or `Ctrl-ENTER` (Windows).
 - That line is copied to the console pane and evaluated.
 - You can save the script to a file.
@@ -794,23 +724,25 @@ Adding comments
 ========================================================
 
 ```r
-## This is a comment
-1 + 2 # add some numbers
-[1] 3
+## In this section, we make a vector and reverse its order
+x = 1:3 * 10                # make a vector [10, 20 ... ]
+x_reversed = x[length(x):1] # reverse its order
 ```
 - Use a `#` to start a comment.
 - A comment extends to the end of the
 line and is ignored by R.
+- comments are complemented by good code style!
 
 
-RStudio Pro-tip: multicursors
+RStudio Pro-tip: scrolling and multicursors
 ===
 
+- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
+- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
 - RStudio's script pane supports multi-cursors! Hold `alt` and drag your mouse up and down 
 - You can also set a keyboard shortcut for `quick add next`
 - These features make it much easier to rename variables, etc.
-- You should also be aware of `cmd-<arrow>` and `alt-<arrow>` for moving the cursor (by line and by word)
-- and `cmd-shift-<arrow>` and `alt-shift-<arrow>` for selecting text (by line and by word)
+
 
 
 
@@ -840,4 +772,4 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-63](2-r-basics-figure/unnamed-chunk-63-1.png)
+![plot of chunk unnamed-chunk-58](2-r-basics-figure/unnamed-chunk-58-1.png)
