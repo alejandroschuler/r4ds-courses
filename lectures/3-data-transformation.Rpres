@@ -92,7 +92,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/mwrvahjz')
+gtex = read_tsv('https://tinyurl.com/342rhdc2')
 
 # Check number of rows
 nrow(gtex)
@@ -154,7 +154,7 @@ filter(gtex, exp(Blood) > 1)
 Filtering out all rows
 =========================================================
 ```{r}
-filter(gtex, NTissues > 5)
+filter(gtex, Blood > 10000)
 ```
 - If you ever get a data frame of length zero, it's because no rows satisfy the condition you asked for
 
@@ -170,34 +170,11 @@ nrow(gtex)
 ```
 
 ```{r, eval=F}
-filter(gtex, NTissues == 2)
+filter(gtex, Gene == ZZZ3)
 filter(gtex, Heart <= -5)
 nrow(gtex)
 ```
 
-Exercise
-========================================================
-type:prompt
-
-- What is the result of running this code?
-
-```{r}
-nrow(gtex)
-```
-
-```{r, eval=F}
-filter(gtex, NTissues <= 2)
-filter(gtex, Heart <= -5)
-nrow(gtex)
-```
-
-- Remember, functions usually do not change their arguments!
-
-```{r}
-low_expression_blood = filter(gtex, Blood <= -5)
-low_expression_blood_heart = filter(low_expression_blood, Heart <= -5)
-nrow(low_expression_blood_heart)
-```
 
 Exercise
 ========================================================
@@ -233,7 +210,7 @@ filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
 Logical conjunctions (OR)
 =========================================================
 ```{r}
-filter(gtex, NTissues %in% c(1,2)) # equivalent to filter(gtex, NTissues==1 | NTissues==2)
+filter(gtex, Gene %in% c(ZZZ3,A2ML1)) # equivalent to filter(gtex, Gene==ZZZ3 | Gene==A2ML1)
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
@@ -245,34 +222,23 @@ filter(gtex, !(Gene=="A2ML1"))
 - The exclamation point ` ! ` means "NOT", which negates the logical condition
 - sometimes it's easier to say what you *don't* want!
 
-Exercise: conjunctions
-==========================================================
-type: prompt
-
-- Filter the GTEX data to keep just the rows corresponding to all genes except CTLA4 and CTDP1 where blood expression is positive.
-
 Exercise: computed conditions
 ==========================================================
 type: prompt
 
 - Filter the GTEX data to keep just the rows where the product of Blood and Heart expression is between 0 and 1.
 
+Exercise: conjunctions
+==========================================================
+type: prompt
+
+Excluding the gene `LAMP3`, does the individual `GTEX-11TT1` have any genes with expression level greater than 4 in their blood?
+
 Exercise: getting rid of NAs
 ==========================================================
 type: prompt
 
 - Filter out any rows where the value for `Heart` is missing (value is `NA`) 
-
-Exercise: getting rid of NAs
-==========================================================
-type: prompt
-
-- Filter out any rows where the value for `Heart` is missing (value is `NA`) 
-
-```{r}
-filter(gtex, !is.na(Heart))
-```
-
 
 Sampling rows
 ==========================================================
@@ -317,7 +283,7 @@ Arrange can sort by more than one column
 - This is useful if there is a tie in sorting by the first column.
 
 ```{r}
-arrange(gtex, NTissues, Blood)
+arrange(gtex, Gene, Blood)
 ```
 
 
@@ -439,12 +405,12 @@ Rename column names with rename()
 =========================================================
 - `select()` can be used to rename variables, but it drops all variables not selected
 ```{r max.lines = 6}
-select(gtex, number_tissues = NTissues)
+select(gtex, individual = Ind)
 ```
 
 - `rename()` is better suited for this because it keeps all the columns
 ```{r max.lines = 6}
-rename(gtex, number_tissues = NTissues)
+rename(gtex, individual = Ind)
 ```
 
 Note: `mutate()`, can also change a column name (more on `mutate()` soon)

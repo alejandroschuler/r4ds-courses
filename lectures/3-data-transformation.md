@@ -64,7 +64,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 ```r
 # Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/mwrvahjz')
+gtex = read_tsv('https://tinyurl.com/342rhdc2')
 
 # Check number of rows
 nrow(gtex)
@@ -89,21 +89,21 @@ Filter rows with filter()
 
 ```r
 filter(gtex, Blood >= 12)
-# A tibble: 12 × 7
-   Gene       Ind        Blood Heart  Lung Liver NTissues
-   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 AC012358.7 GTEX-VUSG   13.6 -1.43  1.22 -0.39        4
- 2 DCSTAMP    GTEX-12696  13.6 NA    -0.57 -0.91        3
- 3 DIAPH2-AS1 GTEX-VUSG   12.2 -0.33  1.18  0.67        4
- 4 DNASE2B    GTEX-12696  14.4 -0.82 -0.92  0.35        4
- 5 FFAR4      GTEX-12696  12.9 -0.96 -0.67  0.18        4
- 6 GAPDHP33   GTEX-UPK5   13.8  1.52 -1.48 -1.84        4
- 7 GTF2A1L    GTEX-VUSG   12.2  1.67  0.78  0.09        4
- 8 GTF2IP14   GTEX-11NV4  12.2  7.26  5.79  7.06        4
- 9 KCNT1      GTEX-1KANB  13.5  3.14  0.62 -0.37        4
-10 KLK3       GTEX-147F4  15.7 -0.74 -0.44 -0.02        4
-11 NAPSA      GTEX-1CB4J  12.3 -0.29 -0.44 -0.14        4
-12 REN        GTEX-U8XE   18.9 -0.57 NA     0.09        3
+# A tibble: 12 × 6
+   Gene       Ind        Blood Heart  Lung Liver
+   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 AC012358.7 GTEX-VUSG   13.6 -1.43  1.22 -0.39
+ 2 DCSTAMP    GTEX-12696  13.6 NA    -0.57 -0.91
+ 3 DIAPH2-AS1 GTEX-VUSG   12.2 -0.33  1.18  0.67
+ 4 DNASE2B    GTEX-12696  14.4 -0.82 -0.92  0.35
+ 5 FFAR4      GTEX-12696  12.9 -0.96 -0.67  0.18
+ 6 GAPDHP33   GTEX-UPK5   13.8  1.52 -1.48 -1.84
+ 7 GTF2A1L    GTEX-VUSG   12.2  1.67  0.78  0.09
+ 8 GTF2IP14   GTEX-11NV4  12.2  7.26  5.79  7.06
+ 9 KCNT1      GTEX-1KANB  13.5  3.14  0.62 -0.37
+10 KLK3       GTEX-147F4  15.7 -0.74 -0.44 -0.02
+11 NAPSA      GTEX-1CB4J  12.3 -0.29 -0.44 -0.14
+12 REN        GTEX-U8XE   18.9 -0.57 NA     0.09
 ```
 
 Comparison operators
@@ -143,19 +143,19 @@ Filtering on computed values
 
 ```r
 filter(gtex, exp(Blood) > 1)
-# A tibble: 185,698 × 7
-   Gene  Ind        Blood Heart  Lung Liver NTissues
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4
- 2 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4
- 3 A2ML1 GTEX-12WSD  0.53  0.36  0.2   0.51        4
- 4 A2ML1 GTEX-12WSG  0.03 -0.64 -1.02  0.07        4
- 5 A2ML1 GTEX-131XE  0.3   0.05  0.53 -0.87        4
- 6 A2ML1 GTEX-132NY  0.42 -0.14 -0.27  1.47        4
- 7 A2ML1 GTEX-13OW6  0.15 -0.13  1.06  0.24        4
- 8 A2ML1 GTEX-147F4  0.2  -0.26  0.11 -0.76        4
- 9 A2ML1 GTEX-147JS  0.36 -0.45 -0.34 -1.39        4
-10 A2ML1 GTEX-14DAQ  0.1   0.69  0.99 -0.79        4
+# A tibble: 185,698 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12
+ 2 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66
+ 3 A2ML1 GTEX-12WSD  0.53  0.36  0.2   0.51
+ 4 A2ML1 GTEX-12WSG  0.03 -0.64 -1.02  0.07
+ 5 A2ML1 GTEX-131XE  0.3   0.05  0.53 -0.87
+ 6 A2ML1 GTEX-132NY  0.42 -0.14 -0.27  1.47
+ 7 A2ML1 GTEX-13OW6  0.15 -0.13  1.06  0.24
+ 8 A2ML1 GTEX-147F4  0.2  -0.26  0.11 -0.76
+ 9 A2ML1 GTEX-147JS  0.36 -0.45 -0.34 -1.39
+10 A2ML1 GTEX-14DAQ  0.1   0.69  0.99 -0.79
 # ℹ 185,688 more rows
 ```
 - note that we didn't actually do anything to the values in the blood column
@@ -165,10 +165,10 @@ Filtering out all rows
 =========================================================
 
 ```r
-filter(gtex, NTissues > 5)
-# A tibble: 0 × 7
-# ℹ 7 variables: Gene <chr>, Ind <chr>, Blood <dbl>, Heart <dbl>, Lung <dbl>,
-#   Liver <dbl>, NTissues <dbl>
+filter(gtex, Blood > 10000)
+# A tibble: 0 × 6
+# ℹ 6 variables: Gene <chr>, Ind <chr>, Blood <dbl>, Heart <dbl>, Lung <dbl>,
+#   Liver <dbl>
 ```
 - If you ever get a data frame of length zero, it's because no rows satisfy the condition you asked for
 
@@ -187,39 +187,11 @@ nrow(gtex)
 
 
 ```r
-filter(gtex, NTissues == 2)
+filter(gtex, Gene == ZZZ3)
 filter(gtex, Heart <= -5)
 nrow(gtex)
 ```
 
-Exercise
-========================================================
-type:prompt
-
-- What is the result of running this code?
-
-
-```r
-nrow(gtex)
-[1] 389922
-```
-
-
-```r
-filter(gtex, NTissues <= 2)
-filter(gtex, Heart <= -5)
-nrow(gtex)
-```
-
-- Remember, functions usually do not change their arguments!
-
-
-```r
-low_expression_blood = filter(gtex, Blood <= -5)
-low_expression_blood_heart = filter(low_expression_blood, Heart <= -5)
-nrow(low_expression_blood_heart)
-[1] 3
-```
 
 Exercise
 ========================================================
@@ -236,12 +208,12 @@ Logical conjunctions (AND)
 
 ```r
 filter(gtex, Blood <= -5 & Heart <= -5)
-# A tibble: 3 × 7
-  Gene     Ind        Blood  Heart   Lung Liver NTissues
-  <chr>    <chr>      <dbl>  <dbl>  <dbl> <dbl>    <dbl>
-1 ATP5A1   GTEX-YFC4  -5.35  -6.05  -7.96 -4.4         4
-2 GHITM    GTEX-WK11  -5.7   -7.24  -7.37 -4.06        4
-3 MTATP6P1 GTEX-1KD5A -9.18 -10.1  -10.3  -9.52        4
+# A tibble: 3 × 6
+  Gene     Ind        Blood  Heart   Lung Liver
+  <chr>    <chr>      <dbl>  <dbl>  <dbl> <dbl>
+1 ATP5A1   GTEX-YFC4  -5.35  -6.05  -7.96 -4.4 
+2 GHITM    GTEX-WK11  -5.7   -7.24  -7.37 -4.06
+3 MTATP6P1 GTEX-1KD5A -9.18 -10.1  -10.3  -9.52
 ```
 - This filters by the **conjunction** of the two constraints---both must be satisfied.
 - The ampersand sign ` & ` stands for "AND"
@@ -249,12 +221,12 @@ filter(gtex, Blood <= -5 & Heart <= -5)
 
 ```r
 filter(gtex, Blood <= -5, Heart <= -5)
-# A tibble: 3 × 7
-  Gene     Ind        Blood  Heart   Lung Liver NTissues
-  <chr>    <chr>      <dbl>  <dbl>  <dbl> <dbl>    <dbl>
-1 ATP5A1   GTEX-YFC4  -5.35  -6.05  -7.96 -4.4         4
-2 GHITM    GTEX-WK11  -5.7   -7.24  -7.37 -4.06        4
-3 MTATP6P1 GTEX-1KD5A -9.18 -10.1  -10.3  -9.52        4
+# A tibble: 3 × 6
+  Gene     Ind        Blood  Heart   Lung Liver
+  <chr>    <chr>      <dbl>  <dbl>  <dbl> <dbl>
+1 ATP5A1   GTEX-YFC4  -5.35  -6.05  -7.96 -4.4 
+2 GHITM    GTEX-WK11  -5.7   -7.24  -7.37 -4.06
+3 MTATP6P1 GTEX-1KD5A -9.18 -10.1  -10.3  -9.52
 ```
 - For filter, you can do "AND" by passing in two separate conditions as two different arguments, but the comma and ampersand are not generally interchangeable
 
@@ -263,19 +235,19 @@ Logical conjunctions (OR)
 
 ```r
 filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
-# A tibble: 156 × 7
-   Gene  Ind        Blood Heart  Lung Liver NTissues
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
- 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
- 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
- 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4
- 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4
- 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4
- 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06        4
- 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75        4
- 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48        4
-10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72        4
+# A tibble: 156 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
+ 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13
+ 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61
+ 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12
+ 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66
+ 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06
+ 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75
+ 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48
+10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72
 # ℹ 146 more rows
 ```
 - The pipe sign ` | ` stands for "OR" 
@@ -285,21 +257,11 @@ Logical conjunctions (OR)
 =========================================================
 
 ```r
-filter(gtex, NTissues %in% c(1,2)) # equivalent to filter(gtex, NTissues==1 | NTissues==2)
-# A tibble: 132 × 7
-   Gene       Ind        Blood Heart  Lung Liver NTissues
-   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 AC016757.3 GTEX-131YS  1.43 NA    NA    -0.07        2
- 2 ACTG1P1    GTEX-15RJE NA    NA    -0.41 -0.1         2
- 3 ACVR2B-AS1 GTEX-1GN73 -0.86 NA    NA     0.46        2
- 4 ADAMTSL1   GTEX-1LGRB -0.48 NA    NA    -0.76        2
- 5 ADGRF5     GTEX-ZPU1  -0.13 NA    NA    -0.68        2
- 6 AOAH       GTEX-11GSP -1.27 NA    NA     0.41        2
- 7 ARV1       GTEX-12WSD -1.07 NA    NA     1.27        2
- 8 BORCS7     GTEX-X261  NA     0.93 NA     0.11        2
- 9 C16orf46   GTEX-ZEX8  -0.95 NA    NA     0.21        2
-10 C4orf19    GTEX-ZVT3  -0.88 NA    NA     0.82        2
-# ℹ 122 more rows
+filter(gtex, Gene %in% c(ZZZ3,A2ML1)) # equivalent to filter(gtex, Gene==ZZZ3 | Gene==A2ML1)
+Error in `filter()`:
+ℹ In argument: `Gene %in% c(ZZZ3, A2ML1)`.
+Caused by error:
+! object 'ZZZ3' not found
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
@@ -308,29 +270,23 @@ Negation (NOT)
 
 ```r
 filter(gtex, !(Gene=="A2ML1"))
-# A tibble: 389,844 × 7
-   Gene    Ind        Blood Heart  Lung Liver NTissues
-   <chr>   <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 A3GALT2 GTEX-11DXZ -0.48 -1     1.83 -0.4         4
- 2 A3GALT2 GTEX-11GSP -0.39  2.09  0.88 -0.78        4
- 3 A3GALT2 GTEX-11NUK -0.36 -0.27 NA     0.2         3
- 4 A3GALT2 GTEX-11NV4 -0.77 -0.08  0.13  0.06        4
- 5 A3GALT2 GTEX-11TT1 -1.4   1.29  1.45  1.57        4
- 6 A3GALT2 GTEX-11TUW  0.15 -3.41  0.96 -0.83        4
- 7 A3GALT2 GTEX-11ZUS -0.03 -0.32  0.25 -0.73        4
- 8 A3GALT2 GTEX-11ZVC -0.21 -0.75  0.59 -0.66        4
- 9 A3GALT2 GTEX-1212Z  0.36 -0.12  0.78  1.5         4
-10 A3GALT2 GTEX-12696 -0.25 -0.31 -0.03  2.62        4
+# A tibble: 389,844 × 6
+   Gene    Ind        Blood Heart  Lung Liver
+   <chr>   <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A3GALT2 GTEX-11DXZ -0.48 -1     1.83 -0.4 
+ 2 A3GALT2 GTEX-11GSP -0.39  2.09  0.88 -0.78
+ 3 A3GALT2 GTEX-11NUK -0.36 -0.27 NA     0.2 
+ 4 A3GALT2 GTEX-11NV4 -0.77 -0.08  0.13  0.06
+ 5 A3GALT2 GTEX-11TT1 -1.4   1.29  1.45  1.57
+ 6 A3GALT2 GTEX-11TUW  0.15 -3.41  0.96 -0.83
+ 7 A3GALT2 GTEX-11ZUS -0.03 -0.32  0.25 -0.73
+ 8 A3GALT2 GTEX-11ZVC -0.21 -0.75  0.59 -0.66
+ 9 A3GALT2 GTEX-1212Z  0.36 -0.12  0.78  1.5 
+10 A3GALT2 GTEX-12696 -0.25 -0.31 -0.03  2.62
 # ℹ 389,834 more rows
 ```
 - The exclamation point ` ! ` means "NOT", which negates the logical condition
 - sometimes it's easier to say what you *don't* want!
-
-Exercise: conjunctions
-==========================================================
-type: prompt
-
-- Filter the GTEX data to keep just the rows corresponding to all genes except CTLA4 and CTDP1 where blood expression is positive.
 
 Exercise: computed conditions
 ==========================================================
@@ -338,37 +294,17 @@ type: prompt
 
 - Filter the GTEX data to keep just the rows where the product of Blood and Heart expression is between 0 and 1.
 
+Exercise: conjunctions
+==========================================================
+type: prompt
+
+Excluding the gene `LAMP3`, does the individual `GTEX-11TT1` have any genes with expression level greater than 4 in their blood?
+
 Exercise: getting rid of NAs
 ==========================================================
 type: prompt
 
 - Filter out any rows where the value for `Heart` is missing (value is `NA`) 
-
-Exercise: getting rid of NAs
-==========================================================
-type: prompt
-
-- Filter out any rows where the value for `Heart` is missing (value is `NA`) 
-
-
-```r
-filter(gtex, !is.na(Heart))
-# A tibble: 383,941 × 7
-   Gene  Ind        Blood Heart  Lung Liver NTissues
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
- 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
- 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
- 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4
- 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4
- 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4
- 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06        4
- 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75        4
- 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48        4
-10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72        4
-# ℹ 383,931 more rows
-```
-
 
 Sampling rows
 ==========================================================
@@ -377,14 +313,14 @@ Sampling rows
 
 ```r
 slice_sample(gtex, n=5)
-# A tibble: 5 × 7
-  Gene   Ind        Blood Heart  Lung Liver NTissues
-  <chr>  <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 FAM81A GTEX-YEC4  -0.24  0.35  0.12 -0.28        4
-2 CYB561 GTEX-ZAB4   2.32 -0.78 -0.83  0.99        4
-3 PDZD9  GTEX-WY7C   0.77 -0.9   0.76 -0.63        4
-4 CNOT9  GTEX-14PJO  0    -1.13 -0.48 -1.24        4
-5 SERP2  GTEX-WY7C  -0.03  0.29 -1.06 -0.9         4
+# A tibble: 5 × 6
+  Gene           Ind        Blood Heart  Lung Liver
+  <chr>          <chr>      <dbl> <dbl> <dbl> <dbl>
+1 RP11-1348G14.5 GTEX-X261  -0.63  0.1  -0.96  0.82
+2 PLD1           GTEX-1KANB  1.56  1.11  0.01 -0.07
+3 DMTF1          GTEX-UPK5   0.56  0.77  0.41  1.42
+4 AL133243.1     GTEX-ZF2S   0    -1.08 -2.77  0.62
+5 RP11-131M11.2  GTEX-12WSI -1.19 -0.23  1.02  1.12
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -398,12 +334,12 @@ Filtering by row number
 
 ```r
 filter(gtex, row_number()<=3)
-# A tibble: 3 × 7
-  Gene  Ind        Blood Heart  Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
-3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
+# A tibble: 3 × 6
+  Gene  Ind        Blood Heart  Lung Liver
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13
 ```
 
 Sort rows by a column with arrange()
@@ -423,19 +359,19 @@ Arrange rows with arrange()
 
 ```r
 arrange(gtex, Blood)
-# A tibble: 389,922 × 7
-   Gene        Ind        Blood  Heart   Lung Liver NTissues
-   <chr>       <chr>      <dbl>  <dbl>  <dbl> <dbl>    <dbl>
- 1 HBA2        GTEX-11DXZ -9.44  -1.52  -1.44 -2.15        4
- 2 MTATP6P1    GTEX-1KD5A -9.18 -10.1  -10.3  -9.52        4
- 3 RP11-46D6.1 GTEX-14E1K -7.83  -3.94  -5.22 -4.49        4
- 4 CYTH3       GTEX-11NV4 -6.63  -0.6   -0.37 -1.32        4
- 5 TRG-AS1     GTEX-11NV4 -6.47   2.39  -0.6  -0.22        4
- 6 SMG1P1      GTEX-11ZUS -6.26  -1.68  -1.41 -0.31        4
- 7 ZBTB10      GTEX-VUSG  -6.13   0.77   0.51 -0.67        4
- 8 RPS29       GTEX-1B8L1 -5.84  -0.8   -0.46 -0.17        4
- 9 GHITM       GTEX-WK11  -5.7   -7.24  -7.37 -4.06        4
-10 ZNF2        GTEX-VUSG  -5.62   1.52   0.61  0.13        4
+# A tibble: 389,922 × 6
+   Gene        Ind        Blood  Heart   Lung Liver
+   <chr>       <chr>      <dbl>  <dbl>  <dbl> <dbl>
+ 1 HBA2        GTEX-11DXZ -9.44  -1.52  -1.44 -2.15
+ 2 MTATP6P1    GTEX-1KD5A -9.18 -10.1  -10.3  -9.52
+ 3 RP11-46D6.1 GTEX-14E1K -7.83  -3.94  -5.22 -4.49
+ 4 CYTH3       GTEX-11NV4 -6.63  -0.6   -0.37 -1.32
+ 5 TRG-AS1     GTEX-11NV4 -6.47   2.39  -0.6  -0.22
+ 6 SMG1P1      GTEX-11ZUS -6.26  -1.68  -1.41 -0.31
+ 7 ZBTB10      GTEX-VUSG  -6.13   0.77   0.51 -0.67
+ 8 RPS29       GTEX-1B8L1 -5.84  -0.8   -0.46 -0.17
+ 9 GHITM       GTEX-WK11  -5.7   -7.24  -7.37 -4.06
+10 ZNF2        GTEX-VUSG  -5.62   1.52   0.61  0.13
 # ℹ 389,912 more rows
 ```
 
@@ -445,20 +381,20 @@ Arrange can sort by more than one column
 
 
 ```r
-arrange(gtex, NTissues, Blood)
-# A tibble: 389,922 × 7
-   Gene       Ind        Blood Heart  Lung Liver NTissues
-   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 HEATR1     GTEX-1EWIQ -1.63  NA      NA  0.49        2
- 2 FOXO1      GTEX-1BAJH -1.58  NA      NA -0.25        2
- 3 UCN        GTEX-12WSI -1.57  NA      NA -0.48        2
- 4 GPR171     GTEX-132NY -1.53  NA      NA -1.03        2
- 5 UCN        GTEX-WFON  -1.46  NA      NA -0.15        2
- 6 KIAA1614   GTEX-12WSI -1.35  NA      NA -0.46        2
- 7 ENTPD1-AS1 GTEX-11NUK -1.28  NA      NA -0.54        2
- 8 TOP3B      GTEX-1A32A -1.28  NA      NA -0.76        2
- 9 AOAH       GTEX-11GSP -1.27  NA      NA  0.41        2
-10 PRRX2      GTEX-1A8FM -1.13  -1.2    NA NA           2
+arrange(gtex, Gene, Blood)
+# A tibble: 389,922 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-1B8L1 -1.4   0.37 -1.05  0.07
+ 2 A2ML1 GTEX-ZVT3  -1.35  1.01  2.91 -0.28
+ 3 A2ML1 GTEX-1AX9I -1.29 -0.19 -0.41 -0.78
+ 4 A2ML1 GTEX-1A32A -1.16  0.44 -0.41 -0.39
+ 5 A2ML1 GTEX-1GN73 -1.13 -0.05 -0.21 -0.82
+ 6 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06
+ 7 A2ML1 GTEX-18A7A -1.01 -0.74 -0.72 -0.76
+ 8 A2ML1 GTEX-17EVP -1    -0.18 -0.2  -0.95
+ 9 A2ML1 GTEX-U8XE  -0.88 -0.91 NA    -0.86
+10 A2ML1 GTEX-131YS -0.78 NA     0.17 -1.5 
 # ℹ 389,912 more rows
 ```
 
@@ -469,19 +405,19 @@ Use the desc function to arrange by descending values
 
 ```r
 arrange(gtex, desc(Blood))
-# A tibble: 389,922 × 7
-   Gene       Ind        Blood Heart  Lung Liver NTissues
-   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 REN        GTEX-U8XE   18.9 -0.57 NA     0.09        3
- 2 KLK3       GTEX-147F4  15.7 -0.74 -0.44 -0.02        4
- 3 DNASE2B    GTEX-12696  14.4 -0.82 -0.92  0.35        4
- 4 GAPDHP33   GTEX-UPK5   13.8  1.52 -1.48 -1.84        4
- 5 DCSTAMP    GTEX-12696  13.6 NA    -0.57 -0.91        3
- 6 AC012358.7 GTEX-VUSG   13.6 -1.43  1.22 -0.39        4
- 7 KCNT1      GTEX-1KANB  13.5  3.14  0.62 -0.37        4
- 8 FFAR4      GTEX-12696  12.9 -0.96 -0.67  0.18        4
- 9 NAPSA      GTEX-1CB4J  12.3 -0.29 -0.44 -0.14        4
-10 DIAPH2-AS1 GTEX-VUSG   12.2 -0.33  1.18  0.67        4
+# A tibble: 389,922 × 6
+   Gene       Ind        Blood Heart  Lung Liver
+   <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 REN        GTEX-U8XE   18.9 -0.57 NA     0.09
+ 2 KLK3       GTEX-147F4  15.7 -0.74 -0.44 -0.02
+ 3 DNASE2B    GTEX-12696  14.4 -0.82 -0.92  0.35
+ 4 GAPDHP33   GTEX-UPK5   13.8  1.52 -1.48 -1.84
+ 5 DCSTAMP    GTEX-12696  13.6 NA    -0.57 -0.91
+ 6 AC012358.7 GTEX-VUSG   13.6 -1.43  1.22 -0.39
+ 7 KCNT1      GTEX-1KANB  13.5  3.14  0.62 -0.37
+ 8 FFAR4      GTEX-12696  12.9 -0.96 -0.67  0.18
+ 9 NAPSA      GTEX-1CB4J  12.3 -0.29 -0.44 -0.14
+10 DIAPH2-AS1 GTEX-VUSG   12.2 -0.33  1.18  0.67
 # ℹ 389,912 more rows
 ```
 
@@ -500,28 +436,28 @@ Use `arrange()` and `filter()` to get the data for the 5 rows with the highest e
 
 ```r
 filter(arrange(gtex, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
-# A tibble: 5 × 7
-  Gene     Ind        Blood Heart  Lung Liver NTissues
-  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09        3
-2 KLK3     GTEX-147F4  15.7 -0.74 -0.44 -0.02        4
-3 DNASE2B  GTEX-12696  14.4 -0.82 -0.92  0.35        4
-4 GAPDHP33 GTEX-UPK5   13.8  1.52 -1.48 -1.84        4
-5 DCSTAMP  GTEX-12696  13.6 NA    -0.57 -0.91        3
+# A tibble: 5 × 6
+  Gene     Ind        Blood Heart  Lung Liver
+  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>
+1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09
+2 KLK3     GTEX-147F4  15.7 -0.74 -0.44 -0.02
+3 DNASE2B  GTEX-12696  14.4 -0.82 -0.92  0.35
+4 GAPDHP33 GTEX-UPK5   13.8  1.52 -1.48 -1.84
+5 DCSTAMP  GTEX-12696  13.6 NA    -0.57 -0.91
 ```
 or
 
 ```r
 gtex_by_blood = arrange(gtex, desc(Blood)) # using a temporary variable
 filter(gtex_by_blood, row_number()<=5)
-# A tibble: 5 × 7
-  Gene     Ind        Blood Heart  Lung Liver NTissues
-  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09        3
-2 KLK3     GTEX-147F4  15.7 -0.74 -0.44 -0.02        4
-3 DNASE2B  GTEX-12696  14.4 -0.82 -0.92  0.35        4
-4 GAPDHP33 GTEX-UPK5   13.8  1.52 -1.48 -1.84        4
-5 DCSTAMP  GTEX-12696  13.6 NA    -0.57 -0.91        3
+# A tibble: 5 × 6
+  Gene     Ind        Blood Heart  Lung Liver
+  <chr>    <chr>      <dbl> <dbl> <dbl> <dbl>
+1 REN      GTEX-U8XE   18.9 -0.57 NA     0.09
+2 KLK3     GTEX-147F4  15.7 -0.74 -0.44 -0.02
+3 DNASE2B  GTEX-12696  14.4 -0.82 -0.92  0.35
+4 GAPDHP33 GTEX-UPK5   13.8  1.52 -1.48 -1.84
+5 DCSTAMP  GTEX-12696  13.6 NA    -0.57 -0.91
 ```
 
 - what happens if we reverse the order in which we did `filter` and `arrange`? Does it still work?
@@ -589,19 +525,19 @@ select(gtex, starts_with("L"))
 
 ```r
 select(gtex, contains("N"))
-# A tibble: 389,922 × 4
-   Gene  Ind         Lung NTissues
-   <chr> <chr>      <dbl>    <dbl>
- 1 A2ML1 GTEX-11DXZ NA           3
- 2 A2ML1 GTEX-11GSP  0.76        4
- 3 A2ML1 GTEX-11NUK -0.26        4
- 4 A2ML1 GTEX-11NV4 -0.42        4
- 5 A2ML1 GTEX-11TT1  0.59        4
- 6 A2ML1 GTEX-11TUW  0.29        4
- 7 A2ML1 GTEX-11ZUS  0.67        4
- 8 A2ML1 GTEX-11ZVC  0.13        4
- 9 A2ML1 GTEX-1212Z  0.1         4
-10 A2ML1 GTEX-12696  0.96        4
+# A tibble: 389,922 × 3
+   Gene  Ind         Lung
+   <chr> <chr>      <dbl>
+ 1 A2ML1 GTEX-11DXZ NA   
+ 2 A2ML1 GTEX-11GSP  0.76
+ 3 A2ML1 GTEX-11NUK -0.26
+ 4 A2ML1 GTEX-11NV4 -0.42
+ 5 A2ML1 GTEX-11TT1  0.59
+ 6 A2ML1 GTEX-11TUW  0.29
+ 7 A2ML1 GTEX-11ZUS  0.67
+ 8 A2ML1 GTEX-11ZVC  0.13
+ 9 A2ML1 GTEX-1212Z  0.1 
+10 A2ML1 GTEX-12696  0.96
 # ℹ 389,912 more rows
 ```
 - The quotes around the letter `"N"` make it a string. If we did not do this, `R` would think it was looking for a variable called `N` and not just the plain letter.
@@ -613,19 +549,19 @@ select() subsets columns by name
 
 ```r
 select(gtex, -starts_with("L"), -Ind)
-# A tibble: 389,922 × 4
-   Gene  Blood Heart NTissues
-   <chr> <dbl> <dbl>    <dbl>
- 1 A2ML1 -0.14 -1.08        3
- 2 A2ML1 -0.5   0.53        4
- 3 A2ML1 -0.08 -0.4         4
- 4 A2ML1 -0.37  0.11        4
- 5 A2ML1  0.3  -1.11        4
- 6 A2ML1  0.02 -0.47        4
- 7 A2ML1 -1.07 -0.41        4
- 8 A2ML1 -0.27 -0.51        4
- 9 A2ML1 -0.3   0.53        4
-10 A2ML1 -0.11  0.24        4
+# A tibble: 389,922 × 3
+   Gene  Blood Heart
+   <chr> <dbl> <dbl>
+ 1 A2ML1 -0.14 -1.08
+ 2 A2ML1 -0.5   0.53
+ 3 A2ML1 -0.08 -0.4 
+ 4 A2ML1 -0.37  0.11
+ 5 A2ML1  0.3  -1.11
+ 6 A2ML1  0.02 -0.47
+ 7 A2ML1 -1.07 -0.41
+ 8 A2ML1 -0.27 -0.51
+ 9 A2ML1 -0.3   0.53
+10 A2ML1 -0.11  0.24
 # ℹ 389,912 more rows
 ```
 
@@ -636,19 +572,19 @@ select(gtex, -starts_with("L"), -Ind)
 
 ```r
 select(gtex, where(is.numeric))
-# A tibble: 389,922 × 5
-   Blood Heart  Lung Liver NTissues
-   <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 -0.14 -1.08 NA    -0.66        3
- 2 -0.5   0.53  0.76 -0.1         4
- 3 -0.08 -0.4  -0.26 -0.13        4
- 4 -0.37  0.11 -0.42 -0.61        4
- 5  0.3  -1.11  0.59 -0.12        4
- 6  0.02 -0.47  0.29 -0.66        4
- 7 -1.07 -0.41  0.67  0.06        4
- 8 -0.27 -0.51  0.13 -0.75        4
- 9 -0.3   0.53  0.1  -0.48        4
-10 -0.11  0.24  0.96  0.72        4
+# A tibble: 389,922 × 4
+   Blood Heart  Lung Liver
+   <dbl> <dbl> <dbl> <dbl>
+ 1 -0.14 -1.08 NA    -0.66
+ 2 -0.5   0.53  0.76 -0.1 
+ 3 -0.08 -0.4  -0.26 -0.13
+ 4 -0.37  0.11 -0.42 -0.61
+ 5  0.3  -1.11  0.59 -0.12
+ 6  0.02 -0.47  0.29 -0.66
+ 7 -1.07 -0.41  0.67  0.06
+ 8 -0.27 -0.51  0.13 -0.75
+ 9 -0.3   0.53  0.1  -0.48
+10 -0.11  0.24  0.96  0.72
 # ℹ 389,912 more rows
 ```
 
@@ -710,26 +646,26 @@ Rename column names with rename()
 - `select()` can be used to rename variables, but it drops all variables not selected
 
 ```r
-select(gtex, number_tissues = NTissues)
+select(gtex, individual = Ind)
 # A tibble: 389,922 × 1
-   number_tissues
-            <dbl>
- 1              3
- 2              4
- 3              4
+   individual
+   <chr>     
+ 1 GTEX-11DXZ
+ 2 GTEX-11GSP
+ 3 GTEX-11NUK
 ...
 ```
 
 - `rename()` is better suited for this because it keeps all the columns
 
 ```r
-rename(gtex, number_tissues = NTissues)
-# A tibble: 389,922 × 7
-   Gene  Ind        Blood Heart  Lung Liver number_tissues
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>          <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66              3
- 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1               4
- 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13              4
+rename(gtex, individual = Ind)
+# A tibble: 389,922 × 6
+   Gene  individual Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
+ 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13
 ...
 ```
 
@@ -753,11 +689,11 @@ Add new variables with mutate()
 
 ```r
 mutate(gtex, abs_blood = abs(Blood))
-# A tibble: 389,922 × 8
-   Gene  Ind        Blood Heart  Lung Liver NTissues abs_blood
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3      0.14
- 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4      0.5 
+# A tibble: 389,922 × 7
+   Gene  Ind        Blood Heart  Lung Liver abs_blood
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>     <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66      0.14
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1       0.5 
 ...
 ```
 - This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
@@ -767,11 +703,11 @@ mutate(gtex, abs_blood = abs(Blood))
 
 ```r
 mutate(gtex, Blood = Blood *1000)
-# A tibble: 389,922 × 7
-   Gene  Ind        Blood Heart  Lung Liver NTissues
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
- 1 A2ML1 GTEX-11DXZ  -140 -1.08 NA    -0.66        3
- 2 A2ML1 GTEX-11GSP  -500  0.53  0.76 -0.1         4
+# A tibble: 389,922 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-11DXZ  -140 -1.08 NA    -0.66
+ 2 A2ML1 GTEX-11GSP  -500  0.53  0.76 -0.1 
 ...
 ```
 
@@ -786,21 +722,20 @@ mutate(gtex, # the newlines make it more readable
       abs_heart = abs(Heart),
       blood_heart_dif = abs_blood - abs_heart
 )
-# A tibble: 389,922 × 10
-   Gene  Ind        Blood Heart  Lung Liver NTissues abs_blood abs_heart
-   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>     <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3      0.14      1.08
- 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4      0.5       0.53
- 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4      0.08      0.4 
- 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4      0.37      0.11
- 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4      0.3       1.11
- 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66        4      0.02      0.47
- 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06        4      1.07      0.41
- 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75        4      0.27      0.51
- 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48        4      0.3       0.53
-10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72        4      0.11      0.24
+# A tibble: 389,922 × 9
+   Gene  Ind        Blood Heart  Lung Liver abs_blood abs_heart blood_heart_dif
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>     <dbl>     <dbl>           <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66      0.14      1.08         -0.94  
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1       0.5       0.53         -0.0300
+ 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13      0.08      0.4          -0.32  
+ 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61      0.37      0.11          0.26  
+ 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12      0.3       1.11         -0.81  
+ 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66      0.02      0.47         -0.45  
+ 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06      1.07      0.41          0.66  
+ 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75      0.27      0.51         -0.24  
+ 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48      0.3       0.53         -0.23  
+10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72      0.11      0.24         -0.13  
 # ℹ 389,912 more rows
-# ℹ 1 more variable: blood_heart_dif <dbl>
 ```
 - Note that we have also used two columns simultaneously (`Blood` and `Heart`) to create a new column)
 
@@ -849,7 +784,7 @@ type:prompt
 
 Filter `gtex` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
-![plot of chunk unnamed-chunk-41](3-data-transformation-figure/unnamed-chunk-41-1.png)
+![plot of chunk unnamed-chunk-37](3-data-transformation-figure/unnamed-chunk-37-1.png)
 
 
 Exercise: putting it together
