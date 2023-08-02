@@ -105,6 +105,12 @@ type: section
 Filter rows with filter()
 ========================================================
 - `filter()` lets you filter out rows of a dataset that meet a certain condition
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-filter.png)
+
+Filter rows with filter()
+========================================================
+- `filter()` lets you filter out rows of a dataset that meet a certain condition
 - It takes two arguments: the dataset and the condition
 
 ```{r, message=F}
@@ -121,22 +127,9 @@ Comparison operators
 c(1,5,-22,4) > 0
 ```
 
-Aside: computers are not perfect, so be careful with checking equality
-===
-```{r}
-sqrt(2) ^ 2 == 2
-1 / 49 * 49 == 1
-```
-
-You can use `near()` to check that two numbers are the same (up to "machine precision")
-```{r}
-near(sqrt(2) ^ 2,  2)
-near(1 / 49 * 49, 1)
-```
-
 Comparing to NA
 ===
-- The other "gotcha" is that  `==`  cannot be used to compare to `NA`:
+- A common "gotcha" is that  `==`  cannot be used to compare to `NA`:
 ```{r}
 x = NA
 x == NA
@@ -148,7 +141,7 @@ x = NA
 is.na(x)
 ```
 
-Filtering on
+Filtering on computed values
 ========================================================
 - the condition can contain computed values
 
@@ -210,7 +203,7 @@ Exercise
 ========================================================
 type:prompt
 
-- Without using the internet, think of how you can use `filter` to create a dataset
+- Without using the internet, think of how you can use `filter` multiple times to create a dataset
 where blood expression is positive (>0) **and** heart expression is negative (<0)
 
 - Using any resources you like, figure out how to use `filter` to create a dataset
@@ -244,7 +237,7 @@ filter(gtex, NTissues %in% c(1,2)) # equivalent to filter(gtex, NTissues==1 | NT
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
-Logical conjunctions (NOT)
+Negation (NOT)
 =========================================================
 ```{r}
 filter(gtex, !(Gene=="A2ML1"))
@@ -308,6 +301,12 @@ type:section
 Arrange rows with arrange()
 ===========================================================
 - `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
+
+![](https://rstudio-education.github.io/tidyverse-cookbook/images/dplyr-arrange.png)
+
+Arrange rows with arrange()
+===========================================================
+- `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
 - Again, the first argument is the data frame and the other arguments tell the function what to do with it
 ```{r}
 arrange(gtex, Blood)
@@ -358,10 +357,18 @@ type:section
 
 Select columns with select()
 =========================================================
+- The select function will return a subset of the tibble, using only the requested columns in the order specified.
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-select.png)
+
+Select columns with select()
+=========================================================
+- The select function will return a subset of the tibble, using only the requested columns in the order specified.
+- first argument is a data frame, then columns you want to select
+
 ```{r}
 select(gtex, Gene, Ind, Blood)
 ```
-- The select function will return a subset of the tibble, using only the requested columns in the order specified.
 
 Select columns with select()
 =========================================================
@@ -412,13 +419,20 @@ type:prompt
 pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
+
+![](https://www.gastonsanchez.com/intro2cwd/images/eda/dplyr-extract-column.svg)
+
+```{r max.lines = 3}
+pull(gtex, Gene)
+```
+
+***
+
 ```{r}
 select(gtex, Gene)
 ```
 
-```{r max.lines = 5}
-pull(gtex, Gene)
-```
+
 
 
 Rename column names with rename()
@@ -442,12 +456,20 @@ type:section
 
 Add new variables with mutate()
 ================================================================
+- `muatate` creates new columns
+
+![](https://ohi-science.org/data-science-training/img/rstudio-cheatsheet-mutate.png)
+
+Add new variables with mutate()
+================================================================
+- `muatate` creates new columns
+- first argument is a dataframe, second specifies what you want the new columns to be
 ```{r, max.lines = 5}
 mutate(gtex, abs_blood = abs(Blood))
 ```
 - This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
 - The thing on the left of the `=` is a new name that you make up which you would like the new column to be called
-- The expresssion on the right of the `=` defines what will go into the new column
+- The expression on the right of the `=` defines what will go into the new column
 - **Warning!** If the new variable name already exists, `mutate()` will overwrite the existing one
 ```{r, max.lines = 5}
 mutate(gtex, Blood = Blood *1000)

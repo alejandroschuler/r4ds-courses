@@ -78,6 +78,12 @@ type: section
 Filter rows with filter()
 ========================================================
 - `filter()` lets you filter out rows of a dataset that meet a certain condition
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-filter.png)
+
+Filter rows with filter()
+========================================================
+- `filter()` lets you filter out rows of a dataset that meet a certain condition
 - It takes two arguments: the dataset and the condition
 
 
@@ -112,28 +118,9 @@ c(1,5,-22,4) > 0
 [1]  TRUE  TRUE FALSE  TRUE
 ```
 
-Aside: computers are not perfect, so be careful with checking equality
-===
-
-```r
-sqrt(2) ^ 2 == 2
-[1] FALSE
-1 / 49 * 49 == 1
-[1] FALSE
-```
-
-You can use `near()` to check that two numbers are the same (up to "machine precision")
-
-```r
-near(sqrt(2) ^ 2,  2)
-[1] TRUE
-near(1 / 49 * 49, 1)
-[1] TRUE
-```
-
 Comparing to NA
 ===
-- The other "gotcha" is that  `==`  cannot be used to compare to `NA`:
+- A common "gotcha" is that  `==`  cannot be used to compare to `NA`:
 
 ```r
 x = NA
@@ -149,7 +136,7 @@ is.na(x)
 [1] TRUE
 ```
 
-Filtering on
+Filtering on computed values
 ========================================================
 - the condition can contain computed values
 
@@ -238,7 +225,7 @@ Exercise
 ========================================================
 type:prompt
 
-- Without using the internet, think of how you can use `filter` to create a dataset
+- Without using the internet, think of how you can use `filter` multiple times to create a dataset
 where blood expression is positive (>0) **and** heart expression is negative (<0)
 
 - Using any resources you like, figure out how to use `filter` to create a dataset
@@ -316,7 +303,7 @@ filter(gtex, NTissues %in% c(1,2)) # equivalent to filter(gtex, NTissues==1 | NT
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
-Logical conjunctions (NOT)
+Negation (NOT)
 =========================================================
 
 ```r
@@ -391,13 +378,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 7
-  Gene             Ind        Blood Heart  Lung Liver NTissues
-  <chr>            <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 AC007193.9       GTEX-X261   1.68  1.3  -0.6  -0.52        4
-2 APOL6            GTEX-ZPU1  -0.84 -1.12 -1.09 -0.59        4
-3 AL022341.3       GTEX-11NV4  0.03  0.11  0.27 -1.03        4
-4 FAM20C           GTEX-1BAJH  0.71 -0.69 -0.21  0.9         4
-5 XXbac-B444P24.13 GTEX-147JS  2.08  3.19 -0.78 -0.97        4
+  Gene   Ind        Blood Heart  Lung Liver NTissues
+  <chr>  <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 FAM81A GTEX-YEC4  -0.24  0.35  0.12 -0.28        4
+2 CYB561 GTEX-ZAB4   2.32 -0.78 -0.83  0.99        4
+3 PDZD9  GTEX-WY7C   0.77 -0.9   0.76 -0.63        4
+4 CNOT9  GTEX-14PJO  0    -1.13 -0.48 -1.24        4
+5 SERP2  GTEX-WY7C  -0.03  0.29 -1.06 -0.9         4
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -422,6 +409,12 @@ filter(gtex, row_number()<=3)
 Sort rows by a column with arrange()
 ===
 type:section
+
+Arrange rows with arrange()
+===========================================================
+- `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
+
+![](https://rstudio-education.github.io/tidyverse-cookbook/images/dplyr-arrange.png)
 
 Arrange rows with arrange()
 ===========================================================
@@ -539,6 +532,15 @@ type:section
 
 Select columns with select()
 =========================================================
+- The select function will return a subset of the tibble, using only the requested columns in the order specified.
+
+![](http://ohi-science.org/data-science-training/img/rstudio-cheatsheet-select.png)
+
+Select columns with select()
+=========================================================
+- The select function will return a subset of the tibble, using only the requested columns in the order specified.
+- first argument is a data frame, then columns you want to select
+
 
 ```r
 select(gtex, Gene, Ind, Blood)
@@ -557,7 +559,6 @@ select(gtex, Gene, Ind, Blood)
 10 A2ML1 GTEX-12696 -0.11
 # ℹ 389,912 more rows
 ```
-- The select function will return a subset of the tibble, using only the requested columns in the order specified.
 
 Select columns with select()
 =========================================================
@@ -669,6 +670,20 @@ pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
 
+![](https://www.gastonsanchez.com/intro2cwd/images/eda/dplyr-extract-column.svg)
+
+
+```r
+pull(gtex, Gene)
+    [1] "A2ML1"              "A2ML1"              "A2ML1"             
+    [4] "A2ML1"              "A2ML1"              "A2ML1"             
+    [7] "A2ML1"              "A2ML1"              "A2ML1"             
+...
+```
+
+***
+
+
 ```r
 select(gtex, Gene)
 # A tibble: 389,922 × 1
@@ -688,15 +703,6 @@ select(gtex, Gene)
 ```
 
 
-```r
-pull(gtex, Gene)
-    [1] "A2ML1"              "A2ML1"              "A2ML1"             
-    [4] "A2ML1"              "A2ML1"              "A2ML1"             
-    [7] "A2ML1"              "A2ML1"              "A2ML1"             
-   [10] "A2ML1"              "A2ML1"              "A2ML1"             
-   [13] "A2ML1"              "A2ML1"              "A2ML1"             
-...
-```
 
 
 Rename column names with rename()
@@ -736,6 +742,14 @@ type:section
 
 Add new variables with mutate()
 ================================================================
+- `muatate` creates new columns
+
+![](https://ohi-science.org/data-science-training/img/rstudio-cheatsheet-mutate.png)
+
+Add new variables with mutate()
+================================================================
+- `muatate` creates new columns
+- first argument is a dataframe, second specifies what you want the new columns to be
 
 ```r
 mutate(gtex, abs_blood = abs(Blood))
@@ -748,7 +762,7 @@ mutate(gtex, abs_blood = abs(Blood))
 ```
 - This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
 - The thing on the left of the `=` is a new name that you make up which you would like the new column to be called
-- The expresssion on the right of the `=` defines what will go into the new column
+- The expression on the right of the `=` defines what will go into the new column
 - **Warning!** If the new variable name already exists, `mutate()` will overwrite the existing one
 
 ```r
@@ -835,7 +849,7 @@ type:prompt
 
 Filter `gtex` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
 
-![plot of chunk unnamed-chunk-43](3-data-transformation-figure/unnamed-chunk-43-1.png)
+![plot of chunk unnamed-chunk-41](3-data-transformation-figure/unnamed-chunk-41-1.png)
 
 
 Exercise: putting it together
