@@ -53,29 +53,35 @@ names to things.
 genes = read_csv("https://tinyurl.com/cjkuecnc")
 ```
 - This code *assigns* the result of running `read_csv("https://tinyurl.com/cjkuecnc")` to the name `gene`
+
+***
+
 - You can do this with any values and/or functions
 
 ```r
-x = (13 + 7)/2
+x = 1
 ```
 - R prints no result from this assignment, but what you entered
 causes a side effect: R has stored the association between
 x and the result of this expression (look at the Environment pane.)
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_gets_1.png?raw=true)
 
 Using the value of a variable
 ========================================================
 
 ```r
 x
-[1] 10
+[1] 1
 x / 5
-[1] 2
+[1] 0.2
 ```
 - When R sees the name of a variable, it uses the stored value of
 that variable in the calculation.
-- Here R uses the value of x, which is 10.
 - We can break complex calculations into named parts. This is a
 simple, but very useful kind of abstraction.
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_is_1.jpg?raw=true)
 
 Two ways to assign
 ========================================================
@@ -123,19 +129,6 @@ person you will be in six months).
 - ADVANCED: See `?make.names` for the complete rules on
 what can be a name.
 
-Case matters for names in R
-========================================================
-
-```r
-a = 1
-A # this causes an error because A does not have a value
-```
-```
-Error: object 'A' not found
-```
-- R cares about upper and lower case in names.
-- We also see that some error messages in R are a bit obscure.
-
 More about naming
 ========================================================
 There are different conventions for constructing compound names. Warning:
@@ -153,8 +146,19 @@ string-length (hyphen)
 - Note that R itself uses several of these conventions.
 - One of these won't work. Which one and why?
 
-R saves some names for itself
+Naming rules
 ========================================================
+
+```r
+a = 1
+A # this causes an error because A does not have a value
+```
+```
+Error: object 'A' not found
+```
+- R cares about upper and lower case in names.
+- names can't start with numbers
+
 
 ```r
 for = 7 # this causes an error
@@ -191,19 +195,36 @@ Functions and variable assignment
 ========================================================
 
 ```r
-x = 4
-sqrt(x)
-[1] 2
-x
+x = 2
+x^2
 [1] 4
+x
+[1] 2
 ```
+- What do you observe?
 
+Functions and variable assignment
+========================================================
 
 ```r
-y = sqrt(x)
+x = 2
+x^2
+[1] 4
+x
+[1] 2
+```
+- What do you observe?
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_squared.png?raw=true)
+
+Functions and variable assignment
+========================================================
+
+```r
+y = x
 y
 [1] 2
-x = 10
+x = 1
 y
 [1] 2
 ```
@@ -211,26 +232,50 @@ y
 
 Functions and variable assignment
 ========================================================
-- functions generally do not affect the variables you pass to them (`x` remains the same after `sqrt(x)`)
-- Once a variable has been assigned (`y`), it keeps its value until updated, even if you change other variables (`x`) that went into the original assignment of that variable
-
-Arguments by position vs. name
-========================================================
-- Arguments can be specified by position, with one supplied
-argument for each name in the function parameter list, and in the
-same order
 
 ```r
-ggplot(genes) + 
-  geom_point(aes(VAPA, EIF3L))
+y = x
+y
+[1] 1
+x = 10
+y
+[1] 1
 ```
-
-![plot of chunk unnamed-chunk-17](2-r-basics-figure/unnamed-chunk-17-1.png)
+- What do you observe?
 
 ***
 
-- Sometimes, arguments can be supplied by name using the syntax,
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/y_gets_x.png?raw=true)
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_changes.png?raw=true)
+
+Functions and variable assignment
+========================================================
+- functions generally do not affect the variables you pass to them (`x` remains the same after `sqrt(x)`)
+- Once a variable has been assigned (`y`), it keeps its value until updated, even if you change other variables (`x`) that went into the original assignment of that variable
+
+Function arguments
+========================================================
+
+- Functions transform inputs to outputs
+- internally, however, they have an environment just like the one you see in your workspace
+- when you call a function, you tell it how to connect the variables in your environment to the ones it expects to have so that it can do its job
+- the names the function calls these inputs inside itself will be different than what you call them on the outside
+
+```
+aes(x=EIF3L, y=VAPA)
+```
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true)
+
+
+Arguments by name vs. position
+========================================================
+
+
+- Arguments can be supplied **by name** using the syntax
 variable `=` value.
+- you can see the names of the arguments in the help page for each function
 - When using names, the order of the named arguments
 does not matter.
 
@@ -239,7 +284,19 @@ ggplot(data=genes) +
   geom_point(mapping=aes(y=EIF3L, x=VAPA))
 ```
 
-![plot of chunk unnamed-chunk-18](2-r-basics-figure/unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-19](2-r-basics-figure/unnamed-chunk-19-1.png)
+
+***
+
+- If you leave the names off, R defaults to a **positional** order that is specific to each function (e.g. for `aes()`, `x` comes first, then `y`)
+- you can see the default order of the arguments in the help page for each function
+
+```r
+ggplot(genes) + 
+  geom_point(aes(VAPA, EIF3L))
+```
+
+![plot of chunk unnamed-chunk-20](2-r-basics-figure/unnamed-chunk-20-1.png)
 
 Optional arguments
 ===
@@ -278,7 +335,7 @@ type: prompt
 
 I'm trying to generate this plot:
 
-![plot of chunk unnamed-chunk-20](2-r-basics-figure/unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-22](2-r-basics-figure/unnamed-chunk-22-1.png)
 
 ***
 
@@ -290,7 +347,7 @@ ggplot(data=genes) +
   geom_point(aes(VAPA, EIF3L))
 ```
 
-![plot of chunk unnamed-chunk-21](2-r-basics-figure/unnamed-chunk-21-1.png)
+![plot of chunk unnamed-chunk-23](2-r-basics-figure/unnamed-chunk-23-1.png)
 
 What am I doing wrong?
 
@@ -306,7 +363,6 @@ How can you use `read_csv` to only read in the *last* 5 rows of a data frame?
 Vectors
 ========================================================
 type: section
-
 
 Repetitive calculations
 ========================================================
@@ -772,4 +828,4 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-58](2-r-basics-figure/unnamed-chunk-58-1.png)
+![plot of chunk unnamed-chunk-60](2-r-basics-figure/unnamed-chunk-60-1.png)

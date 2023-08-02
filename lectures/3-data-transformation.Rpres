@@ -372,7 +372,9 @@ Exercise: select and filter
 ===
 type:prompt
 
-- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex` dataset.
+A colleague wants to see the blood expression for the gene A2ML1 for each person. Use select and filter to produce a dataframe for her that has just two columns: `individual` and `expression`, where the expression values are the blood expression values for each person for the gene A2ML1.
+
+Before writing any code, break the problem down conceptually into steps. Figure out how to do each step independently before you put them together.
 
 Exercise: select text columns
 ===

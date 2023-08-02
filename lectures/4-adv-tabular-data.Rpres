@@ -41,27 +41,31 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex_data = read_tsv('https://tinyurl.com/mwrvahjz')
+gtex = read_tsv('https://tinyurl.com/mwrvahjz')
 
 # Check number of rows
-nrow(gtex_data)
+nrow(gtex)
 ```
 
-Grouped summaries with summarize()
+Summarize
 ================================================================
 ```{r}
-summarize(gtex_data, tissue_avg=mean(NTissues))
+summarize(gtex, tissue_avg=mean(NTissues))
 ```
 - `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `tissue_avg` that contains the mean of the `NTissues` column
 - As with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
 - `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
-- Summaries are more useful when you apply them to subgoups of the data, which we will soon see how to do.
 
-Grouped summaries with summarize()
+***
+
+![](https://www.sonoshah.com/tutorials/2021-04-07-intro-to-dplyr-tools/summarize1.png)
+![](https://www.sonoshah.com/tutorials/2021-04-07-intro-to-dplyr-tools/summary.png)
+
+Multiple summaries
 ================================================================
 - note that you can also pass in multiple conditions that operate on multiple columns at the same time
 ```{r, tidy=F}
-gtex_data %>% 
+gtex %>% 
 summarize( # newlines not necessary, again just increase clarity
   tissue_avg = mean(NTissues),
   blood_max = max(Blood, na.rm=T),
@@ -69,29 +73,41 @@ summarize( # newlines not necessary, again just increase clarity
 )
 ```
 
-Grouped summaries with summarize()
+Grouped summaries 
 ==================================================================
 - Summaries are more useful when you apply them to subgroups of the data
 
 ```{r, tidy=F, message=F}
-gtex_data %>% 
+gtex %>% 
   group_by(Gene) %>%
   summarize(max_blood = max(Blood))
 ```
 
 
 - `group_by()` is a helper function that "groups" the data according to the unique values in the column(s) it gets passed. 
+
+
+***
+
 - Its output is a grouped data frame that looks the same as the original except for some additional metadata that subsequent functions can use
 - `summarize()` works the same as before, except now it returns as many rows as there are groups in the data
 - The result also always contains colunmns corresponding to the unique values of the grouping variable
 
-Multiple columns can be used to group the data simultaneously
+![](https://www.sonoshah.com/tutorials/2021-04-07-intro-to-dplyr-tools/group_summary.png)
+
+Group on many columns
 ===================================================================
+- can generate new columns (like mutate)
+- can group on multiple columns
 
 ```{r, tidy=F, message=F}
-gtex_data %>% 
-  group_by(Gene,Ind) %>%
-  summarize(max_blood = max(Blood))
+gtex %>% 
+  filter(!is.na(Blood) & !is.na(Lung)) %>%
+  group_by(
+    pos_blood = Blood>0, 
+    pos_lung = Lung>0
+  ) %>%
+  summarize(mean_liver = mean(Liver, na.rm=T))
 ```
 
 - The result has the summary value for each unique combination of the grouping variables
@@ -101,7 +117,7 @@ Computing the number of rows in each group
 - The `n()` function counts the number of rows in each group:
 
 ```{r, tidy=F, message=F}
-gtex_data %>% 
+gtex %>% 
   filter(!is.na(Blood)) %>%
   group_by(Gene) %>%
   summarize(how_many = n())
@@ -109,106 +125,54 @@ gtex_data %>%
 - You can also use `count()`, which is just a shorthand for the same thing
 
 ```{r, tidy=F, message=F, eval=F}
-gtex_data %>% 
+gtex %>% 
   filter(!is.na(Blood)) %>%
   group_by(Gene) %>%
   count()
 ```
 
-Computing the number of distinct elements in a column, per group
-=====================================================================
-- `n_distinct()` counts the number of unique elements in a column
-
-```{r, tidy=F, message=F}
-gtex_data %>% 
-  group_by(Ind) %>%
-  summarize(n_genes = n_distinct(Gene))
-```
-
 
 Exercise: top expression per tissue
 =====================================================================
 type:prompt
 
-- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex_data` dataset?
+- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex` dataset?
 - What about the lowest?
 
-Exercise: top expression per tissue
-=====================================================================
+Exercise: summarize and plot
+===
 type:prompt
 
-- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex_data` dataset?
-- What about the lowest?
+Before continuing, run this code to reformat your data and store it as a new data frame `gtex_tidy` (we'll see how to do this later today):
 
-```{r, tidy=F, message=F}
-gtex_data %>% 
-  group_by(Gene) %>%
-  summarize(
-    max_liver = max(Liver, na.rm=T),
-    min_liver = min(Liver, na.rm=T)
+```{r}
+gtex_tidy = gtex %>%
+  pivot_longer(
+    Blood:Liver, 
+    names_to="tissue",
+    values_to="expression"
   )
 ```
 
-Exercise: summarize and plot
-===
-type:prompt
-
-Recreate this plot. 
+Have a look at the dataframe you created. Use it to recreate this plot:
 
 ```{r, echo=F, message=F, fig.width=15, fig.height=6}
 size_text = 30
-gtex_data %>% 
+gtex_tidy %>% 
   filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
-  group_by(Gene, NTissues) %>%
-  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
+  group_by(Gene, tissue) %>%
+  summarize(max_expression = max(expression ,na.rm=T)) %>% 
 ggplot() +
-  geom_point(aes(y=Gene, x=max_heart), size = 8) + 
-  facet_grid(. ~ NTissues , labeller = label_both) +
+  geom_point(aes(y=Gene, x=max_expression, color=tissue), size = 8) + 
   theme(axis.text = element_text(size = size_text),
         axis.title = element_text(size = size_text),
         legend.text = element_text(size = size_text),
         legend.title = element_text(size = size_text),
-        strip.text = element_text(size = size_text))
+        strip.text = element_text(size = size_text)) +
+  xlab("Maximum expression value across all samples")
 ```
 
 
-Exercise: summarize and plot
-===
-type:prompt
-
-Recreate this plot. 
-
-```{r, echo=F, message=F, fig.width=15, fig.height=6}
-size_text = 30
-gtex_data %>% 
-  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
-  group_by(Gene, NTissues) %>%
-  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
-ggplot() +
-  geom_point(aes(y=Gene, x=max_heart), size = 8) + 
-  facet_grid(. ~ NTissues , labeller = label_both) +
-  theme(axis.text = element_text(size = size_text),
-        axis.title = element_text(size = size_text),
-        legend.text = element_text(size = size_text),
-        legend.title = element_text(size = size_text),
-        strip.text = element_text(size = size_text))
-```
-
-
-```{r, eval=F, tidy=F}
-gtex_data %>% 
-  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) %>%
-  group_by(Gene, NTissues) %>%
-  summarize(max_heart = max(Heart ,na.rm=T)) %>% 
-  
-ggplot() +
-  geom_point(aes(y=Gene, x=max_heart)) + 
-  facet_grid(. ~ NTissues , labeller = label_both)
-```
-
-Grouped mutates and filters
-===
-type:section
 
 Filtering grouped data
 ===
@@ -216,38 +180,46 @@ Filtering grouped data
 - `filter()` is aware of grouping. When used on a grouped dataset, it applies the filtering condition separately in each group
 
 ```{r, tidy=F}
-gtex_data %>% 
-  group_by(Gene) %>%
-  filter(NTissues == max(NTissues))
+gtex %>%
+  select(Ind, Gene, Lung) %>%
+  group_by(Ind) %>%
+  filter(Lung == max(Lung, na.rm=T))
 ```
 
-- Why do we get back multiple rows per `class`?
 - This is an extremely convenient idiom for finding the rows that minimize or maximize a condition
-
-Exercise: Max expression change in blood and lung
-===
-
-Which are the individual pairs that have both the max blood expression change *and* max lung expression change among all individuals with measurements for the same gene?
-
-```{r, tidy=F}
-gtex_data %>% 
-  group_by(Gene) %>%
-  filter(Blood == max(Blood), Lung==max(Lung))
-```
 
 Mutating grouped data
 ===
+```{r, tidy=F, message=F}
+gtex %>%
+  group_by(Gene) %>%
+  mutate(rank = rank(-Blood)) %>%
+  select(Gene, Ind, rank, Blood) %>%
+  filter(rank <= 3) %>%
+  arrange(Gene, rank)
+```
+- when `mutate` is used on a grouped dataset, it applies the mutation separately in each group
+- above we rank each person in terms of their expression value in blood for each gene separately
 
-- `mutate()` is aware of grouping. When used on a grouped dataset, it applies the mutation separately in each group
+
+***
 
 ```{r, tidy=F, message=F}
-gtex_data %>%
-  group_by(Gene) %>%
-  mutate(blood_diff_from_min = Blood - min(Blood)) %>%
-  select(Gene, Ind, Blood, blood_diff_from_min)
+gtex %>%
+  mutate(rank = rank(-Blood)) %>%
+  select(Gene, Ind, rank, Blood) %>%
+  filter(rank <= 3) %>%
+  arrange(Gene, rank)
 ```
 
-- As always, mutate does not change the number of rows in the dataset
+- without the `group_by`, the ranking is done overall across all genes.
+
+Exercise: Max expression blood and lung
+===
+type:prompt
+
+Create a dataset that shows which gene has the lowest expression in each person's heart tissue
+
 
 Tidy data: rearranging a data frame
 ============================================================
@@ -342,13 +314,13 @@ Exercise: cleaning GTEX
 type:prompt
 
 ```{r, message = FALSE, warning = FALSE}
-head(gtex_data, 3L)
+head(gtex, 3L)
 ```
 
 Use the GTEX data to reproduce the following plot:
 
 ```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 6}
-gtex_data %>%
+gtex %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -462,7 +434,7 @@ Use the GTEX data to make the following table:
 
 ```{r, echo = FALSE, message = FALSE}
 print("Number of missing tissues:")
-gtex_data %>%
+gtex %>%
   filter(
     Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
     Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
@@ -491,9 +463,6 @@ incremental: true
 
 
 ```{r, message = FALSE}
-gtex_metadata_link = 
-  "https://tinyurl.com/2hy9awda"
-
 gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
 
 head(gtex_samples, 2L)
@@ -573,6 +542,30 @@ inner_join(x, y, by = join_by(key))
 <img src="https://d33wubrfki0l68.cloudfront.net/3abea0b730526c3f053a3838953c35a0ccbe8980/7f29b/diagrams/join-inner.png">
 </div>
 
+Joins: a simple example
+===
+```{r}
+band_members
+
+band_instruments
+```
+
+***
+
+```{r}
+inner_join(
+  band_instruments, 
+  band_members
+)
+```
+
+```{r}
+full_join(
+  band_instruments, 
+  band_members
+)
+```
+
 Duplicate keys
 ===
 ```{r}
@@ -611,15 +604,15 @@ Specifying the keys
 ===
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
-head(gtex_data, 2)
+head(gtex, 2)
 head(gtex_subjects, 2)
 ```
 ```{r}
-gtex_data %>% 
+gtex %>% 
   inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
   head(5L)
 ```
-Note that the first key (`Ind`) corresponds to the first data frame (`gtex_data`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
+Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
 
 Exercise: join vs. concatenation
 ===
@@ -646,34 +639,13 @@ head(batch_data_year, 2L)
 
 Note that you'll have to join to other data frames the `sample` data frame to put this together.
 
-Other joins
-===
-
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/9c12ca9e12ed26a7c5d2aa08e36d2ac4fb593f1e/79980/diagrams/join-outer.png">
-</div>
-
-***
-
-- A left join keeps all observations in `x`.
-- A right join keeps all observations in `y`.
-- A full join keeps all observations in `x` and `y`.
-
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/aeab386461820b029b7e7606ccff1286f623bae1/ef0d4/diagrams/join-venn.png">
-</div>
-
-- Left join should be your default
-  - it looks up additional information in other tables
-  - preserves all rows in the table you're most interested in
 
 Joining on multiple columns
 ===
 Let's read in some more data
 ```{r, message = FALSE}
 gtex_monthly_tissues = 
-  read_csv("https://tinyurl.com/nze7rz7a") %>%
-  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung"))
+  read_csv("https://tinyurl.com/nze7rz7a")
 head(gtex_monthly_tissues, 2L)
 
 gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
@@ -695,13 +667,13 @@ Joining on multiple columns
 
 This is also possible if the columns have different names:
 ```{r}
-gtex_data_long = gtex_data %>% 
+gtex_long = gtex %>% 
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
-head(gtex_data_long, n = 2L)
+head(gtex_long, n = 2L)
 head(gtex_samples, n = 2L)
 
-gtex_data_long %>% 
+gtex_long %>% 
   inner_join(gtex_samples, join_by(tissue, Ind == subject_id)) %>%
   head(n = 4L)
 ```
@@ -718,5 +690,5 @@ Exercise: Looking for variables related to data missingness
 ====
 type: prompt
 
-It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex_data` to look at the relationship between missing gene values and other variables in the data. 
+It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex` to look at the relationship between missing gene values and other variables in the data. 
 

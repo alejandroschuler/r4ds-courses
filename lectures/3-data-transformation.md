@@ -314,13 +314,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 6
-  Gene           Ind        Blood Heart  Lung Liver
-  <chr>          <chr>      <dbl> <dbl> <dbl> <dbl>
-1 RP11-1348G14.5 GTEX-X261  -0.63  0.1  -0.96  0.82
-2 PLD1           GTEX-1KANB  1.56  1.11  0.01 -0.07
-3 DMTF1          GTEX-UPK5   0.56  0.77  0.41  1.42
-4 AL133243.1     GTEX-ZF2S   0    -1.08 -2.77  0.62
-5 RP11-131M11.2  GTEX-12WSI -1.19 -0.23  1.02  1.12
+  Gene          Ind        Blood Heart  Lung Liver
+  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>
+1 P2RX2         GTEX-1KANB -0.04 -0.08 -0.53 -0.06
+2 SSRP1         GTEX-11NV4  1.7   1.6   0.94 -0.29
+3 ZNF706        GTEX-12696 -1.34 -1.52  0.09  0.94
+4 RP11-284M14.1 GTEX-11ZUS -0.09  0.73 -0.01  0.86
+5 RP4-706A16.3  GTEX-12WSD  1.21  0.37 -2.25 -0.96
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -592,7 +592,9 @@ Exercise: select and filter
 ===
 type:prompt
 
-- Create a one-column dataframe of the heart expression Z-scores (`Heart`) of all individuals with data present (i.e. not `NA`) for gene WDR34 (`Gene`) in the `gtex` dataset.
+A colleague wants to see the blood expression for the gene A2ML1 for each person. Use select and filter to produce a dataframe for her that has just two columns: `individual` and `expression`, where the expression values are the blood expression values for each person for the gene A2ML1.
+
+Before writing any code, break the problem down conceptually into steps. Figure out how to do each step independently before you put them together.
 
 Exercise: select text columns
 ===
