@@ -608,6 +608,7 @@ a_list = list(
 - and then retrieve elements by name or position 
 ```{r}
 a_list$a_string  # returns the element named "thrid_number"
+a_list[['a_string']]
 a_list[[3]] # returns the 3rd element
 a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
 ```
