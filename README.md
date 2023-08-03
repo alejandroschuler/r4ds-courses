@@ -21,7 +21,7 @@ This course is not graded, nor are there any assignments or homework. The lectur
 ### Prerequisites
 No prior experience with R is expected. Those with experience using R will still likely find much of value in this course since it covers a more modern style of R programming that has gained traction in the past decade.
 
-We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: [posit.cloud](posit.cloud). It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
+We will use R through the RStudio interface. The easiest way to access RStudio is through the cloud: [posit.cloud](https://posit.cloud). It's fast and easy- just go the link, click "get started" and create an account. Once you're in, click "new project" near the upper-right and the RStudio interface will open.
 
 Alternatively, you can install R and RStudio on your own computer: 
 [Follow this link](https://cran.rstudio.com/) and click on the appropriate options for your operating system to install R, 
@@ -132,7 +132,7 @@ Programming, like all things, is something you learn by doing. The lectures incl
 - **contributor** (0+): Contributors are responsible for generating ideas and code for the exercise.
 
 ### Textbook
-We will be using parts of the fantastic book [R for Data Science]([http://r4ds.had.co.nz/](https://r4ds.hadley.nz/)) (R4DS:2e) by [Hadley Wickham](http://hadley.nz/), Mine Çetinkaya-Rundel, and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
+We will be using parts of the fantastic book [R for Data Science](https://r4ds.hadley.nz/) (R4DS:2e) by [Hadley Wickham](http://hadley.nz/), Mine Çetinkaya-Rundel, and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
 Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
