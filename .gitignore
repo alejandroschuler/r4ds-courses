@@ -5,3 +5,4 @@ lectures/*.png
 .DS_Store
 .Rhistory
 .DS_Store
+.ipynb_checkpoints
