@@ -68,8 +68,8 @@ By the end of the course, you will be able to:
         <ul>
             <li>save values to variables</li>
             <li>find and call R functions with multiple arguments by position and name</li>
-            <li>recognize vectors and vectorized functions</li>
-            <li>recognize, inspect, and import data frames</li>
+            <li>recognize and index vectors and lists</li>
+            <li>recognize, import, and inspect data frames</li>
             <li>issue commands to R using the Rstudio script pane</li>
         </ul></td>
         <td><ul>
@@ -113,13 +113,10 @@ By the end of the course, you will be able to:
       <td>Functional Programming</td>
         <td><ul>
             <li>write your own functions</li>
-            <li>write code that evaluates conditionally</li>
-            <li>create, manipulate, and inspect lists</li>
             <li>iterate functions over lists of arguments</li>
         </ul></td>
         <td><ul>
             <li><code>purrr</code></li>
-            <li><code>zeallot</code></li>
         </ul></td>
         <td>R4DS ch. 26, 27</td>
     </tr>
