@@ -47,13 +47,13 @@ Summarize
 ================================================================
 
 ```r
-summarize(gtex, tissue_avg=mean(NTissues))
+summarize(gtex, blood_avg=mean(Blood))
 # A tibble: 1 × 1
-  tissue_avg
-       <dbl>
-1       3.97
+  blood_avg
+      <dbl>
+1        NA
 ```
-- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `tissue_avg` that contains the mean of the `NTissues` column
+- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `blood_avg` that contains the mean of the `Blood` column
 - As with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
 - `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
 
@@ -69,14 +69,14 @@ Multiple summaries
 ```r
 gtex %>% 
 summarize( # newlines not necessary, again just increase clarity
-  tissue_avg = mean(NTissues),
+  lung_avg = mean(Lung),
   blood_max = max(Blood, na.rm=T),
   blood_lung_dif_min = min(Blood - Lung, na.rm=T)
 )
 # A tibble: 1 × 3
-  tissue_avg blood_max blood_lung_dif_min
-       <dbl>     <dbl>              <dbl>
-1       3.97      18.9              -12.8
+  lung_avg blood_max blood_lung_dif_min
+     <dbl>     <dbl>              <dbl>
+1       NA      18.9              -12.8
 ```
 
 Grouped summaries 
@@ -178,7 +178,7 @@ gtex %>%
 ```
 
 
-Exercise: top expression per tissue
+Exercise: top expression per gene
 =====================================================================
 type:prompt
 
@@ -424,10 +424,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1         10.9          9.90
-2     2         10.7         11.8 
-3     3          8.68        14.0 
-4     4          7.74         9.18
+1     1         11.9          10.9
+2     2          5.13         11.8
+3     3          9.75         14.1
+4     4          9.60         11.6
 ```
 
 
@@ -438,10 +438,10 @@ wide_mice %>%
 # A tibble: 4 × 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.984
-2     2       1.13 
-3     3       5.31 
-4     4       1.45 
+1     1      -0.937
+2     2       6.68 
+3     3       4.38 
+4     4       2.01 
 ```
 
 ***
@@ -451,14 +451,14 @@ wide_mice %>%
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.9 
-2     1 after    9.90
-3     2 before  10.7 
+1     1 before  11.9 
+2     1 after   10.9 
+3     2 before   5.13
 4     2 after   11.8 
-5     3 before   8.68
-6     3 after   14.0 
-7     4 before   7.74
-8     4 after    9.18
+5     3 before   9.75
+6     3 after   14.1 
+7     4 before   9.60
+8     4 after   11.6 
 ```
 
 
@@ -472,10 +472,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.984
-2     2       1.13 
-3     3       5.31 
-4     4       1.45 
+1     1      -0.937
+2     2       6.68 
+3     3       4.38 
+4     4       2.01 
 ```
 
 Pivoting wider
@@ -490,14 +490,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.9 
-2     1 after    9.90
-3     2 before  10.7 
+1     1 before  11.9 
+2     1 after   10.9 
+3     2 before   5.13
 4     2 after   11.8 
-5     3 before   8.68
-6     3 after   14.0 
-7     4 before   7.74
-8     4 after    9.18
+5     3 before   9.75
+6     3 after   14.1 
+7     4 before   9.60
+8     4 after   11.6 
 ```
 
 ***
@@ -512,10 +512,10 @@ long_mice %>%
 # A tibble: 4 × 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1  10.9   9.90
-2     2  10.7  11.8 
-3     3   8.68 14.0 
-4     4   7.74  9.18
+1     1  11.9   10.9
+2     2   5.13  11.8
+3     3   9.75  14.1
+4     4   9.60  11.6
 ```
 
 Names prefix
@@ -527,14 +527,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  10.9 
-2     1 after    9.90
-3     2 before  10.7 
+1     1 before  11.9 
+2     1 after   10.9 
+3     2 before   5.13
 4     2 after   11.8 
-5     3 before   8.68
-6     3 after   14.0 
-7     4 before   7.74
-8     4 after    9.18
+5     3 before   9.75
+6     3 after   14.1 
+7     4 before   9.60
+8     4 after   11.6 
 ```
 
 ***
@@ -553,8 +553,8 @@ long_mice %>%
 # A tibble: 2 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          10.9         9.90
-2     2          10.7        11.8 
+1     1         11.9          10.9
+2     2          5.13         11.8
 ```
 
 - this can also be used to _remove_ a prefix when going from wide to long:
@@ -599,55 +599,46 @@ Relational data
 =====================================================================
 incremental: true
 
-- Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
 - When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
-- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix we've been working with. 
-
 
 
 ```r
 gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
-
-head(gtex_samples, 2L)
-# A tibble: 2 × 6
-  subject_id sample_id     batch_id center_id tissue rin_score
-  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
-1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood       NA  
-2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
+gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
+gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
 ```
-- The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
 
 Relational data
-===
+=====================================================================
 incremental: true
 
-The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
+- The **sample** data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
 
 ```r
-gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
-head(gtex_subjects, 2L)
-# A tibble: 2 × 4
-  subject_id sex    age   death                    
-  <chr>      <chr>  <chr> <chr>                    
-1 GTEX-11DXZ male   50-59 ventilator               
-2 GTEX-11GSP female 60-69 sudden but natural causes
+gtex_samples %>% head(1)
+# A tibble: 1 × 6
+  subject_id sample_id     batch_id center_id tissue rin_score
+  <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
+1 GTEX-11DXZ 0003-SM-58Q7X BP-39216 B1        Blood         NA
 ```
-
-The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
+- The **subject** data table contains some subject demographic information.
 
 ```r
-gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
+gtex_subjects %>% head(1)
+# A tibble: 1 × 4
+  subject_id sex   age   death     
+  <chr>      <chr> <chr> <chr>     
+1 GTEX-11DXZ male  50-59 ventilator
+```
+- The **batch** data contains the batch type and the dates the batches were run
 
-head(gtex_batches, 2L)
-# A tibble: 2 × 3
+```r
+gtex_batches %>% head(1)
+# A tibble: 1 × 3
   batch_id batch_type                                         batch_date
   <chr>    <chr>                                              <chr>     
 1 BP-38516 DNA isolation_Whole Blood_QIAGEN Puregene (Manual) 05/02/2013
-2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 08/14/2013
 ```
-
-We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
-
 
 Relational data
 ===

@@ -50,9 +50,9 @@ nrow(gtex)
 Summarize
 ================================================================
 ```{r}
-summarize(gtex, tissue_avg=mean(NTissues))
+summarize(gtex, blood_avg=mean(Blood))
 ```
-- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `tissue_avg` that contains the mean of the `NTissues` column
+- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `blood_avg` that contains the mean of the `Blood` column
 - As with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
 - `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
 
@@ -67,7 +67,7 @@ Multiple summaries
 ```{r, tidy=F}
 gtex %>% 
 summarize( # newlines not necessary, again just increase clarity
-  tissue_avg = mean(NTissues),
+  lung_avg = mean(Lung),
   blood_max = max(Blood, na.rm=T),
   blood_lung_dif_min = min(Blood - Lung, na.rm=T)
 )
@@ -132,7 +132,7 @@ gtex %>%
 ```
 
 
-Exercise: top expression per tissue
+Exercise: top expression per gene
 =====================================================================
 type:prompt
 
@@ -457,37 +457,30 @@ Relational data
 =====================================================================
 incremental: true
 
-- Relational data are interconnected data that is spread across multiple tables, each of which usually has a different unit of observation
 - When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
-- For the GTEx dataset, we have information about the samples, subjects, and experiment batches in additional data frames in addition to the expression matrix we've been working with. 
 
-
-```{r, message = FALSE}
+```{r, message = FALSE, max.lines=4}
 gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
-
-head(gtex_samples, 2L)
+gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
+gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
 ```
-- The sample data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
 
 Relational data
-===
+=====================================================================
 incremental: true
 
-The subject data table contains some subject demographic information. Death refers to circumstances surrounding death.
-```{r, message = FALSE}
-gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
-head(gtex_subjects, 2L)
+- The **sample** data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
+```{r max.lines=4, message = FALSE}
+gtex_samples %>% head(1)
 ```
-
-The batch data containts the batch type and the dates the batches were run (we were been working a bit with this date data aggregated into counts of samples earlier).
-```{r, message = FALSE}
-gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
-
-head(gtex_batches, 2L)
+- The **subject** data table contains some subject demographic information.
+```{r max.lines=4, message = FALSE}
+gtex_subjects %>% head(1)
 ```
-
-We might also have tables with additional information, such as that about the centers (see `center_id`) where the samples were taken, or a table with information about the genes that includes their length and location.
-
+- The **batch** data contains the batch type and the dates the batches were run
+```{r max.lines=4, message = FALSE}
+gtex_batches %>% head(1)
+```
 
 Relational data
 ===
