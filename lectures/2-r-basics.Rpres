@@ -10,7 +10,7 @@ Learning Goals:
 
 - save values to variables
 - find and call R functions with multiple arguments by position and name
-- recognize vectors and vectorized functions
+- recognize and index vectors and lists
 - recognize, import, and inspect data frames
 - issue commands to R using the Rstudio script pane
 
@@ -516,10 +516,10 @@ seasons_fct[1] = "Jan"
 Logicals
 ========================================================
 ```{r}
-1:10 %% 3 == 0
-c(TRUE, TRUE, FALSE, NA)
+c(-2, -1, 0, 1, 2) > 0
+c(TRUE, TRUE, FALSE)
 ```
-- logical vectors can only be one of three values: `TRUE`, `FALSE`, or `NA`.
+- logical vectors can only be `TRUE` or `FALSE`
 - we'll see more about this later
 
 Coercion
@@ -574,6 +574,66 @@ c(1,2,NA,4)
 mean(c(1,2,NA,4), na.rm=TRUE)
 ```
 
+Lists
+===
+type: section
+
+Lists
+===
+- A `list` is like an atomic vector, except the elements don't have to be the same type of thing
+```{r}
+a_vector = c(1,2,4,5)
+maybe_a_vector = c(1,2,"hello",5,TRUE)
+maybe_a_vector # R converted all of these things to strings!
+```
+- You make them with list() and you can index them like vectors
+```{r}
+a_list = list(1,2,"hello",5,TRUE)
+a_list[3:5]
+```
+- Anything can go in lists, including vectors, other lists, data frames, etc.
+- In fact, a data frame (or tibble) is actually just a list of named column vectors with an enforced constraint that all of the vectors have to be of the same length. That's why the `df$col` syntax works for data frames.
+
+Getting elements from a list
+===
+- You can also name the elements in a list
+```{r}
+a_list = list(
+    first_number = 1,
+    second_number = 2,
+    a_string = "hello",
+    third_number = 5,
+    some_logical = TRUE)
+```
+- and then retrieve elements by name or position 
+```{r}
+a_list$a_string  # returns the element named "thrid_number"
+a_list[[3]] # returns the 3rd element
+a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
+```
+
+Exercise: getting things out of a list
+===
+type:prompt
+Create this list in your workspace and write code to extract the element `"b"`.
+```{r}
+x = list(
+  list("a", "b", "c"), 
+  "d", 
+  "e", 
+  6
+)
+```
+
+
+Seeing into lists
+===
+- Use `str()` to dig into nested lists and other complicated objects
+```{r}
+nested_list = lm(hp ~ ., mtcars)
+str(nested_list)
+```
+
 
 Data Frames
 ===
@@ -609,6 +669,7 @@ Data frame properties
 - `glimpse()` shows you a lot of information, `head()` returns the first `n` rows
 ```{r}
 glimpse(my_data)
+
 head(my_data, n=2)
 ```
 

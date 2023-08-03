@@ -232,7 +232,7 @@ Messy data
 ```{r, message = FALSE}
 gtex_time_tissue_data = read_csv("https://tinyurl.com/3wd4dcsf")
 
-head(gtex_time_tissue_data, 3L)
+head(gtex_time_tissue_data, 3)
 ```
 
 - the values in the table represent how many samples of that tissue were collected during that year.
@@ -259,7 +259,7 @@ clean %>%
 Messy data
 ===
 ```{r}
-head(gtex_time_tissue_data, 3L)
+head(gtex_time_tissue_data, 3)
 ```
 - One of the problems with the way these data are formatted is that the year collected, which is a property of the samples, is stuck into the names of the columns. 
 - Because of this, it's also not obvious what the numbers in the table mean (although we know they are counts)
@@ -302,40 +302,12 @@ Tidying data with pivot_longer()
 ```{r, tidy = FALSE}
 gtex_time_tissue_data %>%
   pivot_longer(-tissue, names_to = "year", values_to = "count") %>%
-  head(2L)
+  head(2)
 ```
 
 - the three important arguments are: a) a selection of columns, b) the name of the new key column, and c) the name of the new value column
 
 ![](https://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig3.png)
-
-Exercise: cleaning GTEX
-===
-type:prompt
-
-```{r, message = FALSE, warning = FALSE}
-head(gtex, 3L)
-```
-
-Use the GTEX data to reproduce the following plot:
-
-```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 6}
-gtex %>%
-  filter(
-    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
-    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
-  ) %>%
-  pivot_longer(
-    Blood:Liver, 
-    names_to = "tissue", 
-    values_to = 'expression'
-  ) %>%
-  ggplot() +
-  geom_point(aes(x = Gene, y = expression, color = tissue), size = 10) + 
-  facet_wrap(~Ind)
-```
-
-The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
 "Messy" data is relative and not always bad
 ===
@@ -393,38 +365,33 @@ long_mice %>%
   )
 ```
 
-Names prefix
-============================================================
+Exercise: cleaning GTEX
+===
+type:prompt
 
-```{r, tidy = FALSE}
-long_mice
+```{r, message = FALSE, warning = FALSE}
+head(gtex, 3)
 ```
 
-***
+Use the GTEX data to reproduce the following plot:
 
-- you can use `names_prefix` to make variables names that are more clear in the result
-
-```{r, tidy = FALSE}
-long_mice %>% 
-  pivot_wider(
-    names_from = time, 
-    values_from = weight,
-    names_prefix = "weight_"
-  ) %>% 
-  head(2L)
-```
-
-- this can also be used to _remove_ a prefix when going from wide to long:
-
-```{r, tidy = FALSE, eval = FALSE}
-wide_mice %>% 
+```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 6}
+gtex %>%
+  filter(
+    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
+    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
+  ) %>%
   pivot_longer(
-    -mouse,
-    names_to = "time",
-    values_to = "weight",
-    names_prefix = "weight_"
-  )
+    Blood:Liver, 
+    names_to = "tissue", 
+    values_to = 'expression'
+  ) %>%
+  ggplot() +
+  geom_point(aes(x = Gene, y = expression, color = tissue), size = 10) + 
+  facet_wrap(~Ind)
 ```
+
+The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
 Exercise: creating a table
 ===
@@ -603,16 +570,9 @@ head(gtex_subjects, 2)
 ```{r}
 gtex %>% 
   inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
-  head(5L)
+  head(5)
 ```
 Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
-
-Exercise: join vs. concatenation
-===
-type: prompt
-Another common way to combine two data frames is `bind_rows` (or `bind_cols`). Read the documentation for those functions and compare to what you know about joins. What is fundamentally different about binding (concatenating) vs. joining?
-
-When would you do one vs. the other?
 
 Exercise: finding expression of specific samples
 ===
@@ -627,10 +587,17 @@ batch_data_year =
     year = lubridate::year(batch_date)
   ) 
 
-head(batch_data_year, 2L)
+head(batch_data_year, 2)
 ```
 
 Note that you'll have to join to other data frames the `sample` data frame to put this together.
+
+Exercise: join vs. concatenation
+===
+type: prompt
+Another common way to combine two data frames is `bind_rows` (or `bind_cols`). Read the documentation for those functions and compare to what you know about joins. What is fundamentally different about binding (concatenating) vs. joining?
+
+When would you do one vs. the other?
 
 
 Joining on multiple columns
@@ -639,10 +606,10 @@ Let's read in some more data
 ```{r, message = FALSE}
 gtex_monthly_tissues = 
   read_csv("https://tinyurl.com/nze7rz7a")
-head(gtex_monthly_tissues, 2L)
+head(gtex_monthly_tissues, 2)
 
 gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
-head(gtex_monthly_samples, 2L)
+head(gtex_monthly_samples, 2)
 ```
 *** 
 - It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
@@ -658,30 +625,19 @@ head(5L)
 Joining on multiple columns
 ===
 
-This is also possible if the columns have different names:
 ```{r}
 gtex_long = gtex %>% 
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
-head(gtex_long, n = 2L)
-head(gtex_samples, n = 2L)
+head(gtex_long, n = 2)
+head(gtex_samples, n = 2)
 
 gtex_long %>% 
-  inner_join(gtex_samples, join_by(tissue, Ind == subject_id)) %>%
-  head(n = 4L)
+  inner_join(gtex_samples, 
+    join_by(
+      tissue, 
+      Ind == subject_id)
+    ) %>%
+  head(n = 4)
 ```
-
-Join problems
-===
-- Joins can be a source of subtle errors in your code
-- check for `NA`s in variables you are going to join on
-- make sure rows aren't being dropped if you don't intend to drop rows
-  - checking the number of rows before and after the join is not sufficient. If you have an inner join with duplicate keys in both tables, you might get unlucky as the number of dropped rows might exactly equal the number of duplicated rows
-
-
-Exercise: Looking for variables related to data missingness
-====
-type: prompt
-
-It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex` to look at the relationship between missing gene values and other variables in the data. 
 

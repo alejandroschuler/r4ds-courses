@@ -505,6 +505,46 @@ Produce a vector containing the ten individual IDs (`Ind`) with the biggest abso
 Before writing any code, break the problem down conceptually into steps. Do you have to create new columns? Filter the rows of a dataset? Arrange rows? Select certain columns? In what order? Once you have a plan, write code, one step at a time.
 
 
+
+mutate() and if_else()
+===
+- `if_else` is a vectorized if-else statement
+- the first argument is an R expression that evaluates to a logical vector, the second argument is what to replace all of the resulting TRUEs with, and the third argument is what to replace the resulting FALSEs with
+```{r}
+x = c(-1, 1/2, 2/3, 5)
+if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
+```
+- this is often used in `mutate()`:
+```{r, max.lines=10}
+mutate(
+  gtex, 
+  blood_expression = ifelse(
+    Blood < 0, 
+    "-", "+"
+  )
+)
+```
+
+mutate() and if_else()
+===
+- this is useful to "interleave" columns:
+```{r}
+emails = tibble(
+  name = c('aya', 'bilal', 'chris', 'diego'),
+  school = c('aya@amherst.edu', 'bilal@berkeley.edu', 'chris@cornell.edu', 'diego@duke.edu'),
+  personal = c('aya@aol.com', 'bilal@bellsouth.net', 'chris@comcast.com', 'diego@dodo.com.au'),
+  preferred = c('school', 'personal', 'personal', 'school')
+)
+emails
+```
+
+```{r}
+mutate(emails,
+  preferred_email = ifelse(preferred=='personal', personal, school)
+)
+```
+
+
 Piping
 ===
 type:section

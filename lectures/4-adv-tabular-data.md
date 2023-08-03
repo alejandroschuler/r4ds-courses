@@ -305,7 +305,7 @@ Messy data
 ```r
 gtex_time_tissue_data = read_csv("https://tinyurl.com/3wd4dcsf")
 
-head(gtex_time_tissue_data, 3L)
+head(gtex_time_tissue_data, 3)
 # A tibble: 3 × 8
   tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
   <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
@@ -325,7 +325,7 @@ Messy data
 ===
 
 ```r
-head(gtex_time_tissue_data, 3L)
+head(gtex_time_tissue_data, 3)
 # A tibble: 3 × 8
   tissue         `2011` `2012` `2013` `2014` `2015` `2016` `2017`
   <chr>           <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
@@ -383,7 +383,7 @@ Tidying data with pivot_longer()
 ```r
 gtex_time_tissue_data %>%
   pivot_longer(-tissue, names_to = "year", values_to = "count") %>%
-  head(2L)
+  head(2)
 # A tibble: 2 × 3
   tissue         year  count
   <chr>          <chr> <dbl>
@@ -395,27 +395,6 @@ gtex_time_tissue_data %>%
 
 ![](https://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig3.png)
 
-Exercise: cleaning GTEX
-===
-type:prompt
-
-
-```r
-head(gtex, 3L)
-# A tibble: 3 × 7
-  Gene  Ind        Blood Heart  Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
-3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
-```
-
-Use the GTEX data to reproduce the following plot:
-
-![plot of chunk unnamed-chunk-22](4-adv-tabular-data-figure/unnamed-chunk-22-1.png)
-
-The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
-
 "Messy" data is relative and not always bad
 ===
 
@@ -424,10 +403,10 @@ The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c
 # A tibble: 4 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1         11.9          10.9
-2     2          5.13         11.8
-3     3          9.75         14.1
-4     4          9.60         11.6
+1     1          8.46         8.67
+2     2          8.54        11.4 
+3     3         10.8          9.46
+4     4         10.1          9.83
 ```
 
 
@@ -438,10 +417,10 @@ wide_mice %>%
 # A tibble: 4 × 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.937
-2     2       6.68 
-3     3       4.38 
-4     4       2.01 
+1     1       0.210
+2     2       2.88 
+3     3      -1.30 
+4     4      -0.222
 ```
 
 ***
@@ -451,14 +430,14 @@ wide_mice %>%
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.9 
-2     1 after   10.9 
-3     2 before   5.13
-4     2 after   11.8 
-5     3 before   9.75
-6     3 after   14.1 
-7     4 before   9.60
-8     4 after   11.6 
+1     1 before   8.46
+2     1 after    8.67
+3     2 before   8.54
+4     2 after   11.4 
+5     3 before  10.8 
+6     3 after    9.46
+7     4 before  10.1 
+8     4 after    9.83
 ```
 
 
@@ -472,10 +451,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1      -0.937
-2     2       6.68 
-3     3       4.38 
-4     4       2.01 
+1     1       0.210
+2     2       2.88 
+3     3      -1.30 
+4     4      -0.222
 ```
 
 Pivoting wider
@@ -490,14 +469,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before  11.9 
-2     1 after   10.9 
-3     2 before   5.13
-4     2 after   11.8 
-5     3 before   9.75
-6     3 after   14.1 
-7     4 before   9.60
-8     4 after   11.6 
+1     1 before   8.46
+2     1 after    8.67
+3     2 before   8.54
+4     2 after   11.4 
+5     3 before  10.8 
+6     3 after    9.46
+7     4 before  10.1 
+8     4 after    9.83
 ```
 
 ***
@@ -512,63 +491,32 @@ long_mice %>%
 # A tibble: 4 × 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1  11.9   10.9
-2     2   5.13  11.8
-3     3   9.75  14.1
-4     4   9.60  11.6
+1     1   8.46  8.67
+2     2   8.54 11.4 
+3     3  10.8   9.46
+4     4  10.1   9.83
 ```
 
-Names prefix
-============================================================
+Exercise: cleaning GTEX
+===
+type:prompt
 
 
 ```r
-long_mice
-# A tibble: 8 × 3
-  mouse time   weight
-  <dbl> <chr>   <dbl>
-1     1 before  11.9 
-2     1 after   10.9 
-3     2 before   5.13
-4     2 after   11.8 
-5     3 before   9.75
-6     3 after   14.1 
-7     4 before   9.60
-8     4 after   11.6 
+head(gtex, 3)
+# A tibble: 3 × 7
+  Gene  Ind        Blood Heart  Lung Liver NTissues
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
 ```
 
-***
+Use the GTEX data to reproduce the following plot:
 
-- you can use `names_prefix` to make variables names that are more clear in the result
+![plot of chunk unnamed-chunk-28](4-adv-tabular-data-figure/unnamed-chunk-28-1.png)
 
-
-```r
-long_mice %>% 
-  pivot_wider(
-    names_from = time, 
-    values_from = weight,
-    names_prefix = "weight_"
-  ) %>% 
-  head(2L)
-# A tibble: 2 × 3
-  mouse weight_before weight_after
-  <dbl>         <dbl>        <dbl>
-1     1         11.9          10.9
-2     2          5.13         11.8
-```
-
-- this can also be used to _remove_ a prefix when going from wide to long:
-
-
-```r
-wide_mice %>% 
-  pivot_longer(
-    -mouse,
-    names_to = "time",
-    values_to = "weight",
-    names_prefix = "weight_"
-  )
-```
+The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
 
 Exercise: creating a table
 ===
@@ -843,7 +791,7 @@ head(gtex_subjects, 2)
 ```r
 gtex %>% 
   inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
-  head(5L)
+  head(5)
 # A tibble: 5 × 10
   Gene  Ind        Blood Heart  Lung Liver NTissues sex    age   death          
   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl> <chr>  <chr> <chr>          
@@ -854,13 +802,6 @@ gtex %>%
 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4 male   20-29 ventilator     
 ```
 Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
-
-Exercise: join vs. concatenation
-===
-type: prompt
-Another common way to combine two data frames is `bind_rows` (or `bind_cols`). Read the documentation for those functions and compare to what you know about joins. What is fundamentally different about binding (concatenating) vs. joining?
-
-When would you do one vs. the other?
 
 Exercise: finding expression of specific samples
 ===
@@ -876,7 +817,7 @@ batch_data_year =
     year = lubridate::year(batch_date)
   ) 
 
-head(batch_data_year, 2L)
+head(batch_data_year, 2)
 # A tibble: 2 × 4
   batch_id batch_type                                         batch_date  year
   <chr>    <chr>                                              <date>     <dbl>
@@ -886,6 +827,13 @@ head(batch_data_year, 2L)
 
 Note that you'll have to join to other data frames the `sample` data frame to put this together.
 
+Exercise: join vs. concatenation
+===
+type: prompt
+Another common way to combine two data frames is `bind_rows` (or `bind_cols`). Read the documentation for those functions and compare to what you know about joins. What is fundamentally different about binding (concatenating) vs. joining?
+
+When would you do one vs. the other?
+
 
 Joining on multiple columns
 ===
@@ -894,7 +842,7 @@ Let's read in some more data
 ```r
 gtex_monthly_tissues = 
   read_csv("https://tinyurl.com/nze7rz7a")
-head(gtex_monthly_tissues, 2L)
+head(gtex_monthly_tissues, 2)
 # A tibble: 2 × 4
   tissue         month  year tiss_samples
   <chr>          <dbl> <dbl>        <dbl>
@@ -902,7 +850,7 @@ head(gtex_monthly_tissues, 2L)
 2 Adipose Tissue     1  2013            4
 
 gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
-head(gtex_monthly_samples, 2L)
+head(gtex_monthly_samples, 2)
 # A tibble: 2 × 3
   month  year num_samples
   <dbl> <dbl>       <dbl>
@@ -932,19 +880,18 @@ head(5L)
 Joining on multiple columns
 ===
 
-This is also possible if the columns have different names:
 
 ```r
 gtex_long = gtex %>% 
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
-head(gtex_long, n = 2L)
+head(gtex_long, n = 2)
 # A tibble: 2 × 5
   Gene  Ind        NTissues tissue zscore
   <chr> <chr>         <dbl> <chr>   <dbl>
 1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
 2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
-head(gtex_samples, n = 2L)
+head(gtex_samples, n = 2)
 # A tibble: 2 × 6
   subject_id sample_id     batch_id center_id tissue rin_score
   <chr>      <chr>         <chr>    <chr>     <chr>      <dbl>
@@ -952,8 +899,12 @@ head(gtex_samples, n = 2L)
 2 GTEX-11DXZ 0126-SM-5EGGY BP-44460 B1        Liver        7.9
 
 gtex_long %>% 
-  inner_join(gtex_samples, join_by(tissue, Ind == subject_id)) %>%
-  head(n = 4L)
+  inner_join(gtex_samples, 
+    join_by(
+      tissue, 
+      Ind == subject_id)
+    ) %>%
+  head(n = 4)
 # A tibble: 4 × 9
   Gene  Ind        NTissues tissue zscore sample_id batch_id center_id rin_score
   <chr> <chr>         <dbl> <chr>   <dbl> <chr>     <chr>    <chr>         <dbl>
@@ -962,18 +913,4 @@ gtex_long %>%
 3 A2ML1 GTEX-11DXZ        3 Lung    NA    0726-SM-… BP-43956 B1              7.8
 4 A2ML1 GTEX-11DXZ        3 Liver   -0.66 0126-SM-… BP-44460 B1              7.9
 ```
-
-Join problems
-===
-- Joins can be a source of subtle errors in your code
-- check for `NA`s in variables you are going to join on
-- make sure rows aren't being dropped if you don't intend to drop rows
-  - checking the number of rows before and after the join is not sufficient. If you have an inner join with duplicate keys in both tables, you might get unlucky as the number of dropped rows might exactly equal the number of duplicated rows
-
-
-Exercise: Looking for variables related to data missingness
-====
-type: prompt
-
-It is important to make sure that the missingness in the expression data is not related to variables present in the data. Use the tables `batch_data_year`, `sample_data`, `subject_data`, and the `gtex` to look at the relationship between missing gene values and other variables in the data. 
 

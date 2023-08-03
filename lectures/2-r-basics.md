@@ -10,7 +10,7 @@ Learning Goals:
 
 - save values to variables
 - find and call R functions with multiple arguments by position and name
-- recognize vectors and vectorized functions
+- recognize and index vectors and lists
 - recognize, import, and inspect data frames
 - issue commands to R using the Rstudio script pane
 
@@ -600,12 +600,12 @@ Logicals
 ========================================================
 
 ```r
-1:10 %% 3 == 0
- [1] FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE
-c(TRUE, TRUE, FALSE, NA)
-[1]  TRUE  TRUE FALSE    NA
+c(-2, -1, 0, 1, 2) > 0
+[1] FALSE FALSE FALSE  TRUE  TRUE
+c(TRUE, TRUE, FALSE)
+[1]  TRUE  TRUE FALSE
 ```
-- logical vectors can only be one of three values: `TRUE`, `FALSE`, or `NA`.
+- logical vectors can only be `TRUE` or `FALSE`
 - we'll see more about this later
 
 Coercion
@@ -672,6 +672,151 @@ mean(c(1,2,NA,4), na.rm=TRUE)
 [1] 2.333333
 ```
 
+Lists
+===
+type: section
+
+Lists
+===
+- A `list` is like an atomic vector, except the elements don't have to be the same type of thing
+
+```r
+a_vector = c(1,2,4,5)
+maybe_a_vector = c(1,2,"hello",5,TRUE)
+maybe_a_vector # R converted all of these things to strings!
+[1] "1"     "2"     "hello" "5"     "TRUE" 
+```
+- You make them with list() and you can index them like vectors
+
+```r
+a_list = list(1,2,"hello",5,TRUE)
+a_list[3:5]
+[[1]]
+[1] "hello"
+
+[[2]]
+[1] 5
+
+[[3]]
+[1] TRUE
+```
+- Anything can go in lists, including vectors, other lists, data frames, etc.
+- In fact, a data frame (or tibble) is actually just a list of named column vectors with an enforced constraint that all of the vectors have to be of the same length. That's why the `df$col` syntax works for data frames.
+
+Getting elements from a list
+===
+- You can also name the elements in a list
+
+```r
+a_list = list(
+    first_number = 1,
+    second_number = 2,
+    a_string = "hello",
+    third_number = 5,
+    some_logical = TRUE)
+```
+- and then retrieve elements by name or position 
+
+```r
+a_list$a_string  # returns the element named "thrid_number"
+[1] "hello"
+a_list[[3]] # returns the 3rd element
+[1] "hello"
+a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
+$a_string
+[1] "hello"
+```
+
+Exercise: getting things out of a list
+===
+type:prompt
+Create this list in your workspace and write code to extract the element `"b"`.
+
+```r
+x = list(
+  list("a", "b", "c"), 
+  "d", 
+  "e", 
+  6
+)
+```
+
+
+Seeing into lists
+===
+- Use `str()` to dig into nested lists and other complicated objects
+
+```r
+nested_list = lm(hp ~ ., mtcars)
+str(nested_list)
+List of 12
+ $ coefficients : Named num [1:11] 79.048 -2.063 8.204 0.439 -4.619 ...
+  ..- attr(*, "names")= chr [1:11] "(Intercept)" "mpg" "cyl" "disp" ...
+ $ residuals    : Named num [1:32] -38.68 -30.63 13.01 -15.75 -8.22 ...
+  ..- attr(*, "names")= chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+ $ effects      : Named num [1:32] -829.8 296.3 124.8 -19.6 90.3 ...
+  ..- attr(*, "names")= chr [1:32] "(Intercept)" "mpg" "cyl" "disp" ...
+ $ rank         : int 11
+ $ fitted.values: Named num [1:32] 149 141 80 126 183 ...
+  ..- attr(*, "names")= chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+ $ assign       : int [1:11] 0 1 2 3 4 5 6 7 8 9 ...
+ $ qr           :List of 5
+  ..$ qr   : num [1:32, 1:11] -5.657 0.177 0.177 0.177 0.177 ...
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+  .. .. ..$ : chr [1:11] "(Intercept)" "mpg" "cyl" "disp" ...
+  .. ..- attr(*, "assign")= int [1:11] 0 1 2 3 4 5 6 7 8 9 ...
+  ..$ qraux: num [1:11] 1.18 1.02 1.29 1.19 1.05 ...
+  ..$ pivot: int [1:11] 1 2 3 4 5 6 7 8 9 10 ...
+  ..$ tol  : num 1e-07
+  ..$ rank : int 11
+  ..- attr(*, "class")= chr "qr"
+ $ df.residual  : int 21
+ $ xlevels      : Named list()
+ $ call         : language lm(formula = hp ~ ., data = mtcars)
+ $ terms        :Classes 'terms', 'formula'  language hp ~ mpg + cyl + disp + drat + wt + qsec + vs + am + gear + carb
+  .. ..- attr(*, "variables")= language list(hp, mpg, cyl, disp, drat, wt, qsec, vs, am, gear, carb)
+  .. ..- attr(*, "factors")= int [1:11, 1:10] 0 1 0 0 0 0 0 0 0 0 ...
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:11] "hp" "mpg" "cyl" "disp" ...
+  .. .. .. ..$ : chr [1:10] "mpg" "cyl" "disp" "drat" ...
+  .. ..- attr(*, "term.labels")= chr [1:10] "mpg" "cyl" "disp" "drat" ...
+  .. ..- attr(*, "order")= int [1:10] 1 1 1 1 1 1 1 1 1 1
+  .. ..- attr(*, "intercept")= int 1
+  .. ..- attr(*, "response")= int 1
+  .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. ..- attr(*, "predvars")= language list(hp, mpg, cyl, disp, drat, wt, qsec, vs, am, gear, carb)
+  .. ..- attr(*, "dataClasses")= Named chr [1:11] "numeric" "numeric" "numeric" "numeric" ...
+  .. .. ..- attr(*, "names")= chr [1:11] "hp" "mpg" "cyl" "disp" ...
+ $ model        :'data.frame':	32 obs. of  11 variables:
+  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
+  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
+  ..$ disp: num [1:32] 160 160 108 258 360 ...
+  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
+  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
+  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
+  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
+  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
+  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language hp ~ mpg + cyl + disp + drat + wt + qsec + vs + am + gear + carb
+  .. .. ..- attr(*, "variables")= language list(hp, mpg, cyl, disp, drat, wt, qsec, vs, am, gear, carb)
+  .. .. ..- attr(*, "factors")= int [1:11, 1:10] 0 1 0 0 0 0 0 0 0 0 ...
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:11] "hp" "mpg" "cyl" "disp" ...
+  .. .. .. .. ..$ : chr [1:10] "mpg" "cyl" "disp" "drat" ...
+  .. .. ..- attr(*, "term.labels")= chr [1:10] "mpg" "cyl" "disp" "drat" ...
+  .. .. ..- attr(*, "order")= int [1:10] 1 1 1 1 1 1 1 1 1 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 1
+  .. .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv> 
+  .. .. ..- attr(*, "predvars")= language list(hp, mpg, cyl, disp, drat, wt, qsec, vs, am, gear, carb)
+  .. .. ..- attr(*, "dataClasses")= Named chr [1:11] "numeric" "numeric" "numeric" "numeric" ...
+  .. .. .. ..- attr(*, "names")= chr [1:11] "hp" "mpg" "cyl" "disp" ...
+ - attr(*, "class")= chr "lm"
+```
+
 
 Data Frames
 ===
@@ -726,6 +871,7 @@ Rows: 4
 Columns: 2
 $ person <chr> "carlos", "nathalie", "christina", "alejandro"
 $ age    <dbl> 33, 48, 8, 29
+
 head(my_data, n=2)
 # A tibble: 2 × 2
   person     age
@@ -828,4 +974,4 @@ Run your script to see the generated plot. Try changing the values of `A`, `B`, 
 
 Your result should look like:
 
-![plot of chunk unnamed-chunk-60](2-r-basics-figure/unnamed-chunk-60-1.png)
+![plot of chunk unnamed-chunk-66](2-r-basics-figure/unnamed-chunk-66-1.png)

@@ -314,13 +314,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 6
-  Gene          Ind        Blood Heart  Lung Liver
-  <chr>         <chr>      <dbl> <dbl> <dbl> <dbl>
-1 P2RX2         GTEX-1KANB -0.04 -0.08 -0.53 -0.06
-2 SSRP1         GTEX-11NV4  1.7   1.6   0.94 -0.29
-3 ZNF706        GTEX-12696 -1.34 -1.52  0.09  0.94
-4 RP11-284M14.1 GTEX-11ZUS -0.09  0.73 -0.01  0.86
-5 RP4-706A16.3  GTEX-12WSD  1.21  0.37 -2.25 -0.96
+  Gene    Ind        Blood Heart  Lung Liver
+  <chr>   <chr>      <dbl> <dbl> <dbl> <dbl>
+1 AP1G1   GTEX-14XAO -2.64 -0.91  1.41 -0.75
+2 MRPL23  GTEX-1GN73 -0.64 -0.35 NA    -0.79
+3 PHF20L1 GTEX-1EWIQ -0.81  0.93 -0.8   1.18
+4 NOTUM   GTEX-14XAO -0.43 -0.59 -0.33 -0.17
+5 PRDM1   GTEX-ZPU1   0.52 -0.66 -1.21 -0.88
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -796,6 +796,76 @@ type:prompt
 Produce a vector containing the ten individual IDs (`Ind`) with the biggest absolute difference in their heart and lung expression for the A2ML1 gene.
 
 Before writing any code, break the problem down conceptually into steps. Do you have to create new columns? Filter the rows of a dataset? Arrange rows? Select certain columns? In what order? Once you have a plan, write code, one step at a time.
+
+
+
+mutate() and if_else()
+===
+- `if_else` is a vectorized if-else statement
+- the first argument is an R expression that evaluates to a logical vector, the second argument is what to replace all of the resulting TRUEs with, and the third argument is what to replace the resulting FALSEs with
+
+```r
+x = c(-1, 1/2, 2/3, 5)
+if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
+[1] "not in [0,1]" "in [0,1]"     "in [0,1]"     "not in [0,1]"
+```
+- this is often used in `mutate()`:
+
+```r
+mutate(
+  gtex, 
+  blood_expression = ifelse(
+    Blood < 0, 
+    "-", "+"
+  )
+)
+# A tibble: 389,922 × 7
+   Gene  Ind        Blood Heart  Lung Liver blood_expression
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl> <chr>           
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66 -               
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1  -               
+ 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13 -               
+ 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61 -               
+ 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12 +               
+ 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66 +               
+ 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06 -               
+...
+```
+
+mutate() and if_else()
+===
+- this is useful to "interleave" columns:
+
+```r
+emails = tibble(
+  name = c('aya', 'bilal', 'chris', 'diego'),
+  school = c('aya@amherst.edu', 'bilal@berkeley.edu', 'chris@cornell.edu', 'diego@duke.edu'),
+  personal = c('aya@aol.com', 'bilal@bellsouth.net', 'chris@comcast.com', 'diego@dodo.com.au'),
+  preferred = c('school', 'personal', 'personal', 'school')
+)
+emails
+# A tibble: 4 × 4
+  name  school             personal            preferred
+  <chr> <chr>              <chr>               <chr>    
+1 aya   aya@amherst.edu    aya@aol.com         school   
+2 bilal bilal@berkeley.edu bilal@bellsouth.net personal 
+3 chris chris@cornell.edu  chris@comcast.com   personal 
+4 diego diego@duke.edu     diego@dodo.com.au   school   
+```
+
+
+```r
+mutate(emails,
+  preferred_email = ifelse(preferred=='personal', personal, school)
+)
+# A tibble: 4 × 5
+  name  school             personal            preferred preferred_email    
+  <chr> <chr>              <chr>               <chr>     <chr>              
+1 aya   aya@amherst.edu    aya@aol.com         school    aya@amherst.edu    
+2 bilal bilal@berkeley.edu bilal@bellsouth.net personal  bilal@bellsouth.net
+3 chris chris@cornell.edu  chris@comcast.com   personal  chris@comcast.com  
+4 diego diego@duke.edu     diego@dodo.com.au   school    diego@duke.edu     
+```
 
 
 Piping
