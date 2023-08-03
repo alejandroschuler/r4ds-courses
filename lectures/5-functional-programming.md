@@ -29,11 +29,11 @@ Motivation
   
 Example
 ===
-What does this code do? (recall that `df$col` is the same as `df %>% pull(col)`)
+What does this code do? (note that `df$col` is a shortcut for `df %>% pull(col)`)
 
 ```r
-df <- tibble(
-  a = rnorm(10), # 10 random numbers from a normal distribution
+df = tibble(
+  a = rnorm(10), # 10 random numbers 
   b = rnorm(10),
   c = rnorm(10),
   d = rnorm(10)
@@ -72,34 +72,34 @@ Example
 ===
 
 ```r
-rescale_0_1 = function(vec) {
+rescale = function(vec) {
   (vec - min(vec))/(max(vec) - min(vec))
 }
 
 df2 = df %>%
   mutate(
-    a= rescale_0_1(a),
-    b= rescale_0_1(b),
-    c= rescale_0_1(c),
-    d= rescale_0_1(d),
+    a= rescale(a),
+    b= rescale(b),
+    c= rescale(c),
+    d= rescale(d),
   )
 ```
 - Much improved!
 - The last two lines clearly say: replace all the columns with their rescaled versions
-  - This is because the function name `rescale_0_1()` is informative and communicates what it does
+  - This is because the function name `rescale()` is informative and communicates what it does
   - If a user (or you a few weeks later) is curious about the specifics, they can check the function body
 
 Example
 ===
 
 ```r
-rescale_0_1 = function(vec) {
+rescale = function(vec) {
   (vec - min(vec))/(max(vec) - min(vec))
 }
 
 df2 = df %>%
   mutate(
-    across(a:d, rescale_0_1)
+    across(a:d, rescale)
   ) # see ?across
 ```
 - Even better.
@@ -110,13 +110,13 @@ Example
 ===
 
 ```r
-rescale_0_1 = function(vec) {
+rescale = function(vec) {
   vec_rng = range(vec, na.rm=T) # same as c(min(vec,na.rm=T), max(vec,na.rm=T))
   (vec - vec_rng[1])/(vec_rng[2] - vec_rng[1])
 }
 
 df2 = df %>%
-  mutate(across(a:d, rescale_0_1))
+  mutate(across(a:d, rescale))
 ```
 - Since we have a function, we can make the change in a single place and improve the efficiency of multiple parts of our code
 - Bonus question: why use `range()` instead of getting and saving the results of `min()` and `max()` separately?
@@ -126,53 +126,91 @@ Example
 We can also test our function in cases where we know what the output should be to make sure it works as intended before we let it loose on the real data
 
 ```r
-rescale_0_1(c(0,0,0,0,0,1))
+rescale(c(0,0,0,0,0,1))
 [1] 0 0 0 0 0 1
-rescale_0_1(0:10)
+rescale(0:10)
  [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
-rescale_0_1(-10:0)
+rescale(-10:0)
  [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 x = c(0,1,runif(100))
-all(x == rescale_0_1(x))
+all(x == rescale(x))
 [1] TRUE
 ```
 - These tests are a critical part of writing good code! It is helpful to save your tests in a separate file and organize them as you go
 
-Function syntax
+Function declaration syntax
 ===
 To write a function, just wrap your code in some special syntax that tells it what variables will be passed in and what will be returned
 
 ```r
-rescale_0_1 = function(x) {
+rescale = function(x) {
   x_rng = range(x, na.rm=T) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-
-rescale_0_1(c(0,0,0,0,0,1))
-[1] 0 0 0 0 0 1
-rescale_0_1(0:10)
- [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 ```
-- The syntax is `FUNCTION_NAME <- function(ARGUMENTS...) { CODE }`
+
 - Just like assigning a variable, except what you put into `FUNCTION_NAME` now isn't a data frame, vector, etc, it's a function object that gets created by the `function(..) {...}` syntax
 - At any point in the body you can `return()` the value, or R will automatically return the result of the last line of code in the body that gets run
-
-Function syntax
-===
-To add a named argument, add an `=` after you declare it as a variable and write in the default value that you would like that variable to take
+- once declared, it can be called:
 
 ```r
-rescale_0_1 = function(x, na.rm=TRUE) {
+rescale(0:10)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+```
+
+
+***
+
+- The syntax is `FUNCTION_NAME <- function(ARGUMENTS...) { CODE }`
+- what you call the arguments that go in the `function(...)` part is how the function will refer to these inputs internally and specify how it should be called using named arguments
+
+![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true)
+
+```
+aes = function(x,y) {...} # defining 
+aes(x=EIF3L, y=VAPA) # calling 
+```
+
+
+Optional arguments
+===
+To add an **optional** argument, add an `=` after you declare it as a variable and write in the default value that you would like that variable to take
+
+```r
+rescale = function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
 
-rescale_0_1(c(0,0,0,0,0,1))
-[1] 0 0 0 0 0 1
-rescale_0_1(0:10)
- [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+vec = c(0,1,NA)
+
+rescale(vec)
+[1]  0  1 NA
+rescale(vec, na.rm=T)
+[1]  0  1 NA
+rescale(vec, na.rm=F)
+[1] NA NA NA
 ```
-- All named arguments must go after positional arguments in the function declaration
+- All optional arguments must go after mandatory arguments in the function declaration
+
+Exercise: Reverse
+===
+type:prompt
+
+- write a function that takes a single vector or list as input and returns it in reverse order
+
+Exercise: Quadratic equation
+===
+type:prompt
+- write a function that returns the larger of the two roots of a polynomial Ax^2 + Bx + C obtained using the quadratic equation. 
+- your function should take as input three arguments: `A`, `B`, and `C`, and should return a single number (possibly `NaN` if there turn out to be no roots)
+- test your function with a variety of inputs by checking that the returned solution x does satisfy Ax^2 + Bx + C = 0.
+
+Exercise: Hardcoding na.rm
+===
+type:prompt
+- It's annoying that the `sum()` function returns `NA` if any values of the input vector are `NA`. You can fix this by passing in the optional argument `na.rm=T` every time you call `sum()`, but it's inconvenient to type that every single time.
+- Using a single line of code, write a new function (called `sum_obs()`, short for "sum observed") that takes a vector and returns the sum of all the non-NA values. Your function should call the usual `sum()` internally.
 
 Exercise: NAs in two vectors
 ===
@@ -180,423 +218,11 @@ type: prompt
 - Write a function called both_na() that takes two vectors of the same length and returns the total number of positions that have an NA in both vectors
 - Make a few vectors and test out your code
 
-Note: functions are objects just like variables are
-===
-
-```r
-rescale_0_1
-function(x, na.rm=TRUE) {
-  x_rng = range(x, na.rm=na.rm) 
-  (x - x_rng[1])/(x_rng[2] - x_rng[1])
-}
-<bytecode: 0x10d127350>
-```
-- As we've seen, they themselves can be passed as arguments to other functions
-
-```r
-df2 = df %>% mutate(across(a:d, rescale_0_1))
-```
-- This is what **functional programming** means. The functions themselves are can be treated as regular objects like variables
-- The name of the function is just what you call the "box" that the function (the code) lives in, just like variables names are names for "boxes" that contain data
-
-Exercise: function factory
-===
-type: prompt
-Without running this code, predict what the output will be:
-
-```r
-f = function(x) {
-  y = x
-  function(y) {
-    y + x
-  }
-}
-f(1)(2)
-```
-
-Exercise: exponent function factory
-===
-type: prompt
-Write a function called `power()` that takes an argument `n` and returns a function that takes an argument x and computes `x^n`
-
-- Example use:
-
-```r
-square = power(2)
-cube = power(3)
-square(2)
-[1] 4
-cube(2)
-[1] 8
-```
-
-Function operators
-===
-- As we've seen, functions can also take other functions as arguments
-- We can use this to write functions that take functions, modify them, and return the modified function
-
-```r
-set_na.rm = function(f, na.rm) {
-  function(x) {
-    f(x, na.rm=na.rm)
-  }
-}
-mean_na.rm = set_na.rm(mean, na.rm=T)
-
-x = c(rnorm(100), NA)
-mean_na.rm(x)
-[1] -0.1291581
-```
-
-Functional programming
-===
-We've discussed a number of **higher-order functions** that either take functions as inputs, return functions as outputs, or both. 
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/1dff819e743f280bbab1c55f8f063e60b6a0d2fb/2269e/diagrams/fp.png">
-</div>
-- `mean()` is a "regular function". It takes data and returns data
-- the `power()` function we made as an exercise is a "function factory". It takes data and returns a function (e.g. `square()` or `cube()`)
-- `mutate(across(...))` are "functional". They take a function (and data) and return data
-- the `set_na.rm` function we made as an exercise is a "function operator": it takes a function and returns a function
-
-These categories are not explicit constructs that exist in R, they are just a way to think about the power of higher order functions. 
-
-Tidyverse + Functions
-===
-type: section
-
-Passing column names to tidyverse within functions
-===
-- Consider this function, which shuffles the `number` column in the passed-in dataframe
-
-
-
-```r
-data = tibble(
-  number = c(1,2,3),
-  label = c('a','b','c')
-)
-
-shuffle_col_named_number = function(df) {
-  df %>% 
-    mutate(number = sample(number, nrow(df)))
-}
-
-data %>% shuffle_col_named_number()
-# A tibble: 3 × 2
-  number label
-   <dbl> <chr>
-1      3 a    
-2      1 b    
-3      2 c    
-```
-
-- What if we wanted to modify it so that `number` weren't hard-coded? Intuitively, we should write something like this:
-
-```r
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate(col = sample(col, nrow(data)))
-}
-```
-
-Passing column names to tidyverse within functions
-===
-
-```r
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate(col = sample(
-      col, 
-      nrow(data)
-    ))
-}
-```
-- Unfortunately, this doesn't work:
-
-
-```r
-data %>% shuffle_col(number)
-Error in `mutate()`:
-ℹ In argument: `col = sample(col, nrow(data))`.
-Caused by error:
-! object 'number' not found
-```
-- The problem is that R doesn't know that `number` should refer to a column in the data, not to an object in the global environment. 
-
-***
-
-- The fix is to use the `{{...}}` syntax to surround the passed in variable name where it gets used in the function. 
-
-
-```r
-shuffle_col = function(data, col) {
-  data %>% 
-    mutate(new_col = sample(
-      {{col}}, 
-      nrow(data)
-    ))
-}
-
-data %>% shuffle_col(number)
-# A tibble: 3 × 3
-  number label new_col
-   <dbl> <chr>   <dbl>
-1      1 a           3
-2      2 b           2
-3      3 c           1
-```
-- This tells R not to look for that object in the global environment.
-- Called "embracing"
-- More on this: see https://dplyr.tidyverse.org/articles/programming.html
-- It gets complicated but this is the price to be paid for nice tidyverse syntax
-
-Conditional Evaluation
-=== 
-type: section 
-
-Conditional Evaluation
-=== 
-- An if statement allows you to conditionally execute code. It looks like this:
-
-```
-if (condition) {
-  # code executed when condition is TRUE
-} else {
-  # code executed when condition is FALSE
-}
-```
-
-- The condition is code that evaluates to TRUE or FALSE
-
-```r
-absolute_value = function(x) {
-    if (x>0) {
-        x
-    } else {
-        -x
-    }
-}
-absolute_value(2)
-[1] 2
-absolute_value(-2)
-[1] 2
-```
-
-
-Conditional Evaluation
-=== 
-- if_else is a function that condenses an if-else statement and is good when the condition and bodies of code are very short
-- the first argument is the conditon, the second is what it returns when the condition is true, the third is what it returns when the condition is false
-
-```r
-absolute_value = function(x) {
-    if_else(x>0, x, -x)
-}
-absolute_value(2)
-[1] 2
-absolute_value(-2)
-[1] 2
-```
-
-Multiple conditions 
-===
-
-- You can evaluate multiple conditions with if...  else if... else
-
-```r
-valence = function(x) {
-    if (x>0) {
-        "positive"
-    } else if (x<0) {
-        "negative"
-    } else {
-        "zero"
-    }
-}
-valence(-12)
-[1] "negative"
-valence(99)
-[1] "positive"
-valence(0)
-[1] "zero"
-```
-
-Exercise: number of elements
-===
-type: prompt
-Write a function that takes a vector as input and returns whether or not it has at least 5 elements in it.
-
-
-Conditions
-===
-- Conditions can be anything that evaluates to a single `TRUE` or `FALSE`
-
-```r
-in_0_1 = function(number) {
-  if (0 <= number & number <=1) {
-      "in [0,1]"
-  } else {
-      "not in [0,1]"
-  }
-}
-in_0_1(0.3)
-[1] "in [0,1]"
-in_0_1(-1.1)
-[1] "not in [0,1]"
-```
-- but not a logical vector or an NA
-
-```r
-in_0_1(
-  c(0.3, -1.1)
-)
-Error in if (0 <= number & number <= 1) {: the condition has length > 1
-```
-
-if_else
-===
-- `if_else` is a vectorized if-else statement
-
-```r
-in_0_1 = function(x) if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
-```
-
-
-```r
-in_0_1(
-  c(0.3, -1.1)
-)
-[1] "in [0,1]"     "not in [0,1]"
-```
-
-
-Lists
-===
-type: section
-
-Lists
-===
-- A `list` is like an atomic vector, except the elements don't have to be the same type of thing
-
-```r
-a_vector = c(1,2,4,5)
-maybe_a_vector = c(1,2,"hello",5,TRUE)
-maybe_a_vector # R converted all of these things to strings!
-[1] "1"     "2"     "hello" "5"     "TRUE" 
-```
-- You make them with list() and you can index them like vectors
-
-```r
-a_list = list(1,2,"hello",5,TRUE)
-a_list[3:5]
-[[1]]
-[1] "hello"
-
-[[2]]
-[1] 5
-
-[[3]]
-[1] TRUE
-```
-- Anything can go in lists, including vectors, other lists, data frames, etc.
-- In fact, a data frame (or tibble) is actually just a list of named column vectors with an enforced constraint that all of the vectors have to be of the same length. That's why the `df$col` syntax works for data frames.
-
-Seeing into lists
-===
-- Use `str()` to dig into nested lists and other complicated objects
-
-```r
-nested_list = list(a_list, 4, mtcars)
-str(nested_list)
-List of 3
- $ :List of 5
-  ..$ : num 1
-  ..$ : num 2
-  ..$ : chr "hello"
-  ..$ : num 5
-  ..$ : logi TRUE
- $ : num 4
- $ :'data.frame':	32 obs. of  11 variables:
-  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
-  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
-  ..$ disp: num [1:32] 160 160 108 258 360 ...
-  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
-  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
-  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
-  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
-  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
-  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
-  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
-  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
-```
-
-Getting elements from a list
-===
-- You can also name the elements in a list
-
-```r
-a_list = list(
-    first_number = 1,
-    second_number = 2,
-    a_string = "hello",
-    third_number = 5,
-    some_logical = TRUE)
-```
-- and then retrieve elements by name or position or using the tidyverse-friendly `pluck()`
-
-```r
-a_list$a_string  # returns the element named "thrid_number"
-[1] "hello"
-a_list[[3]] # returns the 3rd element
-[1] "hello"
-a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
-$a_string
-[1] "hello"
-a_list %>%
-  pluck("a_string")
-[1] "hello"
-```
-
-Using elements in list
-===
-- If you use the `magrittr` package, you can operate on items in lists with the `%$%` operator (fun fact: the `%>%` operator originally came from `magrittr`)
-
-```r
-library(magrittr)
-list(a=5, b=6) %$%
-  rnorm(10, mean=a, sd=b)
- [1] 12.902410 -3.716592  1.609360 15.113924  4.323319  6.272638  9.270736
- [8] 21.246447  4.848733 10.744141
-```
-- `%$%` makes the elements of the list on the left-hand side accessible in bare-name form to the expression on the right-hand side so you don't have to type extra dollar signs:
-
-```r
-x =  list(a=5, b=6)
-rnorm(10, mean=x$a, sd=x$b)
- [1] 11.0099634  5.4482640  0.7418732  7.3853485 16.3768914  6.8653181
- [7] -9.8723235  0.8039850 -0.4716639 -3.2606346
-```
-
-Exercise: getting things out of a list
-===
-type:prompt
-Create this list in your workspace and write code to extract the element `"b"`.
-
-```r
-x = list(
-  list("a", "b", "c"), 
-  "d", 
-  "e", 
-  6
-)
-```
-
 Functions returning multiple values
 ===
 - A function can only return a single object
 - Often, however, it makes sense to group the calculation of two or more things you want to return within a single function
-- You can put all of that into a list and then retrun a single list
+- You can put all of that into a list and then return a single list
 
 ```r
 min_max = function(x) {
@@ -609,79 +235,54 @@ min_max = function(x) {
 ```
 - Why might this code be preferable to running `min()` and then `max()`?
 
-Functions returning multiple values
-===
-- If you use the `zeallot` package, you can assign multiple values out of a list at once using the `c(...) %<-% ...` syntax
+***
+
+- A `list` is like a vector, except the elements don't have to be the same type of thing
 
 ```r
-min_max = function(x) {
-  x_sorted = sort(x)
-  list(
-    min = x_sorted[1],
-    max = x_sorted[length(x)]
-  )
-}
+c(1,2,"hello",5,TRUE)
+[1] "1"     "2"     "hello" "5"     "TRUE" 
 
-library(zeallot)
-c(min_x, max_x) %<-% min_max(rnorm(10))
-min_x
-[1] -1.466663
-max_x
-[1] 1.363967
-```
-
-Dots
-===
-- Besides positional and named arguments, functions in R can also be written to take a variable number of arguments!
-
-```r
-sum(1)
+list(1,2,"hello",5,TRUE)
+[[1]]
 [1] 1
-sum(1,2,3,6) # pass in as many as you want and it still works
-[1] 12
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] "hello"
+
+[[4]]
+[1] 5
+
+[[5]]
+[1] TRUE
 ```
-- Obviously there aren't an infinite number of `sum()` functions to work with all the possible different numbers of arguments
-- To write functions like this, use the dots `...` syntax
 
-```r
-space_text = function(...) {
-  dots = list(...)
-  str_c(dots, collapse=" ")
-} 
-
-space_text("hello", "there,", "how", "are", "you")
-[1] "hello there, how are you"
-space_text("fine,", "thanks")
-[1] "fine, thanks"
-```
-- You can get whatever is passed to the function and save it as a (possibly named) list using `list(...)`
-
-Dots
+Functions are objects
 ===
-- This is useful when you want to pass on a bunch of arbitrary named arguments to another function, but hardcode one or more of them
 
 ```r
-mean_no_na = function(...) {
-  mean(..., na.rm=T)
+rescale
+function(x, na.rm=TRUE) {
+  x_rng = range(x, na.rm=na.rm) 
+  (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-x = c(rnorm(100), NA)
-mean(x)
-[1] NA
-mean_no_na(x)
-[1] -0.03458285
-mean_no_na(x, trim=0.5)
-[1] -0.05075987
-mean(x, trim=0.5, na.rm=T)
-[1] -0.05075987
+<bytecode: 0x107307a38>
 ```
-- Note how `trim` gets passed through as an argument to `mean()` even though it is not specified as an argument in the function declaration of `mean_no_na()`
+- Because of this, they themselves can be passed as arguments to other functions
 
-Exercise: ggplot with red dots
+```r
+df2 = df %>% mutate(across(a:d, rescale))
+```
+- This is what **functional programming** means. The functions themselves are can be treated as regular objects like variables
+- The name of the function is just what you call the "box" that the function (the code) lives in, just like variables names are names for "boxes" that contain data
+
+Exercise: Quadratic equation
 ===
-type: prompt
-- Use the dots to create a fully-featured function (call it `ggplot_redpoint()`), that works exactly like `ggplot()` except that it automatically adds a geom with red points.
-- Test it out using data of your choice
-
+type:prompt
+- modify your quadratic equation function so that it returns **both** roots of a polynomial Ax^2 + Bx + C. 
 
 Iteration
 ===
@@ -695,41 +296,57 @@ Map
 the results together into a list, and returns that
 
 ```r
-numbers = rnorm(3)
-map(numbers, in_0_1)
-[[1]]
-[1] "in [0,1]"
+grades = list(
+  class_A = c(90, 87, 92, 78, 69),
+  class_B = c(88, 85, 76, 78, 77, 97, 91)
+)
+map(grades, mean)
+$class_A
+[1] 83.2
 
-[[2]]
-[1] "not in [0,1]"
-
-[[3]]
-[1] "not in [0,1]"
+$class_B
+[1] 84.57143
 ```
-- Equivalently:
+- map preserves list names
+***
+
+- Or:
 
 ```r
-numbers %>%
-  map(in_0_1)
-[[1]]
-[1] "in [0,1]"
+grades %>%
+  map(mean)
+$class_A
+[1] 83.2
 
-[[2]]
-[1] "not in [0,1]"
-
-[[3]]
-[1] "not in [0,1]"
+$class_B
+[1] 84.57143
 ```
-- this is really only useful when your function isn't already vectorized
+
 
 ```r
-in_0_1(numbers)
-[1] "in [0,1]"     "not in [0,1]" "not in [0,1]"
+grades %>%
+  map(max)
+$class_A
+[1] 92
+
+$class_B
+[1] 97
+```
+
+
+```r
+grades %>%
+  map(min)
+$class_A
+[1] 69
+
+$class_B
+[1] 76
 ```
 
 Map 
 ===
-- for example, let's say you want to read in multiple files:
+- as another example, let's say you want to read in multiple files:
 
 ```r
 url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
@@ -748,55 +365,6 @@ data_frames = urls %>%
   map(read_csv)
 ```
 
-Names are preserved through map
-===
-- If the input list (or vector) has names, the output will have elements with the same names
-
-```r
-read_gtex = function(file) {
-  str_c(url_start, file) %>%
-    read_csv()
-}
-
-data_frames = files %>%
-  map(read_gtex)
-
-names(data_frames)
-[1] "samples" "tissues" "dates"  
-```
-
-
-Returning other data types
-===
-- `map()` typically returns a list (why?)
-- But there are variants that return different data types
-
-
-```r
-data_frames %>%
-  map_dbl(nrow)
-samples tissues   dates 
-     66    1475    1234 
-```
-
-
-```r
-count_rc = function(df) {
-  tibble(
-    n_rows = nrow(df),
-    n_cols = ncol(df)
-  )
-}
-
-data_frames %>%
-  map_df(count_rc)
-# A tibble: 3 × 2
-  n_rows n_cols
-   <int>  <int>
-1     66      3
-2   1475      4
-3   1234      6
-```
 
 Anonymous function syntax
 ===
@@ -830,11 +398,143 @@ data_frames %>%
 - the syntax is `\(ARGUMENTS) BODY`
 - just an abbreviation for `function(ARGUMENTS) {BODY}`
 
+Map or data frame?
+===
+
+- in our initial `map()` example we were looking at some course grades:
+
+```r
+grades
+$class_A
+[1] 90 87 92 78 69
+
+$class_B
+[1] 88 85 76 78 77 97 91
+
+grades %>% map(mean)
+$class_A
+[1] 83.2
+
+$class_B
+[1] 84.57143
+
+grades %>% map(max)
+$class_A
+[1] 92
+
+$class_B
+[1] 97
+
+grades %>% map(min)
+$class_A
+[1] 69
+
+$class_B
+[1] 76
+```
+
+***
+
+- these operations could be more organized if we made a data frame:
+
+```r
+grades_df = grades %>%
+  imap(\(vec, name) 
+    tibble(class=name, grade=vec)
+  ) %>%
+  bind_rows
+
+grades_df %>%
+  group_by(class) %>%
+  summarize(
+    mean(grade), 
+    max(grade), 
+    min(grade)
+  )
+# A tibble: 2 × 4
+  class   `mean(grade)` `max(grade)` `min(grade)`
+  <chr>           <dbl>        <dbl>        <dbl>
+1 class_A          83.2           92           69
+2 class_B          84.6           97           76
+```
+
 Exercise: map practice
 ===
 type: prompt
-- Determine the type of each column in `gtex_data` (`?typeof`). Return the result as a vector of strings (note: a data frame is a list of columns)
+
+
+```r
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+
+data_frames = list(
+  samples = "gtex_samples_time.csv",
+  tissues = "gtex_tissue_month_year.csv",
+  dates = "gtex_dates_clean.csv"
+)  %>% 
+  map(\(f) str_c(url_start, f)) %>%
+  map(read_csv)
+```
+
+`data_frames` is a list of three data frames. Use map to output:
+1. the number of rows of each table
+2. the number of columns of each table
+
+Exercise: read files
+===
+type: prompt
+
+Earlier we saw this example of reading in multiple files:
+
+```r
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+
+data_frames = list(
+  samples = "gtex_samples_time.csv",
+  tissues = "gtex_tissue_month_year.csv",
+  dates = "gtex_dates_clean.csv"
+)  %>% 
+  map(\(f) str_c(url_start, f)) %>%
+  map(read_csv)
+```
+
+- modify the code so that only the first 10 lines of each file are read in.
+
+Exercise: map practice
+===
+type: prompt
 - For each value of x in [1, 5, 10] Generate 10 random numbers between 0 and x (see: `?runif`).
+
+Returning other data types
+===
+- `map()` typically returns a list (why?)
+- But there are variants that return different data types
+
+
+```r
+data_frames %>%
+  map_dbl(nrow)
+samples tissues   dates 
+     66    1475    1234 
+```
+
+
+```r
+count_rc = function(df) {
+  tibble(
+    n_rows = nrow(df),
+    n_cols = ncol(df)
+  )
+}
+
+data_frames %>%
+  map_df(count_rc)
+# A tibble: 3 × 2
+  n_rows n_cols
+   <int>  <int>
+1     66      3
+2   1475      4
+3   1234      6
+```
 
 Mapping over multiple inputs
 ===
@@ -845,11 +545,11 @@ a = c(1,2,3)
 b = c(2,3,4)
 
 runif(1, a[1], b[1])
-[1] 1.578026
+[1] 1.075221
 runif(1, a[2], b[2])
-[1] 2.467262
+[1] 2.823572
 runif(1, a[3], b[3])
-[1] 3.875027
+[1] 3.480157
 ```
 
 ***
@@ -863,19 +563,63 @@ list(
   \(a,b) runif(1,a,b)
 )
 [[1]]
-[1] 1.046799
+[1] 1.319748
 
 [[2]]
-[1] 2.919092
+[1] 2.514968
 
 [[3]]
-[1] 3.88736
+[1] 3.778681
 ```
 
 
 <div align="center">
 <img src="https://dcl-prog.stanford.edu/images/pmap-flipped.png">
 </div>
+
+Mapping over names
+===
+- `imap()` lets you operate on the **names** of the input list.
+
+```r
+grades
+$class_A
+[1] 90 87 92 78 69
+
+$class_B
+[1] 88 85 76 78 77 97 91
+```
+
+*** 
+
+
+```r
+grades %>% imap(
+  \(value, name) 
+  tibble(grade=value, class=name)
+)
+$class_A
+# A tibble: 5 × 2
+  grade class  
+  <dbl> <chr>  
+1    90 class_A
+2    87 class_A
+3    92 class_A
+4    78 class_A
+5    69 class_A
+
+$class_B
+# A tibble: 7 × 2
+  grade class  
+  <dbl> <chr>  
+1    88 class_B
+2    85 class_B
+3    76 class_B
+4    78 class_B
+5    77 class_B
+6    97 class_B
+7    91 class_B
+```
 
 Creating a grid of values
 === 
@@ -897,15 +641,55 @@ expand_grid(
 6     3    11
 ```
 
+Exercise: dimensions
+===
+type:prompt
+
+
+```r
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+
+data_frames = list(
+  samples = "gtex_samples_time.csv",
+  tissues = "gtex_tissue_month_year.csv",
+  dates = "gtex_dates_clean.csv"
+)  %>% 
+  map(\(f) str_c(url_start, f)) %>%
+  map(read_csv)
+```
+
+Fill in the missing parts of the code below to programmatically create the following table:
+
+
+
+```r
+data_frames %>%
+  imap(
+    ???
+  ) %>%
+  bind_rows()
+```
+
+
+```
+# A tibble: 3 × 3
+  dataset  nrow  ncol
+  <chr>   <int> <int>
+1 samples    66     3
+2 tissues  1475     4
+3 dates    1234     6
+```
+
+
 Exercise: reading files in multiple directories 
 ===
 type: prompt
 My collaborator has an online folder of experimental results named `results` that can be found at `"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"`. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_14` would be one sub-folder. Within each sub-folder, there are 3 csv files called `a.csv`, `b.csv` `c.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_14/c.csv`.
 
-1. write code to read these all into one long list of data frames. `str_c()` or `glue()` will be helpful.
+1. write code to read these all into one long list of data frames. `str_c()` or `glue()` will be helpful to create the required file names
 
 
-2. Unfortunately, that wasn't helpful because now you don't know what data frames are what results. Consider just the `a` files. Write code that reads in all of the `a` files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from.
+2. Unfortunately, that wasn't helpful because now you don't know what data frames are what results. Consider just the "`a`" files. Write code that reads in only the "`a`" files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from (use `imap()`).
 
 
 3. Turn your code from above into a function that takes as input the file name (`'a'`, for example) and returns the single concatenated file. Iterate that function over the different file names to output three master data frames corresponding to the file types `'a'`, `'b'`, and `'c'`.

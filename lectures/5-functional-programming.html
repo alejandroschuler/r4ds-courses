@@ -827,10 +827,10 @@ hljs.initHighlightingOnLoad();
 <section data-transition="none" data-transition-speed="default">
 <h3>Example</h3>
 <div class="slideContent" >
-<p>What does this code do? (recall that <code>df$col</code> is the same as <code>df %&gt;% pull(col)</code>)</p>
+<p>What does this code do? (note that <code>df$col</code> is a shortcut for <code>df %&gt;% pull(col)</code>)</p>
 
-<pre><code class="r">df &lt;- tibble(
-  a = rnorm(10), # 10 random numbers from a normal distribution
+<pre><code class="r">df = tibble(
+  a = rnorm(10), # 10 random numbers 
   b = rnorm(10),
   c = rnorm(10),
   d = rnorm(10)
@@ -876,16 +876,16 @@ df$d = (df$d - min(df$d, na.rm = TRUE)) /
 <section data-transition="none" data-transition-speed="default">
 <h3>Example</h3>
 <div class="slideContent" >
-<pre><code class="r">rescale_0_1 = function(vec) {
+<pre><code class="r">rescale = function(vec) {
   (vec - min(vec))/(max(vec) - min(vec))
 }
 
 df2 = df %&gt;%
   mutate(
-    a= rescale_0_1(a),
-    b= rescale_0_1(b),
-    c= rescale_0_1(c),
-    d= rescale_0_1(d),
+    a= rescale(a),
+    b= rescale(b),
+    c= rescale(c),
+    d= rescale(d),
   )
 </code></pre>
 
@@ -894,7 +894,7 @@ df2 = df %&gt;%
 <li>The last two lines clearly say: replace all the columns with their rescaled versions
 
 <ul>
-<li>This is because the function name <code>rescale_0_1()</code> is informative and communicates what it does</li>
+<li>This is because the function name <code>rescale()</code> is informative and communicates what it does</li>
 <li>If a user (or you a few weeks later) is curious about the specifics, they can check the function body</li>
 </ul></li>
 </ul>
@@ -905,13 +905,13 @@ df2 = df %&gt;%
 <section data-transition="none" data-transition-speed="default">
 <h3>Example</h3>
 <div class="slideContent" >
-<pre><code class="r">rescale_0_1 = function(vec) {
+<pre><code class="r">rescale = function(vec) {
   (vec - min(vec))/(max(vec) - min(vec))
 }
 
 df2 = df %&gt;%
   mutate(
-    across(a:d, rescale_0_1)
+    across(a:d, rescale)
   ) # see ?across
 </code></pre>
 
@@ -927,13 +927,13 @@ df2 = df %&gt;%
 <section data-transition="none" data-transition-speed="default">
 <h3>Example</h3>
 <div class="slideContent" >
-<pre><code class="r">rescale_0_1 = function(vec) {
+<pre><code class="r">rescale = function(vec) {
   vec_rng = range(vec, na.rm=T) # same as c(min(vec,na.rm=T), max(vec,na.rm=T))
   (vec - vec_rng[1])/(vec_rng[2] - vec_rng[1])
 }
 
 df2 = df %&gt;%
-  mutate(across(a:d, rescale_0_1))
+  mutate(across(a:d, rescale))
 </code></pre>
 
 <ul>
@@ -949,14 +949,14 @@ df2 = df %&gt;%
 <div class="slideContent" >
 <p>We can also test our function in cases where we know what the output should be to make sure it works as intended before we let it loose on the real data</p>
 
-<pre><code class="r">rescale_0_1(c(0,0,0,0,0,1))
+<pre><code class="r">rescale(c(0,0,0,0,0,1))
 [1] 0 0 0 0 0 1
-rescale_0_1(0:10)
+rescale(0:10)
  [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
-rescale_0_1(-10:0)
+rescale(-10:0)
  [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 x = c(0,1,runif(100))
-all(x == rescale_0_1(x))
+all(x == rescale(x))
 [1] TRUE
 </code></pre>
 
@@ -968,48 +968,101 @@ all(x == rescale_0_1(x))
 
 </section>
 <section data-transition="none" data-transition-speed="default">
-<h3>Function syntax</h3>
-<div class="slideContent" >
+<h3>Function declaration syntax</h3>
+<div class="column column1 slideContent" >
 <p>To write a function, just wrap your code in some special syntax that tells it what variables will be passed in and what will be returned</p>
 
-<pre><code class="r">rescale_0_1 = function(x) {
+<pre><code class="r">rescale = function(x) {
   x_rng = range(x, na.rm=T) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-
-rescale_0_1(c(0,0,0,0,0,1))
-[1] 0 0 0 0 0 1
-rescale_0_1(0:10)
- [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
 </code></pre>
 
 <ul>
-<li>The syntax is <code>FUNCTION_NAME &lt;- function(ARGUMENTS...) { CODE }</code></li>
 <li>Just like assigning a variable, except what you put into <code>FUNCTION_NAME</code> now isn&#39;t a data frame, vector, etc, it&#39;s a function object that gets created by the <code>function(..) {...}</code> syntax</li>
 <li>At any point in the body you can <code>return()</code> the value, or R will automatically return the result of the last line of code in the body that gets run</li>
+<li>once declared, it can be called:</li>
 </ul>
+
+<pre><code class="r">rescale(0:10)
+ [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+</code></pre>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+
+
+<ul>
+<li>The syntax is <code>FUNCTION_NAME &lt;- function(ARGUMENTS...) { CODE }</code></li>
+<li>what you call the arguments that go in the <code>function(...)</code> part is how the function will refer to these inputs internally and specify how it should be called using named arguments</li>
+</ul>
+
+<p><img src="https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true" alt=""/></p>
+
+<pre><code>aes = function(x,y) {...} # defining 
+aes(x=EIF3L, y=VAPA) # calling 
+</code></pre>
 
 </div>
 
 </section>
 <section data-transition="none" data-transition-speed="default">
-<h3>Function syntax</h3>
+<h3>Optional arguments</h3>
 <div class="slideContent" >
-<p>To add a named argument, add an <code>=</code> after you declare it as a variable and write in the default value that you would like that variable to take</p>
+<p>To add an <strong>optional</strong> argument, add an <code>=</code> after you declare it as a variable and write in the default value that you would like that variable to take</p>
 
-<pre><code class="r">rescale_0_1 = function(x, na.rm=TRUE) {
+<pre><code class="r">rescale = function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
 
-rescale_0_1(c(0,0,0,0,0,1))
-[1] 0 0 0 0 0 1
-rescale_0_1(0:10)
- [1] 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+vec = c(0,1,NA)
+
+rescale(vec)
+[1]  0  1 NA
+rescale(vec, na.rm=T)
+[1]  0  1 NA
+rescale(vec, na.rm=F)
+[1] NA NA NA
 </code></pre>
 
 <ul>
-<li>All named arguments must go after positional arguments in the function declaration</li>
+<li>All optional arguments must go after mandatory arguments in the function declaration</li>
+</ul>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: Reverse</h3>
+<div class="slideContent" >
+<ul>
+<li>write a function that takes a single vector or list as input and returns it in reverse order</li>
+</ul>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: Quadratic equation</h3>
+<div class="slideContent" >
+<ul>
+<li>write a function that returns the larger of the two roots of a polynomial Ax<sup>2</sup> + Bx + C obtained using the quadratic equation. </li>
+<li>your function should take as input three arguments: <code>A</code>, <code>B</code>, and <code>C</code>, and should return a single number (possibly <code>NaN</code> if there turn out to be no roots)</li>
+<li>test your function with a variety of inputs by checking that the returned solution x does satisfy Ax<sup>2</sup> + Bx + C = 0.</li>
+</ul>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: Hardcoding na.rm</h3>
+<div class="slideContent" >
+<ul>
+<li>It&#39;s annoying that the <code>sum()</code> function returns <code>NA</code> if any values of the input vector are <code>NA</code>. You can fix this by passing in the optional argument <code>na.rm=T</code> every time you call <code>sum()</code>, but it&#39;s inconvenient to type that every single time.</li>
+<li>Using a single line of code, write a new function (called <code>sum_obs()</code>, short for &ldquo;sum observed&rdquo;) that takes a vector and returns the sum of all the non-NA values. Your function should call the usual <code>sum()</code> internally.</li>
 </ul>
 
 </div>
@@ -1027,534 +1080,12 @@ rescale_0_1(0:10)
 
 </section>
 <section data-transition="none" data-transition-speed="default">
-<h3>Note: functions are objects just like variables are</h3>
-<div class="slideContent" >
-<pre><code class="r">rescale_0_1
-function(x, na.rm=TRUE) {
-  x_rng = range(x, na.rm=na.rm) 
-  (x - x_rng[1])/(x_rng[2] - x_rng[1])
-}
-&lt;bytecode: 0x7f9e317fcb28&gt;
-</code></pre>
-
-<ul>
-<li>As we&#39;ve seen, they themselves can be passed as arguments to other functions</li>
-</ul>
-
-<pre><code class="r">df2 = df %&gt;% mutate(across(a:d, rescale_0_1))
-</code></pre>
-
-<ul>
-<li>This is what <strong>functional programming</strong> means. The functions themselves are can be treated as regular objects like variables</li>
-<li>The name of the function is just what you call the &ldquo;box&rdquo; that the function (the code) lives in, just like variables names are names for &ldquo;boxes&rdquo; that contain data</li>
-</ul>
-
-</div>
-
-</section>
-<section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: function factory</h3>
-<div class="slideContent" >
-<p>Without running this code, predict what the output will be:</p>
-
-<pre><code class="r">f = function(x) {
-  y = x
-  function(y) {
-    y + x
-  }
-}
-f(1)(2)
-</code></pre>
-
-</div>
-
-</section>
-<section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: exponent function factory</h3>
-<div class="slideContent" >
-<p>Write a function called <code>power()</code> that takes an argument <code>n</code> and returns a function that takes an argument x and computes <code>x^n</code></p>
-
-<ul>
-<li>Example use:</li>
-</ul>
-
-<pre><code class="r">square = power(2)
-cube = power(3)
-square(2)
-[1] 4
-cube(2)
-[1] 8
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Function operators</h3>
-<div class="slideContent" >
-<ul>
-<li>As we&#39;ve seen, functions can also take other functions as arguments</li>
-<li>We can use this to write functions that take functions, modify them, and return the modified function</li>
-</ul>
-
-<pre><code class="r">set_na.rm = function(f, na.rm) {
-  function(x) {
-    f(x, na.rm=na.rm)
-  }
-}
-mean_na.rm = set_na.rm(mean, na.rm=T)
-
-x = c(rnorm(100), NA)
-mean_na.rm(x)
-[1] 0.03090052
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Functional programming</h3>
-<div class="slideContent" >
-<p>We&#39;ve discussed a number of <strong>higher-order functions</strong> that either take functions as inputs, return functions as outputs, or both. </p>
-
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/1dff819e743f280bbab1c55f8f063e60b6a0d2fb/2269e/diagrams/fp.png">
-</div>
-
-<ul>
-<li><code>mean()</code> is a &ldquo;regular function&rdquo;. It takes data and returns data</li>
-<li>the <code>power()</code> function we made as an exercise is a &ldquo;function factory&rdquo;. It takes data and returns a function (e.g. <code>square()</code> or <code>cube()</code>)</li>
-<li><code>mutate(across(...))</code> are &ldquo;functional&rdquo;. They take a function (and data) and return data</li>
-<li>the <code>set_na.rm</code> function we made as an exercise is a &ldquo;function operator&rdquo;: it takes a function and returns a function</li>
-</ul>
-
-<p>These categories are not explicit constructs that exist in R, they are just a way to think about the power of higher order functions. </p>
-
-</div>
-
-</section>
-<section data-state="section" data-transition="none" data-transition-speed="default">
-<h2>Tidyverse + Functions</h2>
-<div class="slideContent" >
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Passing column names to tidyverse within functions</h3>
-<div class="slideContent" >
-<ul>
-<li>Consider this function, which shuffles the <code>number</code> column in the passed-in dataframe</li>
-</ul>
-
-<pre><code class="r">data = tibble(
-  number = c(1,2,3),
-  label = c(&#39;a&#39;,&#39;b&#39;,&#39;c&#39;)
-)
-
-shuffle_col_named_number = function(df) {
-  df %&gt;% 
-    mutate(number = sample(number, nrow(df)))
-}
-
-data %&gt;% shuffle_col_named_number()
-# A tibble: 3 × 2
-  number label
-   &lt;dbl&gt; &lt;chr&gt;
-1      3 a    
-2      1 b    
-3      2 c    
-</code></pre>
-
-<ul>
-<li>What if we wanted to modify it so that <code>number</code> weren&#39;t hard-coded? Intuitively, we should write something like this:</li>
-</ul>
-
-<pre><code class="r">shuffle_col = function(data, col) {
-  data %&gt;% 
-    mutate(col = sample(col, nrow(data)))
-}
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Passing column names to tidyverse within functions</h3>
-<div class="column column1 slideContent" >
-<pre><code class="r">shuffle_col = function(data, col) {
-  data %&gt;% 
-    mutate(col = sample(
-      col, 
-      nrow(data)
-    ))
-}
-</code></pre>
-
-<ul>
-<li>Unfortunately, this doesn&#39;t work:</li>
-</ul>
-
-<pre><code class="r">data %&gt;% shuffle_col(number)
-Error in `mutate()`:
-! Problem while computing `col = sample(col, nrow(data))`.
-Caused by error in `sample()`:
-! object &#39;number&#39; not found
-</code></pre>
-
-<ul>
-<li>The problem is that R doesn&#39;t know that <code>number</code> should refer to a column in the data, not to an object in the global environment. </li>
-</ul>
-
-
-</div>
-
-<div class="column column2 slideContent" >
-
-
-<ul>
-<li>The fix is to use the <code>{{...}}</code> syntax to surround the passed in variable name where it gets used in the function. </li>
-</ul>
-
-<pre><code class="r">shuffle_col = function(data, col) {
-  data %&gt;% 
-    mutate(new_col = sample(
-      {{col}}, 
-      nrow(data)
-    ))
-}
-
-data %&gt;% shuffle_col(number)
-# A tibble: 3 × 3
-  number label new_col
-   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
-1      1 a           3
-2      2 b           2
-3      3 c           1
-</code></pre>
-
-<ul>
-<li>This tells R not to look for that object in the global environment.</li>
-<li>Called &ldquo;embracing&rdquo;</li>
-<li>More on this: see <a href="https://dplyr.tidyverse.org/articles/programming.html">https://dplyr.tidyverse.org/articles/programming.html</a></li>
-<li>It gets complicated but this is the price to be paid for nice tidyverse syntax</li>
-</ul>
-
-</div>
-
-</section>
-<section data-state="section" data-transition="none" data-transition-speed="default">
-<h2>Conditional Evaluation</h2>
-<div class="slideContent" >
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Conditional Evaluation</h3>
-<div class="slideContent" >
-<ul>
-<li>An if statement allows you to conditionally execute code. It looks like this:</li>
-</ul>
-
-<pre><code>if (condition) {
-  # code executed when condition is TRUE
-} else {
-  # code executed when condition is FALSE
-}
-</code></pre>
-
-<ul>
-<li>The condition is code that evaluates to TRUE or FALSE</li>
-</ul>
-
-<pre><code class="r">absolute_value = function(x) {
-    if (x&gt;0) {
-        x
-    } else {
-        -x
-    }
-}
-absolute_value(2)
-[1] 2
-absolute_value(-2)
-[1] 2
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Conditional Evaluation</h3>
-<div class="slideContent" >
-<ul>
-<li>if_else is a function that condenses an if-else statement and is good when the condition and bodies of code are very short</li>
-<li>the first argument is the conditon, the second is what it returns when the condition is true, the third is what it returns when the condition is false</li>
-</ul>
-
-<pre><code class="r">absolute_value = function(x) {
-    if_else(x&gt;0, x, -x)
-}
-absolute_value(2)
-[1] 2
-absolute_value(-2)
-[1] 2
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Multiple conditions </h3>
-<div class="slideContent" >
-<ul>
-<li>You can evaluate multiple conditions with if&hellip;  else if&hellip; else</li>
-</ul>
-
-<pre><code class="r">valence = function(x) {
-    if (x&gt;0) {
-        &quot;positive&quot;
-    } else if (x&lt;0) {
-        &quot;negative&quot;
-    } else {
-        &quot;zero&quot;
-    }
-}
-valence(-12)
-[1] &quot;negative&quot;
-valence(99)
-[1] &quot;positive&quot;
-valence(0)
-[1] &quot;zero&quot;
-</code></pre>
-
-</div>
-
-</section>
-<section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: number of elements</h3>
-<div class="slideContent" >
-<p>Write a function that takes a vector as input and returns whether or not it has at least 5 elements in it.</p>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Conditions</h3>
-<div class="slideContent" >
-<ul>
-<li>Conditions can be anything that evaluates to a single <code>TRUE</code> or <code>FALSE</code></li>
-</ul>
-
-<pre><code class="r">in_0_1 = function(number) {
-  if (0 &lt;= number &amp; number &lt;=1) {
-      &quot;in [0,1]&quot;
-  } else {
-      &quot;not in [0,1]&quot;
-  }
-}
-in_0_1(0.3)
-[1] &quot;in [0,1]&quot;
-in_0_1(-1.1)
-[1] &quot;not in [0,1]&quot;
-</code></pre>
-
-<ul>
-<li>but not a logical vector or an NA</li>
-</ul>
-
-<pre><code class="r">in_0_1(
-  c(0.3, -1.1)
-)
-Warning in if (0 &lt;= number &amp; number &lt;= 1) {: the condition has length &gt; 1 and
-only the first element will be used
-[1] &quot;in [0,1]&quot;
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>if_else</h3>
-<div class="slideContent" >
-<ul>
-<li><code>if_else</code> is a vectorized if-else statement</li>
-</ul>
-
-<pre><code class="r">in_0_1 = function(x) if_else(0&lt;=x &amp; x&lt;=1, &quot;in [0,1]&quot;, &quot;not in [0,1]&quot;)
-</code></pre>
-
-<pre><code class="r">in_0_1(
-  c(0.3, -1.1)
-)
-[1] &quot;in [0,1]&quot;     &quot;not in [0,1]&quot;
-</code></pre>
-
-</div>
-
-</section>
-<section data-state="section" data-transition="none" data-transition-speed="default">
-<h2>Lists</h2>
-<div class="slideContent" >
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Lists</h3>
-<div class="slideContent" >
-<ul>
-<li>A <code>list</code> is like an atomic vector, except the elements don&#39;t have to be the same type of thing</li>
-</ul>
-
-<pre><code class="r">a_vector = c(1,2,4,5)
-maybe_a_vector = c(1,2,&quot;hello&quot;,5,TRUE)
-maybe_a_vector # R converted all of these things to strings!
-[1] &quot;1&quot;     &quot;2&quot;     &quot;hello&quot; &quot;5&quot;     &quot;TRUE&quot; 
-</code></pre>
-
-<ul>
-<li>You make them with list() and you can index them like vectors</li>
-</ul>
-
-<pre><code class="r">a_list = list(1,2,&quot;hello&quot;,5,TRUE)
-a_list[3:5]
-[[1]]
-[1] &quot;hello&quot;
-
-[[2]]
-[1] 5
-
-[[3]]
-[1] TRUE
-</code></pre>
-
-<ul>
-<li>Anything can go in lists, including vectors, other lists, data frames, etc.</li>
-<li>In fact, a data frame (or tibble) is actually just a list of named column vectors with an enforced constraint that all of the vectors have to be of the same length. That&#39;s why the <code>df$col</code> syntax works for data frames.</li>
-</ul>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Seeing into lists</h3>
-<div class="slideContent" >
-<ul>
-<li>Use <code>str()</code> to dig into nested lists and other complicated objects</li>
-</ul>
-
-<pre><code class="r">nested_list = list(a_list, 4, mtcars)
-str(nested_list)
-List of 3
- $ :List of 5
-  ..$ : num 1
-  ..$ : num 2
-  ..$ : chr &quot;hello&quot;
-  ..$ : num 5
-  ..$ : logi TRUE
- $ : num 4
- $ :&#39;data.frame&#39;:   32 obs. of  11 variables:
-  ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
-  ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
-  ..$ disp: num [1:32] 160 160 108 258 360 ...
-  ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
-  ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
-  ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
-  ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
-  ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
-  ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
-  ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
-  ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Getting elements from a list</h3>
-<div class="slideContent" >
-<ul>
-<li>You can also name the elements in a list</li>
-</ul>
-
-<pre><code class="r">a_list = list(
-    first_number = 1,
-    second_number = 2,
-    a_string = &quot;hello&quot;,
-    third_number = 5,
-    some_logical = TRUE)
-</code></pre>
-
-<ul>
-<li>and then retrieve elements by name or position or using the tidyverse-friendly <code>pluck()</code></li>
-</ul>
-
-<pre><code class="r">a_list$a_string  # returns the element named &quot;thrid_number&quot;
-[1] &quot;hello&quot;
-a_list[[3]] # returns the 3rd element
-[1] &quot;hello&quot;
-a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
-$a_string
-[1] &quot;hello&quot;
-a_list %&gt;%
-  pluck(&quot;a_string&quot;)
-[1] &quot;hello&quot;
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Using elements in list</h3>
-<div class="slideContent" >
-<ul>
-<li>If you use the <code>magrittr</code> package, you can operate on items in lists with the <code>%$%</code> operator (fun fact: the <code>%&gt;%</code> operator originally came from <code>magrittr</code>)</li>
-</ul>
-
-<pre><code class="r">library(magrittr)
-list(a=5, b=6) %$%
-  rnorm(10, mean=a, sd=b)
- [1] 12.902410 -3.716592  1.609360 15.113924  4.323319  6.272638  9.270736
- [8] 21.246447  4.848733 10.744141
-</code></pre>
-
-<ul>
-<li><code>%$%</code> makes the elements of the list on the left-hand side accessible in bare-name form to the expression on the right-hand side so you don&#39;t have to type extra dollar signs:</li>
-</ul>
-
-<pre><code class="r">x =  list(a=5, b=6)
-rnorm(10, mean=x$a, sd=x$b)
- [1] 11.0099634  5.4482640  0.7418732  7.3853485 16.3768914  6.8653181
- [7] -9.8723235  0.8039850 -0.4716639 -3.2606346
-</code></pre>
-
-</div>
-
-</section>
-<section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: getting things out of a list</h3>
-<div class="slideContent" >
-<p>Create this list in your workspace and write code to extract the element <code>&quot;b&quot;</code>.</p>
-
-<pre><code class="r">x = list(
-  list(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), 
-  &quot;d&quot;, 
-  &quot;e&quot;, 
-  6
-)
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
 <h3>Functions returning multiple values</h3>
-<div class="slideContent" >
+<div class="column column1 slideContent" >
 <ul>
 <li>A function can only return a single object</li>
 <li>Often, however, it makes sense to group the calculation of two or more things you want to return within a single function</li>
-<li>You can put all of that into a list and then retrun a single list</li>
+<li>You can put all of that into a list and then return a single list</li>
 </ul>
 
 <pre><code class="r">min_max = function(x) {
@@ -1570,105 +1101,70 @@ rnorm(10, mean=x$a, sd=x$b)
 <li>Why might this code be preferable to running <code>min()</code> and then <code>max()</code>?</li>
 </ul>
 
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Functions returning multiple values</h3>
-<div class="slideContent" >
-<ul>
-<li>If you use the <code>zeallot</code> package, you can assign multiple values out of a list at once using the <code>c(...) %&lt;-% ...</code> syntax</li>
-</ul>
-
-<pre><code class="r">min_max = function(x) {
-  x_sorted = sort(x)
-  list(
-    min = x_sorted[1],
-    max = x_sorted[length(x)]
-  )
-}
-
-library(zeallot)
-c(min_x, max_x) %&lt;-% min_max(rnorm(10))
-min_x
-[1] -1.466663
-max_x
-[1] 1.363967
-</code></pre>
 
 </div>
 
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Dots</h3>
-<div class="slideContent" >
+<div class="column column2 slideContent" >
+
+
 <ul>
-<li>Besides positional and named arguments, functions in R can also be written to take a variable number of arguments!</li>
+<li>A <code>list</code> is like a vector, except the elements don&#39;t have to be the same type of thing</li>
 </ul>
 
-<pre><code class="r">sum(1)
+<pre><code class="r">c(1,2,&quot;hello&quot;,5,TRUE)
+[1] &quot;1&quot;     &quot;2&quot;     &quot;hello&quot; &quot;5&quot;     &quot;TRUE&quot; 
+
+list(1,2,&quot;hello&quot;,5,TRUE)
+[[1]]
 [1] 1
-sum(1,2,3,6) # pass in as many as you want and it still works
-[1] 12
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] &quot;hello&quot;
+
+[[4]]
+[1] 5
+
+[[5]]
+[1] TRUE
 </code></pre>
-
-<ul>
-<li>Obviously there aren&#39;t an infinite number of <code>sum()</code> functions to work with all the possible different numbers of arguments</li>
-<li>To write functions like this, use the dots <code>...</code> syntax</li>
-</ul>
-
-<pre><code class="r">space_text = function(...) {
-  dots = list(...)
-  str_c(dots, collapse=&quot; &quot;)
-} 
-
-space_text(&quot;hello&quot;, &quot;there,&quot;, &quot;how&quot;, &quot;are&quot;, &quot;you&quot;)
-[1] &quot;hello there, how are you&quot;
-space_text(&quot;fine,&quot;, &quot;thanks&quot;)
-[1] &quot;fine, thanks&quot;
-</code></pre>
-
-<ul>
-<li>You can get whatever is passed to the function and save it as a (possibly named) list using <code>list(...)</code></li>
-</ul>
 
 </div>
 
 </section>
 <section data-transition="none" data-transition-speed="default">
-<h3>Dots</h3>
+<h3>Functions are objects</h3>
 <div class="slideContent" >
-<ul>
-<li>This is useful when you want to pass on a bunch of arbitrary named arguments to another function, but hardcode one or more of them</li>
-</ul>
-
-<pre><code class="r">mean_no_na = function(...) {
-  mean(..., na.rm=T)
+<pre><code class="r">rescale
+function(x, na.rm=TRUE) {
+  x_rng = range(x, na.rm=na.rm) 
+  (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-x = c(rnorm(100), NA)
-mean(x)
-[1] NA
-mean_no_na(x)
-[1] -0.03458285
-mean_no_na(x, trim=0.5)
-[1] -0.05075987
-mean(x, trim=0.5, na.rm=T)
-[1] -0.05075987
+&lt;bytecode: 0x107307a38&gt;
 </code></pre>
 
 <ul>
-<li>Note how <code>trim</code> gets passed through as an argument to <code>mean()</code> even though it is not specified as an argument in the function declaration of <code>mean_no_na()</code></li>
+<li>Because of this, they themselves can be passed as arguments to other functions</li>
+</ul>
+
+<pre><code class="r">df2 = df %&gt;% mutate(across(a:d, rescale))
+</code></pre>
+
+<ul>
+<li>This is what <strong>functional programming</strong> means. The functions themselves are can be treated as regular objects like variables</li>
+<li>The name of the function is just what you call the &ldquo;box&rdquo; that the function (the code) lives in, just like variables names are names for &ldquo;boxes&rdquo; that contain data</li>
 </ul>
 
 </div>
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: ggplot with red dots</h3>
+<h3>Exercise: Quadratic equation</h3>
 <div class="slideContent" >
 <ul>
-<li>Use the dots to create a fully-featured function (call it <code>ggplot_redpoint()</code>), that works exactly like <code>ggplot()</code> except that it automatically adds a geom with red points.</li>
-<li>Test it out using data of your choice</li>
+<li>modify your quadratic equation function so that it returns <strong>both</strong> roots of a polynomial Ax<sup>2</sup> + Bx + C. </li>
 </ul>
 
 </div>
@@ -1683,7 +1179,7 @@ mean(x, trim=0.5, na.rm=T)
 </section>
 <section data-transition="none" data-transition-speed="default">
 <h3>Map</h3>
-<div class="slideContent" >
+<div class="column column1 slideContent" >
 <ul>
 <li>Map is a function that takes a list (or vector) as its first argument and a function as its second argument</li>
 <li>Recall that functions are objects just like anything else so you can pass them around to other functions</li>
@@ -1691,40 +1187,54 @@ mean(x, trim=0.5, na.rm=T)
 the results together into a list, and returns that</li>
 </ul>
 
-<pre><code class="r">numbers = rnorm(3)
-map(numbers, in_0_1)
-[[1]]
-[1] &quot;in [0,1]&quot;
+<pre><code class="r">grades = list(
+  class_A = c(90, 87, 92, 78, 69),
+  class_B = c(88, 85, 76, 78, 77, 97, 91)
+)
+map(grades, mean)
+$class_A
+[1] 83.2
 
-[[2]]
-[1] &quot;not in [0,1]&quot;
-
-[[3]]
-[1] &quot;not in [0,1]&quot;
+$class_B
+[1] 84.57143
 </code></pre>
 
 <ul>
-<li>Equivalently:</li>
+<li><p>map preserves list names</p>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+</li>
+<li><p>Or:</p></li>
 </ul>
 
-<pre><code class="r">numbers %&gt;%
-  map(in_0_1)
-[[1]]
-[1] &quot;in [0,1]&quot;
+<pre><code class="r">grades %&gt;%
+  map(mean)
+$class_A
+[1] 83.2
 
-[[2]]
-[1] &quot;not in [0,1]&quot;
-
-[[3]]
-[1] &quot;not in [0,1]&quot;
+$class_B
+[1] 84.57143
 </code></pre>
 
-<ul>
-<li>this is really only useful when your function isn&#39;t already vectorized</li>
-</ul>
+<pre><code class="r">grades %&gt;%
+  map(max)
+$class_A
+[1] 92
 
-<pre><code class="r">in_0_1(numbers)
-[1] &quot;in [0,1]&quot;     &quot;not in [0,1]&quot; &quot;not in [0,1]&quot;
+$class_B
+[1] 97
+</code></pre>
+
+<pre><code class="r">grades %&gt;%
+  map(min)
+$class_A
+[1] 69
+
+$class_B
+[1] 76
 </code></pre>
 
 </div>
@@ -1734,7 +1244,7 @@ map(numbers, in_0_1)
 <h3>Map </h3>
 <div class="slideContent" >
 <ul>
-<li>for example, let&#39;s say you want to read in multiple files:</li>
+<li>as another example, let&#39;s say you want to read in multiple files:</li>
 </ul>
 
 <pre><code class="r">url_start = &quot;https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/&quot;
@@ -1749,62 +1259,6 @@ urls = str_c(url_start, files)
 
 <pre><code class="r">data_frames = urls %&gt;%
   map(read_csv)
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Names are preserved through map</h3>
-<div class="slideContent" >
-<ul>
-<li>If the input list (or vector) has names, the output will have elements with the same names</li>
-</ul>
-
-<pre><code class="r">read_gtex = function(file) {
-  str_c(url_start, file) %&gt;%
-    read_csv()
-}
-
-data_frames = files %&gt;%
-  map(read_gtex)
-
-names(data_frames)
-[1] &quot;samples&quot; &quot;tissues&quot; &quot;dates&quot;  
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="none" data-transition-speed="default">
-<h3>Returning other data types</h3>
-<div class="slideContent" >
-<ul>
-<li><code>map()</code> typically returns a list (why?)</li>
-<li>But there are variants that return different data types</li>
-</ul>
-
-<pre><code class="r">data_frames %&gt;%
-  map_dbl(nrow)
-samples tissues   dates 
-     66    1475    1234 
-</code></pre>
-
-<pre><code class="r">count_rc = function(df) {
-  tibble(
-    n_rows = nrow(df),
-    n_cols = ncol(df)
-  )
-}
-
-data_frames %&gt;%
-  map_df(count_rc)
-# A tibble: 3 × 2
-  n_rows n_cols
-   &lt;int&gt;  &lt;int&gt;
-1     66      3
-2   1475      4
-3   1234      6
 </code></pre>
 
 </div>
@@ -1854,13 +1308,159 @@ data_frames %&gt;%
 </div>
 
 </section>
+<section data-transition="none" data-transition-speed="default">
+<h3>Map or data frame?</h3>
+<div class="column column1 slideContent" >
+<ul>
+<li>in our initial <code>map()</code> example we were looking at some course grades:</li>
+</ul>
+
+<pre><code class="r">grades
+$class_A
+[1] 90 87 92 78 69
+
+$class_B
+[1] 88 85 76 78 77 97 91
+
+grades %&gt;% map(mean)
+$class_A
+[1] 83.2
+
+$class_B
+[1] 84.57143
+
+grades %&gt;% map(max)
+$class_A
+[1] 92
+
+$class_B
+[1] 97
+
+grades %&gt;% map(min)
+$class_A
+[1] 69
+
+$class_B
+[1] 76
+</code></pre>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+
+
+<ul>
+<li>these operations could be more organized if we made a data frame:</li>
+</ul>
+
+<pre><code class="r">grades_df = grades %&gt;%
+  imap(\(vec, name) 
+    tibble(class=name, grade=vec)
+  ) %&gt;%
+  bind_rows
+
+grades_df %&gt;%
+  group_by(class) %&gt;%
+  summarize(
+    mean(grade), 
+    max(grade), 
+    min(grade)
+  )
+# A tibble: 2 × 4
+  class   `mean(grade)` `max(grade)` `min(grade)`
+  &lt;chr&gt;           &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+1 class_A          83.2           92           69
+2 class_B          84.6           97           76
+</code></pre>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: map practice</h3>
+<div class="slideContent" >
+<pre><code class="r">url_start = &quot;https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/&quot;
+
+data_frames = list(
+  samples = &quot;gtex_samples_time.csv&quot;,
+  tissues = &quot;gtex_tissue_month_year.csv&quot;,
+  dates = &quot;gtex_dates_clean.csv&quot;
+)  %&gt;% 
+  map(\(f) str_c(url_start, f)) %&gt;%
+  map(read_csv)
+</code></pre>
+
+<p><code>data_frames</code> is a list of three data frames. Use map to output:
+1. the number of rows of each table
+2. the number of columns of each table</p>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: read files</h3>
+<div class="slideContent" >
+<p>Earlier we saw this example of reading in multiple files:</p>
+
+<pre><code class="r">url_start = &quot;https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/&quot;
+
+data_frames = list(
+  samples = &quot;gtex_samples_time.csv&quot;,
+  tissues = &quot;gtex_tissue_month_year.csv&quot;,
+  dates = &quot;gtex_dates_clean.csv&quot;
+)  %&gt;% 
+  map(\(f) str_c(url_start, f)) %&gt;%
+  map(read_csv)
+</code></pre>
+
+<ul>
+<li>modify the code so that only the first 10 lines of each file are read in.</li>
+</ul>
+
+</div>
+
+</section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
 <h3>Exercise: map practice</h3>
 <div class="slideContent" >
 <ul>
-<li>Determine the type of each column in <code>gtex_data</code> (<code>?typeof</code>). Return the result as a vector of strings (note: a data frame is a list of columns)</li>
 <li>For each value of x in [1, 5, 10] Generate 10 random numbers between 0 and x (see: <code>?runif</code>).</li>
 </ul>
+
+</div>
+
+</section>
+<section data-transition="none" data-transition-speed="default">
+<h3>Returning other data types</h3>
+<div class="slideContent" >
+<ul>
+<li><code>map()</code> typically returns a list (why?)</li>
+<li>But there are variants that return different data types</li>
+</ul>
+
+<pre><code class="r">data_frames %&gt;%
+  map_dbl(nrow)
+samples tissues   dates 
+     66    1475    1234 
+</code></pre>
+
+<pre><code class="r">count_rc = function(df) {
+  tibble(
+    n_rows = nrow(df),
+    n_cols = ncol(df)
+  )
+}
+
+data_frames %&gt;%
+  map_df(count_rc)
+# A tibble: 3 × 2
+  n_rows n_cols
+   &lt;int&gt;  &lt;int&gt;
+1     66      3
+2   1475      4
+3   1234      6
+</code></pre>
 
 </div>
 
@@ -1876,11 +1476,11 @@ data_frames %&gt;%
 b = c(2,3,4)
 
 runif(1, a[1], b[1])
-[1] 1.578026
+[1] 1.075221
 runif(1, a[2], b[2])
-[1] 2.467262
+[1] 2.823572
 runif(1, a[3], b[3])
-[1] 3.875027
+[1] 3.480157
 </code></pre>
 
 
@@ -1900,18 +1500,69 @@ runif(1, a[3], b[3])
   \(a,b) runif(1,a,b)
 )
 [[1]]
-[1] 1.046799
+[1] 1.319748
 
 [[2]]
-[1] 2.919092
+[1] 2.514968
 
 [[3]]
-[1] 3.88736
+[1] 3.778681
 </code></pre>
 
 <div align="center">
 <img src="https://dcl-prog.stanford.edu/images/pmap-flipped.png">
 </div>
+
+</div>
+
+</section>
+<section data-transition="none" data-transition-speed="default">
+<h3>Mapping over names</h3>
+<div class="column column1 slideContent" >
+<ul>
+<li><code>imap()</code> lets you operate on the <strong>names</strong> of the input list.</li>
+</ul>
+
+<pre><code class="r">grades
+$class_A
+[1] 90 87 92 78 69
+
+$class_B
+[1] 88 85 76 78 77 97 91
+</code></pre>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+
+
+<pre><code class="r">grades %&gt;% imap(
+  \(value, name) 
+  tibble(grade=value, class=name)
+)
+$class_A
+# A tibble: 5 × 2
+  grade class  
+  &lt;dbl&gt; &lt;chr&gt;  
+1    90 class_A
+2    87 class_A
+3    92 class_A
+4    78 class_A
+5    69 class_A
+
+$class_B
+# A tibble: 7 × 2
+  grade class  
+  &lt;dbl&gt; &lt;chr&gt;  
+1    88 class_B
+2    85 class_B
+3    76 class_B
+4    78 class_B
+5    77 class_B
+6    97 class_B
+7    91 class_B
+</code></pre>
 
 </div>
 
@@ -1942,13 +1593,47 @@ runif(1, a[3], b[3])
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
+<h3>Exercise: dimensions</h3>
+<div class="slideContent" >
+<pre><code class="r">url_start = &quot;https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/&quot;
+
+data_frames = list(
+  samples = &quot;gtex_samples_time.csv&quot;,
+  tissues = &quot;gtex_tissue_month_year.csv&quot;,
+  dates = &quot;gtex_dates_clean.csv&quot;
+)  %&gt;% 
+  map(\(f) str_c(url_start, f)) %&gt;%
+  map(read_csv)
+</code></pre>
+
+<p>Fill in the missing parts of the code below to programmatically create the following table:</p>
+
+<pre><code class="r">data_frames %&gt;%
+  imap(
+    ???
+  ) %&gt;%
+  bind_rows()
+</code></pre>
+
+<pre><code># A tibble: 3 × 3
+  dataset  nrow  ncol
+  &lt;chr&gt;   &lt;int&gt; &lt;int&gt;
+1 samples    66     3
+2 tissues  1475     4
+3 dates    1234     6
+</code></pre>
+
+</div>
+
+</section>
+<section data-state="prompt" data-transition="none" data-transition-speed="default">
 <h3>Exercise: reading files in multiple directories </h3>
 <div class="slideContent" >
 <p>My collaborator has an online folder of experimental results named <code>results</code> that can be found at <code>&quot;https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results&quot;</code>. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named <code>rep_n</code>, so, e.g. <code>results/rep_14</code> would be one sub-folder. Within each sub-folder, there are 3 csv files called <code>a.csv</code>, <code>b.csv</code> <code>c.csv</code> that contain different kinds of measurements. Thus, a full path to one of these files might be <code>results/rep_14/c.csv</code>.</p>
 
 <ol>
-<li><p>write code to read these all into one long list of data frames. <code>str_c()</code> or <code>glue()</code> will be helpful.</p></li>
-<li><p>Unfortunately, that wasn&#39;t helpful because now you don&#39;t know what data frames are what results. Consider just the <code>a</code> files. Write code that reads in all of the <code>a</code> files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from.</p></li>
+<li><p>write code to read these all into one long list of data frames. <code>str_c()</code> or <code>glue()</code> will be helpful to create the required file names</p></li>
+<li><p>Unfortunately, that wasn&#39;t helpful because now you don&#39;t know what data frames are what results. Consider just the &ldquo;<code>a</code>&rdquo; files. Write code that reads in only the &ldquo;<code>a</code>&rdquo; files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from (use <code>imap()</code>).</p></li>
 <li><p>Turn your code from above into a function that takes as input the file name (<code>&#39;a&#39;</code>, for example) and returns the single concatenated file. Iterate that function over the different file names to output three master data frames corresponding to the file types <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, and <code>&#39;c&#39;</code>.</p></li>
 </ol>
 
