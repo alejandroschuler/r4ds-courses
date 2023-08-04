@@ -5,8 +5,7 @@
 |---|---|---|
 | Alejandro Schuler | Instructor | alejandro.schuler@berkeley.edu |
 
-- Website: https://github.com/alejandroschuler/r4ds-courses/tree/summer-2023
-- Location: [Zoom](https://berkeley.zoom.us/j/99365583360) 
+- Website: [https://github.com/alejandroschuler/r4ds-courses](https://github.com/alejandroschuler/r4ds-courses)
 
 ### Overview
 This course will make you an expert at data I/O, transformation, programming, and visualization in R. 
