@@ -9,8 +9,6 @@ height: 1050
 
 
 - write and test your own functions
-- write code that evaluates conditionally
-- create, manipulate, and inspect lists
 - iterate functions over lists of arguments
 
 Writing functions
@@ -269,7 +267,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-<bytecode: 0x107307a38>
+<bytecode: 0x10a7df138>
 ```
 - Because of this, they themselves can be passed as arguments to other functions
 
@@ -308,9 +306,10 @@ $class_B
 [1] 84.57143
 ```
 - map preserves list names
+
 ***
 
-- Or:
+Or:
 
 ```r
 grades %>%
@@ -457,6 +456,7 @@ grades_df %>%
 1 class_A          83.2           92           69
 2 class_B          84.6           97           76
 ```
+- we'll learn about `imap` shortly
 
 Exercise: map practice
 ===
@@ -476,6 +476,7 @@ data_frames = list(
 ```
 
 `data_frames` is a list of three data frames. Use map to output:
+
 1. the number of rows of each table
 2. the number of columns of each table
 
@@ -545,11 +546,11 @@ a = c(1,2,3)
 b = c(2,3,4)
 
 runif(1, a[1], b[1])
-[1] 1.075221
+[1] 1.29373
 runif(1, a[2], b[2])
-[1] 2.823572
+[1] 2.19126
 runif(1, a[3], b[3])
-[1] 3.480157
+[1] 3.886451
 ```
 
 ***
@@ -563,13 +564,13 @@ list(
   \(a,b) runif(1,a,b)
 )
 [[1]]
-[1] 1.319748
+[1] 1.503339
 
 [[2]]
-[1] 2.514968
+[1] 2.877058
 
 [[3]]
-[1] 3.778681
+[1] 3.189194
 ```
 
 

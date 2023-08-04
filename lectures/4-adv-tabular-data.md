@@ -35,8 +35,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 
 ```r
-# Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/mwrvahjz')
+gtex = read_tsv('https://tinyurl.com/342rhdc2')
 
 # Check number of rows
 nrow(gtex)
@@ -178,12 +177,15 @@ gtex %>%
 ```
 
 
-Exercise: top expression per gene
+Exercise: expression range per gene
 =====================================================================
 type:prompt
 
-- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex` dataset?
-- What about the lowest?
+Ignoring NAs, what are the highest and lowest liver expression value seen for each gene in the `gtex` dataset?
+
+1. What steps should you take to solve this problem? When you have a question that asks something about "for each ..." that usually indicates that you need to **group** the data by whatever thing that is. When you are asking about a summary measure (like a mean, max etc.), that usually indicates the use of **`summarize()`**. In this problem, what column(s) are you grouping by? What summaries of what columns are you computing?
+
+2. Now that you have a structure, write the code to implement it and solve the problem. 
 
 Exercise: summarize and plot
 ===
@@ -205,7 +207,7 @@ Have a look at the dataframe you created. Use it to recreate this plot:
 
 ![plot of chunk unnamed-chunk-10](4-adv-tabular-data-figure/unnamed-chunk-10-1.png)
 
-
+It's helpful to think backwards from the output you want. First outline the ggplot code that would generate the given plot. What does the dataset need to look like that is going into `ggplot` in order to get the plot shown here? How can we get from `gtex_tidy` to that data? 
 
 Filtering grouped data
 ===
@@ -403,10 +405,10 @@ gtex_time_tissue_data %>%
 # A tibble: 4 × 3
   mouse weight_before weight_after
   <dbl>         <dbl>        <dbl>
-1     1          8.46         8.67
-2     2          8.54        11.4 
-3     3         10.8          9.46
-4     4         10.1          9.83
+1     1          9.93        14.1 
+2     2          7.81        12.5 
+3     3         14.2          8.38
+4     4         10.5         11.1 
 ```
 
 
@@ -417,10 +419,10 @@ wide_mice %>%
 # A tibble: 4 × 2
   mouse weight_gain
   <dbl>       <dbl>
-1     1       0.210
-2     2       2.88 
-3     3      -1.30 
-4     4      -0.222
+1     1       4.18 
+2     2       4.66 
+3     3      -5.84 
+4     4       0.650
 ```
 
 ***
@@ -430,14 +432,14 @@ wide_mice %>%
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.46
-2     1 after    8.67
-3     2 before   8.54
-4     2 after   11.4 
-5     3 before  10.8 
-6     3 after    9.46
-7     4 before  10.1 
-8     4 after    9.83
+1     1 before   9.93
+2     1 after   14.1 
+3     2 before   7.81
+4     2 after   12.5 
+5     3 before  14.2 
+6     3 after    8.38
+7     4 before  10.5 
+8     4 after   11.1 
 ```
 
 
@@ -451,10 +453,10 @@ long_mice %>%
 # Groups:   mouse [4]
   mouse weight_gain
   <dbl>       <dbl>
-1     1       0.210
-2     2       2.88 
-3     3      -1.30 
-4     4      -0.222
+1     1       4.18 
+2     2       4.66 
+3     3      -5.84 
+4     4       0.650
 ```
 
 Pivoting wider
@@ -469,14 +471,14 @@ long_mice
 # A tibble: 8 × 3
   mouse time   weight
   <dbl> <chr>   <dbl>
-1     1 before   8.46
-2     1 after    8.67
-3     2 before   8.54
-4     2 after   11.4 
-5     3 before  10.8 
-6     3 after    9.46
-7     4 before  10.1 
-8     4 after    9.83
+1     1 before   9.93
+2     1 after   14.1 
+3     2 before   7.81
+4     2 after   12.5 
+5     3 before  14.2 
+6     3 after    8.38
+7     4 before  10.5 
+8     4 after   11.1 
 ```
 
 ***
@@ -491,11 +493,58 @@ long_mice %>%
 # A tibble: 4 × 3
   mouse before after
   <dbl>  <dbl> <dbl>
-1     1   8.46  8.67
-2     2   8.54 11.4 
-3     3  10.8   9.46
-4     4  10.1   9.83
+1     1   9.93 14.1 
+2     2   7.81 12.5 
+3     3  14.2   8.38
+4     4  10.5  11.1 
 ```
+
+Exercise: pivot
+===
+type: prompt
+
+I have a dataset that records the pollution levels (in ppm) in three cities across five months:
+
+
+```r
+pollution = read_csv("https://tinyurl.com/yu983bhc")
+pollution
+# A tibble: 15 × 3
+   city  month smoke_ppm
+   <chr> <chr>     <dbl>
+ 1 SF    Jan       14.4 
+ 2 SF    Feb       39.4 
+ 3 SF    Mar       20.4 
+ 4 SF    Apr       44.2 
+ 5 SF    May       47.0 
+ 6 LA    Jan        2.28
+ 7 LA    Feb       26.4 
+ 8 LA    Mar       44.6 
+ 9 LA    Apr       27.6 
+10 LA    May       22.8 
+11 NY    Jan       47.8 
+12 NY    Feb       22.7 
+13 NY    Mar       33.9 
+14 NY    Apr       28.6 
+15 NY    May        5.15
+```
+
+***
+
+Use a pivot and mutate to compute the difference in pollution levels between SF and LA across all 5 months. The output should look like this:
+
+
+```
+# A tibble: 5 × 4
+  month    SF    LA SF_LA_diff
+  <chr> <dbl> <dbl>      <dbl>
+1 Jan    14.4  2.28       12.1
+2 Feb    39.4 26.4        13.0
+3 Mar    20.4 44.6       -24.2
+4 Apr    44.2 27.6        16.6
+5 May    47.0 22.8        24.2
+```
+
 
 Exercise: cleaning GTEX
 ===
@@ -504,19 +553,21 @@ type:prompt
 
 ```r
 head(gtex, 3)
-# A tibble: 3 × 7
-  Gene  Ind        Blood Heart  Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
-3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4
+# A tibble: 3 × 6
+  Gene  Ind        Blood Heart  Lung Liver
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13
 ```
 
 Use the GTEX data to reproduce the following plot:
 
-![plot of chunk unnamed-chunk-28](4-adv-tabular-data-figure/unnamed-chunk-28-1.png)
+![plot of chunk unnamed-chunk-30](4-adv-tabular-data-figure/unnamed-chunk-30-1.png)
 
 The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
+
+Think backwards: what do the data need to look like to make this plot? How do we pare down and reformat `gtex` so that it looks like what we need?
 
 Exercise: creating a table
 ===
@@ -775,11 +826,11 @@ Specifying the keys
 
 ```r
 head(gtex, 2)
-# A tibble: 2 × 7
-  Gene  Ind        Blood Heart  Lung Liver NTissues
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl>
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4
+# A tibble: 2 × 6
+  Gene  Ind        Blood Heart  Lung Liver
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
 head(gtex_subjects, 2)
 # A tibble: 2 × 4
   subject_id sex    age   death                    
@@ -792,16 +843,29 @@ head(gtex_subjects, 2)
 gtex %>% 
   inner_join(gtex_subjects, join_by(Ind == subject_id)) %>% 
   head(5)
-# A tibble: 5 × 10
-  Gene  Ind        Blood Heart  Lung Liver NTissues sex    age   death          
-  <chr> <chr>      <dbl> <dbl> <dbl> <dbl>    <dbl> <chr>  <chr> <chr>          
-1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66        3 male   50-59 ventilator     
-2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1         4 female 60-69 sudden but nat…
-3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13        4 male   50-59 sudden but nat…
-4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61        4 male   60-69 sudden but nat…
-5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12        4 male   20-29 ventilator     
+# A tibble: 5 × 9
+  Gene  Ind        Blood Heart  Lung Liver sex    age   death                   
+  <chr> <chr>      <dbl> <dbl> <dbl> <dbl> <chr>  <chr> <chr>                   
+1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66 male   50-59 ventilator              
+2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1  female 60-69 sudden but natural caus…
+3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13 male   50-59 sudden but natural caus…
+4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61 male   60-69 sudden but natural caus…
+5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12 male   20-29 ventilator              
 ```
 Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
+
+Exercise: join
+===
+type: prompt
+
+How does the average A2ML1 expression in lung tissue compare between females vs. males? To answer this question let's break it down:
+
+1. Since we only care about A2ML1, we can start by filtering `gtex` to only include those rows.
+2. To add sex information for each subject, we have to join our result to the `gtex_subjects` data frame.
+3. Finally, we can group that result by sex and summarize the average expression in lung tissue.
+
+Write the code to execute these steps.
+
 
 Exercise: finding expression of specific samples
 ===
@@ -825,7 +889,7 @@ head(batch_data_year, 2)
 2 BP-42319 RNA isolation_PAXgene Tissue miRNA                 2013-08-14  2013
 ```
 
-Note that you'll have to join to other data frames the `sample` data frame to put this together.
+Start by figuring out what other data frame(s) you have to join to. Consider also what other operations you must do to pick out the data of interest and in what order (if it matters).
 
 Exercise: join vs. concatenation
 ===
@@ -866,7 +930,7 @@ inner_join(
   gtex_monthly_samples, 
   join_by(month, year)
 ) %>%
-head(5L)
+head(5)
 # A tibble: 5 × 5
   tissue         month  year tiss_samples num_samples
   <chr>          <dbl> <dbl>        <dbl>       <dbl>
@@ -886,11 +950,11 @@ gtex_long = gtex %>%
   pivot_longer(cols = c("Blood", "Heart", "Lung", "Liver"), names_to = "tissue", 
     values_to = "zscore") 
 head(gtex_long, n = 2)
-# A tibble: 2 × 5
-  Gene  Ind        NTissues tissue zscore
-  <chr> <chr>         <dbl> <chr>   <dbl>
-1 A2ML1 GTEX-11DXZ        3 Blood   -0.14
-2 A2ML1 GTEX-11DXZ        3 Heart   -1.08
+# A tibble: 2 × 4
+  Gene  Ind        tissue zscore
+  <chr> <chr>      <chr>   <dbl>
+1 A2ML1 GTEX-11DXZ Blood   -0.14
+2 A2ML1 GTEX-11DXZ Heart   -1.08
 head(gtex_samples, n = 2)
 # A tibble: 2 × 6
   subject_id sample_id     batch_id center_id tissue rin_score
@@ -905,12 +969,12 @@ gtex_long %>%
       Ind == subject_id)
     ) %>%
   head(n = 4)
-# A tibble: 4 × 9
-  Gene  Ind        NTissues tissue zscore sample_id batch_id center_id rin_score
-  <chr> <chr>         <dbl> <chr>   <dbl> <chr>     <chr>    <chr>         <dbl>
-1 A2ML1 GTEX-11DXZ        3 Blood   -0.14 0003-SM-… BP-39216 B1             NA  
-2 A2ML1 GTEX-11DXZ        3 Heart   -1.08 0326-SM-… BP-44460 B1              8.3
-3 A2ML1 GTEX-11DXZ        3 Lung    NA    0726-SM-… BP-43956 B1              7.8
-4 A2ML1 GTEX-11DXZ        3 Liver   -0.66 0126-SM-… BP-44460 B1              7.9
+# A tibble: 4 × 8
+  Gene  Ind        tissue zscore sample_id     batch_id center_id rin_score
+  <chr> <chr>      <chr>   <dbl> <chr>         <chr>    <chr>         <dbl>
+1 A2ML1 GTEX-11DXZ Blood   -0.14 0003-SM-58Q7X BP-39216 B1             NA  
+2 A2ML1 GTEX-11DXZ Heart   -1.08 0326-SM-5EGH1 BP-44460 B1              8.3
+3 A2ML1 GTEX-11DXZ Lung    NA    0726-SM-5N9C4 BP-43956 B1              7.8
+4 A2ML1 GTEX-11DXZ Liver   -0.66 0126-SM-5EGGY BP-44460 B1              7.9
 ```
 

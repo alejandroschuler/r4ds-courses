@@ -528,7 +528,7 @@ mutate(
 mutate() and if_else()
 ===
 - this is useful to "interleave" columns:
-```{r}
+```{r, echo=F}
 emails = tibble(
   name = c('aya', 'bilal', 'chris', 'diego'),
   school = c('aya@amherst.edu', 'bilal@berkeley.edu', 'chris@cornell.edu', 'diego@duke.edu'),

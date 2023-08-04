@@ -790,8 +790,6 @@ hljs.initHighlightingOnLoad();
 <div class="slideContent" >
 <ul>
 <li>write and test your own functions</li>
-<li>write code that evaluates conditionally</li>
-<li>create, manipulate, and inspect lists</li>
 <li>iterate functions over lists of arguments</li>
 </ul>
 
@@ -1142,7 +1140,7 @@ function(x, na.rm=TRUE) {
   x_rng = range(x, na.rm=na.rm) 
   (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-&lt;bytecode: 0x107307a38&gt;
+&lt;bytecode: 0x10a7df138&gt;
 </code></pre>
 
 <ul>
@@ -1200,15 +1198,16 @@ $class_B
 </code></pre>
 
 <ul>
-<li><p>map preserves list names</p>
+<li>map preserves list names</li>
+</ul>
 
 
 </div>
 
 <div class="column column2 slideContent" >
-</li>
-<li><p>Or:</p></li>
-</ul>
+
+
+<p>Or:</p>
 
 <pre><code class="r">grades %&gt;%
   map(mean)
@@ -1374,6 +1373,10 @@ grades_df %&gt;%
 2 class_B          84.6           97           76
 </code></pre>
 
+<ul>
+<li>we&#39;ll learn about <code>imap</code> shortly</li>
+</ul>
+
 </div>
 
 </section>
@@ -1391,9 +1394,12 @@ data_frames = list(
   map(read_csv)
 </code></pre>
 
-<p><code>data_frames</code> is a list of three data frames. Use map to output:
-1. the number of rows of each table
-2. the number of columns of each table</p>
+<p><code>data_frames</code> is a list of three data frames. Use map to output:</p>
+
+<ol>
+<li>the number of rows of each table</li>
+<li>the number of columns of each table</li>
+</ol>
 
 </div>
 
@@ -1476,11 +1482,11 @@ data_frames %&gt;%
 b = c(2,3,4)
 
 runif(1, a[1], b[1])
-[1] 1.075221
+[1] 1.29373
 runif(1, a[2], b[2])
-[1] 2.823572
+[1] 2.19126
 runif(1, a[3], b[3])
-[1] 3.480157
+[1] 3.886451
 </code></pre>
 
 
@@ -1500,13 +1506,13 @@ runif(1, a[3], b[3])
   \(a,b) runif(1,a,b)
 )
 [[1]]
-[1] 1.319748
+[1] 1.503339
 
 [[2]]
-[1] 2.514968
+[1] 2.877058
 
 [[3]]
-[1] 3.778681
+[1] 3.189194
 </code></pre>
 
 <div align="center">

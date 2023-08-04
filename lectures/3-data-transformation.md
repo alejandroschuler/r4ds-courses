@@ -314,13 +314,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 6
-  Gene    Ind        Blood Heart  Lung Liver
-  <chr>   <chr>      <dbl> <dbl> <dbl> <dbl>
-1 AP1G1   GTEX-14XAO -2.64 -0.91  1.41 -0.75
-2 MRPL23  GTEX-1GN73 -0.64 -0.35 NA    -0.79
-3 PHF20L1 GTEX-1EWIQ -0.81  0.93 -0.8   1.18
-4 NOTUM   GTEX-14XAO -0.43 -0.59 -0.33 -0.17
-5 PRDM1   GTEX-ZPU1   0.52 -0.66 -1.21 -0.88
+  Gene   Ind        Blood Heart  Lung Liver
+  <chr>  <chr>      <dbl> <dbl> <dbl> <dbl>
+1 IGSF23 GTEX-12WSI -0.16 -0.16 -0.2   0.89
+2 DENND3 GTEX-14XAO  1.53 -0.45 -0.09  0.49
+3 PRKAA2 GTEX-1KANB -0.67 -1.46  1.21 -0.91
+4 MNDA   GTEX-11GSP  1.1  -0.8  -0.1   1   
+5 RETSAT GTEX-1GN2E  0.67  0.23 -1.51  0.39
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -836,14 +836,7 @@ mutate() and if_else()
 ===
 - this is useful to "interleave" columns:
 
-```r
-emails = tibble(
-  name = c('aya', 'bilal', 'chris', 'diego'),
-  school = c('aya@amherst.edu', 'bilal@berkeley.edu', 'chris@cornell.edu', 'diego@duke.edu'),
-  personal = c('aya@aol.com', 'bilal@bellsouth.net', 'chris@comcast.com', 'diego@dodo.com.au'),
-  preferred = c('school', 'personal', 'personal', 'school')
-)
-emails
+```
 # A tibble: 4 × 4
   name  school             personal            preferred
   <chr> <chr>              <chr>               <chr>    

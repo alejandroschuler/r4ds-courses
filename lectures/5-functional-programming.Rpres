@@ -12,11 +12,10 @@ library(tidyverse)
 theme_set(theme_grey(base_size = 22))
 opts_chunk$set(collapse=TRUE,prompt=FALSE,comment=NA,cache=FALSE)
 opts_chunk$set(error=TRUE,warning=TRUE,message=FALSE)
+set.seed(1)
 ```
 
 - write and test your own functions
-- write code that evaluates conditionally
-- create, manipulate, and inspect lists
 - iterate functions over lists of arguments
 
 Writing functions
@@ -266,9 +265,10 @@ grades = list(
 map(grades, mean)
 ```
 - map preserves list names
+
 ***
 
-- Or:
+Or:
 ```{r}
 grades %>%
   map(mean)
@@ -366,6 +366,7 @@ grades_df %>%
     min(grade)
   )
 ```
+- we'll learn about `imap` shortly
 
 Exercise: map practice
 ===
@@ -384,6 +385,7 @@ data_frames = list(
 ```
 
 `data_frames` is a list of three data frames. Use map to output:
+
 1. the number of rows of each table
 2. the number of columns of each table
 

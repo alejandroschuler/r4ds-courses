@@ -1182,13 +1182,13 @@ Caused by error:
 
 <pre><code class="r">slice_sample(gtex, n=5)
 # A tibble: 5 × 6
-  Gene    Ind        Blood Heart  Lung Liver
-  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 AP1G1   GTEX-14XAO -2.64 -0.91  1.41 -0.75
-2 MRPL23  GTEX-1GN73 -0.64 -0.35 NA    -0.79
-3 PHF20L1 GTEX-1EWIQ -0.81  0.93 -0.8   1.18
-4 NOTUM   GTEX-14XAO -0.43 -0.59 -0.33 -0.17
-5 PRDM1   GTEX-ZPU1   0.52 -0.66 -1.21 -0.88
+  Gene   Ind        Blood Heart  Lung Liver
+  &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 IGSF23 GTEX-12WSI -0.16 -0.16 -0.2   0.89
+2 DENND3 GTEX-14XAO  1.53 -0.45 -0.09  0.49
+3 PRKAA2 GTEX-1KANB -0.67 -1.46  1.21 -0.91
+4 MNDA   GTEX-11GSP  1.1  -0.8  -0.1   1   
+5 RETSAT GTEX-1GN2E  0.67  0.23 -1.51  0.39
 </code></pre>
 
 <ul>
@@ -1823,14 +1823,7 @@ if_else(0&lt;=x &amp; x&lt;=1, &quot;in [0,1]&quot;, &quot;not in [0,1]&quot;)
 <li>this is useful to &ldquo;interleave&rdquo; columns:</li>
 </ul>
 
-<pre><code class="r">emails = tibble(
-  name = c(&#39;aya&#39;, &#39;bilal&#39;, &#39;chris&#39;, &#39;diego&#39;),
-  school = c(&#39;aya@amherst.edu&#39;, &#39;bilal@berkeley.edu&#39;, &#39;chris@cornell.edu&#39;, &#39;diego@duke.edu&#39;),
-  personal = c(&#39;aya@aol.com&#39;, &#39;bilal@bellsouth.net&#39;, &#39;chris@comcast.com&#39;, &#39;diego@dodo.com.au&#39;),
-  preferred = c(&#39;school&#39;, &#39;personal&#39;, &#39;personal&#39;, &#39;school&#39;)
-)
-emails
-# A tibble: 4 × 4
+<pre><code># A tibble: 4 × 4
   name  school             personal            preferred
   &lt;chr&gt; &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;    
 1 aya   aya@amherst.edu    aya@aol.com         school   

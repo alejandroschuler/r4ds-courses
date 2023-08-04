@@ -40,8 +40,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 **NOTE**: If copying the code, make sure there are no spaces in the download link (where it wraps to a new line).
 ```{r, message=F}
-# Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/mwrvahjz')
+gtex = read_tsv('https://tinyurl.com/342rhdc2')
 
 # Check number of rows
 nrow(gtex)
@@ -132,12 +131,15 @@ gtex %>%
 ```
 
 
-Exercise: top expression per gene
+Exercise: expression range per gene
 =====================================================================
 type:prompt
 
-- Ignoring NAs, what is the highest liver expression value seen for each gene in the `gtex` dataset?
-- What about the lowest?
+Ignoring NAs, what are the highest and lowest liver expression value seen for each gene in the `gtex` dataset?
+
+1. What steps should you take to solve this problem? When you have a question that asks something about "for each ..." that usually indicates that you need to **group** the data by whatever thing that is. When you are asking about a summary measure (like a mean, max etc.), that usually indicates the use of **`summarize()`**. In this problem, what column(s) are you grouping by? What summaries of what columns are you computing?
+
+2. Now that you have a structure, write the code to implement it and solve the problem. 
 
 Exercise: summarize and plot
 ===
@@ -169,10 +171,10 @@ ggplot() +
         legend.text = element_text(size = size_text),
         legend.title = element_text(size = size_text),
         strip.text = element_text(size = size_text)) +
-  xlab("Maximum expression value across all samples")
+  xlab("max_expression (maximum expression value across all samples)")
 ```
 
-
+It's helpful to think backwards from the output you want. First outline the ggplot code that would generate the given plot. What does the dataset need to look like that is going into `ggplot` in order to get the plot shown here? How can we get from `gtex_tidy` to that data? 
 
 Filtering grouped data
 ===
@@ -365,6 +367,29 @@ long_mice %>%
   )
 ```
 
+Exercise: pivot
+===
+type: prompt
+
+I have a dataset that records the pollution levels (in ppm) in three cities across five months:
+
+```{r, message=F}
+pollution = read_csv("https://tinyurl.com/yu983bhc")
+pollution
+```
+
+***
+
+Use a pivot and mutate to compute the difference in pollution levels between SF and LA across all 5 months. The output should look like this:
+
+```{r, echo=F}
+pollution %>%
+  pivot_wider(names_from="city", values_from="smoke_ppm") %>%
+  mutate(SF_LA_diff = SF - LA) %>%
+  select(month, SF, LA, SF_LA_diff)
+```
+
+
 Exercise: cleaning GTEX
 ===
 type:prompt
@@ -392,6 +417,8 @@ gtex %>%
 ```
 
 The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
+
+Think backwards: what do the data need to look like to make this plot? How do we pare down and reformat `gtex` so that it looks like what we need?
 
 Exercise: creating a table
 ===
@@ -574,6 +601,19 @@ gtex %>%
 ```
 Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
 
+Exercise: join
+===
+type: prompt
+
+How does the average A2ML1 expression in lung tissue compare between females vs. males? To answer this question let's break it down:
+
+1. Since we only care about A2ML1, we can start by filtering `gtex` to only include those rows.
+2. To add sex information for each subject, we have to join our result to the `gtex_subjects` data frame.
+3. Finally, we can group that result by sex and summarize the average expression in lung tissue.
+
+Write the code to execute these steps.
+
+
 Exercise: finding expression of specific samples
 ===
 type: prompt
@@ -590,7 +630,7 @@ batch_data_year =
 head(batch_data_year, 2)
 ```
 
-Note that you'll have to join to other data frames the `sample` data frame to put this together.
+Start by figuring out what other data frame(s) you have to join to. Consider also what other operations you must do to pick out the data of interest and in what order (if it matters).
 
 Exercise: join vs. concatenation
 ===
@@ -619,7 +659,7 @@ inner_join(
   gtex_monthly_samples, 
   join_by(month, year)
 ) %>%
-head(5L)
+head(5)
 ```
 
 Joining on multiple columns
