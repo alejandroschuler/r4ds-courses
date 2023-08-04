@@ -134,7 +134,7 @@ Programming, like all things, is something you learn by doing. The lectures incl
 We will be using parts of the fantastic book [R for Data Science](https://r4ds.hadley.nz/) (R4DS:2e) by [Hadley Wickham](http://hadley.nz/), Mine Çetinkaya-Rundel, and Garrett Grolemund (O'Reilly Media, 2017); it is online and also available in hardcopy.
 
 ### Slides
-Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser. You can also download the `.Rpres` files for easy copy-pasting of code, etc.
+Slides can be found in the `lectures` folder on the website. Github renders the `.md` files nicely in the browser but some plots don't show up. To see those, you can download the `.html` versions which open in the browser (click on the file, click download button in the upper-right). You can also download the `.Rpres` files for easy copy-pasting of code, etc.
 
 # Motivation
 
