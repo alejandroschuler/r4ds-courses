@@ -84,7 +84,8 @@ Figure out how to use R functions and operations for square roots, exponentiatio
 (-14 + sqrt(14^2 - 4*3*(-5)))/(2*3)
 ```
 
-What did you learn? What did you notice?
+- How did this **feel**? What was your emotional reaction when you saw the question?
+- What did you **learn**? What did you notice?
 <!-- - Parentheses are used to encapsulate the *arguments* to a function like `sqrt()` -->
 <!-- - Operators like `\`, `*`, and `^` are useful for math -->
 <!-- - Parentheses can also be used to establish order of operations -->
@@ -440,6 +441,27 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
+
+Exercise
+===
+type: prompt
+incremental: false
+
+Use google or other resources to figure out how to receate this plot in R:
+
+```
+ggplot(genes) + 
+  ...
+```
+
+```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
+ggplot(genes) + 
+  geom_bar(aes(x = ancestry, fill = phenotype))
+```
+
+- What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
+- If you accomplish making the plot, can you figure out how to change the colors of the groups?
+
 Facets
 ===
 - Aesthetics are useful for mapping columns to particular properties of a single plot
@@ -462,26 +484,6 @@ ggplot(genes) +
   facet_grid(rows=vars(phenotype), cols=vars(gender))
 ```
 
-
-Exercise
-===
-type: prompt
-incremental: false
-
-Use google or other resources to figure out how to receate this plot in R:
-
-```
-ggplot(genes) + 
-  ...
-```
-
-```{r, echo=F, tidy=F, fig.height = 8, fig.width = 14, fig.align = "center", message=F}
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
-```
-
-- What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
-- If you accomplish making the plot, can you figure out how to change the colors of the groups?
 
 Exercise
 ===

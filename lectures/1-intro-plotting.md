@@ -80,7 +80,8 @@ Figure out how to use R functions and operations for square roots, exponentiatio
 
 
 
-What did you learn? What did you notice?
+- How did this **feel**? What was your emotional reaction when you saw the question?
+- What did you **learn**? What did you notice?
 <!-- - Parentheses are used to encapsulate the *arguments* to a function like `sqrt()` -->
 <!-- - Operators like `\`, `*`, and `^` are useful for math -->
 <!-- - Parentheses can also be used to establish order of operations -->
@@ -100,8 +101,9 @@ install.packages("QuadRoot")
 
 ```r
 library(QuadRoot)
+Error in library(QuadRoot): there is no package called 'QuadRoot'
 QuadRoot(c(3,14,-5))
-[1] "The two x-intercepts for the quadratic equation are 0.3333 and -5.0000."
+Error in QuadRoot(c(3, 14, -5)): could not find function "QuadRoot"
 ```
 
 Packages
@@ -236,10 +238,7 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<div class="figure">
-<img src="1-intro-plotting-figure/unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15" height="80%" />
-<p class="caption">plot of chunk unnamed-chunk-15</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" height="80%" />
 
 ***
 - `ggplot(dataset)` says "start a chart with this dataset"
@@ -372,10 +371,7 @@ type: prompt
 Can you recreate this plot?
 
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-27-1.png" alt="plot of chunk unnamed-chunk-27"  />
-<p class="caption">plot of chunk unnamed-chunk-27</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" />
 
 Exercise
 ===
@@ -399,10 +395,7 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
-<p class="caption">plot of chunk unnamed-chunk-29</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 - R graph gallery is a great resource to help you design your plot and pick the right geom: r-graph-gallery.com
@@ -414,10 +407,7 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
-<p class="caption">plot of chunk unnamed-chunk-30</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -431,10 +421,7 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
-<p class="caption">plot of chunk unnamed-chunk-31</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -446,10 +433,7 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
-<p class="caption">plot of chunk unnamed-chunk-32</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -461,10 +445,7 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
   geom_point()
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
-<p class="caption">plot of chunk unnamed-chunk-33</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
 
 Geoms
 ===
@@ -476,44 +457,7 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
-<p class="caption">plot of chunk unnamed-chunk-34</p>
-</div>
-
-Facets
-===
-- Aesthetics are useful for mapping columns to particular properties of a single plot
-- Use **facets** to generate multiple plots with shared structure
-
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_wrap(vars(phenotype), nrow = 2)
-```
-
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" alt="plot of chunk unnamed-chunk-35"  />
-<p class="caption">plot of chunk unnamed-chunk-35</p>
-</div>
-- `facet_wrap` is good for faceting according to unordered categories
-
-Facets
-===
-- `facet_grid` is better for ordered categories, and can be used with two variables
-
-
-```r
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_grid(rows=vars(phenotype), cols=vars(gender))
-```
-
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
-<p class="caption">plot of chunk unnamed-chunk-36</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
 
 
 Exercise
@@ -528,13 +472,39 @@ ggplot(genes) +
   ...
 ```
 
-<div class="figure" style="text-align: center">
-<img src="1-intro-plotting-figure/unnamed-chunk-37-1.png" alt="plot of chunk unnamed-chunk-37"  />
-<p class="caption">plot of chunk unnamed-chunk-37</p>
-</div>
+<img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
+
+Facets
+===
+- Aesthetics are useful for mapping columns to particular properties of a single plot
+- Use **facets** to generate multiple plots with shared structure
+
+
+```r
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_wrap(vars(phenotype), nrow = 2)
+```
+
+<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
+- `facet_wrap` is good for faceting according to unordered categories
+
+Facets
+===
+- `facet_grid` is better for ordered categories, and can be used with two variables
+
+
+```r
+ggplot(genes) + 
+  geom_point(aes(x = RSAD2, y = IFI44)) + 
+  facet_grid(rows=vars(phenotype), cols=vars(gender))
+```
+
+<img src="1-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
+
 
 Exercise
 ===
