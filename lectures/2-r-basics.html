@@ -1086,7 +1086,8 @@ x
 <section data-transition="none" data-transition-speed="default">
 <h3>Functions and variable assignment</h3>
 <div class="slideContent" >
-<pre><code class="r">y = x
+<pre><code class="r">x = 2
+y = x
 y
 [1] 2
 x = 1
@@ -1104,12 +1105,13 @@ y
 <section data-transition="none" data-transition-speed="default">
 <h3>Functions and variable assignment</h3>
 <div class="column column1 slideContent" >
-<pre><code class="r">y = x
+<pre><code class="r">x = 2
+y = x
 y
-[1] 1
-x = 10
+[1] 2
+x = 1
 y
-[1] 1
+[1] 2
 </code></pre>
 
 <ul>
@@ -1216,7 +1218,7 @@ genes = read_csv(file_name)
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise</h3>
+<h3>Exercise [together]</h3>
 <div class="slideContent" >
 <p>Why does this code generate errors?</p>
 
@@ -1235,7 +1237,7 @@ Caused by error:
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise</h3>
+<h3>Exercise [together]</h3>
 <div class="column column1 slideContent" >
 <p>I&#39;m trying to generate this plot:</p>
 
@@ -1324,7 +1326,7 @@ multi-element vector arguments.</li>
 <h3>Elementwise operations on a vector</h3>
 <div class="slideContent" >
 <ul>
-<li>This multiplies each element of <code>1:10</code> by the corresponding element of <code>1:10</code>, that is, it squares each element.</li>
+<li>This multiplies each element of <code>c(1,2,3)</code> by the corresponding element of <code>c(4,5,6)</code></li>
 </ul>
 
 <pre><code class="r">c(1,2,3) * c(4,5,6)
@@ -1378,7 +1380,7 @@ mean(numbers)
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: a vector of variables</h3>
+<h3>Exercise: a vector of variables [together]</h3>
 <div class="slideContent" >
 <ul>
 <li>Predict the output of the following code:</li>
@@ -1606,7 +1608,7 @@ Error in numbers + 2: non-numeric argument to binary operator
 
 </section>
 <section data-state="prompt" data-transition="none" data-transition-speed="default">
-<h3>Exercise: data types</h3>
+<h3>Exercise: data types [together]</h3>
 <div class="slideContent" >
 <p>What types are each of the following vectors? Are they all fundamentally the same, or are they different?</p>
 
@@ -1722,11 +1724,18 @@ a_list[3:5]
 <li>and then retrieve elements by name or position </li>
 </ul>
 
-<pre><code class="r">a_list$a_string  # returns the element named &quot;thrid_number&quot;
+<pre><code class="r"># returns the element named &quot;thrid_number&quot;
+a_list$a_string  
 [1] &quot;hello&quot;
-a_list[[3]] # returns the 3rd element
+a_list[[&#39;a_string&#39;]]
 [1] &quot;hello&quot;
-a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
+
+# returns the 3rd element
+a_list[[3]]
+[1] &quot;hello&quot;
+
+# subsets the list, so returns a list of length 1 that contains a single element (the third)
+a_list[3]
 $a_string
 [1] &quot;hello&quot;
 </code></pre>

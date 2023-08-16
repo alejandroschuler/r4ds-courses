@@ -374,7 +374,7 @@ ggplot(genes) +
 # increase legend and point size
 ```
 
-Exercise
+Exercise [together]
 ===
 incremental: false
 type: prompt

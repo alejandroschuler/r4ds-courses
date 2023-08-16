@@ -56,7 +56,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 - **The full dataset.** Includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. 
 - **The subsetted dataset.** We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. 
-- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
+- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of "Z-scores", which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
 - **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
 
 
@@ -136,6 +136,31 @@ is.na(x)
 [1] TRUE
 ```
 
+Equality on Strings
+===
+- you can use `==` to test whether a string variable matches given text
+- but remember to quote the text you want to compare to
+
+```r
+filter(gtex, Gene == "ZZZ3")
+# A tibble: 78 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 ZZZ3  GTEX-11DXZ  1.37 -0.06  1.74  0.41
+ 2 ZZZ3  GTEX-11GSP -0.68 -1.83  0.8   0.93
+ 3 ZZZ3  GTEX-11NUK -0.75 -3.41  0.73  0.39
+ 4 ZZZ3  GTEX-11NV4  0.6  -0.28 -0.23 -0.05
+ 5 ZZZ3  GTEX-11TT1  0.86  0.93  0.07  1.3 
+ 6 ZZZ3  GTEX-11TUW  0.15  0.68 -0.43  1.23
+ 7 ZZZ3  GTEX-11ZUS -2.29 -0.78 NA     0.6 
+ 8 ZZZ3  GTEX-11ZVC -0.98 -1.4   1.22 -1.32
+ 9 ZZZ3  GTEX-1212Z -0.36 -0.33 -0.34  0.57
+10 ZZZ3  GTEX-12696 -1.37 -0.9   1.03  0.22
+# ℹ 68 more rows
+```
+- why doesn't `Gene == ZZZ3` work?
+- why doesn't `"Gene" == "ZZZ3"` make sense?
+
 Filtering on computed values
 ========================================================
 - the condition can contain computed values
@@ -173,7 +198,7 @@ filter(gtex, Blood > 10000)
 - If you ever get a data frame of length zero, it's because no rows satisfy the condition you asked for
 
 
-Exercise
+Exercise [together]
 ========================================================
 type:prompt
 
@@ -187,7 +212,7 @@ nrow(gtex)
 
 
 ```r
-filter(gtex, Gene == ZZZ3)
+filter(gtex, Gene == "ZZZ3")
 filter(gtex, Heart <= -5)
 nrow(gtex)
 ```
@@ -257,11 +282,23 @@ Logical conjunctions (OR)
 =========================================================
 
 ```r
-filter(gtex, Gene %in% c(ZZZ3,A2ML1)) # equivalent to filter(gtex, Gene==ZZZ3 | Gene==A2ML1)
-Error in `filter()`:
-ℹ In argument: `Gene %in% c(ZZZ3, A2ML1)`.
-Caused by error:
-! object 'ZZZ3' not found
+filter(gtex, Gene %in% c("ZZZ3","A2ML1")) 
+# A tibble: 156 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 A2ML1 GTEX-11DXZ -0.14 -1.08 NA    -0.66
+ 2 A2ML1 GTEX-11GSP -0.5   0.53  0.76 -0.1 
+ 3 A2ML1 GTEX-11NUK -0.08 -0.4  -0.26 -0.13
+ 4 A2ML1 GTEX-11NV4 -0.37  0.11 -0.42 -0.61
+ 5 A2ML1 GTEX-11TT1  0.3  -1.11  0.59 -0.12
+ 6 A2ML1 GTEX-11TUW  0.02 -0.47  0.29 -0.66
+ 7 A2ML1 GTEX-11ZUS -1.07 -0.41  0.67  0.06
+ 8 A2ML1 GTEX-11ZVC -0.27 -0.51  0.13 -0.75
+ 9 A2ML1 GTEX-1212Z -0.3   0.53  0.1  -0.48
+10 A2ML1 GTEX-12696 -0.11  0.24  0.96  0.72
+# ℹ 146 more rows
+# equivalent to 
+# filter(gtex, Gene=="ZZZ3" | Gene=="A2ML1")
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
@@ -314,13 +351,13 @@ Sampling rows
 ```r
 slice_sample(gtex, n=5)
 # A tibble: 5 × 6
-  Gene   Ind        Blood Heart  Lung Liver
-  <chr>  <chr>      <dbl> <dbl> <dbl> <dbl>
-1 IGSF23 GTEX-12WSI -0.16 -0.16 -0.2   0.89
-2 DENND3 GTEX-14XAO  1.53 -0.45 -0.09  0.49
-3 PRKAA2 GTEX-1KANB -0.67 -1.46  1.21 -0.91
-4 MNDA   GTEX-11GSP  1.1  -0.8  -0.1   1   
-5 RETSAT GTEX-1GN2E  0.67  0.23 -1.51  0.39
+  Gene       Ind        Blood Heart  Lung Liver
+  <chr>      <chr>      <dbl> <dbl> <dbl> <dbl>
+1 AKNA       GTEX-11ZUS -1.75 -0.61  0.01 -0.7 
+2 AC108448.2 GTEX-11TUW -1.25  0.04  0.28 -0.27
+3 EOGT       GTEX-18A7A  2.02 -1.41  0.13 -0.49
+4 SEMA4D     GTEX-14DAQ  0.6  -1.3  -0.89 -0.28
+5 ZNF707     GTEX-1JMLX  0.17  1.79  0.41  2.15
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -479,22 +516,24 @@ Select columns with select()
 
 
 ```r
-select(gtex, Gene, Ind, Blood)
+select(gtex, Gene, Ind, expression=Blood)
 # A tibble: 389,922 × 3
-   Gene  Ind        Blood
-   <chr> <chr>      <dbl>
- 1 A2ML1 GTEX-11DXZ -0.14
- 2 A2ML1 GTEX-11GSP -0.5 
- 3 A2ML1 GTEX-11NUK -0.08
- 4 A2ML1 GTEX-11NV4 -0.37
- 5 A2ML1 GTEX-11TT1  0.3 
- 6 A2ML1 GTEX-11TUW  0.02
- 7 A2ML1 GTEX-11ZUS -1.07
- 8 A2ML1 GTEX-11ZVC -0.27
- 9 A2ML1 GTEX-1212Z -0.3 
-10 A2ML1 GTEX-12696 -0.11
+   Gene  Ind        expression
+   <chr> <chr>           <dbl>
+ 1 A2ML1 GTEX-11DXZ      -0.14
+ 2 A2ML1 GTEX-11GSP      -0.5 
+ 3 A2ML1 GTEX-11NUK      -0.08
+ 4 A2ML1 GTEX-11NV4      -0.37
+ 5 A2ML1 GTEX-11TT1       0.3 
+ 6 A2ML1 GTEX-11TUW       0.02
+ 7 A2ML1 GTEX-11ZUS      -1.07
+ 8 A2ML1 GTEX-11ZVC      -0.27
+ 9 A2ML1 GTEX-1212Z      -0.3 
+10 A2ML1 GTEX-12696      -0.11
 # ℹ 389,912 more rows
 ```
+
+- you can rename columns in the result with the syntax ` new_name = old_name`
 
 Select columns with select()
 =========================================================
@@ -596,14 +635,6 @@ A colleague wants to see the blood expression for the gene A2ML1 for each person
 
 Before writing any code, break the problem down conceptually into steps. Figure out how to do each step independently before you put them together.
 
-Exercise: select text columns
-===
-type:prompt
-
-- Use select to subset the `gtex` dataframe to just those columns that contain text data. 
-- Can you do this programmatically without specifying the names of each of the desired columns? 
-- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
-
 pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
@@ -680,13 +711,13 @@ type:section
 
 Add new variables with mutate()
 ================================================================
-- `muatate` creates new columns
+- `mutate` creates new columns
 
 ![](https://ohi-science.org/data-science-training/img/rstudio-cheatsheet-mutate.png)
 
 Add new variables with mutate()
 ================================================================
-- `muatate` creates new columns
+- `mutate` creates new columns
 - first argument is a dataframe, second specifies what you want the new columns to be
 
 ```r
@@ -773,31 +804,35 @@ mutate(df, number = as.numeric(number))
 3      3
 ```
 
+
 Exercise: mutate()
 ===
 type:prompt
 
-I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. Using the GTEX data, create a new column containing the average of the four expression measurements in the different tissues.
+**Problem 1** 
 
+I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. 
 
-Exercise: mutate() and ggplot
-===
-type:prompt
+Using the GTEX data, create a new column containing the sum of the four expression measurements in the different tissues.
 
-Filter `gtex` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
+**Problem 2** 
 
-![plot of chunk unnamed-chunk-37](3-data-transformation-figure/unnamed-chunk-37-1.png)
+Filter `gtex` to only include measurements of the MYL1 gene.
 
+Then, use mutate to mark which individuals have greater than average (positive) expression in liver tissue.
 
-Exercise: putting it together
-===
-type:prompt
+Finally, produce a plot showing blood vs heart expression and color the liver expression outliers in a different color than the other points.
+
+*** 
+
+Plot for problem 2:
+![plot of chunk unnamed-chunk-38](3-data-transformation-figure/unnamed-chunk-38-1.png)
+
+**Problem 3** 
 
 Produce a vector containing the ten individual IDs (`Ind`) with the biggest absolute difference in their heart and lung expression for the A2ML1 gene.
 
-Before writing any code, break the problem down conceptually into steps. Do you have to create new columns? Filter the rows of a dataset? Arrange rows? Select certain columns? In what order? Once you have a plan, write code, one step at a time.
-
-
+Before writing code, break the problem into steps. Do you have to create new columns? Filter rows? Arrange rows? Select columns? In what order? Once you have a plan, write code, one step at a time.
 
 mutate() and if_else()
 ===
@@ -812,13 +847,10 @@ if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
 - this is often used in `mutate()`:
 
 ```r
-mutate(
-  gtex, 
+mutate(gtex, 
   blood_expression = ifelse(
-    Blood < 0, 
-    "-", "+"
-  )
-)
+    Blood < 0, "-", "+"
+))
 # A tibble: 389,922 × 7
    Gene  Ind        Blood Heart  Lung Liver blood_expression
    <chr> <chr>      <dbl> <dbl> <dbl> <dbl> <chr>           
@@ -901,15 +933,15 @@ pull(
 The pipe operator
 ===
 
-- Tidyverse solves these problems with the pipe operator `%>%`
+- R solves these problems with the "pipe" operator `|>`
 
 
 ```r
-gtex %>% 
-    filter(Gene == 'A2ML1') %>%
-    mutate(diff = abs(Heart-Lung)) %>%
-    arrange(desc(diff)) %>%
-    filter(row_number() <= 10) %>%
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
     pull(Ind)
 ```
 
@@ -917,15 +949,15 @@ gtex %>%
 The pipe operator
 ===
 
-- Tidyverse solves these problems with the pipe operator `%>%`
+- Tidyverse solves these problems with the pipe operator `|>`
 
 
 ```r
-gtex %>% 
-    filter(Gene == 'A2ML1') %>%
-    mutate(diff = abs(Heart-Lung)) %>%
-    arrange(desc(diff)) %>%
-    filter(row_number() <= 10) %>%
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
     pull(Ind)
 ```
 
@@ -948,7 +980,7 @@ When `df1` is piped into `fun(x)` (`fun` is just some fake function)
 
 
 ```r
-df1 %>% fun(x)
+df1 |> fun(x)
 ```
 
 is converted into:
@@ -965,38 +997,70 @@ Pipe details: What objects can be piped?
 =================================================================
 - The pipe works for all variables and functions (not just tidyverse functions)
 
-Piping with a vector
+Piping a string
+
+```r
+# paste("hello", "world")
+"hello" |> paste("world") 
+[1] "hello world"
+```
+
+Piping a vector
 
 
 ```r
-c(1,44,21,0,-4) %>%
-    sum() # instead of sum(c(1,44,21,0,-4))
+# sum(c(1,44,21,0,-4))
+c(1,44,21,0,-4) |> sum()
 [1] 62
 ```
 
-Piping with a scalar
+Piping a data frame
 
 
 ```r
-1 %>% `+`(1) # `+` is just a function that takes two arguments!
-[1] 2
+# filter(gtex, Gene=="ZZZ3")
+gtex |> filter(Gene=="ZZZ3") 
+# A tibble: 78 × 6
+   Gene  Ind        Blood Heart  Lung Liver
+   <chr> <chr>      <dbl> <dbl> <dbl> <dbl>
+ 1 ZZZ3  GTEX-11DXZ  1.37 -0.06  1.74  0.41
+ 2 ZZZ3  GTEX-11GSP -0.68 -1.83  0.8   0.93
+...
 ```
 
-Piping with a data frame
+An assembly line
+===
+
+```r
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
+    pull(Ind)
+```
+
+- The pipe represents a "conveyor belt" along which data is passed from function to function ("workers") in an assembly line
+
+Two Pipes
+===
+
+**History**
+- R had no pipe
+- ~2014: introduced by `magrittr` (as `%>%`)
+- ~2016: tidyverse adoption, proliferated in code
+- ~2021: base language adopted idea, implemented native pipe `|>`
+
+
+- `%>%` and `|>` are (basically) the same
+- you will see both in the wild
+
 
 
 ```r
-tibble(
-  name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
-  age = c(10,54,21,99,96)
-) %>%
-filter(age > 30) 
-# A tibble: 3 × 2
-  name          age
-  <chr>       <dbl>
-1 Rose           54
-2 Marigold       99
-3 Arabidopsis    96
+filter(gtex, Gene=="ZZZ3")
+gtex |> filter(Gene=="ZZZ3") 
+gtex %>% filter(Gene=="ZZZ3") 
 ```
 
 Exercise: Pipe to ggplot
@@ -1007,12 +1071,12 @@ type:prompt
 
 
 ```r
-gene_data = filter(gtex, Gene == 'MYBL2')
-outliers = mutate(gene_data, blood_outlier = abs(Blood) > 2)
+mybl2 = filter(gtex, Gene == 'MYBL2')
+
+outliers = mutate(mybl2, blood_outlier = abs(Blood) > 2)
+
 ggplot(outliers) +
-  geom_bar(aes(x=blood_outlier)) +
-  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
-  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
+  geom_bar(aes(x=blood_outlier))
 ```
 
 ============================================================

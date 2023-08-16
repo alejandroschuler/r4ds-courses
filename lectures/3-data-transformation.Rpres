@@ -85,7 +85,7 @@ This is a subset of the Genotype Tissue Expression (GTEx) dataset
 
 - **The full dataset.** Includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. 
 - **The subsetted dataset.** We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. 
-- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of Z-scores, which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
+- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of "Z-scores", which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
 - **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
 
 
@@ -141,6 +141,16 @@ x = NA
 is.na(x)
 ```
 
+Equality on Strings
+===
+- you can use `==` to test whether a string variable matches given text
+- but remember to quote the text you want to compare to
+```{r}
+filter(gtex, Gene == "ZZZ3")
+```
+- why doesn't `Gene == ZZZ3` work?
+- why doesn't `"Gene" == "ZZZ3"` make sense?
+
 Filtering on computed values
 ========================================================
 - the condition can contain computed values
@@ -159,7 +169,7 @@ filter(gtex, Blood > 10000)
 - If you ever get a data frame of length zero, it's because no rows satisfy the condition you asked for
 
 
-Exercise
+Exercise [together]
 ========================================================
 type:prompt
 
@@ -170,7 +180,7 @@ nrow(gtex)
 ```
 
 ```{r, eval=F}
-filter(gtex, Gene == ZZZ3)
+filter(gtex, Gene == "ZZZ3")
 filter(gtex, Heart <= -5)
 nrow(gtex)
 ```
@@ -210,7 +220,9 @@ filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
 Logical conjunctions (OR)
 =========================================================
 ```{r}
-filter(gtex, Gene %in% c(ZZZ3,A2ML1)) # equivalent to filter(gtex, Gene==ZZZ3 | Gene==A2ML1)
+filter(gtex, Gene %in% c("ZZZ3","A2ML1")) 
+# equivalent to 
+# filter(gtex, Gene=="ZZZ3" | Gene=="A2ML1")
 ```
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
@@ -333,8 +345,10 @@ Select columns with select()
 - first argument is a data frame, then columns you want to select
 
 ```{r}
-select(gtex, Gene, Ind, Blood)
+select(gtex, Gene, Ind, expression=Blood)
 ```
+
+- you can rename columns in the result with the syntax ` new_name = old_name`
 
 Select columns with select()
 =========================================================
@@ -376,14 +390,6 @@ A colleague wants to see the blood expression for the gene A2ML1 for each person
 
 Before writing any code, break the problem down conceptually into steps. Figure out how to do each step independently before you put them together.
 
-Exercise: select text columns
-===
-type:prompt
-
-- Use select to subset the `gtex` dataframe to just those columns that contain text data. 
-- Can you do this programmatically without specifying the names of each of the desired columns? 
-- Which base R function will help you determine if a column is textual or not? Use whatever tools you want to find out.
-
 pull() is a friend of select()
 =========================================================
 - `select()` has a friend called `pull()` which returns a vector instead of a (one-column) data frame
@@ -424,13 +430,13 @@ type:section
 
 Add new variables with mutate()
 ================================================================
-- `muatate` creates new columns
+- `mutate` creates new columns
 
 ![](https://ohi-science.org/data-science-training/img/rstudio-cheatsheet-mutate.png)
 
 Add new variables with mutate()
 ================================================================
-- `muatate` creates new columns
+- `mutate` creates new columns
 - first argument is a dataframe, second specifies what you want the new columns to be
 ```{r, max.lines = 5}
 mutate(gtex, abs_blood = abs(Blood))
@@ -470,24 +476,33 @@ mutate(df, number_plus_1 = number + 1)
 mutate(df, number = as.numeric(number))
 ```
 
+
 Exercise: mutate()
 ===
 type:prompt
 
-I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. Using the GTEX data, create a new column containing the average of the four expression measurements in the different tissues.
+**Problem 1** 
 
+I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. 
 
-Exercise: mutate() and ggplot
-===
-type:prompt
+Using the GTEX data, create a new column containing the sum of the four expression measurements in the different tissues.
 
-Filter `gtex` to only include measurements of the MYL1 gene. Then, use mutate to mark which gene-individual pairs have outlier MYL1 expression in blood, defined as Z > 3 or Z < -3. Then, produce a plot showing blood Z-scores vs heart Z-scores and color the blood gene expression outliers in a different color than the other points.
+**Problem 2** 
 
+Filter `gtex` to only include measurements of the MYL1 gene.
+
+Then, use mutate to mark which individuals have greater than average (positive) expression in liver tissue.
+
+Finally, produce a plot showing blood vs heart expression and color the liver expression outliers in a different color than the other points.
+
+*** 
+
+Plot for problem 2:
 ```{r, echo=F, fig.width=15}
 gene_data = filter(gtex, Gene == 'MYL1')
-blood_outliers = mutate(gene_data, blood_outlier = abs(Blood)>3)
-ggplot(blood_outliers) +
-  geom_point(aes(x=Blood, y=Heart, color=blood_outlier),
+myl1 = mutate(gene_data, pos_liver = Liver>0)
+ggplot(myl1) +
+  geom_point(aes(x=Blood, y=Heart, color=pos_liver),
              size = 3) +
   theme(axis.text = element_text(size = 15),
         axis.title = element_text(size = 20),
@@ -495,16 +510,11 @@ ggplot(blood_outliers) +
         legend.title = element_text(size = 20))
 ```
 
-
-Exercise: putting it together
-===
-type:prompt
+**Problem 3** 
 
 Produce a vector containing the ten individual IDs (`Ind`) with the biggest absolute difference in their heart and lung expression for the A2ML1 gene.
 
-Before writing any code, break the problem down conceptually into steps. Do you have to create new columns? Filter the rows of a dataset? Arrange rows? Select certain columns? In what order? Once you have a plan, write code, one step at a time.
-
-
+Before writing code, break the problem into steps. Do you have to create new columns? Filter rows? Arrange rows? Select columns? In what order? Once you have a plan, write code, one step at a time.
 
 mutate() and if_else()
 ===
@@ -516,13 +526,10 @@ if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
 ```
 - this is often used in `mutate()`:
 ```{r, max.lines=10}
-mutate(
-  gtex, 
+mutate(gtex, 
   blood_expression = ifelse(
-    Blood < 0, 
-    "-", "+"
-  )
-)
+    Blood < 0, "-", "+"
+))
 ```
 
 mutate() and if_else()
@@ -583,14 +590,14 @@ pull(
 The pipe operator
 ===
 
-- Tidyverse solves these problems with the pipe operator `%>%`
+- R solves these problems with the "pipe" operator `|>`
 
 ```{r, eval=F, tidy=F}
-gtex %>% 
-    filter(Gene == 'A2ML1') %>%
-    mutate(diff = abs(Heart-Lung)) %>%
-    arrange(desc(diff)) %>%
-    filter(row_number() <= 10) %>%
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
     pull(Ind)
 ```
 
@@ -598,14 +605,14 @@ gtex %>%
 The pipe operator
 ===
 
-- Tidyverse solves these problems with the pipe operator `%>%`
+- Tidyverse solves these problems with the pipe operator `|>`
 
 ```{r, eval=F, tidy=F}
-gtex %>% 
-    filter(Gene == 'A2ML1') %>%
-    mutate(diff = abs(Heart-Lung)) %>%
-    arrange(desc(diff)) %>%
-    filter(row_number() <= 10) %>%
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
     pull(Ind)
 ```
 
@@ -626,7 +633,7 @@ Pipe details: What happens to an object when it gets "piped in"?
 When `df1` is piped into `fun(x)` (`fun` is just some fake function)
 
 ```{r eval=FALSE}
-df1 %>% fun(x)
+df1 |> fun(x)
 ```
 
 is converted into:
@@ -642,27 +649,57 @@ Pipe details: What objects can be piped?
 =================================================================
 - The pipe works for all variables and functions (not just tidyverse functions)
 
-Piping with a vector
-
+Piping a string
 ```{r}
-c(1,44,21,0,-4) %>%
-    sum() # instead of sum(c(1,44,21,0,-4))
+# paste("hello", "world")
+"hello" |> paste("world") 
 ```
 
-Piping with a scalar
+Piping a vector
 
 ```{r}
-1 %>% `+`(1) # `+` is just a function that takes two arguments!
+# sum(c(1,44,21,0,-4))
+c(1,44,21,0,-4) |> sum()
 ```
 
-Piping with a data frame
+Piping a data frame
 
-```{r}
-tibble(
-  name = c("Petunia", "Rose", "Daisy", "Marigold", "Arabidopsis"),
-  age = c(10,54,21,99,96)
-) %>%
-filter(age > 30) 
+```{r, max.lines=5}
+# filter(gtex, Gene=="ZZZ3")
+gtex |> filter(Gene=="ZZZ3") 
+```
+
+An assembly line
+===
+```{r, eval=F, tidy=F}
+gtex |> 
+    filter(Gene == 'A2ML1') |>
+    mutate(diff = abs(Heart-Lung)) |>
+    arrange(desc(diff)) |>
+    filter(row_number() <= 10) |>
+    pull(Ind)
+```
+
+- The pipe represents a "conveyor belt" along which data is passed from function to function ("workers") in an assembly line
+
+Two Pipes
+===
+
+**History**
+- R had no pipe
+- ~2014: introduced by `magrittr` (as `%>%`)
+- ~2016: tidyverse adoption, proliferated in code
+- ~2021: base language adopted idea, implemented native pipe `|>`
+
+
+- `%>%` and `|>` are (basically) the same
+- you will see both in the wild
+
+
+```{r, max.lines=5, eval=F}
+filter(gtex, Gene=="ZZZ3")
+gtex |> filter(Gene=="ZZZ3") 
+gtex %>% filter(Gene=="ZZZ3") 
 ```
 
 Exercise: Pipe to ggplot
@@ -672,12 +709,12 @@ type:prompt
 - Run this code to see what it does. Then rewrite it using the pipe operator and get it to produce the same output.
 
 ```{r, eval=F, tidy=F}
-gene_data = filter(gtex, Gene == 'MYBL2')
-outliers = mutate(gene_data, blood_outlier = abs(Blood) > 2)
+mybl2 = filter(gtex, Gene == 'MYBL2')
+
+outliers = mutate(mybl2, blood_outlier = abs(Blood) > 2)
+
 ggplot(outliers) +
-  geom_bar(aes(x=blood_outlier)) +
-  scale_x_discrete("Class", labels=c("Other", "Outlier")) +
-  ggtitle("How many individuals have outlier MYBL2 expression in blood?")
+  geom_bar(aes(x=blood_outlier))
 ```
 
 ============================================================

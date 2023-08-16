@@ -221,6 +221,7 @@ Functions and variable assignment
 ========================================================
 
 ```r
+x = 2
 y = x
 y
 [1] 2
@@ -234,12 +235,13 @@ Functions and variable assignment
 ========================================================
 
 ```r
+x = 2
 y = x
 y
-[1] 1
-x = 10
+[1] 2
+x = 1
 y
-[1] 1
+[1] 2
 ```
 - What do you observe?
 
@@ -310,7 +312,7 @@ genes = read_csv(file_name)
 - `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
 - If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
 
-Exercise
+Exercise [together]
 ========================================================
 type: prompt
 
@@ -329,7 +331,7 @@ Caused by error:
 ! object 'EIF3L' not found
 ```
 
-Exercise
+Exercise [together]
 ========================================================
 type: prompt
 
@@ -401,7 +403,7 @@ multi-element vector arguments.
 
 Elementwise operations on a vector
 ========================================================
-- This multiplies each element of `1:10` by the corresponding element of `1:10`, that is, it squares each element.
+- This multiplies each element of `c(1,2,3)` by the corresponding element of `c(4,5,6)`
 
 ```r
 c(1,2,3) * c(4,5,6)
@@ -445,7 +447,7 @@ x = c(7, 3, 1, 9)
 ```
 - Subtract the mean of `x` from `x`, and then `sum` the result.
 
-Exercise: a vector of variables
+Exercise: a vector of variables [together]
 ===
 type: prompt
 
@@ -626,7 +628,7 @@ Error in numbers + 2: non-numeric argument to binary operator
 ```
 - this is a frequent source of unexpected errors!
 
-Exercise: data types
+Exercise: data types [together]
 ========================================================
 type: prompt
 
@@ -718,11 +720,18 @@ a_list = list(
 - and then retrieve elements by name or position 
 
 ```r
-a_list$a_string  # returns the element named "thrid_number"
+# returns the element named "thrid_number"
+a_list$a_string  
 [1] "hello"
-a_list[[3]] # returns the 3rd element
+a_list[['a_string']]
 [1] "hello"
-a_list[3] # subsets the list, so returns a list of length 1 that contains a single element (the third)
+
+# returns the 3rd element
+a_list[[3]]
+[1] "hello"
+
+# subsets the list, so returns a list of length 1 that contains a single element (the third)
+a_list[3]
 $a_string
 [1] "hello"
 ```

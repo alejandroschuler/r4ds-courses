@@ -101,9 +101,8 @@ install.packages("QuadRoot")
 
 ```r
 library(QuadRoot)
-Error in library(QuadRoot): there is no package called 'QuadRoot'
 QuadRoot(c(3,14,-5))
-Error in QuadRoot(c(3, 14, -5)): could not find function "QuadRoot"
+[1] "The two x-intercepts for the quadratic equation are 0.3333 and -5.0000."
 ```
 
 Packages
@@ -238,7 +237,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" height="80%" />
+<div class="figure">
+<img src="1-intro-plotting-figure/unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15" height="80%" />
+<p class="caption">plot of chunk unnamed-chunk-15</p>
+</div>
 
 ***
 - `ggplot(dataset)` says "start a chart with this dataset"
@@ -371,9 +373,12 @@ type: prompt
 Can you recreate this plot?
 
 
-<img src="1-intro-plotting-figure/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-27-1.png" alt="plot of chunk unnamed-chunk-27"  />
+<p class="caption">plot of chunk unnamed-chunk-27</p>
+</div>
 
-Exercise
+Exercise [together]
 ===
 incremental: false
 type: prompt
@@ -395,7 +400,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-29-1.png" alt="plot of chunk unnamed-chunk-29"  />
+<p class="caption">plot of chunk unnamed-chunk-29</p>
+</div>
 - Both these plots represent the same data, but they use a different geometric representation ("geom")
 - e.g. bar chart vs. line chart, etc. 
 - R graph gallery is a great resource to help you design your plot and pick the right geom: r-graph-gallery.com
@@ -407,7 +415,10 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<p class="caption">plot of chunk unnamed-chunk-30</p>
+</div>
 
 Geoms
 ===
@@ -421,7 +432,10 @@ ggplot(genes) +
   geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" title="plot of chunk unnamed-chunk-31" alt="plot of chunk unnamed-chunk-31" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-31-1.png" alt="plot of chunk unnamed-chunk-31"  />
+<p class="caption">plot of chunk unnamed-chunk-31</p>
+</div>
 
 Geoms
 ===
@@ -433,7 +447,10 @@ ggplot(genes) +
   geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" title="plot of chunk unnamed-chunk-32" alt="plot of chunk unnamed-chunk-32" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<p class="caption">plot of chunk unnamed-chunk-32</p>
+</div>
 
 Geoms
 ===
@@ -445,7 +462,10 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
   geom_point()
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-33-1.png" alt="plot of chunk unnamed-chunk-33"  />
+<p class="caption">plot of chunk unnamed-chunk-33</p>
+</div>
 
 Geoms
 ===
@@ -457,7 +477,10 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
   geom_smooth()
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<p class="caption">plot of chunk unnamed-chunk-34</p>
+</div>
 
 
 Exercise
@@ -472,7 +495,10 @@ ggplot(genes) +
   ...
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" title="plot of chunk unnamed-chunk-35" alt="plot of chunk unnamed-chunk-35" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-35-1.png" alt="plot of chunk unnamed-chunk-35"  />
+<p class="caption">plot of chunk unnamed-chunk-35</p>
+</div>
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
 - If you accomplish making the plot, can you figure out how to change the colors of the groups?
@@ -489,7 +515,10 @@ ggplot(genes) +
   facet_wrap(vars(phenotype), nrow = 2)
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" title="plot of chunk unnamed-chunk-36" alt="plot of chunk unnamed-chunk-36" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<p class="caption">plot of chunk unnamed-chunk-36</p>
+</div>
 - `facet_wrap` is good for faceting according to unordered categories
 
 Facets
@@ -503,7 +532,10 @@ ggplot(genes) +
   facet_grid(rows=vars(phenotype), cols=vars(gender))
 ```
 
-<img src="1-intro-plotting-figure/unnamed-chunk-37-1.png" title="plot of chunk unnamed-chunk-37" alt="plot of chunk unnamed-chunk-37" style="display: block; margin: auto;" />
+<div class="figure" style="text-align: center">
+<img src="1-intro-plotting-figure/unnamed-chunk-37-1.png" alt="plot of chunk unnamed-chunk-37"  />
+<p class="caption">plot of chunk unnamed-chunk-37</p>
+</div>
 
 
 Exercise
