@@ -471,16 +471,28 @@ Before writing any code, break the problem down conceptually into steps. Figure 
 *** 
 ::::{.columns}
 :::{.column}
-```{r max.lines = 3}
-# same as gtex$Gene, but pipeable!
-# eg. gtex |> .... |> pull(some_col) 
+```{r}
+#| echo: true
+#| eval: false
 gtex |> pull(Gene)
+```
+```{r}
+#| echo: false
+#| eval: true
+gtex |> head(10) |> pull(Gene)
 ```
 
 :::
 :::{.column}
 ```{r}
+#| echo: true
+#| eval: false
 gtex |> select(Gene)
+```
+```{r}
+#| echo: false
+#| eval: true
+gtex |> head(10) |> select(Gene)
 ```
 
 :::
