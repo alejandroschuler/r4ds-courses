@@ -276,12 +276,10 @@ Alejandro Schuler
 </section>
 <section id="why-learn-this-when-llms-can-do-it-1" class="slide level2" data-background-color="teal">
 <h2>Why learn this when LLMs can do it?</h2>
-<p>type: prompt incremental: true</p>
 <p>Discuss in your groups.</p>
 </section>
 <section id="quadratic-equation" class="slide level2" data-background-color="teal">
 <h2>Quadratic Equation</h2>
-<p>type: prompt incremental: true</p>
 <p>Solutions to a polynomial equation <span class="math inline">\(ax^2 + bx + c = 0\)</span> are given by <span class="math display">\[x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\]</span></p>
 <p>Figure out how to use R functions and operations for square roots, exponentiation, and multiplication to calculate x given a=3, b=14, c=-5 (no LLMs).</p>
 <div class="fragment">
@@ -387,7 +385,7 @@ Alejandro Schuler
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 59 x 11
+<pre><code># A tibble: 59 × 11
    sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
    &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
  1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
@@ -400,8 +398,8 @@ Alejandro Schuler
  8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
  9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
 10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# i 49 more rows
-# i 1 more variable: VAPA &lt;dbl&gt;</code></pre>
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>This is a <strong>data frame</strong>, one of the most powerful features in R (a “tibble” is a kind of data frame). - Similar to an Excel spreadsheet. - One row ~ one instance of some (real-world) object. - One column ~ one variable, containing the values for the corresponding instances. - All the values in one column should be of the same type (a number, a category, text, etc.), but different columns can be of different types.</p>
@@ -411,7 +409,7 @@ Alejandro Schuler
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 59 x 11
+<pre><code># A tibble: 59 × 11
    sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
    &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
  1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
@@ -424,8 +422,8 @@ Alejandro Schuler
  8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
  9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
 10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# i 49 more rows
-# i 1 more variable: VAPA &lt;dbl&gt;</code></pre>
+# ℹ 49 more rows
+# ℹ 1 more variable: VAPA &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.</p>
@@ -716,7 +714,7 @@ Alejandro Schuler
 <span id="cb36-2"><a href=""></a>reformatted_genes <span class="ot">=</span> <span class="fu">pivot_longer</span>(genes, <span class="fu">all_of</span>(gene_names), <span class="at">names_to=</span><span class="st">'gene'</span>, <span class="at">values_to=</span><span class="st">'expression'</span>)</span>
 <span id="cb36-3"><a href=""></a>reformatted_genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 354 x 7
+<pre><code># A tibble: 354 × 7
    sampleid     age gender ancestry  phenotype gene   expression
    &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;
  1 GSM3057239    70 F      Caucasian SLE       FAM50A      18.6 
@@ -729,7 +727,7 @@ Alejandro Schuler
  8 GSM3057241    78 F      Caucasian SLE       ERCC2        3.02
  9 GSM3057241    78 F      Caucasian SLE       IFI44       21.1 
 10 GSM3057241    78 F      Caucasian SLE       EIF3L      157.  
-# i 344 more rows</code></pre>
+# ℹ 344 more rows</code></pre>
 </div>
 </div>
 

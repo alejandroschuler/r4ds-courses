@@ -58,14 +58,10 @@ gives you information about what the function does
 - Anthropic's Claude code (using eg Opus 5) or OpenAI's codex (using eg Sol) can do everything you will learn about in this class and probably also in any quant class you'll take in your MPH.
 
 ## Why learn this when LLMs can do it? {data-background-color=teal}
-type: prompt
-incremental: true
 
 Discuss in your groups.
 
 ## Quadratic Equation {data-background-color=teal}
-type: prompt
-incremental: true
 
 Solutions to a polynomial equation $ax^2 + bx + c = 0$ are given by
 $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$

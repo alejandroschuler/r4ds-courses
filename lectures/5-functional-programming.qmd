@@ -179,12 +179,12 @@ rescale(vec, na.rm=F)
 - write a function that takes a single vector or list as input and returns it in reverse order
 
 ## Exercise: Hardcoding na.rm {data-background-color=teal}
-type:prompt
+
 - It's annoying that the `sum()` function returns `NA` if any values of the input vector are `NA`. You can fix this by passing in the optional argument `na.rm=T` every time you call `sum()`, but it's inconvenient to type that every single time.
 - Write a new function (called `sum_obs()`, short for "sum observed") that takes a vector and returns the sum of all the non-NA values. Your function should call the usual `sum()` internally.
 
 ## Exercise: NAs in two vectors {data-background-color=teal}
-type: prompt
+
 - Write a function called both_na() that takes two vectors of the same length and returns the total number of positions that have an NA in both vectors
 - Make a few vectors and test out your code
 
