@@ -90,7 +90,7 @@ nrow(nhanes)
 - It takes two arguments: the dataset and the condition
 
 ```{r, message=F}
-filter(nhanes, bp_sys_1 >= 180)
+filter(nhanes, age >= 70)
 ```
 
 ## Comparisons
@@ -121,19 +121,20 @@ is.na(x)
 - you can use `==` to test whether a string variable matches given text
 - but remember to quote the text you want to compare to
 ```{r}
-filter(nhanes, education == "College grad")
+filter(nhanes, race == "Asian")
 ```
 
-- why doesn't `education == College grad` work?
-- why doesn't `"education" == "College grad"` make sense?
+- why doesn't `race == Asian` work?
+- why doesn't `"race" == "Asian"` make sense?
 
 ## Filtering on computed values
 - the condition can contain computed values
 
 ```{r, message=F}
-filter(nhanes, bp_sys_1 - bp_dia_1 > 60)
+filter(nhanes, weight_kg / (height_cm/100)^2 > 30)
 ```
 
+- that condition is the formula for BMI, so this picks out the participants who are obese. Compare what you computed to the `bmi` column that came with the data
 - note that we didn't actually do anything to the values in the data
 
 ## Exercise [together] {data-background-color=teal}

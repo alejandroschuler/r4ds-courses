@@ -281,22 +281,22 @@ Alejandro Schuler
 <li>It takes two arguments: the dataset and the condition</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">filter</span>(nhanes, bp_sys_1 <span class="sc">&gt;=</span> <span class="dv">180</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">filter</span>(nhanes, age <span class="sc">&gt;=</span> <span class="dv">70</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 87 x 28
+<pre><code># A tibble: 1,046 x 28
    id              age age_group sex   race  education weight_kg height_cm   bmi
    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
- 1 NHANES-100064    71 60-79     fema~ Othe~ Some col~      62.9      165.  23.2
- 2 NHANES-100188    80 80+       fema~ White Some col~      61        153.  26  
- 3 NHANES-100389    55 40-59     fema~ Black 9-11th g~      78.7      159.  31.1
- 4 NHANES-100490    80 80+       fema~ White High sch~      45.3      157   18.4
- 5 NHANES-100509    79 60-79     fema~ White 9-11th g~      66.9      153.  28.5
- 6 NHANES-100963    80 80+       male  Black Some col~      77.7      180.  23.9
- 7 NHANES-101091    58 40-59     fema~ Black Some col~      98.9      162.  37.8
- 8 NHANES-101109    60 60-79     fema~ Black Some col~     120.       160.  47  
- 9 NHANES-101127    25 20-39     male  Other College ~     146.       186.  42.4
-10 NHANES-101200    73 60-79     male  White Some col~      67.1      176.  21.7
-# i 77 more rows
+ 1 NHANES-100010    80 80+       male  White College ~      NA        170.  NA  
+ 2 NHANES-100053    77 60-79     fema~ Asian College ~      58.5      149.  26.4
+ 3 NHANES-100064    71 60-79     fema~ Othe~ Some col~      62.9      165.  23.2
+ 4 NHANES-100071    71 60-79     male  White Some col~      71.1      169.  24.9
+ 5 NHANES-100078    75 60-79     male  White High sch~      NA         NA   NA  
+ 6 NHANES-100079    80 80+       fema~ White High sch~      56.4      152.  24.6
+ 7 NHANES-100083    80 80+       fema~ White High sch~      51.6      152   22.3
+ 8 NHANES-100088    75 60-79     male  Mexi~ Less tha~      78.3      168.  27.6
+ 9 NHANES-100113    79 60-79     male  White High sch~      96.7      169.  33.8
+10 NHANES-100114    79 60-79     male  White College ~      73.8      164.  27.5
+# i 1,036 more rows
 # i 19 more variables: waist_cm &lt;dbl&gt;, pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;,
 #   bp_sys_2 &lt;dbl&gt;, bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;,
 #   bp_dia_2 &lt;dbl&gt;, bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;,
@@ -355,22 +355,22 @@ Alejandro Schuler
 <li>but remember to quote the text you want to compare to</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">filter</span>(nhanes, education <span class="sc">==</span> <span class="st">"College grad"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a><span class="fu">filter</span>(nhanes, race <span class="sc">==</span> <span class="st">"Asian"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,336 x 28
+<pre><code># A tibble: 1,168 x 28
    id              age age_group sex   race  education weight_kg height_cm   bmi
    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
- 1 NHANES-100010    80 80+       male  White College ~      NA        170.  NA  
- 2 NHANES-100012    51 40-59     male  White College ~     131.       170.  45.1
+ 1 NHANES-100008    56 40-59     fema~ Asian High sch~      73.3      156.  29.9
+ 2 NHANES-100011     6 0-19      fema~ Asian &lt;NA&gt;           16.4      115.  12.3
  3 NHANES-100013    43 40-59     fema~ Asian College ~      59        154.  25  
- 4 NHANES-100016    36 20-39     male  Asian College ~      82.8      167.  29.5
- 5 NHANES-100025    35 20-39     fema~ White College ~     149.       167.  53.1
+ 4 NHANES-100014    19 0-19      fema~ Asian &lt;NA&gt;           57.5      156.  23.7
+ 5 NHANES-100016    36 20-39     male  Asian College ~      82.8      167.  29.5
  6 NHANES-100032    27 20-39     fema~ Asian College ~      48        152.  20.6
- 7 NHANES-100041    47 40-59     male  White College ~      89.5      182.  27.1
+ 7 NHANES-100036     4 0-19      male  Asian &lt;NA&gt;           19.9      107.  17.3
  8 NHANES-100053    77 60-79     fema~ Asian College ~      58.5      149.  26.4
  9 NHANES-100055    47 40-59     fema~ Asian College ~      76        153.  32.4
-10 NHANES-100056    57 40-59     male  Mexi~ College ~     132.       190.  36.9
-# i 1,326 more rows
+10 NHANES-100061    55 40-59     fema~ Asian College ~      54.4      162.  20.7
+# i 1,158 more rows
 # i 19 more variables: waist_cm &lt;dbl&gt;, pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;,
 #   bp_sys_2 &lt;dbl&gt;, bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;,
 #   bp_dia_2 &lt;dbl&gt;, bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;,
@@ -379,8 +379,8 @@ Alejandro Schuler
 </div>
 </div>
 <ul>
-<li>why doesn’t <code>education == College grad</code> work?</li>
-<li>why doesn’t <code>"education" == "College grad"</code> make sense?</li>
+<li>why doesn’t <code>race == Asian</code> work?</li>
+<li>why doesn’t <code>"race" == "Asian"</code> make sense?</li>
 </ul>
 </section>
 <section id="filtering-on-computed-values" class="slide level2">
@@ -389,22 +389,22 @@ Alejandro Schuler
 <li>the condition can contain computed values</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">filter</span>(nhanes, bp_sys_1 <span class="sc">-</span> bp_dia_1 <span class="sc">&gt;</span> <span class="dv">60</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a><span class="fu">filter</span>(nhanes, weight_kg <span class="sc">/</span> (height_cm<span class="sc">/</span><span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">&gt;</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,484 x 28
+<pre><code># A tibble: 2,398 x 28
    id              age age_group sex   race  education weight_kg height_cm   bmi
    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
- 1 NHANES-100004    65 60-79     fema~ Othe~ Less tha~      60.2      159.  23.8
- 2 NHANES-100010    80 80+       male  White College ~      NA        170.  NA  
- 3 NHANES-100020    65 60-79     male  White High sch~     119.       177   37.9
- 4 NHANES-100031     8 0-19      male  White &lt;NA&gt;           22.2      119.  15.7
- 5 NHANES-100033    62 60-79     fema~ Mexi~ High sch~      71.2      159.  28  
- 6 NHANES-100047    42 40-59     male  Black High sch~      79        173.  26.3
- 7 NHANES-100048    12 0-19      male  White &lt;NA&gt;           67.6      159.  26.7
- 8 NHANES-100064    71 60-79     fema~ Othe~ Some col~      62.9      165.  23.2
- 9 NHANES-100071    71 60-79     male  White Some col~      71.1      169.  24.9
-10 NHANES-100079    80 80+       fema~ White High sch~      56.4      152.  24.6
-# i 1,474 more rows
+ 1 NHANES-100000    21 20-39     fema~ Black Some col~      73.9      156   30.4
+ 2 NHANES-100001    39 20-39     male  White Some col~      96        176.  30.9
+ 3 NHANES-100009    19 0-19      fema~ White &lt;NA&gt;           86.5      154.  36.7
+ 4 NHANES-100012    51 40-59     male  White College ~     131.       170.  45.1
+ 5 NHANES-100020    65 60-79     male  White High sch~     119.       177   37.9
+ 6 NHANES-100024    39 20-39     fema~ White High sch~      91.2      170.  31.5
+ 7 NHANES-100025    35 20-39     fema~ White College ~     149.       167.  53.1
+ 8 NHANES-100040    24 20-39     male  Other High sch~     112.       181   34.3
+ 9 NHANES-100042    16 0-19      fema~ Black &lt;NA&gt;          104.       158.  41.4
+10 NHANES-100043    67 60-79     fema~ Black Some col~     108.       159.  42.8
+# i 2,388 more rows
 # i 19 more variables: waist_cm &lt;dbl&gt;, pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;,
 #   bp_sys_2 &lt;dbl&gt;, bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;,
 #   bp_dia_2 &lt;dbl&gt;, bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;,
@@ -413,6 +413,7 @@ Alejandro Schuler
 </div>
 </div>
 <ul>
+<li>that condition is the formula for BMI, so this picks out the participants who are obese. Compare what you computed to the <code>bmi</code> column that came with the data</li>
 <li>note that we didn’t actually do anything to the values in the data</li>
 </ul>
 </section>
@@ -630,11 +631,11 @@ Alejandro Schuler
 <pre><code># A tibble: 5 x 28
   id      age age_group sex   race  education weight_kg height_cm   bmi waist_cm
   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 NHAN~     7 0-19      male  Black &lt;NA&gt;           NA         NA   NA       NA  
-2 NHAN~    25 20-39     male  Mexi~ High sch~      98.3      173.  32.7    102  
-3 NHAN~    26 20-39     fema~ Mexi~ High sch~      74.3      152   32.2    100. 
-4 NHAN~    54 40-59     fema~ Othe~ College ~      79.7      154.  33.6    103. 
-5 NHAN~     9 0-19      male  Black &lt;NA&gt;           68.3      153   29.2     94.9
+1 NHAN~    76 60-79     male  White College ~     106.       172.  35.8    113. 
+2 NHAN~    42 40-59     male  Asian College ~      58.7      174.  19.3     78.7
+3 NHAN~     9 0-19      male  White &lt;NA&gt;           23.4      127.  14.5     54.8
+4 NHAN~    43 40-59     male  White 9-11th g~      NA        186.  NA      110. 
+5 NHAN~    36 20-39     male  Mexi~ 9-11th g~      77.8      168.  27.4     94.7
 # i 18 more variables: pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;, bp_sys_2 &lt;dbl&gt;,
 #   bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;, bp_dia_2 &lt;dbl&gt;,
 #   bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;, hdl &lt;dbl&gt;, hba1c &lt;dbl&gt;,
