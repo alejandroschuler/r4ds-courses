@@ -469,7 +469,7 @@ Before writing any code, break the problem down conceptually into steps. Figure 
 
 ![](https://www.gastonsanchez.com/intro2cwd/images/eda/dplyr-extract-column.svg)
 
-*** 
+***
 ::::{.columns}
 :::{.column}
 ```{r}
@@ -498,6 +498,31 @@ nhanes |> head(10) |> select(education)
 
 :::
 ::::
+
+## Why would you want a vector?
+
+Most of the functions that actually calculate something want a plain vector, not a table.
+
+::::{.columns}
+:::{.column}
+```{r, tidy=F}
+bmi = nhanes |> pull(bmi)
+mean(bmi, na.rm=TRUE)
+```
+
+:::
+:::{.column}
+```{r, tidy=F, warning=TRUE}
+bmi = nhanes |> select(bmi)
+mean(bmi, na.rm=TRUE)
+```
+
+:::
+::::
+
+- the code is identical apart from `pull()` vs `select()`, but only one of them gives you a number
+- `mean()` has no idea what to do with a table, so it warns you and hands back `NA`
+- watch out: this one *warns* rather than erroring. `median()` and `sd()` would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash
 
 ## Rename columns
 ::::{.columns}

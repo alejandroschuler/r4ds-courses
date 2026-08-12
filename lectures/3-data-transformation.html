@@ -631,11 +631,11 @@ Alejandro Schuler
 <pre><code># A tibble: 5 x 28
   id      age age_group sex   race  education weight_kg height_cm   bmi waist_cm
   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 NHAN~    56 40-59     fema~ Othe~ Less tha~      81        156   33.3     99.9
-2 NHAN~     0 0-19      male  White &lt;NA&gt;            7.8       NA   NA       NA  
-3 NHAN~    46 40-59     fema~ Othe~ High sch~      69.2      154.  29.1     86.2
-4 NHAN~    11 0-19      male  White &lt;NA&gt;           51.4      147.  23.9     NA  
-5 NHAN~    78 60-79     male  White High sch~      97        179.  30.3    118. 
+1 NHAN~     8 0-19      fema~ White &lt;NA&gt;           NA        NA    NA       NA  
+2 NHAN~    56 40-59     male  Black Some col~     121.      184.   35.5    131. 
+3 NHAN~    46 40-59     fema~ Black College ~      82.3     159.   32.7     99.4
+4 NHAN~    18 0-19      male  White &lt;NA&gt;          121.      174.   40.1    123. 
+5 NHAN~     2 0-19      fema~ White &lt;NA&gt;           11.2      89.3  14       NA  
 # i 18 more variables: pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;, bp_sys_2 &lt;dbl&gt;,
 #   bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;, bp_dia_2 &lt;dbl&gt;,
 #   bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;, hdl &lt;dbl&gt;, hba1c &lt;dbl&gt;,
@@ -1138,6 +1138,37 @@ Alejandro Schuler
 </div>
 </div></div>
 </section>
+<section id="why-would-you-want-a-vector" class="slide level2">
+<h2>Why would you want a vector?</h2>
+<p>Most of the functions that actually calculate something want a plain vector, not a table.</p>
+<div class="columns">
+<div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">pull</span>(bmi)</span>
+<span id="cb76-2"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 26.5775</code></pre>
+</div>
+</div>
+</div><div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(bmi)</span>
+<span id="cb78-2"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in mean.default(bmi, na.rm = TRUE): argument is not numeric or logical:
+returning NA</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+</div></div>
+<ul>
+<li>the code is identical apart from <code>pull()</code> vs <code>select()</code>, but only one of them gives you a number</li>
+<li><code>mean()</code> has no idea what to do with a table, so it warns you and hands back <code>NA</code></li>
+<li>watch out: this one <em>warns</em> rather than erroring. <code>median()</code> and <code>sd()</code> would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash</li>
+</ul>
+</section>
 <section id="rename-columns" class="slide level2">
 <h2>Rename columns</h2>
 <div class="columns">
@@ -1146,7 +1177,7 @@ Alejandro Schuler
 <li><code>select()</code> can be used to rename variables, but it drops all variables not selected</li>
 </ul>
 <div class="cell" data-max.lines="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="at">individual =</span> id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="at">individual =</span> id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 1
    individual   
@@ -1169,7 +1200,7 @@ Alejandro Schuler
 <li><code>rename()</code> is better suited for this because it keeps all the columns</li>
 </ul>
 <div class="cell" data-max.lines="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">individual =</span> id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">individual =</span> id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 28
    individual      age age_group sex   race  education weight_kg height_cm   bmi
@@ -1213,9 +1244,9 @@ Alejandro Schuler
 <li>first argument is a dataframe, second specifies what you want the new columns to be</li>
 </ul>
 <div class="cell" data-max.lines="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb80-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg) <span class="sc">|&gt;</span></span>
-<span id="cb80-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weight_lb =</span> <span class="fl">2.205</span><span class="sc">*</span>weight_kg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb85-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg) <span class="sc">|&gt;</span></span>
+<span id="cb85-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weight_lb =</span> <span class="fl">2.205</span><span class="sc">*</span>weight_kg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 3
    id            weight_kg weight_lb
@@ -1245,9 +1276,9 @@ Alejandro Schuler
 <li><strong>Warning!</strong> If the new variable name already exists, <code>mutate()</code> will overwrite the existing one (<em>in the new dataframe that gets created</em>)</li>
 </ul>
 <div class="cell" data-max.lines="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb82-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg) <span class="sc">|&gt;</span></span>
-<span id="cb82-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weight_kg =</span> <span class="fl">2.205</span><span class="sc">*</span>weight_kg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb87-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg) <span class="sc">|&gt;</span></span>
+<span id="cb87-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">weight_kg =</span> <span class="fl">2.205</span><span class="sc">*</span>weight_kg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 2
    id            weight_kg
@@ -1272,13 +1303,13 @@ Alejandro Schuler
 <li><code>mutate()</code> can create multiple columns at the same time and use multiple columns to define a single new one</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb84-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg, height_cm) <span class="sc">|&gt;</span></span>
-<span id="cb84-3"><a href=""></a>  <span class="fu">mutate</span>(  <span class="co"># the newlines make it more readable</span></span>
-<span id="cb84-4"><a href=""></a>      <span class="at">weight_lb =</span> <span class="fl">2.205</span> <span class="sc">*</span> weight_kg,</span>
-<span id="cb84-5"><a href=""></a>      <span class="at">height_in =</span> <span class="fl">0.394</span> <span class="sc">*</span> height_cm,</span>
-<span id="cb84-6"><a href=""></a>      <span class="at">bmi_imperial =</span> <span class="dv">703</span> <span class="sc">*</span> weight_lb <span class="sc">/</span> height_in<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb84-7"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb89-2"><a href=""></a>  <span class="fu">select</span>(id, weight_kg, height_cm) <span class="sc">|&gt;</span></span>
+<span id="cb89-3"><a href=""></a>  <span class="fu">mutate</span>(  <span class="co"># the newlines make it more readable</span></span>
+<span id="cb89-4"><a href=""></a>      <span class="at">weight_lb =</span> <span class="fl">2.205</span> <span class="sc">*</span> weight_kg,</span>
+<span id="cb89-5"><a href=""></a>      <span class="at">height_in =</span> <span class="fl">0.394</span> <span class="sc">*</span> height_cm,</span>
+<span id="cb89-6"><a href=""></a>      <span class="at">bmi_imperial =</span> <span class="dv">703</span> <span class="sc">*</span> weight_lb <span class="sc">/</span> height_in<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb89-7"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 6
    id            weight_kg height_cm weight_lb height_in bmi_imperial
@@ -1306,11 +1337,11 @@ Alejandro Schuler
 <li>mutate is used for text data too</li>
 </ul>
 <div class="cell" data-max.lines="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href=""></a><span class="fu">library</span>(stringr)</span>
-<span id="cb86-2"><a href=""></a></span>
-<span id="cb86-3"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb86-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">id_suffix =</span> <span class="fu">str_extract</span>(id, <span class="st">"(NHANES-)(.*)"</span>, <span class="at">group=</span><span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb86-5"><a href=""></a>  <span class="fu">select</span>(id, id_suffix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href=""></a><span class="fu">library</span>(stringr)</span>
+<span id="cb91-2"><a href=""></a></span>
+<span id="cb91-3"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb91-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">id_suffix =</span> <span class="fu">str_extract</span>(id, <span class="st">"(NHANES-)(.*)"</span>, <span class="at">group=</span><span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb91-5"><a href=""></a>  <span class="fu">select</span>(id, id_suffix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 2
    id            id_suffix
@@ -1335,8 +1366,8 @@ Alejandro Schuler
 <li>Data is sometimes given to you in a form that makes it difficult to do operations on</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href=""></a>df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">number =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>))</span>
-<span id="cb88-2"><a href=""></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href=""></a>df <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">number =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>))</span>
+<span id="cb93-2"><a href=""></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 x 1
   number
@@ -1345,7 +1376,7 @@ Alejandro Schuler
 2 2     
 3 3     </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href=""></a>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">number_plus_1 =</span> number <span class="sc">+</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href=""></a>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">number_plus_1 =</span> number <span class="sc">+</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `mutate()`:
 i In argument: `number_plus_1 = number + 1`.
@@ -1357,7 +1388,7 @@ Caused by error in `number + 1`:
 <li><code>mutate()</code> is also useful for converting data types, in this case text to numbers</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href=""></a>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">number =</span> <span class="fu">as.numeric</span>(number))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href=""></a>df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">number =</span> <span class="fu">as.numeric</span>(number))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 x 1
   number
@@ -1376,9 +1407,9 @@ Caused by error in `number + 1`:
 <li><code>mutate()</code> can be used to make logical columns (indicators)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb94-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">obese =</span> bmi <span class="sc">&gt;=</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
-<span id="cb94-3"><a href=""></a>  <span class="fu">select</span>(education, id, bmi, obese)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb99-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">obese =</span> bmi <span class="sc">&gt;=</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
+<span id="cb99-3"><a href=""></a>  <span class="fu">select</span>(education, id, bmi, obese)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 4
    education           id              bmi obese
@@ -1401,14 +1432,14 @@ Caused by error in `number + 1`:
 <li>which can be used to make plots</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb96-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">obese =</span> bmi <span class="sc">&gt;=</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
-<span id="cb96-3"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>obese, <span class="at">y=</span>bp_sys_1)) <span class="sc">+</span></span>
-<span id="cb96-4"><a href=""></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb101-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">obese =</span> bmi <span class="sc">&gt;=</span> <span class="dv">30</span>) <span class="sc">|&gt;</span></span>
+<span id="cb101-3"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>obese, <span class="at">y=</span>bp_sys_1)) <span class="sc">+</span></span>
+<span id="cb101-4"><a href=""></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-52-1.png" width="960"></p>
+<p><img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-54-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1419,12 +1450,12 @@ Caused by error in `number + 1`:
 
 <p>or you can just “mutate” directly in ggplot!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href=""></a>nhanes <span class="sc">|&gt;</span>  <span class="co"># mutate(obese = bmi &gt;= 30) |&gt;</span></span>
-<span id="cb97-2"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>bmi <span class="sc">&gt;=</span> <span class="dv">30</span>, <span class="at">y=</span>bp_sys_1)) <span class="sc">+</span></span>
-<span id="cb97-3"><a href=""></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href=""></a>nhanes <span class="sc">|&gt;</span>  <span class="co"># mutate(obese = bmi &gt;= 30) |&gt;</span></span>
+<span id="cb102-2"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>bmi <span class="sc">&gt;=</span> <span class="dv">30</span>, <span class="at">y=</span>bp_sys_1)) <span class="sc">+</span></span>
+<span id="cb102-3"><a href=""></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch"></section>
+<img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch"></section>
 <section id="exercise-mutate" class="slide level2" data-background-color="teal">
 <h2>Exercise: mutate()</h2>
 <p><em>Before writing code for each problem , break the problem into steps. Do you have to create new columns? Filter rows? Arrange rows? Select columns? In what order? Once you have a plan, write code, one step at a time.</em></p>
@@ -1442,8 +1473,8 @@ Caused by error in `number + 1`:
 <li>the first argument is an R expression that evaluates to a logical vector, the second argument is what to replace all of the resulting TRUEs with, and the third argument is what to replace the resulting FALSEs with</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href=""></a>x <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">5</span>)</span>
-<span id="cb98-2"><a href=""></a><span class="fu">if_else</span>(<span class="dv">0</span><span class="sc">&lt;=</span>x <span class="sc">&amp;</span> x<span class="sc">&lt;=</span><span class="dv">1</span>, <span class="st">"in [0,1]"</span>, <span class="st">"not in [0,1]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href=""></a>x <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb103-2"><a href=""></a><span class="fu">if_else</span>(<span class="dv">0</span><span class="sc">&lt;=</span>x <span class="sc">&amp;</span> x<span class="sc">&lt;=</span><span class="dv">1</span>, <span class="st">"in [0,1]"</span>, <span class="st">"not in [0,1]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "not in [0,1]" "in [0,1]"     "in [0,1]"     "not in [0,1]"</code></pre>
 </div>
@@ -1452,12 +1483,12 @@ Caused by error in `number + 1`:
 <li>this is often used in <code>mutate()</code>:</li>
 </ul>
 <div class="cell" data-max.lines="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
-<span id="cb100-2"><a href=""></a><span class="fu">select</span>(id, age, bp_sys_1) <span class="sc">|&gt;</span></span>
-<span id="cb100-3"><a href=""></a><span class="fu">mutate</span>( </span>
-<span id="cb100-4"><a href=""></a>  <span class="at">sys_category =</span> <span class="fu">ifelse</span>(</span>
-<span id="cb100-5"><a href=""></a>    bp_sys_1 <span class="sc">&gt;=</span> <span class="dv">140</span>, <span class="st">"high"</span>, <span class="st">"normal"</span></span>
-<span id="cb100-6"><a href=""></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href=""></a>nhanes <span class="sc">|&gt;</span></span>
+<span id="cb105-2"><a href=""></a><span class="fu">select</span>(id, age, bp_sys_1) <span class="sc">|&gt;</span></span>
+<span id="cb105-3"><a href=""></a><span class="fu">mutate</span>( </span>
+<span id="cb105-4"><a href=""></a>  <span class="at">sys_category =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb105-5"><a href=""></a>    bp_sys_1 <span class="sc">&gt;=</span> <span class="dv">140</span>, <span class="st">"high"</span>, <span class="st">"normal"</span></span>
+<span id="cb105-6"><a href=""></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,254 x 4
    id              age bp_sys_1 sys_category
@@ -1493,8 +1524,8 @@ Caused by error in `number + 1`:
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href=""></a>emails <span class="sc">|&gt;</span> </span>
-<span id="cb103-2"><a href=""></a><span class="fu">mutate</span>(<span class="at">preferred_email =</span> <span class="fu">ifelse</span>(preferred<span class="sc">==</span><span class="st">'personal'</span>, personal, school))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href=""></a>emails <span class="sc">|&gt;</span> </span>
+<span id="cb108-2"><a href=""></a><span class="fu">mutate</span>(<span class="at">preferred_email =</span> <span class="fu">ifelse</span>(preferred<span class="sc">==</span><span class="st">'personal'</span>, personal, school))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 x 5
   name  school             personal            preferred preferred_email    
