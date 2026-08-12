@@ -386,20 +386,20 @@ Alejandro Schuler
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>nhanes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 59 x 11
-   id         age sex   race  diabetes   bmi waist_cm bp_sys_1 cholesterol hba1c
-   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
- 1 NHANES-~    72 male  Mexi~ Yes       31.5    107.       124         170   6.8
- 2 NHANES-~    80 fema~ White Yes       26       87        180         250   6.7
- 3 NHANES-~    66 male  White Yes       26.1    105.       120         161   7.9
- 4 NHANES-~    65 fema~ Black Yes       34.4    102.       102         227   7.4
- 5 NHANES-~    31 male  White No        23.2     85.3      112         161   4.8
- 6 NHANES-~    80 male  Mexi~ Yes       32.1    120.       156         239   7.7
- 7 NHANES-~    49 fema~ Black No        39.3    112.       128         240   5.7
- 8 NHANES-~    65 fema~ Black Yes       30.8    114.       128         193   8.1
- 9 NHANES-~    80 fema~ White Yes       30      118.       156         141   8.7
-10 NHANES-~    53 male  Asian No        28.6     99.1      126         162   5.6
+   id             age sex   race  diabetes glucose hba1c   bmi waist_cm bp_sys_1
+   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1 NHANES-1001~    72 male  Mexi~ Yes          124   6.8  31.5    107.       124
+ 2 NHANES-1001~    80 fema~ White Yes           95   6.7  26       87        180
+ 3 NHANES-1002~    66 male  White Yes          171   7.9  26.1    105.       120
+ 4 NHANES-1002~    65 fema~ Black Yes          157   7.4  34.4    102.       102
+ 5 NHANES-1004~    31 male  White No            98   4.8  23.2     85.3      112
+ 6 NHANES-1008~    80 male  Mexi~ Yes          174   7.7  32.1    120.       156
+ 7 NHANES-1011~    49 fema~ Black No           107   5.7  39.3    112.       128
+ 8 NHANES-1012~    65 fema~ Black Yes          150   8.1  30.8    114.       128
+ 9 NHANES-1013~    80 fema~ White Yes          165   8.7  30      118.       156
+10 NHANES-1014~    53 male  Asian No           104   5.6  28.6     99.1      126
 # i 49 more rows
-# i 1 more variable: glucose &lt;dbl&gt;</code></pre>
+# i 1 more variable: cholesterol &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>This is a <strong>data frame</strong>, one of the most powerful features in R (a “tibble” is a kind of data frame). - Similar to an Excel spreadsheet. - One row ~ one instance of some (real-world) object. - One column ~ one variable, containing the values for the corresponding instances. - All the values in one column should be of the same type (a number, a category, text, etc.), but different columns can be of different types.</p>
@@ -410,20 +410,20 @@ Alejandro Schuler
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>nhanes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 59 x 11
-   id         age sex   race  diabetes   bmi waist_cm bp_sys_1 cholesterol hba1c
-   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
- 1 NHANES-~    72 male  Mexi~ Yes       31.5    107.       124         170   6.8
- 2 NHANES-~    80 fema~ White Yes       26       87        180         250   6.7
- 3 NHANES-~    66 male  White Yes       26.1    105.       120         161   7.9
- 4 NHANES-~    65 fema~ Black Yes       34.4    102.       102         227   7.4
- 5 NHANES-~    31 male  White No        23.2     85.3      112         161   4.8
- 6 NHANES-~    80 male  Mexi~ Yes       32.1    120.       156         239   7.7
- 7 NHANES-~    49 fema~ Black No        39.3    112.       128         240   5.7
- 8 NHANES-~    65 fema~ Black Yes       30.8    114.       128         193   8.1
- 9 NHANES-~    80 fema~ White Yes       30      118.       156         141   8.7
-10 NHANES-~    53 male  Asian No        28.6     99.1      126         162   5.6
+   id             age sex   race  diabetes glucose hba1c   bmi waist_cm bp_sys_1
+   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1 NHANES-1001~    72 male  Mexi~ Yes          124   6.8  31.5    107.       124
+ 2 NHANES-1001~    80 fema~ White Yes           95   6.7  26       87        180
+ 3 NHANES-1002~    66 male  White Yes          171   7.9  26.1    105.       120
+ 4 NHANES-1002~    65 fema~ Black Yes          157   7.4  34.4    102.       102
+ 5 NHANES-1004~    31 male  White No            98   4.8  23.2     85.3      112
+ 6 NHANES-1008~    80 male  Mexi~ Yes          174   7.7  32.1    120.       156
+ 7 NHANES-1011~    49 fema~ Black No           107   5.7  39.3    112.       128
+ 8 NHANES-1012~    65 fema~ Black Yes          150   8.1  30.8    114.       128
+ 9 NHANES-1013~    80 fema~ White Yes          165   8.7  30      118.       156
+10 NHANES-1014~    53 male  Asian No           104   5.6  28.6     99.1      126
 # i 49 more rows
-# i 1 more variable: glucose &lt;dbl&gt;</code></pre>
+# i 1 more variable: cholesterol &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>This is a subset of NHANES, the CDC’s National Health and Nutrition Examination Survey. NHANES sends a mobile clinic around the country, interviews a nationally representative sample of Americans, and gives each of them a physical exam and a blood draw.</p>
@@ -717,16 +717,16 @@ Alejandro Schuler
 <pre><code># A tibble: 354 x 7
    id              age sex    race             diabetes measure     value
    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;
- 1 NHANES-100129    72 male   Mexican American Yes      bmi          31.5
- 2 NHANES-100129    72 male   Mexican American Yes      waist_cm    107. 
- 3 NHANES-100129    72 male   Mexican American Yes      bp_sys_1    124  
- 4 NHANES-100129    72 male   Mexican American Yes      cholesterol 170  
- 5 NHANES-100129    72 male   Mexican American Yes      hba1c         6.8
- 6 NHANES-100129    72 male   Mexican American Yes      glucose     124  
- 7 NHANES-100188    80 female White            Yes      bmi          26  
- 8 NHANES-100188    80 female White            Yes      waist_cm     87  
- 9 NHANES-100188    80 female White            Yes      bp_sys_1    180  
-10 NHANES-100188    80 female White            Yes      cholesterol 250  
+ 1 NHANES-100129    72 male   Mexican American Yes      glucose     124  
+ 2 NHANES-100129    72 male   Mexican American Yes      hba1c         6.8
+ 3 NHANES-100129    72 male   Mexican American Yes      bmi          31.5
+ 4 NHANES-100129    72 male   Mexican American Yes      waist_cm    107. 
+ 5 NHANES-100129    72 male   Mexican American Yes      bp_sys_1    124  
+ 6 NHANES-100129    72 male   Mexican American Yes      cholesterol 170  
+ 7 NHANES-100188    80 female White            Yes      glucose      95  
+ 8 NHANES-100188    80 female White            Yes      hba1c         6.7
+ 9 NHANES-100188    80 female White            Yes      bmi          26  
+10 NHANES-100188    80 female White            Yes      waist_cm     87  
 # i 344 more rows</code></pre>
 </div>
 </div>
