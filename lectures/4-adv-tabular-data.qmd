@@ -317,40 +317,42 @@ nhanes_cycle_data |>
 
 ## "Messy" data is relative and not always bad
 
+Systolic blood pressure for four patients, before and after starting a new medication:
+
 ::::{.columns}
 :::{.column}
 ```{r, echo = FALSE}
-wide_mice = tibble(
-  mouse = c(1, 2, 3, 4),
-  weight_before = rnorm(4, 10, 2),
-  weight_after = rnorm(4, 11, 2),
+wide_bp = tibble(
+  patient = c(1, 2, 3, 4),
+  bp_before = c(152, 141, 158, 147),
+  bp_after  = c(138, 135, 141, 149),
 )
-wide_mice
+wide_bp
 ```
 
 ```{r, tidy = FALSE}
-wide_mice |>
-  mutate(weight_gain = weight_after - weight_before) |>
-  select(mouse, weight_gain)
+wide_bp |>
+  mutate(bp_change = bp_after - bp_before) |>
+  select(patient, bp_change)
 ```
 
 :::
 :::{.column}
 
 ```{r, echo = FALSE}
-long_mice = 
-  wide_mice |>
-  pivot_longer(-mouse, names_to = "time", values_to = "weight", names_prefix = "weight_")
+long_bp =
+  wide_bp |>
+  pivot_longer(-patient, names_to = "time", values_to = "bp", names_prefix = "bp_")
 
-long_mice
+long_bp
 ```
 
 ```{r, tidy = FALSE}
-long_mice |>
-  group_by(mouse) |>
-  mutate(weight_gain = weight - lag(weight)) |>
-  filter(!is.na(weight_gain)) |>
-  select(mouse, weight_gain)
+long_bp |>
+  group_by(patient) |>
+  mutate(bp_change = bp - lag(bp)) |>
+  filter(!is.na(bp_change)) |>
+  select(patient, bp_change)
 ```
 
 :::
@@ -358,7 +360,7 @@ long_mice |>
 
 ## Pivoting wider
 
-- As we saw with the mouse example, sometimes our data is actually easier to work with in the "wide" format. 
+- As we saw with the blood pressure example, sometimes our data is actually easier to work with in the "wide" format. 
 - wide data is also often nice to make tables for presentations, or is (unfortunately) sometimes required as input for other software packages
 - To go from long to wide, we use `pivot_wider()`:
 
@@ -366,17 +368,17 @@ long_mice |>
 :::{.column}
 
 ```{r, tidy = FALSE}
-long_mice
+long_bp
 ```
 
 :::
 :::{.column}
 
 ```{r, tidy = FALSE}
-long_mice |> 
+long_bp |> 
   pivot_wider(
     names_from = time, 
-    values_from = weight
+    values_from = bp
   )
 ```
 
