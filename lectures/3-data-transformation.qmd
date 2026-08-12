@@ -277,14 +277,14 @@ Use `arrange()` and `filter()` to get the data for the 5 rows with the highest B
 
 ## Nesting and Temporary Variables
 
-- In our last exercise, we used two function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
-```{r}
+- In our last exercise, we used two function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean.
+```{r, results='hide'}
 nhanes_by_bmi = arrange(nhanes, desc(bmi)) # using a temporary variable
 filter(nhanes_by_bmi, row_number()<=5)
 ```
 
 - we can also accompish this by "nesting" the function calls:
-```{r}
+```{r, results='hide'}
 filter(arrange(nhanes, desc(bmi)), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 
