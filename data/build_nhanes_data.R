@@ -150,10 +150,13 @@ message("building nhanes_subset.csv")
 # Dropping the handful of participants above 300 mg/dL keeps one extreme outlier from
 # squashing every scatterplot in lecture 1 into the left-hand third of the panel. It costs
 # 1% of the eligible pool and still spans normal to poorly-controlled diabetic glucose.
+# glucose and hba1c lead the measurement block because they are the pair lecture 1 plots, and
+# the eleventh column of a tibble does not print at 80 characters. Positions 6:11 must stay the
+# six measurements either way: the last slide of lecture 1 pivots names(nhanes)[6:11].
 subset_pool <- nhanes_out |>
   filter(age >= 20, diabetes %in% c("Yes", "No"), glucose < 300) |>
   select(id, age, sex, race, diabetes,
-         bmi, waist_cm, bp_sys_1, cholesterol, hba1c, glucose) |>
+         glucose, hba1c, bmi, waist_cm, bp_sys_1, cholesterol) |>
   drop_na()
 
 set.seed(20260812)
@@ -247,9 +250,11 @@ exams <- participant_sessions |>
   ) |>
   arrange(id, match(component, components))
 
+# Deliberately narrow. A tibble prints only what fits in 80 characters, so every column here
+# costs one that a join could otherwise show. The timestamps and status code live in the
+# practice copy below, which is read from a file rather than printed on a slide.
 write_csv(
-  exams |> select(participant_id = id, exam_id, session_id, center_id,
-                  component, status_code, exam_start, exam_end),
+  exams |> select(participant_id = id, exam_id, session_id, center_id, component),
   file.path(out_dir, "nhanes_exams.csv")
 )
 
@@ -275,9 +280,11 @@ participants <- nhanes |>
   ) |>
   arrange(id)
 
+# birth_country comes second on purpose: it is the variable the join exercise asks about, and
+# a joined-in column has to survive into the printed output for the exercise to be checkable.
 write_csv(
-  participants |> select(participant_id = id, sex, age_group, race, education,
-                         birth_country, birth_date),
+  participants |> select(participant_id = id, birth_country, sex, age_group, race,
+                         education, birth_date),
   file.path(out_dir, "nhanes_participants.csv")
 )
 
@@ -496,6 +503,25 @@ md  <- read_csv(file.path(out_dir, "nhanes_medications.csv"), show_col_types = F
 sh  <- read_csv(file.path(out_dir, "state_health.csv"), show_col_types = FALSE)
 
 check("exams has 4 components",                 n_distinct(ex$component) == 4)
+
+# The slides print these tables, and a tibble shows only what fits in 80 characters. These
+# checks pin the column sets and orders that keep every printed operation checkable.
+printed_cols <- function(d) {
+  op <- options(width = 80); on.exit(options(op))
+  strsplit(trimws(capture.output(print(d, n = 1))[2]), "\\s+")[[1]]
+}
+check("exams is 5 columns wide",                 ncol(ex) == 5)
+check("exams carries no timestamps",             !any(c("exam_start","exam_end") %in% names(ex)))
+check("birth_country is participants column 2",  names(pt)[2] == "birth_country")
+check("subset measurements start with glucose",  identical(names(ns)[6:7], c("glucose","hba1c")))
+# Eleven columns cannot all fit in 80 characters whatever the order, so cholesterol is last on
+# purpose: it is the only measurement lecture 1 never plots or filters on.
+check("every variable lecture 1 plots prints",
+      all(c("glucose","hba1c","bmi","waist_cm","diabetes","race","sex","age") %in%
+            printed_cols(ns)))
+check("join shows the joined-in columns",
+      all(c("component","center_id","sex","birth_country") %in%
+            printed_cols(inner_join(ex, pt, by = join_by(participant_id)))))
 check("every exam session exists",              all(ex$session_id %in% se$session_id))
 check("every exam participant exists",          all(ex$participant_id %in% pt$participant_id))
 check("participants has no center_id",          !"center_id" %in% names(pt))

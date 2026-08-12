@@ -145,6 +145,7 @@ Before continuing, run this code to reformat your data and store it as a new dat
 
 ```{r}
 nhanes_tidy = nhanes |>
+  select(id, sex, race, bp_sys_1:bp_sys_4) |>
   pivot_longer(
     bp_sys_1:bp_sys_4, 
     names_to="reading",
@@ -472,7 +473,7 @@ nhanes_sessions = read_csv("https://raw.githubusercontent.com/alejandroschuler/r
 
 ***
 
-- The **exam** data has one row per participant per exam component (body measures, blood pressure, and so on), with the session it was done in, the examination center it was done at, and a status code saying whether that component was completed.
+- The **exam** data has one row per participant per exam component (body measures, blood pressure, and so on), with an id for that exam, the session it was done in, and the examination center it was done at.
 ```{r max.lines=4, message = FALSE}
 nhanes_exams |> head(1)
 ```
@@ -619,6 +620,7 @@ head(nhanes_participants, 2)
 ```
 ```{r}
 nhanes |> 
+  select(id, age, bmi) |> 
   inner_join(nhanes_participants, join_by(id == participant_id)) |> 
   head(5)
 ```

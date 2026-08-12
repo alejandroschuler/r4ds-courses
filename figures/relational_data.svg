@@ -15,13 +15,11 @@
     <rect class="tbl" x="655" y="227" width="215" height="66"/>
     <rect class="tbl" x="655" y="293" width="215" height="66"/>
     <rect class="tbl" x="655" y="359" width="215" height="66"/>
-    <rect class="tbl" x="655" y="425" width="215" height="66"/>
     <text class="col" x="673" y="137">participant_id</text>
     <text class="col" x="673" y="203">exam_id</text>
     <text class="col" x="673" y="269">session_id</text>
     <text class="col" x="673" y="335">center_id</text>
     <text class="col" x="673" y="401">component</text>
-    <text class="col" x="673" y="467">status_code</text>
   </g>
 
   <!-- participants (left) -->
@@ -32,9 +30,9 @@
     <rect class="tbl" x="80" y="287" width="225" height="66"/>
     <rect class="tbl" x="80" y="353" width="225" height="66"/>
     <text class="col" x="98" y="197">participant_id</text>
-    <text class="col" x="98" y="263">age_group</text>
+    <text class="col" x="98" y="263">birth_country</text>
     <text class="col" x="98" y="329">sex</text>
-    <text class="col" x="98" y="395">birth_country</text>
+    <text class="col" x="98" y="395">age_group</text>
   </g>
   <line class="link" x1="305" y1="188" x2="655" y2="128"/>
 

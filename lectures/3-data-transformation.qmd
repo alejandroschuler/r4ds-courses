@@ -154,13 +154,13 @@ nrow(nhanes)
 
 ## Exercise
 
-- Without using the internet, think of how you can use `filter` multiple times to create a dataset where BMI is in the obese range (>=30) **and** systolic blood pressure is high (>=140)
+- Without using the internet, think of how you can use `filter` multiple times to create a dataset where BMI is in the obese range (>=30) **and** the participant is 70 or older
 
-- Using any resources you like, figure out how to use `filter` to create a dataset where **either** BMI is in the obese range (>=30) **or** systolic blood pressure is high (>=140)
+- Using any resources you like, figure out how to use `filter` to create a dataset where **either** BMI is in the obese range (>=30) **or** the participant is 70 or older
 
 ## Logical conjunctions (AND)
 ```{r}
-filter(nhanes, bmi >= 30 & bp_sys_1 >= 140)
+filter(nhanes, bmi >= 30 & age >= 70)
 ```
 
 - This filters by the **conjunction** of the two constraints---both must be satisfied.
@@ -176,8 +176,8 @@ FALSE & TRUE
 
 - For filter, you can do "AND" by passing in two separate conditions as two different arguments, but the comma and ampersand are not generally interchangeable
 ```{r}
-# filter(nhanes, bmi >= 30 & bp_sys_1 >= 140)
-filter(nhanes, bmi >= 30, bp_sys_1 >= 140)
+# filter(nhanes, bmi >= 30 & age >= 70)
+filter(nhanes, bmi >= 30, age >= 70)
 ```
 
 
@@ -251,13 +251,13 @@ filter(nhanes, row_number()<=3)
 - `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
 - Again, the first argument is the data frame and the other arguments tell the function what to do with it
 ```{r}
-arrange(nhanes, bp_sys_1)
+arrange(nhanes, bmi)
 ```
 
 ## Descending sort
 - Use the desc function to arrange by descending values
 ```{r}
-arrange(nhanes, desc(bp_sys_1))
+arrange(nhanes, desc(bmi))
 ```
 
 ## Multisort
@@ -265,13 +265,13 @@ arrange(nhanes, desc(bp_sys_1))
 - This is useful if there is a tie in sorting by the first column.
 
 ```{r}
-arrange(nhanes, education, bp_sys_1)
+arrange(nhanes, race, bmi)
 ```
 
 
-## Exercise: top 5 highest blood pressures {data-background-color=teal}
+## Exercise: top 5 highest BMIs {data-background-color=teal}
 
-Use `arrange()` and `filter()` to get the data for the 5 rows with the highest first systolic blood pressure readings
+Use `arrange()` and `filter()` to get the data for the 5 rows with the highest BMI
 
 # Piping {data-background-color=black}
 
@@ -279,13 +279,13 @@ Use `arrange()` and `filter()` to get the data for the 5 rows with the highest f
 
 - In our last exercise, we used two function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
 ```{r}
-nhanes_by_sys = arrange(nhanes, desc(bp_sys_1)) # using a temporary variable
-filter(nhanes_by_sys, row_number()<=5)
+nhanes_by_bmi = arrange(nhanes, desc(bmi)) # using a temporary variable
+filter(nhanes_by_bmi, row_number()<=5)
 ```
 
 - we can also accompish this by "nesting" the function calls:
 ```{r}
-filter(arrange(nhanes, desc(bp_sys_1)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(nhanes, desc(bmi)), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 
 - Which do you prefer? Why? What are the sylistic pros and cons to both if you are trying to understand what the code does for the first time?
@@ -296,7 +296,7 @@ filter(arrange(nhanes, desc(bp_sys_1)), row_number()<=5) # "nesting" the calls t
 
 ```{r, eval=F, tidy=F}
 nhanes |> 
-  arrange(desc(bp_sys_1)) |>
+  arrange(desc(bmi)) |>
   filter(row_number()<=5)
 ```
 
@@ -305,8 +305,8 @@ nhanes |>
 - How does this compare with our code before? What do you notice?
 
 ```{r, eval=F, tidy=F}
-nhanes_by_sys = arrange(nhanes, desc(bp_sys_1)) # using a temporary variable
-filter(nhanes_by_sys, row_number()<=5)
+nhanes_by_bmi = arrange(nhanes, desc(bmi)) # using a temporary variable
+filter(nhanes_by_bmi, row_number()<=5)
 ```
 
 
@@ -333,16 +333,16 @@ fun(df1, x)
 
 ```{r, eval=F, tidy=F}
 nhanes |> 
-  arrange(desc(bp_sys_1)) |>
+  arrange(desc(bmi)) |>
   filter(row_number()<=5)
 
 # same as:
-#   arrange(nhanes, desc(bp_sys_1)) |>
+#   arrange(nhanes, desc(bmi)) |>
 #   filter(row_number()<=5)
 
 
 # same as:
-#   filter( arrange(nhanes, desc(bp_sys_1)), row_number()<=5)
+#   filter( arrange(nhanes, desc(bmi)), row_number()<=5)
 ```
 
 *** 
@@ -530,6 +530,7 @@ nhanes |> rename(individual = id)
 - first argument is a dataframe, second specifies what you want the new columns to be
 ```{r, max.lines = 5}
 nhanes |>
+  select(id, weight_kg) |>
   mutate(weight_lb = 2.205*weight_kg)
 ```
 - This uses `mutate()` to add a new column which is the weight converted from kilograms to pounds.
@@ -540,6 +541,7 @@ nhanes |>
 - **Warning!** If the new variable name already exists, `mutate()` will overwrite the existing one (*in the new dataframe that gets created*)
 ```{r, max.lines = 5}
 nhanes |>
+  select(id, weight_kg) |>
   mutate(weight_kg = 2.205*weight_kg)
 ```
 
@@ -548,6 +550,7 @@ nhanes |>
 
 ```{r, tidy=F}
 nhanes |>
+  select(id, weight_kg, height_cm) |>
   mutate(  # the newlines make it more readable
       weight_lb = 2.205 * weight_kg,
       height_in = 0.394 * height_cm,
@@ -642,6 +645,7 @@ if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
 - this is often used in `mutate()`:
 ```{r, max.lines=10}
 nhanes |>
+select(id, age, bp_sys_1) |>
 mutate( 
   sys_category = ifelse(
     bp_sys_1 >= 140, "high", "normal"
