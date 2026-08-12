@@ -472,41 +472,10 @@ Before writing any code, break the problem down conceptually into steps. Figure 
 ***
 ::::{.columns}
 :::{.column}
-```{r}
-#| echo: true
-#| eval: false
-nhanes |> pull(education)
-```
-```{r}
-#| echo: false
-#| eval: true
-nhanes |> head(10) |> pull(education)
-```
-
-:::
-:::{.column}
-```{r}
-#| echo: true
-#| eval: false
-nhanes |> select(education)
-```
-```{r}
-#| echo: false
-#| eval: true
-nhanes |> head(10) |> select(education)
-```
-
-:::
-::::
-
-## Why would you want a vector?
-
-Most of the functions that actually calculate something want a plain vector, not a table.
-
-::::{.columns}
-:::{.column}
-```{r, tidy=F}
+```{r, tidy=F, warning=TRUE}
 bmi = nhanes |> pull(bmi)
+head(bmi)
+
 mean(bmi, na.rm=TRUE)
 ```
 
@@ -514,15 +483,17 @@ mean(bmi, na.rm=TRUE)
 :::{.column}
 ```{r, tidy=F, warning=TRUE}
 bmi = nhanes |> select(bmi)
+head(bmi)
+
 mean(bmi, na.rm=TRUE)
 ```
 
 :::
 ::::
 
-- the code is identical apart from `pull()` vs `select()`, but only one of them gives you a number
-- `mean()` has no idea what to do with a table, so it warns you and hands back `NA`
-- watch out: this one *warns* rather than erroring. `median()` and `sd()` would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash
+- the two are identical apart from `pull()` vs `select()`, but only one of them gives you a number
+- most functions that actually calculate something want a plain vector. `mean()` has no idea what to do with a table, so it warns and hands back `NA`
+- note that it *warns* rather than erroring. `median()` and `sd()` would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash
 
 ## Rename columns
 ::::{.columns}

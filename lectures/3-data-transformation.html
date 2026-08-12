@@ -631,11 +631,11 @@ Alejandro Schuler
 <pre><code># A tibble: 5 x 28
   id      age age_group sex   race  education weight_kg height_cm   bmi waist_cm
   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 NHAN~     8 0-19      fema~ White &lt;NA&gt;           NA        NA    NA       NA  
-2 NHAN~    56 40-59     male  Black Some col~     121.      184.   35.5    131. 
-3 NHAN~    46 40-59     fema~ Black College ~      82.3     159.   32.7     99.4
-4 NHAN~    18 0-19      male  White &lt;NA&gt;          121.      174.   40.1    123. 
-5 NHAN~     2 0-19      fema~ White &lt;NA&gt;           11.2      89.3  14       NA  
+1 NHAN~    70 60-79     fema~ White Some col~      65.5      151.  28.8     94.5
+2 NHAN~    16 0-19      male  Black &lt;NA&gt;           58.8      181   17.9     65.6
+3 NHAN~    66 60-79     fema~ Othe~ College ~      53.5      156.  22.1     78.2
+4 NHAN~    15 0-19      male  Mexi~ &lt;NA&gt;           60.1      169.  21.1     73  
+5 NHAN~    41 40-59     fema~ Mexi~ High sch~      72.7      153.  31.1    102. 
 # i 18 more variables: pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;, bp_sys_2 &lt;dbl&gt;,
 #   bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;, bp_dia_2 &lt;dbl&gt;,
 #   bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;, hdl &lt;dbl&gt;, hba1c &lt;dbl&gt;,
@@ -1105,55 +1105,32 @@ Alejandro Schuler
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">pull</span>(education)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">pull</span>(bmi)</span>
+<span id="cb72-2"><a href=""></a><span class="fu">head</span>(bmi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "Some college"        "Some college"        NA                   
- [4] NA                    "Less than 9th grade" NA                   
- [7] NA                    "Some college"        "High school"        
-[10] NA                   </code></pre>
+<pre><code>[1] 30.4 30.9 23.5 23.0 23.8   NA</code></pre>
 </div>
-</div>
-</div><div class="column">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href=""></a>nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(education)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 x 1
-   education          
-   &lt;chr&gt;              
- 1 Some college       
- 2 Some college       
- 3 &lt;NA&gt;               
- 4 &lt;NA&gt;               
- 5 Less than 9th grade
- 6 &lt;NA&gt;               
- 7 &lt;NA&gt;               
- 8 Some college       
- 9 High school        
-10 &lt;NA&gt;               </code></pre>
-</div>
-</div>
-</div></div>
-</section>
-<section id="why-would-you-want-a-vector" class="slide level2">
-<h2>Why would you want a vector?</h2>
-<p>Most of the functions that actually calculate something want a plain vector, not a table.</p>
-<div class="columns">
-<div class="column">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">pull</span>(bmi)</span>
-<span id="cb76-2"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 26.5775</code></pre>
 </div>
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(bmi)</span>
-<span id="cb78-2"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href=""></a>bmi <span class="ot">=</span> nhanes <span class="sc">|&gt;</span> <span class="fu">select</span>(bmi)</span>
+<span id="cb76-2"><a href=""></a><span class="fu">head</span>(bmi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 x 1
+    bmi
+  &lt;dbl&gt;
+1  30.4
+2  30.9
+3  23.5
+4  23  
+5  23.8
+6  NA  </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href=""></a><span class="fu">mean</span>(bmi, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in mean.default(bmi, na.rm = TRUE): argument is not numeric or logical:
 returning NA</code></pre>
@@ -1164,9 +1141,9 @@ returning NA</code></pre>
 </div>
 </div></div>
 <ul>
-<li>the code is identical apart from <code>pull()</code> vs <code>select()</code>, but only one of them gives you a number</li>
-<li><code>mean()</code> has no idea what to do with a table, so it warns you and hands back <code>NA</code></li>
-<li>watch out: this one <em>warns</em> rather than erroring. <code>median()</code> and <code>sd()</code> would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash</li>
+<li>the two are identical apart from <code>pull()</code> vs <code>select()</code>, but only one of them gives you a number</li>
+<li>most functions that actually calculate something want a plain vector. <code>mean()</code> has no idea what to do with a table, so it warns and hands back <code>NA</code></li>
+<li>note that it <em>warns</em> rather than erroring. <code>median()</code> and <code>sd()</code> would stop with an error instead. A wrong answer that keeps going is more dangerous than a crash</li>
 </ul>
 </section>
 <section id="rename-columns" class="slide level2">
@@ -1439,7 +1416,7 @@ Caused by error in `number + 1`:
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-54-1.png" width="960"></p>
+<p><img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-50-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1455,7 +1432,7 @@ Caused by error in `number + 1`:
 <span id="cb102-3"><a href=""></a>  <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch"></section>
+<img data-src="3-data-transformation_files/figure-revealjs/unnamed-chunk-51-1.png" width="960" class="r-stretch"></section>
 <section id="exercise-mutate" class="slide level2" data-background-color="teal">
 <h2>Exercise: mutate()</h2>
 <p><em>Before writing code for each problem , break the problem into steps. Do you have to create new columns? Filter rows? Arrange rows? Select columns? In what order? Once you have a plan, write code, one step at a time.</em></p>
