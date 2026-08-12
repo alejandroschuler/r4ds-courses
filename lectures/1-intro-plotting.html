@@ -315,10 +315,10 @@ Alejandro Schuler
 <li>csv is a common format for data to come in, and it’s easy to export csv files from microsoft excel, for instance.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="co"># I have a file called "lupusGenes.csv" on github that we can read from the URL </span></span>
-<span id="cb10-2"><a href=""></a>genes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://tinyurl.com/4vjrbwce"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="co"># I have a file called "nhanes_subset.csv" on github that we can read from the URL</span></span>
+<span id="cb10-2"><a href=""></a>nhanes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
-<pre><code>Error in read_csv("https://tinyurl.com/4vjrbwce"): could not find function "read_csv"</code></pre>
+<pre><code>Error in read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv"): could not find function "read_csv"</code></pre>
 </div>
 </div>
 <ul>
@@ -329,7 +329,7 @@ Alejandro Schuler
 <span id="cb12-2"><a href=""></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>) <span class="co"># load the package into the current R session - do this every time you use R and need functions from this package</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>genes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://tinyurl.com/4vjrbwce"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>nhanes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li>Now there is no error message</li>
@@ -342,7 +342,7 @@ Alejandro Schuler
 <li>once the package is loaded it doesn’t need to be loaded again before each function call</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>poly <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://tinyurl.com/y22p5j6j"</span>) <span class="co"># reading another csv file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>poly <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/poly.csv"</span>) <span class="co"># reading another csv file</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section></section>
 <section>
@@ -364,7 +364,7 @@ Alejandro Schuler
 <li>Getting your data into R is easy. We already saw, for example:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>genes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://tinyurl.com/4vjrbwce"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>nhanes <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li><code>read_csv()</code> requires you to tell it where to find the file you want to read in
@@ -380,26 +380,26 @@ Alejandro Schuler
 <section id="looking-at-data" class="slide level2">
 <h2>Looking at data</h2>
 <ul>
-<li><code>genes</code> is now a dataset loaded into R. To look at it, just type</li>
+<li><code>nhanes</code> is now a dataset loaded into R. To look at it, just type</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>nhanes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 59 × 11
-   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
-   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
- 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
- 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
- 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
- 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
- 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
- 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
- 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
- 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
- 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
-10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# ℹ 49 more rows
-# ℹ 1 more variable: VAPA &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 59 x 11
+   id         age sex   race  diabetes   bmi waist_cm bp_sys_1 cholesterol hba1c
+   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
+ 1 NHANES-~    72 male  Mexi~ Yes       31.5    107.       124         170   6.8
+ 2 NHANES-~    80 fema~ White Yes       26       87        180         250   6.7
+ 3 NHANES-~    66 male  White Yes       26.1    105.       120         161   7.9
+ 4 NHANES-~    65 fema~ Black Yes       34.4    102.       102         227   7.4
+ 5 NHANES-~    31 male  White No        23.2     85.3      112         161   4.8
+ 6 NHANES-~    80 male  Mexi~ Yes       32.1    120.       156         239   7.7
+ 7 NHANES-~    49 fema~ Black No        39.3    112.       128         240   5.7
+ 8 NHANES-~    65 fema~ Black Yes       30.8    114.       128         193   8.1
+ 9 NHANES-~    80 fema~ White Yes       30      118.       156         141   8.7
+10 NHANES-~    53 male  Asian No        28.6     99.1      126         162   5.6
+# i 49 more rows
+# i 1 more variable: glucose &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <p>This is a <strong>data frame</strong>, one of the most powerful features in R (a “tibble” is a kind of data frame). - Similar to an Excel spreadsheet. - One row ~ one instance of some (real-world) object. - One column ~ one variable, containing the values for the corresponding instances. - All the values in one column should be of the same type (a number, a category, text, etc.), but different columns can be of different types.</p>
@@ -407,43 +407,43 @@ Alejandro Schuler
 <section id="the-dataset" class="slide level2">
 <h2>The Dataset</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>nhanes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 59 × 11
-   sampleid     age gender ancestry  phenotype FAM50A ERCC2 IFI44 EIF3L  RSAD2
-   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
- 1 GSM3057239    70 F      Caucasian SLE         18.6  4.28  18.0 182.    25.5
- 2 GSM3057241    78 F      Caucasian SLE         20.3  3.02  21.1 157.    37.2
- 3 GSM3057243    64 F      Caucasian SLE         21.4  4.00 488.  169.   792. 
- 4 GSM3057245    32 F      Asian     SLE         17.1  4.49  34.0 149.    60.7
- 5 GSM3057247    33 F      Caucasian SLE         20.9  5.00  34.4 224.    60.8
- 6 GSM3057249    46 M      Maori     SLE         15.8  3.96 466.  111.  1382. 
- 7 GSM3057251    45 F      Asian     SLE         18.9  6.04 299.  157.   926. 
- 8 GSM3057253    67 M      Caucasian SLE         27.6  4.77  21.8 265.    20.6
- 9 GSM3057255    33 F      Caucasian SLE         15.4  3.88 700.   98.6 1652. 
-10 GSM3057257    28 F      Caucasian SLE         19.9  7.21 278.  217.   972. 
-# ℹ 49 more rows
-# ℹ 1 more variable: VAPA &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 59 x 11
+   id         age sex   race  diabetes   bmi waist_cm bp_sys_1 cholesterol hba1c
+   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
+ 1 NHANES-~    72 male  Mexi~ Yes       31.5    107.       124         170   6.8
+ 2 NHANES-~    80 fema~ White Yes       26       87        180         250   6.7
+ 3 NHANES-~    66 male  White Yes       26.1    105.       120         161   7.9
+ 4 NHANES-~    65 fema~ Black Yes       34.4    102.       102         227   7.4
+ 5 NHANES-~    31 male  White No        23.2     85.3      112         161   4.8
+ 6 NHANES-~    80 male  Mexi~ Yes       32.1    120.       156         239   7.7
+ 7 NHANES-~    49 fema~ Black No        39.3    112.       128         240   5.7
+ 8 NHANES-~    65 fema~ Black Yes       30.8    114.       128         193   8.1
+ 9 NHANES-~    80 fema~ White Yes       30      118.       156         141   8.7
+10 NHANES-~    53 male  Asian No        28.6     99.1      126         162   5.6
+# i 49 more rows
+# i 1 more variable: glucose &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.</p>
+<p>This is a subset of NHANES, the CDC’s National Health and Nutrition Examination Survey. NHANES sends a mobile clinic around the country, interviews a nationally representative sample of Americans, and gives each of them a physical exam and a blood draw.</p>
 <ul>
-<li>29 SLE Patients, 30 Healthy Controls</li>
-<li>We have basic metadata as well as the levels of multiple genes in blood.</li>
+<li>30 participants with diagnosed diabetes, 29 without</li>
+<li>We have basic demographics as well as several body measurements and lab values.</li>
 <li>Let’s see if we can find anything interesting from this already-generated data!</li>
 </ul>
 </section>
 <section id="investigating-a-relationship" class="slide level2">
 <h2>Investigating a relationship</h2>
-<p>Let’s say we’re curious about the relationship between two genes RSAD2 and IFI44.</p>
+<p>Let’s say we’re curious about the relationship between two lab values, glucose and hba1c.</p>
 <ul>
 <li>Can we use R to make a plot of these two variables?</li>
 </ul>
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb20-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb20-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -465,8 +465,8 @@ Alejandro Schuler
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb21-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> VAPA, <span class="at">y =</span> EIF3L))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb21-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> waist_cm, <span class="at">y =</span> bmi))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -485,18 +485,18 @@ Alejandro Schuler
 </ul>
 </div></div>
 </section>
-<section id="exercise-comparing-expression-levels" class="slide level2" data-background-color="teal">
-<h2>Exercise: comparing expression levels</h2>
-<p>Make a scatterplot of <code>phenotype</code> vs <code>IFI44</code> (another gene in the dataset). The result should look like this:</p>
+<section id="exercise-comparing-lab-values" class="slide level2" data-background-color="teal">
+<h2>Exercise: comparing lab values</h2>
+<p>Make a scatterplot of <code>diabetes</code> vs <code>hba1c</code> (another lab value in the dataset). The result should look like this:</p>
 
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"></section>
 <section id="investigating-a-relationship-1" class="slide level2">
 <h2>Investigating a relationship</h2>
-<p>Let’s say we’re curious about the relationship between RSAD2 and IFI44.</p>
+<p>Let’s say we’re curious about the relationship between glucose and hba1c.</p>
 
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"><ul>
 <li>What’s going on here? It seems like there are two clusters.</li>
-<li>What is driving this clustering? Age? Sex? Ancestry? Phenotype?</li>
+<li>What is driving this clustering? Age? Sex? Race? Diabetes?</li>
 </ul>
 </section>
 <section id="aesthetics" class="slide level2">
@@ -506,10 +506,10 @@ Alejandro Schuler
 <li>You can also use them to assign color, for instance</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb22-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, </span>
-<span id="cb22-3"><a href=""></a>                 <span class="at">y =</span> IFI44,</span>
-<span id="cb22-4"><a href=""></a>                 <span class="at">color =</span> phenotype))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb22-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, </span>
+<span id="cb22-3"><a href=""></a>                 <span class="at">y =</span> hba1c,</span>
+<span id="cb22-4"><a href=""></a>                 <span class="at">color =</span> diabetes))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
@@ -520,11 +520,11 @@ Alejandro Schuler
 <li>We could have used a shape</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
 <span id="cb23-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
-<span id="cb23-3"><a href=""></a>    <span class="at">x =</span> RSAD2, </span>
-<span id="cb23-4"><a href=""></a>    <span class="at">y =</span> IFI44, </span>
-<span id="cb23-5"><a href=""></a>    <span class="at">shape=</span>phenotype</span>
+<span id="cb23-3"><a href=""></a>    <span class="at">x =</span> glucose, </span>
+<span id="cb23-4"><a href=""></a>    <span class="at">y =</span> hba1c, </span>
+<span id="cb23-5"><a href=""></a>    <span class="at">shape=</span>diabetes</span>
 <span id="cb23-6"><a href=""></a>  )) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
@@ -535,11 +535,11 @@ Alejandro Schuler
 <li>Or size</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
 <span id="cb24-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
-<span id="cb24-3"><a href=""></a>    <span class="at">x =</span> RSAD2, </span>
-<span id="cb24-4"><a href=""></a>    <span class="at">y =</span> IFI44, </span>
-<span id="cb24-5"><a href=""></a>    <span class="at">size=</span>ancestry</span>
+<span id="cb24-3"><a href=""></a>    <span class="at">x =</span> glucose, </span>
+<span id="cb24-4"><a href=""></a>    <span class="at">y =</span> hba1c, </span>
+<span id="cb24-5"><a href=""></a>    <span class="at">size=</span>race</span>
 <span id="cb24-6"><a href=""></a>  )) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
@@ -553,11 +553,11 @@ Alejandro Schuler
 <li>If we set a property <em>outside</em> of the aesthetic, it no longer maps that property to a column.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
 <span id="cb25-2"><a href=""></a>  <span class="fu">geom_point</span>(</span>
 <span id="cb25-3"><a href=""></a>    <span class="fu">aes</span>(</span>
-<span id="cb25-4"><a href=""></a>      <span class="at">x =</span> RSAD2, </span>
-<span id="cb25-5"><a href=""></a>      <span class="at">y =</span> IFI44</span>
+<span id="cb25-4"><a href=""></a>      <span class="at">x =</span> glucose, </span>
+<span id="cb25-5"><a href=""></a>      <span class="at">y =</span> hba1c</span>
 <span id="cb25-6"><a href=""></a>    ),</span>
 <span id="cb25-7"><a href=""></a>    <span class="at">color =</span> <span class="st">"blue"</span></span>
 <span id="cb25-8"><a href=""></a>  ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -576,8 +576,8 @@ Alejandro Schuler
 <h2>Exercise [together]</h2>
 <p>What will this do? Why?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb26-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44, <span class="at">color =</span> <span class="st">"blue"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c, <span class="at">color =</span> <span class="st">"blue"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="geoms" class="slide level2">
@@ -585,8 +585,8 @@ Alejandro Schuler
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb27-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -597,8 +597,8 @@ Alejandro Schuler
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb28-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -622,8 +622,8 @@ Alejandro Schuler
 <li>On the other hand, you <em>can</em> set the “line type” of a line:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb29-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44, <span class="at">linetype =</span> phenotype))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb29-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c, <span class="at">linetype =</span> diabetes))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"><ul>
@@ -636,9 +636,9 @@ Alejandro Schuler
 <li>It’s possible to add multiple geoms to the same plot</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb30-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44, <span class="at">color =</span> phenotype)) <span class="sc">+</span> </span>
-<span id="cb30-3"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44, <span class="at">color =</span> phenotype))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb30-2"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c, <span class="at">color =</span> diabetes)) <span class="sc">+</span> </span>
+<span id="cb30-3"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c, <span class="at">color =</span> diabetes))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-28-1.png" width="960" class="r-stretch"></section>
@@ -648,7 +648,7 @@ Alejandro Schuler
 <li>To assign the same aesthetics to all geoms, pass the aesthetics to the <code>ggplot</code> function directly instead of to each geom individually</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">ggplot</span>(genes, <span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44, <span class="at">color =</span> phenotype)) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">ggplot</span>(nhanes, <span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c, <span class="at">color =</span> diabetes)) <span class="sc">+</span> </span>
 <span id="cb31-2"><a href=""></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span> </span>
 <span id="cb31-3"><a href=""></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
@@ -660,8 +660,8 @@ Alejandro Schuler
 <li>You can also use different mappings in different geoms</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a><span class="fu">ggplot</span>(genes, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44)) <span class="sc">+</span> </span>
-<span id="cb32-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> ancestry)) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a><span class="fu">ggplot</span>(nhanes, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c)) <span class="sc">+</span> </span>
+<span id="cb32-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> race)) <span class="sc">+</span> </span>
 <span id="cb32-3"><a href=""></a>  <span class="fu">geom_smooth</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
@@ -669,7 +669,7 @@ Alejandro Schuler
 <section id="exercise" class="slide level2" data-background-color="teal">
 <h2>Exercise</h2>
 <p>Use google or other resources to figure out how to receate this plot in R:</p>
-<pre><code>ggplot(genes) + 
+<pre><code>ggplot(nhanes) + 
   ...</code></pre>
 
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"><ul>
@@ -684,9 +684,9 @@ Alejandro Schuler
 <li>Use <strong>facets</strong> to generate multiple plots with shared structure</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb34-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44)) <span class="sc">+</span> </span>
-<span id="cb34-3"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(phenotype), <span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb34-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c)) <span class="sc">+</span> </span>
+<span id="cb34-3"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(diabetes), <span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-32-1.png" width="960" class="r-stretch"><ul>
@@ -699,35 +699,35 @@ Alejandro Schuler
 <li><code>facet_grid</code> is better for ordered categories, and can be used with two variables</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">ggplot</span>(genes) <span class="sc">+</span> </span>
-<span id="cb35-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RSAD2, <span class="at">y =</span> IFI44)) <span class="sc">+</span> </span>
-<span id="cb35-3"><a href=""></a>  <span class="fu">facet_grid</span>(<span class="at">rows=</span><span class="fu">vars</span>(phenotype), <span class="at">cols=</span><span class="fu">vars</span>(gender))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a><span class="fu">ggplot</span>(nhanes) <span class="sc">+</span> </span>
+<span id="cb35-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> glucose, <span class="at">y =</span> hba1c)) <span class="sc">+</span> </span>
+<span id="cb35-3"><a href=""></a>  <span class="fu">facet_grid</span>(<span class="at">rows=</span><span class="fu">vars</span>(diabetes), <span class="at">cols=</span><span class="fu">vars</span>(sex))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="1-intro-plotting_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
 <section id="exercise-1" class="slide level2" data-background-color="teal">
 <h2>Exercise</h2>
-<p>Use ggplot to investigate the relationship between gene expression and lupus using any combination of any kinds of plots that you like. Which genes are most associated with lupus? Does this vary by ancestry, age, or assigned sex at birth?</p>
+<p>Use ggplot to investigate the relationship between these measurements and diabetes using any combination of any kinds of plots that you like. Which measurements are most associated with diabetes? Does this vary by race, age, or assigned sex at birth?</p>
 <p>For some plots it may be helpful to reformat your data using this code (we’ll learn how to do this on day 4):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>gene_names <span class="ot">=</span> <span class="fu">names</span>(genes)[<span class="dv">6</span><span class="sc">:</span><span class="dv">11</span>]</span>
-<span id="cb36-2"><a href=""></a>reformatted_genes <span class="ot">=</span> <span class="fu">pivot_longer</span>(genes, <span class="fu">all_of</span>(gene_names), <span class="at">names_to=</span><span class="st">'gene'</span>, <span class="at">values_to=</span><span class="st">'expression'</span>)</span>
-<span id="cb36-3"><a href=""></a>reformatted_genes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>measure_names <span class="ot">=</span> <span class="fu">names</span>(nhanes)[<span class="dv">6</span><span class="sc">:</span><span class="dv">11</span>]</span>
+<span id="cb36-2"><a href=""></a>reformatted_nhanes <span class="ot">=</span> <span class="fu">pivot_longer</span>(nhanes, <span class="fu">all_of</span>(measure_names), <span class="at">names_to=</span><span class="st">'measure'</span>, <span class="at">values_to=</span><span class="st">'value'</span>)</span>
+<span id="cb36-3"><a href=""></a>reformatted_nhanes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 354 × 7
-   sampleid     age gender ancestry  phenotype gene   expression
-   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;
- 1 GSM3057239    70 F      Caucasian SLE       FAM50A      18.6 
- 2 GSM3057239    70 F      Caucasian SLE       ERCC2        4.28
- 3 GSM3057239    70 F      Caucasian SLE       IFI44       18.0 
- 4 GSM3057239    70 F      Caucasian SLE       EIF3L      182.  
- 5 GSM3057239    70 F      Caucasian SLE       RSAD2       25.5 
- 6 GSM3057239    70 F      Caucasian SLE       VAPA       159.  
- 7 GSM3057241    78 F      Caucasian SLE       FAM50A      20.3 
- 8 GSM3057241    78 F      Caucasian SLE       ERCC2        3.02
- 9 GSM3057241    78 F      Caucasian SLE       IFI44       21.1 
-10 GSM3057241    78 F      Caucasian SLE       EIF3L      157.  
-# ℹ 344 more rows</code></pre>
+<pre><code># A tibble: 354 x 7
+   id              age sex    race             diabetes measure     value
+   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;
+ 1 NHANES-100129    72 male   Mexican American Yes      bmi          31.5
+ 2 NHANES-100129    72 male   Mexican American Yes      waist_cm    107. 
+ 3 NHANES-100129    72 male   Mexican American Yes      bp_sys_1    124  
+ 4 NHANES-100129    72 male   Mexican American Yes      cholesterol 170  
+ 5 NHANES-100129    72 male   Mexican American Yes      hba1c         6.8
+ 6 NHANES-100129    72 male   Mexican American Yes      glucose     124  
+ 7 NHANES-100188    80 female White            Yes      bmi          26  
+ 8 NHANES-100188    80 female White            Yes      waist_cm     87  
+ 9 NHANES-100188    80 female White            Yes      bp_sys_1    180  
+10 NHANES-100188    80 female White            Yes      cholesterol 250  
+# i 344 more rows</code></pre>
 </div>
 </div>
 

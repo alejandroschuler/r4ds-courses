@@ -372,9 +372,9 @@ Alejandro Schuler
 <li>The syntax is <code>FUNCTION_NAME &lt;- function(ARGUMENTS...) { CODE }</code></li>
 <li>what you call the arguments that go in the <code>function(...)</code> part is how the function will refer to these inputs internally and specify how it should be called using named arguments</li>
 </ul>
-<p><img data-src="https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true"></p>
+<p><img data-src="https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/call.png?raw=true"></p>
 <pre><code>aes = function(x,y) {...} # defining 
-aes(x=EIF3L, y=VAPA) # calling </code></pre>
+aes(x=waist_cm, y=bmi) # calling </code></pre>
 </div></div>
 </section>
 <section id="optional-arguments" class="slide level2">
@@ -455,7 +455,7 @@ aes(x=EIF3L, y=VAPA) # calling </code></pre>
     x_rng = range(x, na.rm = na.rm)
     (x - x_rng[1])/(x_rng[2] - x_rng[1])
 }
-&lt;bytecode: 0x12a083d28&gt;</code></pre>
+&lt;bytecode: 0x118049008&gt;</code></pre>
 </div>
 </div>
 <ul>
@@ -523,11 +523,11 @@ $class_B
 <li>as another example, let’s say you want to read in multiple files:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"</span></span>
 <span id="cb33-2"><a href=""></a>files <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb33-3"><a href=""></a>  <span class="at">samples =</span> <span class="st">"gtex_samples_time.csv"</span>,</span>
-<span id="cb33-4"><a href=""></a>  <span class="at">tissues =</span> <span class="st">"gtex_tissue_month_year.csv"</span>,</span>
-<span id="cb33-5"><a href=""></a>  <span class="at">dates =</span> <span class="st">"gtex_dates_clean.csv"</span></span>
+<span id="cb33-3"><a href=""></a>  <span class="at">exams      =</span> <span class="st">"nhanes_monthly_exams.csv"</span>,</span>
+<span id="cb33-4"><a href=""></a>  <span class="at">components =</span> <span class="st">"nhanes_monthly_components.csv"</span>,</span>
+<span id="cb33-5"><a href=""></a>  <span class="at">dates      =</span> <span class="st">"nhanes_exam_dates.csv"</span></span>
 <span id="cb33-6"><a href=""></a>)</span>
 <span id="cb33-7"><a href=""></a></span>
 <span id="cb33-8"><a href=""></a>urls <span class="ot">=</span> <span class="fu">str_c</span>(url_start, files)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -540,12 +540,12 @@ $class_B
 <section id="exercise-map-practice" class="slide level2" data-background-color="teal">
 <h2>Exercise: map practice</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"</span></span>
 <span id="cb35-2"><a href=""></a></span>
 <span id="cb35-3"><a href=""></a>data_frames <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb35-4"><a href=""></a>  <span class="at">samples =</span> <span class="st">"gtex_samples_time.csv"</span>,</span>
-<span id="cb35-5"><a href=""></a>  <span class="at">tissues =</span> <span class="st">"gtex_tissue_month_year.csv"</span>,</span>
-<span id="cb35-6"><a href=""></a>  <span class="at">dates =</span> <span class="st">"gtex_dates_clean.csv"</span></span>
+<span id="cb35-4"><a href=""></a>  <span class="at">exams      =</span> <span class="st">"nhanes_monthly_exams.csv"</span>,</span>
+<span id="cb35-5"><a href=""></a>  <span class="at">components =</span> <span class="st">"nhanes_monthly_components.csv"</span>,</span>
+<span id="cb35-6"><a href=""></a>  <span class="at">dates      =</span> <span class="st">"nhanes_exam_dates.csv"</span></span>
 <span id="cb35-7"><a href=""></a>)  <span class="sc">|&gt;</span> </span>
 <span id="cb35-8"><a href=""></a>  <span class="fu">map</span>(\(f) <span class="fu">str_c</span>(url_start, f)) <span class="sc">|&gt;</span></span>
 <span id="cb35-9"><a href=""></a>  <span class="fu">map</span>(read_csv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -623,12 +623,12 @@ $class_B
 <h2>Exercise: read files</h2>
 <p>Earlier we saw this example of reading in multiple files:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"</span></span>
 <span id="cb40-2"><a href=""></a></span>
 <span id="cb40-3"><a href=""></a>data_frames <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb40-4"><a href=""></a>  <span class="at">samples =</span> <span class="st">"gtex_samples_time.csv"</span>,</span>
-<span id="cb40-5"><a href=""></a>  <span class="at">tissues =</span> <span class="st">"gtex_tissue_month_year.csv"</span>,</span>
-<span id="cb40-6"><a href=""></a>  <span class="at">dates =</span> <span class="st">"gtex_dates_clean.csv"</span></span>
+<span id="cb40-4"><a href=""></a>  <span class="at">exams      =</span> <span class="st">"nhanes_monthly_exams.csv"</span>,</span>
+<span id="cb40-5"><a href=""></a>  <span class="at">components =</span> <span class="st">"nhanes_monthly_components.csv"</span>,</span>
+<span id="cb40-6"><a href=""></a>  <span class="at">dates      =</span> <span class="st">"nhanes_exam_dates.csv"</span></span>
 <span id="cb40-7"><a href=""></a>)  <span class="sc">|&gt;</span> </span>
 <span id="cb40-8"><a href=""></a>  <span class="fu">map</span>(\(f) <span class="fu">str_c</span>(url_start, f)) <span class="sc">|&gt;</span></span>
 <span id="cb40-9"><a href=""></a>  <span class="fu">map</span>(read_csv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -647,8 +647,8 @@ $class_B
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>data_frames <span class="sc">|&gt;</span></span>
 <span id="cb41-2"><a href=""></a>  <span class="fu">map_dbl</span>(nrow)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>samples tissues   dates 
-     66    1475    1234 </code></pre>
+<pre><code>     exams components      dates 
+        24         96      34816 </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -662,12 +662,12 @@ $class_B
 <span id="cb43-8"><a href=""></a>data_frames <span class="sc">|&gt;</span></span>
 <span id="cb43-9"><a href=""></a>  <span class="fu">map_df</span>(count_rc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
+<pre><code># A tibble: 3 x 2
   n_rows n_cols
    &lt;int&gt;  &lt;int&gt;
-1     66      3
-2   1475      4
-3   1234      6</code></pre>
+1     24      3
+2     96      4
+3  34816      5</code></pre>
 </div>
 </div>
 </section>
@@ -701,17 +701,17 @@ $class_B
 <span id="cb46-4"><a href=""></a> <span class="co"># a random number between a[1] and b[1]</span></span>
 <span id="cb46-5"><a href=""></a><span class="fu">runif</span>(<span class="dv">1</span>, a[<span class="dv">1</span>], b[<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.386694</code></pre>
+<pre><code>[1] 1.40282</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="co"># a random number between a[2] and b[2]</span></span>
 <span id="cb48-2"><a href=""></a><span class="fu">runif</span>(<span class="dv">1</span>, a[<span class="dv">2</span>], b[<span class="dv">2</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.697886</code></pre>
+<pre><code>[1] 2.668126</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="co"># a random number between a[3] and b[3]</span></span>
 <span id="cb50-2"><a href=""></a><span class="fu">runif</span>(<span class="dv">1</span>, a[<span class="dv">3</span>], b[<span class="dv">3</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.39753</code></pre>
+<pre><code>[1] 3.058854</code></pre>
 </div>
 </div>
 </div><div class="column">
@@ -727,13 +727,13 @@ $class_B
 <span id="cb52-6"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1] 1.536055
+[1] 1.073197
 
 [[2]]
-[1] 2.989367
+[1] 2.288867
 
 [[3]]
-[1] 3.686994</code></pre>
+[1] 3.015552</code></pre>
 </div>
 </div>
 <div data-align="center">
@@ -766,7 +766,7 @@ $class_B
 <span id="cb56-4"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$class_A
-# A tibble: 5 × 2
+# A tibble: 5 x 2
   grade class  
   &lt;dbl&gt; &lt;chr&gt;  
 1    90 class_A
@@ -776,7 +776,7 @@ $class_B
 5    69 class_A
 
 $class_B
-# A tibble: 7 × 2
+# A tibble: 7 x 2
   grade class  
   &lt;dbl&gt; &lt;chr&gt;  
 1    88 class_B
@@ -800,7 +800,7 @@ $class_B
 <span id="cb58-3"><a href=""></a>    <span class="at">b =</span> <span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">11</span>)</span>
 <span id="cb58-4"><a href=""></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 2
+<pre><code># A tibble: 6 x 2
       a     b
   &lt;dbl&gt; &lt;dbl&gt;
 1     1    10
@@ -815,12 +815,12 @@ $class_B
 <section id="exercise-dimensions" class="slide level2" data-background-color="teal">
 <h2>Exercise: dimensions</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href=""></a>url_start <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"</span></span>
 <span id="cb60-2"><a href=""></a></span>
 <span id="cb60-3"><a href=""></a>data_frames <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb60-4"><a href=""></a>  <span class="at">samples =</span> <span class="st">"gtex_samples_time.csv"</span>,</span>
-<span id="cb60-5"><a href=""></a>  <span class="at">tissues =</span> <span class="st">"gtex_tissue_month_year.csv"</span>,</span>
-<span id="cb60-6"><a href=""></a>  <span class="at">dates =</span> <span class="st">"gtex_dates_clean.csv"</span></span>
+<span id="cb60-4"><a href=""></a>  <span class="at">exams      =</span> <span class="st">"nhanes_monthly_exams.csv"</span>,</span>
+<span id="cb60-5"><a href=""></a>  <span class="at">components =</span> <span class="st">"nhanes_monthly_components.csv"</span>,</span>
+<span id="cb60-6"><a href=""></a>  <span class="at">dates      =</span> <span class="st">"nhanes_exam_dates.csv"</span></span>
 <span id="cb60-7"><a href=""></a>)  <span class="sc">|&gt;</span> </span>
 <span id="cb60-8"><a href=""></a>  <span class="fu">map</span>(\(f) <span class="fu">str_c</span>(url_start, f)) <span class="sc">|&gt;</span></span>
 <span id="cb60-9"><a href=""></a>  <span class="fu">map</span>(read_csv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -835,13 +835,13 @@ $class_B
 </div>
 <div class="cell">
 <div class="cell-output cell-output-error">
-<pre><code>Error in bind_rows: The pipe operator requires a function call as RHS (&lt;text&gt;:8:3)</code></pre>
+<pre><code>Error in bind_rows: The pipe operator requires a function call as RHS (&lt;input&gt;:8:3)</code></pre>
 </div>
 </div>
 </section>
 <section id="exercise-reading-files-in-multiple-directories" class="slide level2" data-background-color="teal">
 <h2>Exercise: reading files in multiple directories</h2>
-<p>My collaborator has an online folder of experimental results named <code>results</code> that can be found at <code>"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"</code>. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named <code>rep_n</code>, so, e.g.&nbsp;<code>results/rep_14</code> would be one sub-folder. Within each sub-folder, there are 3 csv files called <code>a.csv</code>, <code>b.csv</code> <code>c.csv</code> that contain different kinds of measurements. Thus, a full path to one of these files might be <code>results/rep_14/c.csv</code>.</p>
+<p>My collaborator has an online folder of experimental results named <code>results</code> that can be found at <code>"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/results"</code>. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named <code>rep_n</code>, so, e.g.&nbsp;<code>results/rep_14</code> would be one sub-folder. Within each sub-folder, there are 3 csv files called <code>a.csv</code>, <code>b.csv</code> <code>c.csv</code> that contain different kinds of measurements. Thus, a full path to one of these files might be <code>results/rep_14/c.csv</code>.</p>
 <ol type="1">
 <li><p>write code to read these all into one long list of data frames. <code>str_c()</code> or <code>glue()</code> will be helpful to create the required file names</p></li>
 <li><p>Unfortunately, that wasn’t helpful because now you don’t know what data frames are what results. Consider just the “<code>a</code>” files. Write code that reads in only the “<code>a</code>” files and concatenates them into one data frame. Include a column in this data frame that indicates which experimental repetition each row of the data frame came from (use <code>imap()</code>).</p></li>
