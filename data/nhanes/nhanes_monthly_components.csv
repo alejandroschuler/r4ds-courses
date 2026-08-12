@@ -1,0 +1,97 @@
+component,month,year,n_exams
+blood pressure,1,2017,395
+blood pressure,2,2017,360
+blood pressure,3,2017,414
+blood pressure,4,2017,360
+blood pressure,5,2017,413
+blood pressure,6,2017,396
+blood pressure,7,2017,378
+blood pressure,8,2017,414
+blood pressure,9,2017,378
+blood pressure,10,2017,396
+blood pressure,11,2017,396
+blood pressure,12,2017,341
+blood pressure,1,2018,345
+blood pressure,2,2018,300
+blood pressure,3,2018,330
+blood pressure,4,2018,315
+blood pressure,5,2018,414
+blood pressure,6,2018,378
+blood pressure,7,2018,346
+blood pressure,8,2018,345
+blood pressure,9,2018,300
+blood pressure,10,2018,345
+blood pressure,11,2018,330
+blood pressure,12,2018,315
+body measures,1,2017,395
+body measures,2,2017,360
+body measures,3,2017,414
+body measures,4,2017,360
+body measures,5,2017,413
+body measures,6,2017,396
+body measures,7,2017,378
+body measures,8,2017,414
+body measures,9,2017,378
+body measures,10,2017,396
+body measures,11,2017,396
+body measures,12,2017,341
+body measures,1,2018,345
+body measures,2,2018,300
+body measures,3,2018,330
+body measures,4,2018,315
+body measures,5,2018,414
+body measures,6,2018,378
+body measures,7,2018,346
+body measures,8,2018,345
+body measures,9,2018,300
+body measures,10,2018,345
+body measures,11,2018,330
+body measures,12,2018,315
+oral health,1,2017,395
+oral health,2,2017,360
+oral health,3,2017,414
+oral health,4,2017,360
+oral health,5,2017,413
+oral health,6,2017,396
+oral health,7,2017,378
+oral health,8,2017,414
+oral health,9,2017,378
+oral health,10,2017,396
+oral health,11,2017,396
+oral health,12,2017,341
+oral health,1,2018,345
+oral health,2,2018,300
+oral health,3,2018,330
+oral health,4,2018,315
+oral health,5,2018,414
+oral health,6,2018,378
+oral health,7,2018,346
+oral health,8,2018,345
+oral health,9,2018,300
+oral health,10,2018,345
+oral health,11,2018,330
+oral health,12,2018,315
+phlebotomy,1,2017,395
+phlebotomy,2,2017,360
+phlebotomy,3,2017,414
+phlebotomy,4,2017,360
+phlebotomy,5,2017,413
+phlebotomy,6,2017,396
+phlebotomy,7,2017,378
+phlebotomy,8,2017,414
+phlebotomy,9,2017,378
+phlebotomy,10,2017,396
+phlebotomy,11,2017,396
+phlebotomy,12,2017,341
+phlebotomy,1,2018,345
+phlebotomy,2,2018,300
+phlebotomy,3,2018,330
+phlebotomy,4,2018,315
+phlebotomy,5,2018,414
+phlebotomy,6,2018,378
+phlebotomy,7,2018,346
+phlebotomy,8,2018,345
+phlebotomy,9,2018,300
+phlebotomy,10,2018,345
+phlebotomy,11,2018,330
+phlebotomy,12,2018,315

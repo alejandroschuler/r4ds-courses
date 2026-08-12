@@ -23,28 +23,28 @@ library(tidyverse)
 
 # Summaries {data-background-color=black}
 
-## GTEx data
-This is a subset of the Genotype Tissue Expression (GTEx) dataset
+## NHANES data
+This is a subset of the National Health and Nutrition Examination Survey (NHANES)
 
-- **The full dataset.** Includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. 
-- **The subsetted dataset.** We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. 
-- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of "Z-scores", which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
-- **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+- **The full dataset.** NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. Hundreds of variables are released publicly, cycle by cycle.
+- **The subsetted dataset.** We are looking at the 2017-2018 cycle here, with about 30 of the variables: demographics, body measurements, blood pressure, and a handful of lab values.
+- **Data processing** The coded values in the public files have been translated into readable labels and the variables renamed, so you don't need the NHANES codebook open to read the data. Nothing else has been changed.
+- **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on picking out participants with unusually high or low values for a given measurement as compared to the distribution across all participants.
 
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/342rhdc2')
+nhanes = read_csv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes.csv')
 
 # Check number of rows
-nrow(gtex)
+nrow(nhanes)
 ```
 
 ## Summarize
 ```{r}
-summarize(gtex, blood_avg=mean(Blood, na.rm=T))
+summarize(nhanes, sys_avg=mean(bp_sys_1, na.rm=T))
 ```
 
-- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `blood_avg` that contains the mean of the `Blood` column
+- `summarize()` boils down the data frame according to the conditions it gets. In this case, it creates a data frame with a single column called `sys_avg` that contains the mean of the `bp_sys_1` column
 - As with `mutate()`, the name on the left of the `=` is something you make up that you would like the new column to be named.
 - `mutate()` transforms columns into new columns of the same length, but `summarize()` collapses down the data frame into a single row
 
@@ -60,16 +60,16 @@ summarize(gtex, blood_avg=mean(Blood, na.rm=T))
 ***
 - note that you can also pass in multiple conditions that operate on multiple columns at the same time
 ```{r, tidy=F}
-gtex |> 
+nhanes |> 
 summarize( # newlines not necessary, again just increase clarity
-  lung_avg = mean(Lung, na.rm=T),
-  blood_max = max(Blood, na.rm=T),
-  blood_lung_dif_min = min(Blood - Lung, na.rm=T)
+  dia_avg = mean(bp_dia_1, na.rm=T),
+  sys_max = max(bp_sys_1, na.rm=T),
+  sys_dia_dif_min = min(bp_sys_1 - bp_dia_1, na.rm=T)
 )
 ```
 
 ## Exercise: summaries {data-background-color=teal}
-Find the average, maximum, and minimum expressions of the REN gene in blood. *Hint: filter and summarize.*
+Find the average, maximum, and minimum first systolic reading among participants whose education is `College grad`. *Hint: filter and summarize.*
 
 # Grouping {data-background-color=black}
 
@@ -80,9 +80,9 @@ Find the average, maximum, and minimum expressions of the REN gene in blood. *Hi
 - Summaries are more useful when you apply them to subgroups of the data
 
 ```{r, tidy=F, message=F}
-gtex |> 
-  group_by(Gene) |>
-  summarize(max_blood = max(Blood))
+nhanes |> 
+  group_by(education) |>
+  summarize(max_sys = max(bp_sys_1))
 ```
 
 - `group_by()` is a helper function that "groups" the data according to the unique values in the column(s) it gets passed. 
@@ -100,13 +100,13 @@ gtex |>
 ## Group on many columns
 
 ```{r, tidy=F, message=F}
-gtex |> 
-  filter(!is.na(Blood) & !is.na(Lung)) |>
+nhanes |> 
+  filter(!is.na(bmi) & !is.na(bp_sys_1)) |>
   group_by(
-    pos_blood = Blood>0, 
-    pos_lung = Lung>0
+    obese = bmi>=30, 
+    high_sys = bp_sys_1>=140
   ) |>
-  summarize(mean_liver = mean(Liver, na.rm=T))
+  summarize(mean_hba1c = mean(hba1c, na.rm=T))
 ```
 
 - The result has the summary value for each unique combination of the grouping variables
@@ -115,24 +115,24 @@ gtex |>
 - The `n()` function counts the number of rows in each group:
 
 ```{r, tidy=F, message=F}
-gtex |> 
-  filter(!is.na(Blood)) |>
-  group_by(Gene) |>
+nhanes |> 
+  filter(!is.na(bp_sys_1)) |>
+  group_by(education) |>
   summarize(how_many = n())
 ```
 - You can also use `count()`, which is just a shorthand for the same thing
 
 ```{r, tidy=F, message=F, eval=F}
-gtex |> 
-  filter(!is.na(Blood)) |>
-  group_by(Gene) |>
+nhanes |> 
+  filter(!is.na(bp_sys_1)) |>
+  group_by(education) |>
   count()
 ```
 
 
-## Exercise: expression range per gene {data-background-color=teal}
+## Exercise: blood pressure range per group {data-background-color=teal}
 
-Ignoring NAs, what are the highest and lowest liver expression values seen for each gene in the `gtex` dataset?
+Ignoring NAs, what are the highest and lowest first systolic readings seen for each education level in the `nhanes` dataset?
 
 1. What steps should you take to solve this problem? When you have a question that asks something about "for each ..." that usually indicates that you need to **`group_by()`** the data by whatever thing that is. When you are asking about a summary measure (like a mean, max etc.), that usually indicates the use of **`summarize()`**. In this problem, what column(s) are you grouping by? What summaries of what columns are you computing?
 
@@ -141,14 +141,14 @@ Ignoring NAs, what are the highest and lowest liver expression values seen for e
 ## Exercise: summarize and plot {data-background-color=teal}
 ::::{.columns}
 :::{.column width="70%"}
-Before continuing, run this code to reformat your data and store it as a new data frame `gtex_tidy` (we'll see how to do this later today):
+Before continuing, run this code to reformat your data and store it as a new data frame `nhanes_tidy` (we'll see how to do this later today):
 
 ```{r}
-gtex_tidy = gtex |>
+nhanes_tidy = nhanes |>
   pivot_longer(
-    Blood:Liver, 
-    names_to="tissue",
-    values_to="expression"
+    bp_sys_1:bp_sys_4, 
+    names_to="reading",
+    values_to="systolic"
   )
 ```
 
@@ -156,12 +156,12 @@ Have a look at the dataframe you created. Use it to recreate this plot:
 
 ```{r, echo=F, message=F}
 size_text = 30
-gtex_tidy |> 
-  filter(Gene %in% c('FFAR4', 'KLK3', 'PLOD2', 'MLPH')) |>
-  group_by(Gene, tissue) |>
-  summarize(max_expression = max(expression ,na.rm=T)) |> 
+nhanes_tidy |> 
+  filter(race %in% c('White', 'Black', 'Asian', 'Mexican American')) |>
+  group_by(race, reading) |>
+  summarize(max_systolic = max(systolic ,na.rm=T)) |> 
 ggplot() +
-  geom_point(aes(y=Gene, x=max_expression, color=tissue), size = 8) + 
+  geom_point(aes(y=race, x=max_systolic, color=reading), size = 8) + 
   theme(axis.text = element_text(size = size_text),
         axis.title = element_text(size = size_text),
         legend.text = element_text(size = size_text),
@@ -171,9 +171,9 @@ ggplot() +
 
 :::
 :::{.column width="30%"}
-The `max_expression` variable in the x-axis of the plot indicates the maximum expression across all samples (in whatever grouping we are looking at).
+The `max_systolic` variable in the x-axis of the plot indicates the maximum systolic reading across all participants (in whatever grouping we are looking at).
 
-It's helpful to think backwards from the output you want. First outline the ggplot code that would generate the given plot. What does the dataset need to look like that is going into `ggplot` in order to get the plot shown here? How can we get from `gtex_tidy` to that data? 
+It's helpful to think backwards from the output you want. First outline the ggplot code that would generate the given plot. What does the dataset need to look like that is going into `ggplot` in order to get the plot shown here? How can we get from `nhanes_tidy` to that data? 
 :::
 ::::
 
@@ -182,10 +182,10 @@ It's helpful to think backwards from the output you want. First outline the ggpl
 - `filter()` is aware of grouping. When used on a grouped dataset, it applies the filtering condition separately in each group
 
 ```{r, tidy=F}
-gtex |>
-  select(Ind, Gene, Lung) |>
-  group_by(Ind) |>
-  filter(Lung == max(Lung, na.rm=T))
+nhanes |>
+  select(id, race, bmi) |>
+  group_by(race) |>
+  filter(bmi == max(bmi, na.rm=T))
 ```
 
 - This is an extremely convenient idiom for finding the rows that minimize or maximize a condition
@@ -195,12 +195,12 @@ gtex |>
 ::::{.columns}
 :::{.column}
 ```{r, tidy=F, message=F}
-gtex |>
-  group_by(Gene) |>
-  mutate(rank = rank(-Blood)) |>
-  select(Gene, Ind, rank, Blood) |>
+nhanes |>
+  group_by(education) |>
+  mutate(rank = rank(-bp_sys_1)) |>
+  select(education, id, rank, bp_sys_1) |>
   filter(rank <= 3) |>
-  arrange(Gene, rank)
+  arrange(education, rank)
 ```
 
 - when `mutate` is used on a grouped dataset, it applies the mutation separately in each group
@@ -209,20 +209,20 @@ gtex |>
 :::{.column}
 
 ```{r, tidy=F, message=F}
-gtex |>
-  mutate(rank = rank(-Blood)) |>
-  select(Gene, Ind, rank, Blood) |>
+nhanes |>
+  mutate(rank = rank(-bp_sys_1)) |>
+  select(education, id, rank, bp_sys_1) |>
   filter(rank <= 3) |>
-  arrange(Gene, rank)
+  arrange(education, rank)
 ```
 
-- without the `group_by`, the ranking is done overall across all genes.
+- without the `group_by`, the ranking is done overall across all participants.
 :::
 ::::
 
-## Exercise: Max expression blood and lung {data-background-color=teal}
+## Exercise: lowest reading per participant {data-background-color=teal}
 
-Create a dataset that shows which gene has the lowest expression in each person's heart tissue
+Using `nhanes_tidy`, create a dataset that shows which of the systolic readings was the lowest one for each participant
 
 
 # Tidy data: rearranging a data frame {data-background-color=black}
@@ -231,20 +231,20 @@ Create a dataset that shows which gene has the lowest expression in each person'
 - Sometimes data are organized in a way that makes it difficult to compute in a vector-oriented way. For example, look at this dataset:
 
 ```{r, message = FALSE}
-gtex_time_tissue_data = read_csv("https://tinyurl.com/3wd4dcsf")
+nhanes_cycle_data = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_cycle_counts.csv")
 
-head(gtex_time_tissue_data, 3)
+head(nhanes_cycle_data, 3)
 ```
 
-- the values in the table represent how many samples of that tissue were collected during that year.
+- the values in the table represent how many participants in that age group were examined in the survey cycle that began in that year.
 - How could I use ggplot to make this plot? It's hard!
 
 ```{r, echo = FALSE, warning = FALSE}
 clean = 
-  gtex_time_tissue_data |>
+  nhanes_cycle_data |>
   select(-`2017`) |>
-  pivot_longer(cols = `2011`:`2016`, names_to = "year", values_to = "n") |>
-  group_by(tissue) |>
+  pivot_longer(cols = `1999`:`2015`, names_to = "year", values_to = "n") |>
+  group_by(age_group) |>
   mutate(freq = n / sum(n)) |>
   ungroup() |>
   rename(count = n)
@@ -252,25 +252,25 @@ clean =
 
 ```{r, echo = FALSE, warning = FALSE, fig.width = 20, fig.height = 5}
 clean |> 
-  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) |>
+  filter(age_group %in% c("20-39", "40-59", "60-79", "80+")) |>
   ggplot() +
-  geom_bar(aes(x = year, y = count, fill = tissue), stat = 'identity')
+  geom_bar(aes(x = year, y = count, fill = age_group), stat = 'identity')
 ```
 
 ## Messy data
 ```{r}
-head(gtex_time_tissue_data, 3)
+head(nhanes_cycle_data, 3)
 ```
 
-- One of the problems with the way these data are formatted is that the year collected, which is a property of the samples, is stuck into the names of the columns. 
+- One of the problems with the way these data are formatted is that the survey cycle, which is a property of the participants, is stuck into the names of the columns. 
 - Because of this, it's also not obvious what the numbers in the table mean (although we know they are counts)
 
 ## Tidy data
 - Here's a better way to organize the data:
 ```{r, echo = FALSE}
 tidy = 
-  gtex_time_tissue_data |>
-  pivot_longer(-tissue, names_to="year", values_to="count")
+  nhanes_cycle_data |>
+  pivot_longer(-age_group, names_to="year", values_to="count")
 
 head(tidy)
 ```
@@ -281,7 +281,7 @@ This data is *tidy*. Tidy data follows three precepts:
 2. each "observation" has its own row
 3. each type of observational unit has its own data frame
 
-In our example, each of the **observations** are different **groups of samples**, each of which has an associated _tissue_, _year_, and _count_. These are the _variables_ that are associated with the groups of samples. 
+In our example, each of the **observations** are different **groups of participants**, each of which has an associated _age group_, _year_, and _count_. These are the _variables_ that are associated with the groups of participants.
 
 ## Tidy data
 
@@ -289,9 +289,9 @@ Tidy data is easy to work with.
 
 ```{r, tidy = FALSE, warning = FALSE, fig.width = 20, fig.height = 5}
 tidy |> 
-  filter(tissue %in% c("Blood", "Heart", "Liver", "Lung")) |>
+  filter(age_group %in% c("20-39", "40-59", "60-79", "80+")) |>
   ggplot() +
-  geom_bar(aes(x = year, y = count, fill = tissue), stat = 'identity')
+  geom_bar(aes(x = year, y = count, fill = age_group), stat = 'identity')
 ```
 
 ## Tidying data with pivot_longer()
@@ -305,8 +305,8 @@ tidy |>
 
 - `tidyr::pivot_longer()` is the function you will most often want to use to tidy your data
 ```{r, tidy = FALSE}
-gtex_time_tissue_data |>
-  pivot_longer(-tissue, names_to = "year", values_to = "count") |>
+nhanes_cycle_data |>
+  pivot_longer(-age_group, names_to = "year", values_to = "count") |>
   head(2)
 ```
 
@@ -392,7 +392,7 @@ I have a dataset that records the pollution levels (in ppm) in three cities acro
 
 ```{r, message=F}
 pollution = read_csv(
-  "https://tinyurl.com/yu983bhc"
+  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/pollution.csv"
 )
 pollution
 ```
@@ -412,48 +412,49 @@ pollution |>
 :::
 ::::
 
-## Exercise: cleaning GTEX {data-background-color=teal}
+## Exercise: cleaning NHANES {data-background-color=teal}
 
-Use the GTEX data to reproduce the following plot:
+Use the NHANES data to reproduce the following plot:
 
 ```{r, echo = FALSE, warning = FALSE}
-gtex |>
+nhanes |>
   filter(
-    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
-    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
+    id %in% c('NHANES-100000', 'NHANES-100013', 'NHANES-100042',
+              'NHANES-100001', 'NHANES-100167', 'NHANES-100229')
   ) |>
   pivot_longer(
-    Blood:Liver, 
-    names_to = "tissue", 
-    values_to = 'expression'
+    bp_sys_1:bp_sys_4,
+    names_to = "reading",
+    values_to = 'systolic'
   ) |>
   ggplot() +
-  geom_point(aes(x = Gene, y = expression, color = tissue), size = 5) + 
-  facet_wrap(~Ind)
+  geom_point(aes(x = id, y = systolic, color = reading), size = 5) +
+  facet_wrap(~sex, scales = "free_x") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-The individuals and genes of interest are `c('GTEX-11GSP', 'GTEX-11DXZ')` and `c('A2ML1', 'A3GALT2', 'A4GALT')`, respectively.
+The participants of interest are `c('NHANES-100000', 'NHANES-100013', 'NHANES-100042', 'NHANES-100001', 'NHANES-100167', 'NHANES-100229')`.
 
-Think backwards: what do the data need to look like to make this plot? How do we pare down and reformat `gtex` so that it looks like what we need?
+Think backwards: what do the data need to look like to make this plot? How do we pare down and reformat `nhanes` so that it looks like what we need?
 
 ## Exercise: tabulating missigness {data-background-color=teal}
 
-Use the GTEX data to make the following table:
+Use the NHANES data to make the following table:
 
 ```{r, echo = FALSE, message = FALSE}
-print("Number of missing tissues:")
-gtex |>
+print("Number of missing systolic readings:")
+nhanes |>
   filter(
-    Ind %in% c('GTEX-11GSP', 'GTEX-11DXZ'),
-    Gene %in% c('A2ML1', 'A3GALT2', 'A4GALT')
-  ) |> 
-  pivot_longer(Lung:Liver, names_to = 'tissue', values_to = 'expression') |>
-  group_by(Ind, Gene) |>
-  summarize(n_missing_tissues = sum(is.na(expression))) |>
-  pivot_wider(names_from = Gene, values_from = n_missing_tissues)
+    race %in% c('White', 'Black', 'Asian'),
+    education %in% c('High school', 'Some college', 'College grad')
+  ) |>
+  pivot_longer(bp_sys_1:bp_sys_4, names_to = 'reading', values_to = 'systolic') |>
+  group_by(race, education) |>
+  summarize(n_missing_readings = sum(is.na(systolic))) |>
+  pivot_wider(names_from = education, values_from = n_missing_readings)
 ```
 
-The numbers in the table are the number of tissues in each individual for which the gene in question was missing.
+The numbers in the table are the number of systolic readings that were missing across all the participants in each race and education group.
 
 
 # Combining multiple tables with joins {data-background-color=black}
@@ -461,45 +462,45 @@ The numbers in the table are the number of tissues in each individual for which 
 
 ## Relational data
 
-- When we get an expression dataset, the data is usually divided into an expression matrix with the expression values of each sample, and table(s) with metadata about the samples themselves. 
+- When a survey like NHANES releases its data, it doesn't come as one big table. It is split into a table of measurements and table(s) with information about the participants and about how the data was collected.
 
 ```{r, message = FALSE, max.lines=4}
-gtex_samples = read_csv("https://tinyurl.com/2hy9awda")
-gtex_subjects = read_csv("https://tinyurl.com/3tfbew8f")
-gtex_batches = read_csv("https://tinyurl.com/3phsbxsj")
+nhanes_exams = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_exams.csv")
+nhanes_participants = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_participants.csv")
+nhanes_sessions = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_sessions.csv")
 ```
 
 ***
 
-- The **sample** data has information about the tissue and the subject who contributed the sample, the batch it was processed in, the center the sample was processed at, and the RNA integrity number (RIN score) for the sample. 
+- The **exam** data has one row per participant per exam component (body measures, blood pressure, and so on), with the session it was done in, the examination center it was done at, and a status code saying whether that component was completed.
 ```{r max.lines=4, message = FALSE}
-gtex_samples |> head(1)
+nhanes_exams |> head(1)
 ```
-- The **subject** data table contains some subject demographic information.
+- The **participant** data table contains some participant demographic information.
 ```{r max.lines=4, message = FALSE}
-gtex_subjects |> head(1)
+nhanes_participants |> head(1)
 ```
-- The **batch** data contains the batch type and the dates the batches were run
+- The **session** data contains the session type and the dates the sessions were run
 ```{r max.lines=4, message = FALSE}
-gtex_batches |> head(1)
+nhanes_sessions |> head(1)
 ```
 
 ***
 
-- These data are not independent of each other. Subjects described in the `subject` data are referenced in the `sample` data, and the batches referenced in the `sample` data are in the `batch` data. The sample ids from the `sample` data are used for accessing expression data.
+- These data are not independent of each other. Participants described in the `participant` data are referenced in the `exam` data, and the sessions referenced in the `exam` data are in the `session` data. The participant ids from the `exam` data are used for accessing the measurements.
 
-![](https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/advance-2020/relational_data.png)
+![](https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/figures/relational_data.png)
 
-- `subject` connects to `sample` via a single variable, `subject_id`.
-- `sample` connects to `batch` through the `batch_id` variable.
+- `participant` connects to `exam` via a single variable, `participant_id`.
+- `exam` connects to `session` through the `session_id` variable.
 
 
 ## An example join
-- Imagine we want to add subject information to the sample data
+- Imagine we want to add participant information to the exam data
 - We can accomplish that with a **join**:
 ```{r, tidy = FALSE}
-gtex_samples |> 
-  inner_join(gtex_subjects, by = join_by(subject_id))
+nhanes_exams |>
+  inner_join(nhanes_participants, by = join_by(participant_id))
 ```
 
 ## Joins
@@ -603,8 +604,8 @@ When keys are duplicated, multiple rows can match multiple rows, so each possibl
 
 ## Specifying the keys
 ```{r}
-gtex_samples |> 
-  inner_join(gtex_subjects, join_by(center_id))
+nhanes_exams |> 
+  inner_join(nhanes_participants, join_by(center_id))
 ```
 
 - Why does this fail?
@@ -613,39 +614,39 @@ gtex_samples |>
 
 - When keys have different names in different dataframes, the syntax to join is:
 ```{r}
-head(gtex, 2)
-head(gtex_subjects, 2)
+head(nhanes, 2)
+head(nhanes_participants, 2)
 ```
 ```{r}
-gtex |> 
-  inner_join(gtex_subjects, join_by(Ind == subject_id)) |> 
+nhanes |> 
+  inner_join(nhanes_participants, join_by(id == participant_id)) |> 
   head(5)
 ```
-Note that the first key (`Ind`) corresponds to the first data frame (`gtex`) and the second key (`subject_id`) corresponds to the second data frame (`gtex_subjects`).
+Note that the first key (`id`) corresponds to the first data frame (`nhanes`) and the second key (`participant_id`) corresponds to the second data frame (`nhanes_participants`).
 
 ## Exercise: join {data-background-color=teal}
 
-How does the average A2ML1 expression in lung tissue compare between females vs. males? To answer this question let's break it down:
+How does the average first systolic reading compare between participants born in the United States vs. those born elsewhere? To answer this question let's break it down:
 
-1. Since we only care about A2ML1, we can start by filtering `gtex` to only include those rows.
-2. To add sex information for each subject, we have to join our result to the `gtex_subjects` data frame.
-3. Finally, we can group that result by sex and summarize the average expression in lung tissue.
+1. Since we only care about adults, we can start by filtering `nhanes` to participants aged 20 and over.
+2. `nhanes` does not record where anyone was born, so to add that information we have to join our result to the `nhanes_participants` data frame.
+3. Finally, we can group that result by `birth_country` and summarize the average first systolic reading.
 
 Write the code to execute these steps.
 
 
-## Exercise: finding expression of specific samples {data-background-color=teal}
+## Exercise: finding specific exams {data-background-color=teal}
 
-Use joins to find the samples collected in 2015 with blood expression greater than 3 of "KRT19" in males. Start with the `batch_data_year`; this data has an extra extracted column with the year.
+Use joins to find the exams done in 2018 for male participants whose first systolic reading was over 160. Start with the `session_data_year`; this data has an extra extracted column with the year.
 ```{r}
-batch_data_year = 
-  gtex_batches |> 
+session_data_year = 
+  nhanes_sessions |> 
   mutate(
-    batch_date = lubridate::mdy(batch_date), 
-    year = lubridate::year(batch_date)
+    session_date = lubridate::mdy(session_date), 
+    year = lubridate::year(session_date)
   ) 
 
-head(batch_data_year, 2)
+head(session_data_year, 2)
 ```
 
 Start by figuring out what other data frame(s) you have to join to. Consider also what other operations you must do to pick out the data of interest and in what order (if it matters).
@@ -661,21 +662,22 @@ When would you do one vs. the other?
 :::{.column}
 Let's read in some more data
 ```{r, message = FALSE}
-gtex_monthly_tissues = 
-  read_csv("https://tinyurl.com/nze7rz7a")
-head(gtex_monthly_tissues, 2)
+nhanes_monthly_components = 
+  read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_monthly_components.csv")
+head(nhanes_monthly_components, 2)
 
-gtex_monthly_samples = read_csv("https://tinyurl.com/2s5neht6")
-head(gtex_monthly_samples, 2)
+nhanes_monthly_exams = read_csv(
+  "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_monthly_exams.csv")
+head(nhanes_monthly_exams, 2)
 ```
 
 :::
 :::{.column}
-- It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining tissue sample counts with total sample counts.
+- It is often desirable to find matches along more than one column, such as month and year in this example. Here we're joining per-component exam counts with total exam counts.
 ```{r, message = FALSE}
 inner_join(
-  gtex_monthly_tissues,
-  gtex_monthly_samples, 
+  nhanes_monthly_components,
+  nhanes_monthly_exams, 
   join_by(month, year)
 ) |>
 head(5)

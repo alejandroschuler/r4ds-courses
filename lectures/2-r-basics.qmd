@@ -24,17 +24,17 @@ echo: true
 library(tidyverse)
 ```
 ```{r, eval=F}
-genes = read_csv("https://tinyurl.com/cjkuecnc")
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 ```{r, include=F}
-genes = read_csv("https://tinyurl.com/cjkuecnc")
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 
 - We know this reads a .csv from a file and creates something called a "data frame" 
 - We've been using this data frame in code like
 ```{r, eval=F}
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
+ggplot(nhanes) + 
+  geom_bar(aes(x = race, fill = diabetes))
 ```
 
 - But what does this syntax really mean? Is it useful outside of making plots?
@@ -46,10 +46,10 @@ ggplot(genes) +
 - To do complex computations, we need to be able to give
 names to things.
 ```{r, eval=F}
-genes = read_csv("https://tinyurl.com/cjkuecnc")
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 
-- This code *assigns* the result of running `read_csv("https://tinyurl.com/cjkuecnc")` to the name `gene`
+- This code *assigns* the result of running `read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")` to the name `nhanes`
 - You can do this with any values and/or functions
 
 :::: {.columns}
@@ -63,7 +63,7 @@ causes a side effect: R has stored the association between
 x and the result of this expression (look at the Environment pane.)
 :::
 :::{.column}
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_gets_1.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/x_gets_1.png?raw=true)
 :::
 ::::
 
@@ -78,7 +78,7 @@ that variable in the calculation.
 - We can break complex calculations into named parts. This is a
 simple, but very useful kind of abstraction.
 
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_is_1.jpg?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/x_is_1.jpg?raw=true)
 
 ## Two ways to assign
 
@@ -180,10 +180,10 @@ y
 
 ::::{.columns}
 :::{.column}
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/y_gets_x.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/y_gets_x.png?raw=true)
 :::
 :::{.column}
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_changes.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/x_changes.png?raw=true)
 :::
 ::::
 
@@ -207,10 +207,10 @@ sqrt(2)
 - the names the function calls these inputs inside itself will be different than what you call them on the outside
 
 ```
-aes(x=EIF3L, y=VAPA)
+aes(x=bmi, y=waist_cm)
 ```
 
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/call.png?raw=true)
 
 
 ## Named and positional arguments
@@ -224,8 +224,8 @@ variable `=` value.
 - When using names, the order of the named arguments
 does not matter.
 ```{r, tidy=F}
-ggplot(data=genes) + 
-  geom_point(mapping=aes(y=EIF3L, x=VAPA))
+ggplot(data=nhanes) + 
+  geom_point(mapping=aes(y=bmi, x=waist_cm))
 ```
 
 :::
@@ -234,8 +234,8 @@ ggplot(data=genes) +
 - If you leave the names off, R defaults to a **positional** order that is specific to each function (e.g. for `aes()`, `x` comes first, then `y`)
 - you can see the default order of the arguments in the help page for each function
 ```{r, tidy=F} 
-ggplot(genes) + 
-  geom_point(aes(VAPA, EIF3L))
+ggplot(nhanes) + 
+  geom_point(aes(waist_cm, bmi))
 ```
 
 :::
@@ -244,9 +244,9 @@ ggplot(genes) +
 ## Optional arguments
 - Many R functions have arguments that you don't always have to specify. For example:
 ```{r setup, eval=FALSE}
-file_name = "https://tinyurl.com/cjkuecnc"
-genes_10 = read_csv(file_name, n_max=10) # only read in 10 rows
-genes = read_csv(file_name) 
+file_name = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv"
+nhanes_10 = read_csv(file_name, n_max=10) # only read in 10 rows
+nhanes = read_csv(file_name) 
 ```
 - `n_max` tells `read_csv()` to only read the first 10 rows of the dataset. 
 - If you don't specify it, it defaults to infinity (i.e. R reads until there are no more lines in the file).
@@ -256,8 +256,8 @@ genes = read_csv(file_name)
 Why does this code generate errors?
 
 ```{r, tidy=F}
-ggplot(the_data=genes) + 
-  geom_point(mapping=aes(y_axis=EIF3L, x_axis=VAPA))
+ggplot(the_data=nhanes) + 
+  geom_point(mapping=aes(y_axis=bmi, x_axis=waist_cm))
 ```
 
 ## Exercise [together] {data-background-color=teal}
@@ -267,16 +267,16 @@ ggplot(the_data=genes) +
 I'm trying to generate this plot:
 
 ```{r, echo=F, tidy=F}
-ggplot(data=genes) + 
-  geom_point(aes(EIF3L, VAPA))
+ggplot(data=nhanes) + 
+  geom_point(aes(bmi, waist_cm))
 ```
 :::
 :::{.column}
 But when I use this code, I get:
 
 ```{r, tidy=F}
-ggplot(data=genes) + 
-  geom_point(aes(VAPA, EIF3L))
+ggplot(data=nhanes) + 
+  geom_point(aes(waist_cm, bmi))
 ```
 
 What am I doing wrong?
@@ -299,7 +299,7 @@ x^2
 x
 ```
 
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/x_squared.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/x_squared.png?raw=true)
 
 - functions generally do not affect the variables you pass to them (`x` remains the same after `sqrt(x)`)
 

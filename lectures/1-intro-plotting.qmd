@@ -97,8 +97,8 @@ QuadRoot(c(3,14,-5))
 - csv is a common format for data to come in, and it's easy to export csv files from microsoft excel, for instance. 
 
 ```{r}
-# I have a file called "lupusGenes.csv" on github that we can read from the URL 
-genes = read_csv("https://tinyurl.com/4vjrbwce")
+# I have a file called "nhanes_subset.csv" on github that we can read from the URL
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 
 - This fails because I haven't yet installed and loaded the `tidyverse` package
@@ -111,7 +111,7 @@ library(tidyverse)
 ```
 
 ```{r, eval=F}
-genes = read_csv("https://tinyurl.com/4vjrbwce")
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 
 - Now there is no error message
@@ -120,7 +120,7 @@ genes = read_csv("https://tinyurl.com/4vjrbwce")
 - packages only need to be loaded once per R session (session starts when you open R studio, ends when you shut it down)
 - once the package is loaded it doesn't need to be loaded again before each function call
 ```{r, eval=F}
-poly = read_csv("https://tinyurl.com/y22p5j6j") # reading another csv file
+poly = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/poly.csv") # reading another csv file
 ```
 
 
@@ -135,7 +135,7 @@ poly = read_csv("https://tinyurl.com/y22p5j6j") # reading another csv file
 - Getting your data into R is easy. We already saw, for example:
 
 ```{r echo = T, results = 'hide', message=FALSE}
-genes = read_csv("https://tinyurl.com/4vjrbwce")
+nhanes = read_csv("https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes_subset.csv")
 ```
 
 - `read_csv()` requires you to tell it where to find the file you want to read in
@@ -146,9 +146,9 @@ genes = read_csv("https://tinyurl.com/4vjrbwce")
 - We'll learn the details of this later, but this is enough to get you started! 
 
 ## Looking at data
-- `genes` is now a dataset loaded into R. To look at it, just type
+- `nhanes` is now a dataset loaded into R. To look at it, just type
 ```{r}
-genes
+nhanes
 ```
 
 This is a **data frame**, one of the most powerful features in R (a "tibble" is a kind of data frame).
@@ -162,18 +162,18 @@ different columns can be of different types.
 
 ## The Dataset
 ```{r}
-genes
+nhanes
 ```
 
-This is a subset of a real RNA-seq (GSE112087) dataset comparing RNA levels in blood between lupus (SLE) patients and healthy controls.
+This is a subset of NHANES, the CDC's National Health and Nutrition Examination Survey. NHANES sends a mobile clinic around the country, interviews a nationally representative sample of Americans, and gives each of them a physical exam and a blood draw.
 
-- 29 SLE Patients, 30 Healthy Controls
-- We have basic metadata as well as the levels of multiple genes in blood.
+- 30 participants with diagnosed diabetes, 29 without
+- We have basic demographics as well as several body measurements and lab values.
 - Let's see if we can find anything interesting from this already-generated data!
 
 ## Investigating a relationship
 
-Let's say we're curious about the relationship between two genes RSAD2 and IFI44.
+Let's say we're curious about the relationship between two lab values, glucose and hba1c.
 
 - Can we use R to make a plot of these two variables?
 
@@ -181,8 +181,8 @@ Let's say we're curious about the relationship between two genes RSAD2 and IFI44
 
 ::: {.column width="60%"}
 ```{r, tidy=F, out.height="80%"}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c))
 ```
 :::
 
@@ -200,8 +200,8 @@ ggplot(genes) +
 
 ::: {.column width="60%"}
 ```{r, tidy=F}
-ggplot(genes) + 
-  geom_point(aes(x = VAPA, y = EIF3L))
+ggplot(nhanes) + 
+  geom_point(aes(x = waist_cm, y = bmi))
 ```
 :::
 
@@ -213,43 +213,43 @@ ggplot(genes) +
 
 ::::
 
-## Exercise: comparing expression levels {data-background-color=teal}
+## Exercise: comparing lab values {data-background-color=teal}
 
-Make a scatterplot of `phenotype` vs `IFI44` (another gene in the dataset). The result should look like this:
+Make a scatterplot of `diabetes` vs `hba1c` (another lab value in the dataset). The result should look like this:
 
 ```{r, tidy=F, echo=F}
-ggplot(genes) + 
-  geom_point(aes(x = phenotype, y = IFI44))
+ggplot(nhanes) + 
+  geom_point(aes(x = diabetes, y = hba1c))
 ```
 
 ## Investigating a relationship
-Let's say we're curious about the relationship between RSAD2 and IFI44.
+Let's say we're curious about the relationship between glucose and hba1c.
 
 ```{r, tidy=F, echo=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype)) +
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c, color = diabetes)) +
   theme(legend.position = "none")
 ```
 
-- What's going on here? It seems like there are two clusters. 
-- What is driving this clustering? Age? Sex? Ancestry? Phenotype?
+- What's going on here? It seems like there are two clusters.
+- What is driving this clustering? Age? Sex? Race? Diabetes?
 
 ## Aesthetics
 - Aesthetics aren't just for mapping columns to the x- and y-axis
 - You can also use them to assign color, for instance
 
 ```{r, tidy=F, eval=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, 
-                 y = IFI44,
-                 color = phenotype))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, 
+                 y = hba1c,
+                 color = diabetes))
 ```
 
 ```{r, tidy=F, echo=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, 
-                 y = IFI44,
-                 color = phenotype))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, 
+                 y = hba1c,
+                 color = diabetes))
 ```
 
 ***
@@ -257,11 +257,11 @@ ggplot(genes) +
 - We could have used a shape
 
 ```{r, tidy=F}
-ggplot(genes) + 
+ggplot(nhanes) + 
   geom_point(aes(
-    x = RSAD2, 
-    y = IFI44, 
-    shape=phenotype
+    x = glucose, 
+    y = hba1c, 
+    shape=diabetes
   )) 
         
 ```
@@ -270,11 +270,11 @@ ggplot(genes) +
 - Or size
 
 ```{r, tidy=F}
-ggplot(genes) + 
+ggplot(nhanes) + 
   geom_point(aes(
-    x = RSAD2, 
-    y = IFI44, 
-    size=ancestry
+    x = glucose, 
+    y = hba1c, 
+    size=race
   )) 
 ```
 - This one doesn't really make sense because we're mapping a categorical variable to an aesthetic that can take continuous values that imply some ordering
@@ -284,11 +284,11 @@ ggplot(genes) +
 - If we set a property *outside* of the aesthetic, it no longer maps that property to a column. 
 
 ```{r, tidy=F}
-ggplot(genes) + 
+ggplot(nhanes) + 
   geom_point(
     aes(
-      x = RSAD2, 
-      y = IFI44
+      x = glucose, 
+      y = hba1c
     ),
     color = "blue"
   ) 
@@ -301,13 +301,13 @@ ggplot(genes) +
 Can you recreate this plot?
 
 ```{r, tidy=F, echo=F, fig.width=16, fig.height=10, fig.align="center"}
-ggplot(genes) + 
+ggplot(nhanes) + 
   geom_point(
     aes(
-      x = RSAD2, 
-      y = IFI44,
-      color = phenotype,
-      size = EIF3L
+      x = glucose, 
+      y = hba1c,
+      color = diabetes,
+      size = bmi
     )
   ) 
 # increase legend and point size
@@ -318,8 +318,8 @@ ggplot(genes) +
 What will this do? Why?
 
 ```{r, tidy=F, eval=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44, color = "blue"))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c, color = "blue"))
 ```
 
 ## Geoms
@@ -327,14 +327,14 @@ ggplot(genes) +
 :::: {.columns}
 ::: {.column}
 ```{r, tidy=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c))
 ```
 :::
 :::  {.column}
 ```{r, tidy=F, message=F}
-ggplot(genes) + 
-  geom_smooth(aes(x = RSAD2, y = IFI44))
+ggplot(nhanes) + 
+  geom_smooth(aes(x = glucose, y = hba1c))
 ```
 :::
 ::::
@@ -350,8 +350,8 @@ ggplot(genes) +
 - On the other hand, you *can* set the "line type" of a line:
 
 ```{r, tidy=F, message=F}
-ggplot(genes) + 
-  geom_smooth(aes(x = RSAD2, y = IFI44, linetype = phenotype))
+ggplot(nhanes) + 
+  geom_smooth(aes(x = glucose, y = hba1c, linetype = diabetes))
 ```
 
 - Use e.g. `?geom_point` to see what aesthetics are expected or allowed
@@ -359,15 +359,15 @@ ggplot(genes) +
 ***
 - It's possible to add multiple geoms to the same plot
 ```{r, tidy=F, message=F}
-ggplot(genes) + 
-  geom_smooth(aes(x = RSAD2, y = IFI44, color = phenotype)) + 
-  geom_point(aes(x = RSAD2, y = IFI44, color = phenotype))
+ggplot(nhanes) + 
+  geom_smooth(aes(x = glucose, y = hba1c, color = diabetes)) + 
+  geom_point(aes(x = glucose, y = hba1c, color = diabetes))
 ```
 
 ***
 - To assign the same aesthetics to all geoms, pass the aesthetics to the `ggplot` function directly instead of to each geom individually
 ```{r, tidy=F, message=F}
-ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) + 
+ggplot(nhanes, aes(x = glucose, y = hba1c, color = diabetes)) + 
   geom_smooth() + 
   geom_point()
 ```
@@ -375,8 +375,8 @@ ggplot(genes, aes(x = RSAD2, y = IFI44, color = phenotype)) +
 ***
 - You can also use different mappings in different geoms
 ```{r, tidy=F, message=F}
-ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) + 
-  geom_point(aes(color = ancestry)) + 
+ggplot(nhanes, mapping = aes(x = glucose, y = hba1c)) + 
+  geom_point(aes(color = race)) + 
   geom_smooth()
 ```
 
@@ -386,13 +386,13 @@ ggplot(genes, mapping = aes(x = RSAD2, y = IFI44)) +
 Use google or other resources to figure out how to receate this plot in R:
 
 ```
-ggplot(genes) + 
+ggplot(nhanes) + 
   ...
 ```
 
 ```{r, echo=F, tidy=F, message=F}
-ggplot(genes) + 
-  geom_bar(aes(x = ancestry, fill = phenotype))
+ggplot(nhanes) + 
+  geom_bar(aes(x = race, fill = diabetes))
 ```
 
 - What might the name of this geom be? What properties of the plot (aesthetics) are mapped to what columns of the data?
@@ -404,9 +404,9 @@ ggplot(genes) +
 - Use **facets** to generate multiple plots with shared structure
 
 ```{r, tidy=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_wrap(vars(phenotype), nrow = 2)
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c)) + 
+  facet_wrap(vars(diabetes), nrow = 2)
 ```
 - `facet_wrap` is good for faceting according to unordered categories
 
@@ -414,20 +414,20 @@ ggplot(genes) +
 - `facet_grid` is better for ordered categories, and can be used with two variables
 
 ```{r, tidy=F}
-ggplot(genes) + 
-  geom_point(aes(x = RSAD2, y = IFI44)) + 
-  facet_grid(rows=vars(phenotype), cols=vars(gender))
+ggplot(nhanes) + 
+  geom_point(aes(x = glucose, y = hba1c)) + 
+  facet_grid(rows=vars(diabetes), cols=vars(sex))
 ```
 
 
 ## Exercise {data-background-color=teal}
 
-Use ggplot to investigate the relationship between gene expression and lupus using any combination of any kinds of plots that you like. Which genes are most associated with lupus? Does this vary by ancestry, age, or assigned sex at birth?
+Use ggplot to investigate the relationship between these measurements and diabetes using any combination of any kinds of plots that you like. Which measurements are most associated with diabetes? Does this vary by race, age, or assigned sex at birth?
 
 For some plots it may be helpful to reformat your data using this code (we'll learn how to do this on day 4):
 ```{r}
 
-gene_names = names(genes)[6:11]
-reformatted_genes = pivot_longer(genes, all_of(gene_names), names_to='gene', values_to='expression')
-reformatted_genes
+measure_names = names(nhanes)[6:11]
+reformatted_nhanes = pivot_longer(nhanes, all_of(measure_names), names_to='measure', values_to='value')
+reformatted_nhanes
 ```

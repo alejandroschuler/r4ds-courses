@@ -20,11 +20,11 @@ local({
 })
 ```
 
-This demonstration applies data transformations and tabular manipulation with `dplyr` to gain insight into patient health records.
+This demonstration applies data transformations and tabular manipulation with `dplyr` to gain insight into participant health records.
 
 #### Instructions
 
-This demonstration provides a framework for inspecting data in the example healthcare data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+This demonstration provides a framework for inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
 
 #### Scope
 
@@ -39,11 +39,13 @@ This notebook includes material covered in Lecture 3: Basic Tabular Manipulation
 
 #### Data Description
 
-We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
 
->Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+The public NHANES files are documented here:
 
-The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real.
 
 #### Import Modules
 
@@ -54,112 +56,112 @@ library(dplyr)
 
 #### Specify and Load Data
 
-In the subsequent code block, we use the `read.csv` function to load patient data stored in `data/patients.csv`. We will use the same approach that we used in the first two demonstrations.
+In the subsequent code block, we use the `read.csv` function to load participant data stored in `data/participants.csv`. We will use the same approach that we used in the first two demonstrations.
 
 ```{r}
-# TODO: Assign the value "data/patients.csv" to the variable `path`
+# TODO: Assign the value "data/participants.csv" to the variable `path`
 path <- ...
 
 # TODO: Load the table using read.csv
-df_patient <- ...
+df_participant <- ...
 ```
 
-#### Identify Patient Ages at Some Reference Date
+#### Identify Participant Ages at Some Reference Date
 
-We will provide you with a reference date. Using the `BIRTHDATE` column in the `patients` table, you will identify the age of each patient at the reference date. Please use the `difftime` function to do this. This function returns the difference between two time points in specified units. The documentation for `difftime` can be found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/difftime). We will store the patient ages in a new "age" column.
+We will provide you with a reference date. Using the `birth_date` column in the `participants` table, you will identify the age of each participant at the reference date. Please use the `difftime` function to do this. This function returns the difference between two time points in specified units. The documentation for `difftime` can be found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/difftime). We will store the participant ages in a new "age" column.
 
 ```{r}
 # Age will be evaluated at January 1, 2023
 ref_date <- as.Date("2023-01-01")
 
-# Convert the `BIRTHDATE` column in the `patients` table to date format
-df_patient$BIRTHDATE <- as.Date(df_patient$BIRTHDATE)
+# Convert the `birth_date` column in the `participants` table to date format
+df_participant$birth_date <- as.Date(df_participant$birth_date)
 
-# TODO: Take the difference between the `BIRTHDATE` column in the `patients` table and the `ref_date`
+# TODO: Take the difference between the `birth_date` column in the `participants` table and the `ref_date`
 # TODO: Represent the age in units of years (hint: if the age is given in days, divide by 365.25)
 # TODO: Store the results in a new column called `age`
-df_patient$age <- ...
+df_participant$age <- ...
 
 # For convenience, we express the age as a numerical value and round down to a whole number
-df_patient$age <- as.numeric(df_patient$age)
-df_patient$age <- floor(df_patient$age)
+df_participant$age <- as.numeric(df_participant$age)
+df_participant$age <- floor(df_participant$age)
 
 # Let's be more descriptive
-# TODO: Rename the `age` column of the `patients` table to "age (years)"
+# TODO: Rename the `age` column of the `participants` table to "age (years)"
 # Hint: Use the `rename` function
-df_patient <- ...
+df_participant <- ...
 ```
 
-#### Sort Patients
+#### Sort Participants
 
-Sort the patients by both their date of birth and their identifier. Report the patients in order of increasing age (most recent birthdays first), then alphabetical patient identifier. Please use the `arrange` function in the `dplyr` package to do this.
+Sort the participants by both their date of birth and their identifier. Report the participants in order of increasing age (most recent birthdays first), then alphabetical participant identifier. Please use the `arrange` function in the `dplyr` package to do this.
 
 ```{r, max.height='200px'}
-# TODO: Sort patients by `BIRTHDATE` and `Id` using `dplyr`
-df_patient <- ...
+# TODO: Sort participants by `birth_date` and `id` using `dplyr`
+df_participant <- ...
 
-# Print the sorted `df_patient` table
-print(df_patient)
+# Print the sorted `df_participant` table
+print(df_participant)
 ```
 
-#### Extract Patient Identifier and Age
+#### Extract Participant Identifier and Age
 
-If we are only interested in the patient ID and age, we may want to isolate those columns from the data frame. Please isolate the patient ID and age columns in their own data frame called `patient_ages`. Please use the `select` function in `dplyr` to do this. Also, isolate the age column into its own vector called `age_vector`.
+If we are only interested in the participant ID and age, we may want to isolate those columns from the data frame. Please isolate the participant ID and age columns in their own data frame called `participant_ages`. Please use the `select` function in `dplyr` to do this. Also, isolate the age column into its own vector called `age_vector`.
 
 ```{r}
-# TODO: Create a new data frame from the `Id` and `age (years)` columns of the `patients` table using `dplyr`
+# TODO: Create a new data frame from the `id` and `age (years)` columns of the `participants` table using `dplyr`
 # Hint: Normally, with dplyr, we would not place quotes around column names.
 # Hint: When a column name has a space in it, we can use `backticks` around the column name to select it
-patient_ages <- ...
+participant_ages <- ...
 
 # TODO: Isolate the age column into its own vector
 # Hint: Use the `pull` function in `dplyr`
 age_vector <- ...
 ```
 
-#### Plot the Distribution of Patient Ages
+#### Plot the Distribution of Participant Ages
 
-Plot a histogram of the patient ages. For more practice, add a vertical reference line at the mean age. Please use `ggplot` to do this.
+Plot a histogram of the participant ages. For more practice, add a vertical reference line at the mean age. Please use `ggplot` to do this.
 
 ```{r}
-# TODO: Plot a histogram of patient ages
+# TODO: Plot a histogram of participant ages
 ...
 
 ```
 
 #### Filter on a Single Condition
 
-Filter the `patient_ages` data frame to patients under 18 years old, and store the filtered data frame in a variable called `under_18`.
-Then, filter the `patient_ages` data frame to patients over 65 years old, and store the filtered data frame in a variable called `over_65`.
+Filter the `participant_ages` data frame to participants under 18 years old, and store the filtered data frame in a variable called `under_18`.
+Then, filter the `participant_ages` data frame to participants over 65 years old, and store the filtered data frame in a variable called `over_65`.
 Please use `dplyr` to perform the filtering.
 
 ```{r}
-# TODO: Isolate rows from `patient_ages` associated with patients under 18 years old
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old
 under_18 <- ...
 
-# TODO: Isolate rows from `patient_ages` associated with patients over 65 years old
+# TODO: Isolate rows from `participant_ages` associated with participants over 65 years old
 over_65 <- ...
 ```
 
 #### Filter on Multiple Conditions
 
-Filter the `patient_ages` data frame to patients who are under 18 years old **or** over 65 years old, and store the filtered data in a variable called `under_18_or_over_65`. Then, filter the `patient_ages` data frame to patients who are at least 18 years old **and** at most 65 years old, and store the filtered data in a variable called `between_18_and_65`. Use `dplyr` to perform both tasks.
+Filter the `participant_ages` data frame to participants who are under 18 years old **or** over 65 years old, and store the filtered data in a variable called `under_18_or_over_65`. Then, filter the `participant_ages` data frame to participants who are at least 18 years old **and** at most 65 years old, and store the filtered data in a variable called `between_18_and_65`. Use `dplyr` to perform both tasks.
 
 ```{r}
-# TODO: Isolate rows from `patient_ages` associated with patients under 18 years old or over 65 years old
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old or over 65 years old
 under_18_or_over_65 <- ...
 
-# TODO: Isolate rows from `patient_ages` associated with patients >=18 years old and <=65 years old
+# TODO: Isolate rows from `participant_ages` associated with participants >=18 years old and <=65 years old
 between_18_and_65 <- ...
 
-# CHECKING WORK: The code below checks that no patients were lost during the filtering process
+# CHECKING WORK: The code below checks that no participants were lost during the filtering process
 # If this code block runs successfully without an error, your work is correct!
-stopifnot(nrow(under_18_or_over_65) + nrow(between_18_and_65) == nrow(patient_ages))
+stopifnot(nrow(under_18_or_over_65) + nrow(between_18_and_65) == nrow(participant_ages))
 ```
 
 #### Create New Columns using Existing Columns
 
-Using the `mutate` function in `dplyr` and the `sapply` in base R, create a new column in the `patient_ages` table called `"age_group"` with the following values: `"minor"` if the patient is under 18 years old, `"adult"` if the patient is between 18 and 65 years old, and `"older adult"` if the patient is over 65 years old. To support this task, we provide the function `get_age_group` that takes a numerical age in years and returns the associated age group.
+Using the `mutate` function in `dplyr` and the `sapply` in base R, create a new column in the `participant_ages` table called `"age_group"` with the following values: `"minor"` if the participant is under 18 years old, `"adult"` if the participant is between 18 and 65 years old, and `"older adult"` if the participant is over 65 years old. To support this task, we provide the function `get_age_group` that takes a numerical age in years and returns the associated age group.
 
 ```{r}
 # We will provide a function for identifying age category
@@ -174,15 +176,15 @@ get_age_group <- function(age) {
   }
 }
 
-# TODO: Apply the function to the `age` column of `patient_ages` to obtain the age category of each patient
+# TODO: Apply the function to the `age` column of `participant_ages` to obtain the age category of each participant
 # Hint: Use the `mutate` function in dplyr to define the `age_group` column
 # Hint: Use the `sapply` function to apply the `get_age_group` function to the `age (years)` column
-patient_ages <- ...
+participant_ages <- ...
 ```
 
 #### Grouped Summaries
 
-Calculate the average age of patients in the three age groups: `"minor"`, `"adult"`, and `"older adult"`. Use the `group_by` and `summarize` functions in `dplyr` to complete this task.
+Calculate the average age of participants in the three age groups: `"minor"`, `"adult"`, and `"older adult"`. Use the `group_by` and `summarize` functions in `dplyr` to complete this task.
 
 ```{r}
 # TODO: Calculate the average age in each age group
@@ -194,4 +196,4 @@ print(age_group_averages)
 
 #### Summary
 
-In this notebook, we investigated the age distribution of patients in our records. We started by calculating age using each patient's date of birth. We visualized the distribution of ages using a histogram. We then filtered patients according to age criteria, and we assigned patients into age categories. Finally, we calculated the average age for each age category.
+In this notebook, we investigated the age distribution of participants in our records. We started by calculating age using each participant's date of birth. We visualized the distribution of ages using a histogram. We then filtered participants according to age criteria, and we assigned participants into age categories. Finally, we calculated the average age for each age category.

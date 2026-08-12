@@ -20,7 +20,7 @@ local({
 })
 ```
 
-In this demonstration we will practice with data formats encountered in medical records.
+In this demonstration we will practice with data formats encountered in health records.
 
 #### Scope
 
@@ -35,11 +35,13 @@ Since this material was not covered in the course, there are no fill-in-the-blan
 
 #### Data Description
 
-We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
 
->Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+The public NHANES files are documented here:
 
-The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or session times, so the `exam_start` and `exam_end` columns are simulated (each participant's exam falls inside their real reported examination period). Every measurement, lab value, and drug name is real.
 
 #### Import Modules
 
@@ -49,170 +51,170 @@ library(tidyverse)
 
 #### Specify and Load Data
 
-In this demonstration, we will be working with just one data table containing patient encounters. This data file is located at `data/encounters.csv`, relative to the directory containing this notebook. Below, we load this table from the CSV file into a data frame.
+In this demonstration, we will be working with just one data table containing exam components. This data file is located at `data/exams.csv`, relative to the directory containing this notebook. Below, we load this table from the CSV file into a data frame.
 
 ```{r, max.height='200px'}
-# Specify the path to the file containing patient encounters
-encounters_path <- "data/encounters.csv"
+# Specify the path to the file containing exam components
+exams_path <- "data/exams.csv"
 
-# Load the encounters data into a data frame
-encounters <- read.csv(encounters_path, header = TRUE, stringsAsFactors = FALSE)
+# Load the exams data into a data frame
+exams <- read.csv(exams_path, header = TRUE, stringsAsFactors = FALSE)
 
 # Display the table
-print(encounters)
+print(exams)
 ```
 
 #### Format Date/Time information
 
-The `encounters` table includes `START` and `STOP` timestamps denoting the start and end times of each encounter. We format these columns into date/time format using the `POSIXct` package.
+The `exams` table includes `exam_start` and `exam_end` timestamps denoting the start and end times of each exam component. We format these columns into date/time format using the `POSIXct` package.
 
 ```{r}
-# Convert `START` and `STOP` columns to date
-encounters = encounters %>%
-  mutate(START = as.POSIXct(START, format = "%Y-%m-%dT%H:%M:%SZ")) %>%
-  mutate(STOP = as.POSIXct(STOP, format = "%Y-%m-%dT%H:%M:%SZ"))
+# Convert `exam_start` and `exam_end` columns to date
+exams = exams %>%
+  mutate(exam_start = as.POSIXct(exam_start, format = "%Y-%m-%dT%H:%M:%SZ")) %>%
+  mutate(exam_end = as.POSIXct(exam_end, format = "%Y-%m-%dT%H:%M:%SZ"))
 ```
 
-#### Task 3: Identify the Duration of Each Encounter
+#### Task 3: Identify the Duration of Each Exam Component
 
-For each encounter, we take the difference between the values in the `STOP` and `START` columns and express the result in units of hours. We store the results in a new column of the `encounters` table called `duration (hr)`.
+For each exam component, we take the difference between the values in the `exam_end` and `exam_start` columns and express the result in units of hours. We store the results in a new column of the `exams` table called `duration_hr`.
 
 ```{r, max.height='200px'}
-# We take the difference between the `STOP` and `START` columns and store the result in a `duration column
+# We take the difference between the `exam_end` and `exam_start` columns and store the result in a `duration` column
 # We then convert the duration to units of hours
-encounters = encounters %>%
-  mutate(duration = difftime(STOP, START, units="secs")) %>%
+exams = exams %>%
+  mutate(duration = difftime(exam_end, exam_start, units="secs")) %>%
   mutate(duration_hr = as.numeric(duration) / 3600)
-print(encounters)
+print(exams)
 ```
 
-#### Plot a Histogram of Encounter Durations
+#### Plot a Histogram of Component Durations
 
-We visualize the distribution of encounter durations. Notice, there will be some outliers. To address outliers, we exclude durations greater than four hours from your histogram.
+We visualize the distribution of component durations. Notice, there will be some outliers. To address outliers, we exclude durations greater than four hours from your histogram.
 
 ```{r}
 # Isolate the `duration_hr` column in its own vector and remove values greater than 4
-durations_hr_vec <- encounters %>%
+durations_hr_vec <- exams %>%
   select(duration_hr) %>%
   filter(duration_hr <= 4) %>%
   pull()
 
-# Plot a histogram of the encounter durations
+# Plot a histogram of the component durations
 bin_edges <- seq(0, 4, length.out = 41)
 ggplot(data = data.frame(durations_hr_vec), aes(x = durations_hr_vec)) +
   geom_histogram(binwidth = 0.1, color = "black", fill = "steelblue", breaks = bin_edges) +
-  xlab("Encounter Duration (hrs)") +
+  xlab("Component Duration (hrs)") +
   ylab("Frequency")
 ```
 
-It appears that the durations are often recorded in 15 minute intervals, with a minimum encounter duration of 15 minutes.
+It appears that the durations are recorded in 5 minute intervals, with a minimum component duration of 20 minutes.
 
-#### Isolate the Encounters for a Single Patient
+#### Isolate the Exam Components for a Single Participant
 
-We isolate the encounters associated with patient `034e9e3b-2def-4559-bb2a-7850888ae060`. To do so, we filter the rows in the `encounters` table to those associated with our patient of interest.
+We isolate the exam components associated with participant `NHANES-100000`. To do so, we filter the rows in the `exams` table to those associated with our participant of interest.
 
 ```{r}
-# Specify a patient of interest
-patient <- "034e9e3b-2def-4559-bb2a-7850888ae060"
+# Specify a participant of interest
+participant <- "NHANES-100000"
 
-# Filter the `encounters` table to rows with `034e9e3b-2def-4559-bb2a-7850888ae060` in the `PATIENT` column
-patient_encounters <- encounters %>%
-  filter(PATIENT == patient)
+# Filter the `exams` table to rows with `NHANES-100000` in the `participant_id` column
+participant_exams <- exams %>%
+  filter(participant_id == participant)
 
-# Sort the patient encounters by the `START` times
-patient_encounters <- patient_encounters %>%
-  arrange(START)
+# Sort the exam components by the `exam_start` times
+participant_exams <- participant_exams %>%
+  arrange(exam_start)
 ```
 
 ```{r}
-# How many encounters did the patient of interest have
-n_encounters <- nrow(patient_encounters)
+# How many exam components did the participant of interest have
+n_exams <- nrow(participant_exams)
 
-# Print the number of encounters associated with the patient
-cat(paste0("The patient had ", n_encounters, " encounters."))
+# Print the number of exam components associated with the participant
+cat(paste0("The participant had ", n_exams, " exam components."))
 ```
 
-#### Identify Medical Costs Following an Encounter
+#### Identify Examination-Center Workload Following a Component
 
-Medical follow-up can be costly! We will work through an analysis of the six-month follow-up costs after each procedure. Given an encounter, we will implement a function to do the following:
+A mobile examination center has a finite amount of time on the road, so knowing how heavily each center is booked matters for planning. We will work through an analysis of the week of work that follows any given component. Given a component, we will implement a function to do the following:
 
-1. Identify the date six months after the `STOP` of the encounter
-2. Identify all subsequent encounters for the same patient during the six-month follow-up period
-3. Calculate the total medical cost associated with the follow-up period
+1. Identify the date one week after the `exam_end` of the component
+2. Identify all subsequent components run at the same center during that week
+3. Calculate the total examination time booked during that week
 
 ```{r}
-# Create a function to identify the cost of follow-up encounters during a six-month period following an encounter
-cost_of_follow_ups <- function(encounter) {
-  
-  # Identify the STOP time of the encounter
-  encounter_stop_time <- as.POSIXlt(encounter$STOP)
-  
-  # Identify the time six months (~182 days) following the encounter
-  six_months_later <- encounter_stop_time + as.difftime(182, units = "days")
-  
-  # Identify the patient associated with the encounter
-  patient_id <- encounter$PATIENT
-  
-  # Filter the `encounters` table to rows matching the patient
-  patient_specific_encounters <- encounters %>%
-    filter(PATIENT == patient_id)
-  
-  # Filter the `patient_specific_encounters` to encounters with START times in the six-month period
-  patient_specific_encounters <- patient_specific_encounters %>%
-    filter(START > encounter_stop_time, START < six_months_later)
-  
-  # Evaluate the total cost of the follow-ups
-  tot_cost <- sum(patient_specific_encounters$TOTAL_CLAIM_COST)
-  return(tot_cost)
+# Create a function to identify the examination time booked in the week following a component
+hours_of_follow_up_work <- function(component) {
+
+  # Identify the exam_end time of the component
+  component_stop_time <- as.POSIXlt(component$exam_end)
+
+  # Identify the time one week (7 days) following the component
+  one_week_later <- component_stop_time + as.difftime(7, units = "days")
+
+  # Identify the examination center associated with the component
+  center <- component$center_id
+
+  # Filter the `exams` table to rows matching the center
+  center_specific_exams <- exams %>%
+    filter(center_id == center)
+
+  # Filter the `center_specific_exams` to components with exam_start times in the one-week period
+  center_specific_exams <- center_specific_exams %>%
+    filter(exam_start > component_stop_time, exam_start < one_week_later)
+
+  # Evaluate the total examination time booked in that week
+  tot_hours <- sum(center_specific_exams$duration_hr)
+  return(tot_hours)
 }
 ```
 
 ```{r}
-# Test the `cost_of_follow_ups` on specific encounters
+# Test the `hours_of_follow_up_work` on specific components
 n_eval <- 10
 for (i in 1:n_eval) {
-  encounter <- encounters[sample(nrow(encounters), 1), ]
-  
-  patient_id <- encounter$PATIENT
-  code <- encounter$CODE
-  follow_up_costs <- cost_of_follow_ups(encounter)
-  
-  cat("Patient:", patient_id, "\n")
-  cat("Encounter Code:", code, "\n")
-  cat("Follow-up Costs:", follow_up_costs, "\n\n")
+  component <- exams[sample(nrow(exams), 1), ]
+
+  participant_id <- component$participant_id
+  which_component <- component$component
+  follow_up_hours <- hours_of_follow_up_work(component)
+
+  cat("Participant:", participant_id, "\n")
+  cat("Component:", which_component, "\n")
+  cat("Follow-up work (hrs):", follow_up_hours, "\n\n")
 }
 ```
 
-#### Task 8: Summarize the Costs of Patient Encounters and Export to CSV
+#### Task 8: Summarize the Exam Components and Export to CSV
 
-We generate descriptive statistics summarizing the costs associated with encounters, and export those summary statistics to a CSV file.
+We generate descriptive statistics summarizing the exam components, and export those summary statistics to a CSV file.
 
 ```{r}
-# List the columns associated with some cost
-cost_cols <- c("BASE_ENCOUNTER_COST", "TOTAL_CLAIM_COST", "PAYER_COVERAGE")
+# List the numeric columns we want to describe
+numeric_cols <- c("duration_hr", "status_code")
 
-# Isolate the costs associated with patient encounters
-encounter_costs <- encounters[cost_cols]
+# Isolate those columns
+exam_numbers <- exams[numeric_cols]
 
-# Generate a table summarizing each of the costs columns with descriptive statistics
-encounter_cost_summaries <- summary(encounter_costs)
-print(encounter_cost_summaries)
+# Generate a table summarizing each of those columns with descriptive statistics
+exam_summaries <- summary(exam_numbers)
+print(exam_summaries)
 ```
 
 ```{r}
-# Specify a path at which to save the encounter summaries
-save_path <- "data/encounter_cost_summaries.csv"
+# Specify a path at which to save the exam summaries
+save_path <- "data/exam_summaries.csv"
 
-# Save the `encounter_cost_summaries` to a CSV file
-write.csv(encounter_cost_summaries, file = save_path, row.names = FALSE)
+# Save the `exam_summaries` to a CSV file
+write.csv(exam_summaries, file = save_path, row.names = FALSE)
 
 # Read the CSV file that you just saved
-encounter_cost_summaries_reloaded <- read.csv(save_path, header = TRUE)
+exam_summaries_reloaded <- read.csv(save_path, header = TRUE)
 
-# Display the reloaded table summarizing the costs of encounters
-print(encounter_cost_summaries_reloaded)
+# Display the reloaded table summarizing the exam components
+print(exam_summaries_reloaded)
 ```
 
 #### Summary
 
-In this notebook, we worked with date/time data to summarize patient encounters reported in medical records. After loading and formatting the data, we calculated the duration of encounters and plotted the distribution of encounter durations. Given a specific encounter, we implemented a function to identify follow-up encounters and calculate the total cost of those follow-ups. Finally, we generated summary statistics that describe the cost of encounters, and we exported those summary statistics to a CSV file.
+In this notebook, we worked with date/time data to summarize exam components reported in health records. After loading and formatting the data, we calculated the duration of components and plotted the distribution of those durations. Given a specific component, we implemented a function to identify subsequent components at the same examination center and calculate the total examination time booked in the following week. Finally, we generated summary statistics that describe the components, and we exported those summary statistics to a CSV file.

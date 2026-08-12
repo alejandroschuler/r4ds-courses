@@ -21,11 +21,11 @@ local({
 })
 ```
 
-This Jupyter notebook introduces a healthcare data set that we will be using to practice for the duration of the workshop.
+This Jupyter notebook introduces a NHANES data set that we will be using to practice for the duration of the workshop.
 
 #### Instructions
 
-This notebook includes a framework for loading and inspecting data in the example healthcare data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+This notebook includes a framework for loading and inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
 
 #### Scope
 
@@ -37,11 +37,13 @@ This notebook includes material covered in Lecture 1: Programming Basics. You wi
 
 #### Data Description
 
-We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
 
->Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+The public NHANES files are documented here:
 
-The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.** In this example, we will be working with patient records stored in `patients.csv`.
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real. In this example, we will be working with participant records stored in `participants.csv`.
 
 #### Import Modules
 
@@ -51,60 +53,60 @@ library(ggplot2)
 
 #### Assign Variable
 
-We will be working with the `patients.csv` file in this example.
+We will be working with the `participants.csv` file in this example.
 In the subsequent code block, you will specify the location of the data table.
-To do so, you will assign the value `"data/patients.csv"` to the variable `path`.
+To do so, you will assign the value `"data/participants.csv"` to the variable `path`.
 
 ```{r}
-# TODO: Assign the value "data/patients.csv" to the variable `path`
-path <- "data/patients.csv"
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- "data/participants.csv"
 ```
 
 #### Load Data into a Table
 
-During lecture 2, you will learn more about data frames. Briefly, data frames are tables of data. Below, we provide the code for loading the data in `patients.csv` into a data frame.
+During lecture 2, you will learn more about data frames. Briefly, data frames are tables of data. Below, we provide the code for loading the data in `participants.csv` into a data frame.
 
 ```{r}
 # Load the table using read.csv
-df_patient <- read.csv(path, header = TRUE)
+df_participant <- read.csv(path, header = TRUE)
 ```
 
 Let's take a look at the data using the `print` command.
 
 ```{r, max.height='200px'}
-# Print the table of patient data
-print(df_patient)
+# Print the table of participant data
+print(df_participant)
 ```
 #### Visualize the Data Set
 
-Let's start by inspecting the distribution of healthcare expenses among patients.
-Below we use ggplot2 to plot a histogram of the healthcare expenses, which are stored in the `HEALTHCARE_EXPENSES` column of `df_patient`.
+Let's start by inspecting the distribution of HbA1c among participants. HbA1c is the share of hemoglobin in the blood that has sugar attached to it, and it reflects average blood sugar over the previous two to three months. A value of 6.5% or above is diagnostic of diabetes.
+Below we use ggplot2 to plot a histogram of the HbA1c values, which are stored in the `hba1c` column of `df_participant`.
 
 ```{r}
-# Plot a histogram of healthcare expenses
+# Plot a histogram of HbA1c
 # TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
-ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
+ggplot(df_participant, aes(x = hba1c)) +
   geom_histogram(fill = "steelblue", color = "white", bins = 20) +
   labs(title = "Cost of Healthcare",
-       x = "Patient Healthcare Expense ($)",
+       x = "HbA1c (%)",
        y = "Frequency")
 ```
 
-Please comment on the distribution of healthcare expenses.
+Please comment on the distribution of HbA1c.
 
-**POSSIBLE ANS.** Generally speaking, healthcare expenses appear to have a rightward skew. Few patients appear to have particularly high expenses. The distribution of healthcare expenses also appears to be bimodal, with peaks near \$100,000 and \$1.3M.
+**POSSIBLE ANS.** Generally speaking, HbA1c appears to have a rightward skew. Most participants cluster between 5% and 6%, with a long tail of participants at much higher values. Those in the tail are largely the participants with diabetes.
 
 We can simplify the theme of our figure by adding `theme_minimal()` to our plotting code.
 
 ```{r}
-# Plot a histogram of healthcare expenses using a simple theme
+# Plot a histogram of HbA1c using a simple theme
 # TODO: Provide appropriate x and y labels for the histogram
 # TODO: Provide an appropriate title for the histogram
-ggplot(df_patient, aes(x = HEALTHCARE_EXPENSES)) +
+ggplot(df_participant, aes(x = hba1c)) +
   geom_histogram(fill = "steelblue", color = "white", bins = 20) +
   labs(title = "Cost of Healthcare",
-       x = "Patient Healthcare Expense ($)",
+       x = "HbA1c (%)",
        y = "Frequency") +
   theme_minimal()
 ```
@@ -113,9 +115,9 @@ Now, let's visualize the distribution of race in the data set. Since race is a c
 We will use the built-in `table` function to generate a count of each race. We will then represent these counts in a data frame. Finally, we will plot our bar chart. Built-in functions and data frames will be discussed in more detail during lecture 2.
 
 ```{r}
-# Generate a count of each race in the `df_patient` table.
+# Generate a count of each race in the `df_participant` table.
 # We will introduce data frames in more detail during lecture 2. For now, just consider data frames as a way to represent tables in R.
-counts <- table(df_patient$RACE)
+counts <- table(df_participant$race)
 counts <- as.data.frame(counts)
 
 # Print the counts of each race
@@ -137,7 +139,7 @@ print(counts)
 # TODO: Provide an appropriate title for the bar chart
 ggplot(counts, aes(x = race, y = count)) +
   geom_col(fill = "steelblue") +
-  labs(title = "Distribution of Races in Patient Records",
+  labs(title = "Distribution of Races in Participant Records",
        x = "Race",
        y = "Count") +
   theme_minimal()
@@ -145,11 +147,11 @@ ggplot(counts, aes(x = race, y = count)) +
 
 Please comment on the distribution of races in the data set. It is important to account for imbalanced representation in the data set when using the data to develop models (however, model development is beyond the scope of this course).
 
-**Possible ANS.** Most patients in the data set belong to the `white` race category.
+**Possible ANS.** Most participants in the data set belong to the `White` race category.
 
 #### Advanced Plotting (just for fun)
 
-Notice, all patients appear to come from Massachusetts. To demonstrate the capabilities of ggplot2, let's generate a heatmap to visualize which counties are most represented in the dataset. You do not need to worry about implementing this yourself! The code makes use of a third-party `maps` package that enables us to overlay a heatmap on the map of the US. 
+NHANES deliberately releases no geographic information about its participants, so we cannot map them. Instead we will use a second table, `data/state_health.csv`, which holds the share of adults in each state who are obese according to the CDC's Behavioral Risk Factor Surveillance System. To demonstrate the capabilities of ggplot2, let's generate a heatmap of obesity prevalence across the United States. You do not need to worry about implementing this yourself! The code makes use of a third-party `maps` package that enables us to overlay a heatmap on the map of the US.
 
 ```{r}
 # Install the `maps` package
@@ -160,37 +162,31 @@ Notice, all patients appear to come from Massachusetts. To demonstrate the capab
 library(maps)
 ```
 
-```{r}
-# Count the frequency that each state appears in the data set
-county_counts <- table(df_patient$COUNTY)
-county_counts <- as.data.frame(county_counts)
-
-# For convenience, rename the column labels in `state_counts`
-names(county_counts) <- c("county", "count")
-print(county_counts)
+```{r, max.height='200px'}
+# Load the state-level obesity prevalences
+state_health <- read.csv("data/state_health.csv", header = TRUE)
+print(state_health)
 ```
 
 ```{r}
 # Don't worry about the rest of this code! This is for demonstration purposes only!
 
-# Get the boundaries of Massachusetts counties using the `maps` package
-ma_counties <- map("county", "massachusetts", fill = TRUE, plot = FALSE)
-ma_counties_df <- fortify(ma_counties, region = "names")
+# Get the boundaries of the US states using the `maps` package
+us_states <- map("state", fill = TRUE, plot = FALSE)
+us_states_df <- fortify(us_states, region = "names")
 
-## Relabel the row labels in `county_counts` so they are consistent with the `ma_counties_df`
-county_counts$county <- as.character(county_counts$county)
-county_counts$county <- gsub("county", "", tolower(county_counts$county))
-county_counts$county <- trimws(county_counts$county)
+## Relabel the states in `state_health` so they are consistent with `us_states_df`
+state_health$state <- tolower(as.character(state_health$state))
 
-# Overlay the county frequency data on the Massachusetts map
-county_map_data <- merge(ma_counties_df, county_counts, by.x = "subregion", by.y = "county", all.x = TRUE)
+# Overlay the obesity prevalences on the US map
+state_map_data <- merge(us_states_df, state_health, by.x = "region", by.y = "state", all.x = TRUE)
 
-# Visualize the state frequencies as a heatmap
-ggplot(county_map_data, aes(x = long, y = lat, group = group, fill = count)) +
+# Visualize the state obesity prevalences as a heatmap
+ggplot(state_map_data, aes(x = long, y = lat, group = group, fill = obese_pct)) +
   geom_polygon(color = "white") +
   coord_fixed(1.3) +  # Aspect ratio for the map
-  labs(title = "Frequency of Counties in Massachusetts",
-       fill = "Frequency") +
+  labs(title = "Percent of adults who are obese, by state",
+       fill = "Percent") +
   theme_minimal() +
   scale_fill_viridis_c()
 ```
@@ -198,4 +194,4 @@ ggplot(county_map_data, aes(x = long, y = lat, group = group, fill = count)) +
 
 #### Summary
 
-In this demonstration, we loaded and inspected a table of patient information. We visualized the distribution of healthcare expenses using a histogram, patient races using a bar plot, and patient location using a heatmap. The hands-on portion of this first demonstration is light. In future demonstrations, as you grow more familiar with the R syntax, you will have a chance to practice loading and manipulating data yourself!
+In this demonstration, we loaded and inspected a table of participant information. We visualized the distribution of HbA1c using a histogram, participant races using a bar plot, and state-level obesity prevalence using a heatmap. The hands-on portion of this first demonstration is light. In future demonstrations, as you grow more familiar with the R syntax, you will have a chance to practice loading and manipulating data yourself!

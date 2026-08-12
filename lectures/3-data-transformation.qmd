@@ -62,20 +62,20 @@ Later we will also learn
 
 and `group_by()` which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. 
 
-## GTEx data
-This is a subset of the Genotype Tissue Expression (GTEx) dataset
+## NHANES data
+This is a subset of the National Health and Nutrition Examination Survey (NHANES)
 
-- **The full dataset.** Includes gene expression data, measured via RNA-sequencing, from 54 post-mortem tissues in ~800 individuals. Whole genome sequencing is also available for these individuals as part of the GTEx v8 release, available through dbGaP. 
-- **The subsetted dataset.** We are looking at expression data for just 78 individuals here, in four tissues including blood, heart, lung and liver. 
-- **Data processing** The expression values have been normalized and corrected for technical covariates and are now in the form of "Z-scores", which indicate the distance of a given expression value from the mean across all measurements of that gene in that tissue. 
-- **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on extracting individuals with extremely high or low expression values for a given gene as compared to the distribution across all samples.
+- **The full dataset.** NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. Hundreds of variables are released publicly, cycle by cycle.
+- **The subsetted dataset.** We are looking at the 2017-2018 cycle here, with about 30 of the variables: demographics, body measurements, blood pressure, and a handful of lab values.
+- **Data processing** The coded values in the public files have been translated into readable labels and the variables renamed, so you don't need the NHANES codebook open to read the data. Nothing else has been changed.
+- **Goal.** We will use the data here to illustrate different functions for data transformation, often focused on picking out participants with unusually high or low values for a given measurement as compared to the distribution across all participants.
 
 ```{r, message=F}
 # Read subsetted data from online file - make sure there are no spaces
-gtex = read_tsv('https://tinyurl.com/342rhdc2')
+nhanes = read_csv('https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/nhanes.csv')
 
 # Check number of rows
-nrow(gtex)
+nrow(nhanes)
 ```
 
 # Filter rows with filter() {data-background-color=black}
@@ -90,7 +90,7 @@ nrow(gtex)
 - It takes two arguments: the dataset and the condition
 
 ```{r, message=F}
-filter(gtex, Blood >= 12)
+filter(nhanes, bp_sys_1 >= 180)
 ```
 
 ## Comparisons
@@ -121,17 +121,17 @@ is.na(x)
 - you can use `==` to test whether a string variable matches given text
 - but remember to quote the text you want to compare to
 ```{r}
-filter(gtex, Gene == "ZZZ3")
+filter(nhanes, education == "College grad")
 ```
 
-- why doesn't `Gene == ZZZ3` work?
-- why doesn't `"Gene" == "ZZZ3"` make sense?
+- why doesn't `education == College grad` work?
+- why doesn't `"education" == "College grad"` make sense?
 
 ## Filtering on computed values
 - the condition can contain computed values
 
 ```{r, message=F}
-filter(gtex, Blood + Heart > 0)
+filter(nhanes, bp_sys_1 - bp_dia_1 > 60)
 ```
 
 - note that we didn't actually do anything to the values in the data
@@ -141,25 +141,25 @@ filter(gtex, Blood + Heart > 0)
 - What is the result of running this code?
 
 ```{r}
-nrow(gtex)
+nrow(nhanes)
 ```
 
 ```{r, eval=F}
-filter(gtex, Gene == "ZZZ3")
-filter(gtex, Heart <= -5)
-nrow(gtex)
+filter(nhanes, education == "College grad")
+filter(nhanes, bp_sys_2 <= 80)
+nrow(nhanes)
 ```
 
 
 ## Exercise
 
-- Without using the internet, think of how you can use `filter` multiple times to create a dataset where blood expression is positive (>0) **and** heart expression is negative (<0)
+- Without using the internet, think of how you can use `filter` multiple times to create a dataset where BMI is in the obese range (>=30) **and** systolic blood pressure is high (>=140)
 
-- Using any resources you like, figure out how to use `filter` to create a dataset where **either** blood expression is positive (>0) **or** heart expression is negative (<0)
+- Using any resources you like, figure out how to use `filter` to create a dataset where **either** BMI is in the obese range (>=30) **or** systolic blood pressure is high (>=140)
 
 ## Logical conjunctions (AND)
 ```{r}
-filter(gtex, Blood < 0 & Heart < 0)
+filter(nhanes, bmi >= 30 & bp_sys_1 >= 140)
 ```
 
 - This filters by the **conjunction** of the two constraints---both must be satisfied.
@@ -175,15 +175,15 @@ FALSE & TRUE
 
 - For filter, you can do "AND" by passing in two separate conditions as two different arguments, but the comma and ampersand are not generally interchangeable
 ```{r}
-# filter(gtex, Blood < 0 & Heart < 0)
-filter(gtex, Blood < 0, Heart < 0)
+# filter(nhanes, bmi >= 30 & bp_sys_1 >= 140)
+filter(nhanes, bmi >= 30, bp_sys_1 >= 140)
 ```
 
 
 ## Logical conjunctions (OR)
 
 ```{r}
-filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
+filter(nhanes, education == "College grad" | education == "Some college")
 ```
 
 - The pipe sign ` | ` stands for "OR" 
@@ -191,16 +191,16 @@ filter(gtex, Gene == "A2ML1" | Gene == "A4GALT")
 
 ***
 ```{r}
-filter(gtex, Gene %in% c("ZZZ3","A2ML1")) 
+filter(nhanes, education %in% c("College grad","High school")) 
 # equivalent to 
-# filter(gtex, Gene=="ZZZ3" | Gene=="A2ML1")
+# filter(nhanes, education=="College grad" | education=="High school")
 ```
 
 - ` %in% ` returns true for all elements of the thing on the left that are also elements of the thing on the right. This is actually shorthand for a match function (use `help('%in%')` to learn more)
 
 ## Negation (NOT)
 ```{r}
-filter(gtex, !(Gene=="A2ML1"))
+filter(nhanes, !(education=="College grad"))
 ```
 - The exclamation point ` ! ` means "NOT", which negates the logical condition
 - sometimes it's easier to say what you *don't* want!
@@ -209,13 +209,13 @@ filter(gtex, !(Gene=="A2ML1"))
 
 **Do each of these three exercises separately**
 
-- Filter the GTEX data to keep just the rows where the product of Blood and Heart expression is between 0 and 1.
+- Filter the NHANES data to keep just the rows where the ratio of `waist_cm` to `height_cm` is between 0.5 and 0.6. (This ratio is a measure of abdominal obesity; above 0.5 is considered elevated.)
 
 
-- Excluding the gene `LAMP3`, does the individual `GTEX-11TT1` have any genes with expression level greater than 4 in their blood?
+- Excluding participants who report having diabetes, are there any participants under 30 whose `hba1c` is above 6.5?
 
 
-- Filter out any rows where the value for `Heart` is missing (value is `NA`) 
+- Filter out any rows where the value for `bp_sys_4` is missing (value is `NA`)
 
 
 ## Sampling rows
@@ -223,7 +223,7 @@ filter(gtex, !(Gene=="A2ML1"))
 - You can use `slice_sample()` to get `n` randomly selected rows if you don't have a particular condition you would like to filter on.
 
 ```{r}
-slice_sample(gtex, n=5)
+slice_sample(nhanes, n=5)
 ```
 
 - the named argument `prop` allows you to sample a proportion of rows
@@ -235,7 +235,7 @@ slice_sample(gtex, n=5)
 - This is more useful once you have sorted the data in a particular order, which we will soon see how to do.
 
 ```{r}
-filter(gtex, row_number()<=3)
+filter(nhanes, row_number()<=3)
 ```
 
 # Sort rows with arrange() {data-background-color=black}
@@ -250,13 +250,13 @@ filter(gtex, row_number()<=3)
 - `arrange()` takes a data frame and a column, and sorts the rows by the values in that column (ascending order).
 - Again, the first argument is the data frame and the other arguments tell the function what to do with it
 ```{r}
-arrange(gtex, Blood)
+arrange(nhanes, bp_sys_1)
 ```
 
 ## Descending sort
 - Use the desc function to arrange by descending values
 ```{r}
-arrange(gtex, desc(Blood))
+arrange(nhanes, desc(bp_sys_1))
 ```
 
 ## Multisort
@@ -264,13 +264,13 @@ arrange(gtex, desc(Blood))
 - This is useful if there is a tie in sorting by the first column.
 
 ```{r}
-arrange(gtex, Gene, Blood)
+arrange(nhanes, education, bp_sys_1)
 ```
 
 
-## Exercise: top 5 high expression instances {data-background-color=teal}
+## Exercise: top 5 highest blood pressures {data-background-color=teal}
 
-Use `arrange()` and `filter()` to get the data for the 5 rows with the highest expression values in blood
+Use `arrange()` and `filter()` to get the data for the 5 rows with the highest first systolic blood pressure readings
 
 # Piping {data-background-color=black}
 
@@ -278,13 +278,13 @@ Use `arrange()` and `filter()` to get the data for the 5 rows with the highest e
 
 - In our last exercise, we used two function applications to arrive at our answer. Shown below, we used temporary variables to keep our code clean. 
 ```{r}
-gtex_by_blood = arrange(gtex, desc(Blood)) # using a temporary variable
-filter(gtex_by_blood, row_number()<=5)
+nhanes_by_sys = arrange(nhanes, desc(bp_sys_1)) # using a temporary variable
+filter(nhanes_by_sys, row_number()<=5)
 ```
 
 - we can also accompish this by "nesting" the function calls:
 ```{r}
-filter(arrange(gtex, desc(Blood)), row_number()<=5) # "nesting" the calls to filter and arrange
+filter(arrange(nhanes, desc(bp_sys_1)), row_number()<=5) # "nesting" the calls to filter and arrange
 ```
 
 - Which do you prefer? Why? What are the sylistic pros and cons to both if you are trying to understand what the code does for the first time?
@@ -294,8 +294,8 @@ filter(arrange(gtex, desc(Blood)), row_number()<=5) # "nesting" the calls to fil
 - R solves these problems with the "pipe" operator `|>`
 
 ```{r, eval=F, tidy=F}
-gtex |> 
-  arrange(desc(Blood)) |>
+nhanes |> 
+  arrange(desc(bp_sys_1)) |>
   filter(row_number()<=5)
 ```
 
@@ -304,8 +304,8 @@ gtex |>
 - How does this compare with our code before? What do you notice?
 
 ```{r, eval=F, tidy=F}
-gtex_by_blood = arrange(gtex, desc(Blood)) # using a temporary variable
-filter(gtex_by_blood, row_number()<=5)
+nhanes_by_sys = arrange(nhanes, desc(bp_sys_1)) # using a temporary variable
+filter(nhanes_by_sys, row_number()<=5)
 ```
 
 
@@ -331,17 +331,17 @@ fun(df1, x)
 - The pipe represents a "conveyor belt" along which data is passed from function to function ("workers") in an assembly line
 
 ```{r, eval=F, tidy=F}
-gtex |> 
-  arrange(desc(Blood)) |>
+nhanes |> 
+  arrange(desc(bp_sys_1)) |>
   filter(row_number()<=5)
 
 # same as:
-#   arrange(gtex, desc(Blood)) |>
+#   arrange(nhanes, desc(bp_sys_1)) |>
 #   filter(row_number()<=5)
 
 
 # same as:
-#   filter( arrange(gtex, desc(Blood)), row_number()<=5)
+#   filter( arrange(nhanes, desc(bp_sys_1)), row_number()<=5)
 ```
 
 *** 
@@ -363,8 +363,8 @@ c(1,44,21,0,-4) |> sum()
 Piping a data frame
 
 ```{r, max.lines=5}
-# filter(gtex, Gene=="ZZZ3")
-gtex |> filter(Gene=="ZZZ3") 
+# filter(nhanes, education=="College grad")
+nhanes |> filter(education=="College grad") 
 ```
 
 
@@ -382,23 +382,23 @@ gtex |> filter(Gene=="ZZZ3")
 
 
 ```{r, max.lines=5, eval=F}
-filter(gtex, Gene=="ZZZ3")
-gtex |> filter(Gene=="ZZZ3") 
-gtex %>% filter(Gene=="ZZZ3") 
+filter(nhanes, education=="College grad")
+nhanes |> filter(education=="College grad") 
+nhanes %>% filter(education=="College grad") 
 ```
 
 ## Exercise: Pipe to ggplot {data-background-color=teal}
 
-- Run this code to see what it does. Then rewrite it using the pipe operator (get rid of the intermediate variables `mybl2` and `outliers`) and get it to produce the same output.
+- Run this code to see what it does. Then rewrite it using the pipe operator (get rid of the intermediate variables `seniors` and `outliers`) and get it to produce the same output.
 
 ```{r, eval=F, tidy=F}
-mybl2 = filter(gtex, Gene == 'MYBL2')
+seniors = filter(nhanes, age >= 60)
 
 # we haven't learned about this function yet, but doesn't matter
-outliers = mutate(mybl2, blood_outlier = abs(Blood) > 2) 
+outliers = mutate(seniors, sys_outlier = abs(bp_sys_1 - 120) > 40) 
 
 ggplot(outliers) +
-  geom_bar(aes(x=blood_outlier))
+  geom_bar(aes(x=sys_outlier))
 ```
 
 
@@ -414,8 +414,8 @@ ggplot(outliers) +
 - first argument is a data frame, then columns you want to select
 
 ```{r}
-gtex |>
-  select(Gene, Ind, expression=Blood)
+nhanes |>
+  select(education, id, systolic=bp_sys_1)
 ```
 
 - you can rename columns in the result with the syntax ` new_name = old_name`
@@ -424,26 +424,26 @@ gtex |>
 - `select()` can also be used with handy helpers like `starts_with()` and `contains()`
 
 ```{r}
-gtex |>
-  select(starts_with("L"))
+nhanes |>
+  select(starts_with("bp_dia"))
 ```
 - Use `?select` to see all the possibilities
 
 ***
 
 ```{r}
-gtex |>
-  select(contains("N"))
+nhanes |>
+  select(contains("age"))
 ```
-- The quotes around the letter `"N"` make it a string. If we did not do this, `R` would think it was looking for a variable called `N` and not just the plain letter.
-- We don't have to quote the names of columns (like `Ind`) because the `tidyverse` functions know that we are working within the dataframe and thus treat the column names like they are variables in their own right
+- The quotes around `"age"` make it a string. If we did not do this, `R` would think it was looking for a variable called `age` and not just the plain text.
+- We don't have to quote the names of columns (like `id`) because the `tidyverse` functions know that we are working within the dataframe and thus treat the column names like they are variables in their own right
 
 ***
 
 - we can even select columns based on metadata (but not values!)
 
 ```{r}
-gtex |>
+nhanes |>
   select(where(is.numeric))
 ```
 
@@ -452,14 +452,14 @@ gtex |>
 
 - `select()` can also be used to select everything **except for** certain columns
 ```{r}
-gtex |>
-  select(-starts_with("L"), -Ind)
+nhanes |>
+  select(-starts_with("bp_"), -id)
 ```
 
 
 ## Exercise: select and filter {data-background-color=teal}
 
-A colleague wants to see the blood expression for the gene A2ML1 for each person. Use select and filter to produce a dataframe for her that has just two columns: `individual` and `expression`, where the expression values are the blood expression values for each person for the gene A2ML1.
+A colleague wants to see the first systolic blood pressure reading for each college graduate. Use select and filter to produce a dataframe for her that has just two columns: `participant` and `systolic`, where the systolic values are the first systolic readings for each participant whose education is `College grad`.
 
 Before writing any code, break the problem down conceptually into steps. Figure out how to do each step independently before you put them together.
 
@@ -474,12 +474,12 @@ Before writing any code, break the problem down conceptually into steps. Figure 
 ```{r}
 #| echo: true
 #| eval: false
-gtex |> pull(Gene)
+nhanes |> pull(education)
 ```
 ```{r}
 #| echo: false
 #| eval: true
-gtex |> head(10) |> pull(Gene)
+nhanes |> head(10) |> pull(education)
 ```
 
 :::
@@ -487,12 +487,12 @@ gtex |> head(10) |> pull(Gene)
 ```{r}
 #| echo: true
 #| eval: false
-gtex |> select(Gene)
+nhanes |> select(education)
 ```
 ```{r}
 #| echo: false
 #| eval: true
-gtex |> head(10) |> select(Gene)
+nhanes |> head(10) |> select(education)
 ```
 
 :::
@@ -503,14 +503,14 @@ gtex |> head(10) |> select(Gene)
 :::{.column}
 - `select()` can be used to rename variables, but it drops all variables not selected
 ```{r max.lines = 6}
-gtex |> select(individual = Ind)
+nhanes |> select(individual = id)
 ```
 
 :::
 :::{.column}
 - `rename()` is better suited for this because it keeps all the columns
 ```{r max.lines = 6}
-gtex |> rename(individual = Ind)
+nhanes |> rename(individual = id)
 ```
 
 :::
@@ -528,29 +528,29 @@ gtex |> rename(individual = Ind)
 - `mutate` creates new columns
 - first argument is a dataframe, second specifies what you want the new columns to be
 ```{r, max.lines = 5}
-gtex |>
-  mutate(scaled_blood = 100*Blood))
+nhanes |>
+  mutate(weight_lb = 2.205*weight_kg)
 ```
-- This uses `mutate()` to add a new column to which is the absolute value of `Blood`.
+- This uses `mutate()` to add a new column which is the weight converted from kilograms to pounds.
 - The thing on the left of the `=` is a new name that you make up which you would like the new column to be called
 - The expression on the right of the `=` defines what will go into the new column
 
 ***
 - **Warning!** If the new variable name already exists, `mutate()` will overwrite the existing one (*in the new dataframe that gets created*)
 ```{r, max.lines = 5}
-gtex |>
-  mutate(Blood = 100*Blood)
+nhanes |>
+  mutate(weight_kg = 2.205*weight_kg)
 ```
 
 ***
 - `mutate()` can create multiple columns at the same time and use multiple columns to define a single new one
 
 ```{r, tidy=F}
-gtex |>
+nhanes |>
   mutate(  # the newlines make it more readable
-      scaled_blood = 100* Blood,
-      scaled_heart = 100* Heart,
-      scaled_blood_heart_dif = scaled_blood - scaled_heart
+      weight_lb = 2.205 * weight_kg,
+      height_in = 0.394 * height_cm,
+      bmi_imperial = 703 * weight_lb / height_in^2
   )
 ```
 - Note that we have also used two columns simultaneously to create a new column
@@ -561,9 +561,9 @@ gtex |>
 ```{r, max.lines = 5}
 library(stringr)
 
-gtex |>
-  mutate(Ind_ID_suffix = str_extract(Ind, "(GTEX-)(.*)", group=2)) |>
-  select(Ind, Ind_ID_suffix)
+nhanes |>
+  mutate(id_suffix = str_extract(id, "(NHANES-)(.*)", group=2)) |>
+  select(id, id_suffix)
 ```
 
 
@@ -586,18 +586,18 @@ df |> mutate(number = as.numeric(number))
 :::{.column}
 - `mutate()` can be used to make logical columns (indicators)
 ```{r, tidy=F}
-gtex |>
-  mutate(positive_liver = Liver > 0) |>
-  select(Gene, Ind, Liver, positive_liver)
+nhanes |>
+  mutate(obese = bmi >= 30) |>
+  select(education, id, bmi, obese)
 ```
 
 :::
 :::{.column}
 - which can be used to make plots
 ```{r, tidy=F}
-gtex |>
-  mutate(positive_liver = Liver > 0) |>
-ggplot(aes(x=positive_liver, y=Blood)) +
+nhanes |>
+  mutate(obese = bmi >= 30) |>
+ggplot(aes(x=obese, y=bp_sys_1)) +
   geom_violin()
 ```
 
@@ -607,8 +607,8 @@ ggplot(aes(x=positive_liver, y=Blood)) +
 ***
 or you can just "mutate" directly in ggplot!
 ```{r, tidy=F}
-gtex |>  # mutate(positive_liver = Liver > 0) |>
-ggplot(aes(x=Liver > 0, y=Blood)) +
+nhanes |>  # mutate(obese = bmi >= 30) |>
+ggplot(aes(x=bmi >= 30, y=bp_sys_1)) +
   geom_violin()
 ```
 
@@ -619,15 +619,15 @@ ggplot(aes(x=Liver > 0, y=Blood)) +
 
 **Problem 1** 
 
-I want to see if certain genes are generally more highly expressed in certain individuals, irrespective of tissue type. Using the GTEX data, create a new column containing the sum of the four expression measurements in the different tissues.
+I want a single blood pressure number for each participant instead of three separate readings. Using the NHANES data, create a new column containing the average of the three systolic readings. (This is exactly what NHANES itself reports as the participant's systolic blood pressure.)
 
 **Problem 2** 
 
-Produce a plot showing blood vs heart expression of the MYL1 gene only and assign color based on positive vs. negative expression of that gene in liver tissue.
+Produce a plot showing systolic vs diastolic blood pressure for participants aged 60 and over only, and assign color based on whether or not the participant is obese (BMI of 30 or more).
 
 **Problem 3** 
 
-Produce a vector containing the ten individual IDs (`Ind`) with the biggest difference in their heart and lung expression for the A2ML1 gene.
+Produce a vector containing the ten participant IDs (`id`) with the biggest difference between their first and third systolic readings.
 
 
 
@@ -640,10 +640,10 @@ if_else(0<=x & x<=1, "in [0,1]", "not in [0,1]")
 ```
 - this is often used in `mutate()`:
 ```{r, max.lines=10}
-gtex |>
+nhanes |>
 mutate( 
-  blood_expression = ifelse(
-    Blood < 0, "-", "+"
+  sys_category = ifelse(
+    bp_sys_1 >= 140, "high", "normal"
 ))
 ```
 

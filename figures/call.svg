@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <style>
+    .plane { fill: #eeeeee; stroke: #cccccc; stroke-width: 1.5; }
+    .face  { fill: #c8c8c8; stroke: #555555; stroke-width: 1.5; }
+    .top   { fill: #dcdcdc; stroke: #555555; stroke-width: 1.5; }
+    .side  { fill: #b4b4b4; stroke: #555555; stroke-width: 1.5; }
+    .label { fill: #ffffff; stroke: #999999; stroke-width: 1.5; }
+    .mono  { font-family: "Courier New", Courier, monospace; fill: #000000; }
+    .arrow { fill: none; stroke: #2a7fff; stroke-width: 13; stroke-linecap: butt; }
+    .fat   { fill: #2a7fff; }
+  </style>
+  <rect width="960" height="540" fill="#ffffff"/>
+
+  <!-- ================= upper plane: the function's own environment ================= -->
+  <polygon class="plane" points="336,205 392,60 940,60 884,205"/>
+  <text class="mono" x="586" y="190" font-size="21" font-style="italic">aes</text>
+
+  <!-- straight blue arrow leaving the function -->
+  <polygon class="fat" points="520,120 760,120 760,105 800,127 760,149 760,134 520,134"/>
+
+  <!-- small box: x -->
+  <polygon class="top"  points="404,58 428,42 492,42 468,58"/>
+  <polygon class="side" points="468,58 492,42 492,86 468,102"/>
+  <rect class="face" x="404" y="58" width="64" height="44"/>
+  <rect class="label" x="414" y="70" width="44" height="22" rx="7"/>
+  <text class="mono" x="431" y="86" font-size="15">x</text>
+
+  <!-- small box: y -->
+  <polygon class="top"  points="348,116 372,100 436,100 412,116"/>
+  <polygon class="side" points="412,116 436,100 436,144 412,160"/>
+  <rect class="face" x="348" y="116" width="64" height="44"/>
+  <rect class="label" x="358" y="128" width="44" height="22" rx="7"/>
+  <text class="mono" x="375" y="144" font-size="15">y</text>
+
+  <!-- ================= lower plane: your environment ================= -->
+  <polygon class="plane" points="36,500 200,285 790,285 626,500"/>
+
+  <!-- box: waist_cm -->
+  <polygon class="top"  points="112,290 168,248 300,248 244,290"/>
+  <polygon class="side" points="244,290 300,248 300,398 244,440"/>
+  <rect class="face" x="112" y="290" width="132" height="150"/>
+  <rect class="label" x="124" y="330" width="112" height="42" rx="12"/>
+  <text class="mono" x="132" y="358" font-size="19">waist_cm</text>
+
+  <!-- box: bmi -->
+  <polygon class="top"  points="376,290 432,248 564,248 508,290"/>
+  <polygon class="side" points="508,290 564,248 564,398 508,440"/>
+  <rect class="face" x="376" y="290" width="132" height="150"/>
+  <rect class="label" x="398" y="330" width="90" height="42" rx="12"/>
+  <text class="mono" x="416" y="358" font-size="19">bmi</text>
+
+  <!-- ================= the two curved arrows ================= -->
+  <!-- waist_cm -> x -->
+  <path class="arrow" d="M 190,272 C 150,170 250,84 372,80"/>
+  <polygon class="fat" points="366,58 406,80 366,102"/>
+  <!-- bmi -> y -->
+  <path class="arrow" d="M 470,272 C 380,250 300,190 320,140"/>
+  <polygon class="fat" points="300,118 341,138 302,162"/>
+</svg>

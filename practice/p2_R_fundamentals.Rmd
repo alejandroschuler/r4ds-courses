@@ -21,11 +21,11 @@ local({
 })
 ```
 
-This notebook provides the opportunity to practice loading and manipulating data from yesterday's healthcare data set.
+This notebook provides the opportunity to practice loading and manipulating data from yesterday's NHANES data set.
 
 #### Instructions
 
-This notebook includes a framework for inspecting data in the example healthcare data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+This notebook includes a framework for inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
 
 #### Scope
 
@@ -36,11 +36,13 @@ This notebook includes material covered in Lecture 2: R Fundamentals. You will h
 
 #### Data Description
 
-We will be working with synthetic patient records generated with the Synthea$^{\text{TM}}$ software package made available by The MITRE Corporation. The synthetic data models 1000 patient records and is stored in 16 CSV tables. The data source is cited below:
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
 
->Jason Walonoski, Mark Kramer, Joseph Nichols, Andre Quina, Chris Moesel, Dylan Hall, Carlton Duffett, Kudakwashe Dube, Thomas Gallagher, Scott McLachlan, Synthea: An approach, method, and software mechanism for generating synthetic patients and the synthetic electronic health care record, Journal of the American Medical Informatics Association, Volume 25, Issue 3, March 2018, Pages 230–238, [https://doi.org/10.1093/jamia/ocx079](https://doi.org/10.1093/jamia/ocx079)
+The public NHANES files are documented here:
 
-The data may be downloaded by clicking [this](https://synthetichealth.github.io/synthea-sample-data/downloads/synthea_sample_data_csv_apr2020.zip) hyperlink. **Please ensure that all tables are stored subdirectory called "data" placed immediately inside the directory containing this notebook.**
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real.
 
 #### Import Modules
 
@@ -50,80 +52,80 @@ library(ggplot2)
 
 #### Specify and Load Data
 
-During the first demonstration, we loaded patient data into a data frame. Please load the table below using the `read.csv` function. If you are stumped, please look back at the first demonstration or review the documentation [here](https://www.rdocumentation.org/packages/qtl2/versions/0.32/topics/read_csv).
+During the first demonstration, we loaded participant data into a data frame. Please load the table below using the `read.csv` function. If you are stumped, please look back at the first demonstration or review the documentation [here](https://www.rdocumentation.org/packages/qtl2/versions/0.32/topics/read_csv).
 
 ```{r}
-# TODO: Assign the value "data/patients.csv" to the variable `path`
+# TODO: Assign the value "data/participants.csv" to the variable `path`
 path <- ...
 
 # TODO: Load the table using read.csv
-df_patient <- ...
+df_participant <- ...
 ```
 
 #### Load Column Names
 
-A data frame includes columns of fixed data types that are labeled with headers. You can identify the headers in a data frame using the `colnames` function. After reviewing the documentation for this function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/row%2Bcolnames), please use the `colnames` function to extract the column names in the `df_patient` data frame.
+A data frame includes columns of fixed data types that are labeled with headers. You can identify the headers in a data frame using the `colnames` function. After reviewing the documentation for this function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/row%2Bcolnames), please use the `colnames` function to extract the column names in the `df_participant` data frame.
 
 ```{r}
-# TODO: Extract the column names of the `df_patient` table using the `colnames` function
+# TODO: Extract the column names of the `df_participant` table using the `colnames` function
 col_names <- ...
 
 # Print the column names
 print(col_names)
 ```
 
-#### Identify Unique Patients
+#### Identify Unique Participants
 
-The built-in `unique` function is used to identify unique values in a data set. If the function is applied to a data frame, then unique rows will be returned. If the function is applied to a vector, then unique elements will be returned. Please review the documentation for the `unique` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unique), then use the function to identify the unique values in the `Id` column of `df_patient`.
+The built-in `unique` function is used to identify unique values in a data set. If the function is applied to a data frame, then unique rows will be returned. If the function is applied to a vector, then unique elements will be returned. Please review the documentation for the `unique` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unique), then use the function to identify the unique values in the `id` column of `df_participant`.
 
 ```{r, max.height='200px'}
-# TODO: Identify the unique values in the `Id` column of `df_patient`
-# Store the unique patient IDs in a vector
-unique_patients <- ...
+# TODO: Identify the unique values in the `id` column of `df_participant`
+# Store the unique participant IDs in a vector
+unique_participants <- ...
 
-# Print the unique patients
-print(unique_patients)
+# Print the unique participants
+print(unique_participants)
 ```
 
-#### Count Unique Patients
+#### Count Unique Participants
 
-The built-in `length` function can be used to identify the number of elements in a vector. Please review the documentation for the `length` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/length), then use the function to identify the number of unique patients in `df_patient`.
+The built-in `length` function can be used to identify the number of elements in a vector. Please review the documentation for the `length` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/length), then use the function to identify the number of unique participants in `df_participant`.
 
 ```{r}
-# TODO: Use the `length` function to identify the number of unique patients in `df_patient`
-n_patients <- ...
+# TODO: Use the `length` function to identify the number of unique participants in `df_participant`
+n_participants <- ...
 
-# Print the number of patients (There should be 1171 unique patients)
-print(n_patients)
+# Print the number of participants (There should be 9254 unique participants)
+print(n_participants)
 ```
 
-#### Sort Patient Identifiers
+#### Sort Participant Identifiers
 
-The built-in `sort` function can be used to sort values in a vector. When the values in a vector are alphanumeric, they are sorted in alphabetical order with numbers coming first. Please review the documentation for the `sort` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sort), then use the function to sort the unique patient identifiers.
+The built-in `sort` function can be used to sort values in a vector. When the values in a vector are alphanumeric, they are sorted in alphabetical order with numbers coming first. Please review the documentation for the `sort` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sort), then use the function to sort the unique participant identifiers.
 
 ```{r, max.height='200px'}
-# TODO: Sort the patients listed in `unique_patients` by their identifiers
+# TODO: Sort the participants listed in `unique_participants` by their identifiers
 unique_patients_sorted <- ...
 
-# Print the sorted patient identifiers
+# Print the sorted participant identifiers
 print(unique_patients_sorted)
 ```
 
-#### Load Patient Encounters
+#### Load Participant Encounters
 
-Now, we will open a second table from our data set to inspect encounters with patients. Again using the `read.csv` function, please load the encounters data stored in `data/encounters.csv`.
+Now, we will open a second table from our data set to inspect encounters with participants. Again using the `read.csv` function, please load the encounters data stored in `data/exams.csv`.
 
 ```{r, max.height='200px'}
 # Specify the path to the encounters data
-encounters_path <- "data/encounters.csv"
+exams_path <- "data/exams.csv"
 
-# TODO: Use the `read.csv`function to load the patient encounters into a data frame
-df_encounters <- ...
+# TODO: Use the `read.csv`function to load the exam components into a data frame
+df_exams <- ...
 ```
 
 #### Define a Vector
 
-We will use this notebook to inspect the number of patient encounters in each month. Please define a vector specifying the twelve months of the year ("January" through "December") as strings values.
+We will use this notebook to inspect the number of exam components in each month. Please define a vector specifying the twelve months of the year ("January" through "December") as strings values.
 
 ```{r}
 # TODO: Generate a vector of strings specifying the twelve months of the year
@@ -132,14 +134,14 @@ months <- ...
 
 #### Extract Encounter Dates
 
-Using the code provided below, we will extract the date of each encounter. We will get this information from the `START` column of the `encounters` table. We will format the encounter dates as POSIXct (date and time) information. POSIXct internally represents date and time as seconds since Junuary 1, 1970. We use the `as.POSIXct` function (with documentation [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/as.POSIX*)) to convert string timestamps into POSIXct format. You have no task in the subsequent code block.
+Using the code provided below, we will extract the date of each encounter. We will get this information from the `exam_start` column of the `encounters` table. We will format the encounter dates as POSIXct (date and time) information. POSIXct internally represents date and time as seconds since Junuary 1, 1970. We use the `as.POSIXct` function (with documentation [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/as.POSIX*)) to convert string timestamps into POSIXct format. You have no task in the subsequent code block.
 
 ```{r, max.height='200px'}
-# Extract encounters for each patient
-encounters <- df_encounters[, c("PATIENT", "START")]
+# Extract encounters for each participant
+encounters <- df_exams[, c("participant_id", "exam_start")]
 
-# Reformat `START` column as `POSIXct` (datetime) information
-encounters$START <- as.POSIXct(encounters$START)
+# Reformat `exam_start` column as `POSIXct` (datetime) information
+encounters$exam_start <- as.POSIXct(encounters$exam_start)
 
 # Print the encounter start times
 print(encounters)
@@ -147,11 +149,11 @@ print(encounters)
 
 #### Identify the Month of Each Encounter
 
-For each of the patient encounters, we will identify the month of that encounter. We will do so by reformatting the data in the `START` column using the `format` function (with documentation found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/format)). The "%B" identifier specifies unabbreviated months (as noted [here](https://www.statmethods.net/input/dates.html). We will store the month in a new column. You have no task in the subsequent code block.
+For each of the exam components, we will identify the month of that encounter. We will do so by reformatting the data in the `exam_start` column using the `format` function (with documentation found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/format)). The "%B" identifier specifies unabbreviated months (as noted [here](https://www.statmethods.net/input/dates.html). We will store the month in a new column. You have no task in the subsequent code block.
 
 ```{r, max.height='200px'}
 # Extract the month for each encounter
-encounters$MONTH <- format(encounters$START, "%B")
+encounters$MONTH <- format(encounters$exam_start, "%B")
 
 # Display the resulting table
 print(encounters)
@@ -191,4 +193,4 @@ for (month in months) {
 
 #### Summary
 
-In this notebook, we loaded patient records into a data frame. We identified and sorted the unique patient IDs in our records. We also identified and plotted the number of patient encounters by month.
+In this notebook, we loaded participant records into a data frame. We identified and sorted the unique participant IDs in our records. We also identified and plotted the number of exam components by month.

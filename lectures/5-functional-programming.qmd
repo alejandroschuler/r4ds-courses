@@ -148,11 +148,11 @@ rescale(0:10)
 - The syntax is `FUNCTION_NAME <- function(ARGUMENTS...) { CODE }`
 - what you call the arguments that go in the `function(...)` part is how the function will refer to these inputs internally and specify how it should be called using named arguments
 
-![](https://github.com/alejandroschuler/r4ds-courses/blob/summer-2023/figures/call.png?raw=true)
+![](https://github.com/alejandroschuler/r4ds-courses/blob/mph-nhanes/figures/call.png?raw=true)
 
 ```
 aes = function(x,y) {...} # defining 
-aes(x=EIF3L, y=VAPA) # calling 
+aes(x=waist_cm, y=bmi) # calling 
 ```
 :::
 ::::
@@ -253,11 +253,11 @@ grades |>
 ***
 - as another example, let's say you want to read in multiple files:
 ```{r}
-url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"
 files = list(
-  samples = "gtex_samples_time.csv",
-  tissues = "gtex_tissue_month_year.csv",
-  dates = "gtex_dates_clean.csv"
+  exams      = "nhanes_monthly_exams.csv",
+  components = "nhanes_monthly_components.csv",
+  dates      = "nhanes_exam_dates.csv"
 )
 
 urls = str_c(url_start, files)
@@ -271,12 +271,12 @@ data_frames = urls |>
 ## Exercise: map practice  {data-background-color=teal}
 
 ```{r}
-url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"
 
 data_frames = list(
-  samples = "gtex_samples_time.csv",
-  tissues = "gtex_tissue_month_year.csv",
-  dates = "gtex_dates_clean.csv"
+  exams      = "nhanes_monthly_exams.csv",
+  components = "nhanes_monthly_components.csv",
+  dates      = "nhanes_exam_dates.csv"
 )  |> 
   map(\(f) str_c(url_start, f)) |>
   map(read_csv)
@@ -341,12 +341,12 @@ data_frames |>
 
 Earlier we saw this example of reading in multiple files:
 ```{r}
-url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"
 
 data_frames = list(
-  samples = "gtex_samples_time.csv",
-  tissues = "gtex_tissue_month_year.csv",
-  dates = "gtex_dates_clean.csv"
+  exams      = "nhanes_monthly_exams.csv",
+  components = "nhanes_monthly_components.csv",
+  dates      = "nhanes_exam_dates.csv"
 )  |> 
   map(\(f) str_c(url_start, f)) |>
   map(read_csv)
@@ -456,12 +456,12 @@ expand_grid(
 ## Exercise: dimensions {data-background-color=teal}
 
 ```{r}
-url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/gtex_metadata/"
+url_start = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/nhanes/"
 
 data_frames = list(
-  samples = "gtex_samples_time.csv",
-  tissues = "gtex_tissue_month_year.csv",
-  dates = "gtex_dates_clean.csv"
+  exams      = "nhanes_monthly_exams.csv",
+  components = "nhanes_monthly_components.csv",
+  dates      = "nhanes_exam_dates.csv"
 )  |> 
   map(\(f) str_c(url_start, f)) |>
   map(read_csv)
@@ -492,12 +492,12 @@ data_frames |>
 
 ## Exercise: reading files in multiple directories {data-background-color=teal}
 
-My collaborator has an online folder of experimental results named `results` that can be found at `"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"`. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_14` would be one sub-folder. Within each sub-folder, there are 3 csv files called `a.csv`, `b.csv` `c.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_14/c.csv`.
+My collaborator has an online folder of experimental results named `results` that can be found at `"https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/results"`. In that folder, there are 20 sub-folders that represent the results of each repetition of her experiment. These sub-folders are each named `rep_n`, so, e.g. `results/rep_14` would be one sub-folder. Within each sub-folder, there are 3 csv files called `a.csv`, `b.csv` `c.csv` that contain different kinds of measurements. Thus, a full path to one of these files might be `results/rep_14/c.csv`.
 
 1. write code to read these all into one long list of data frames. `str_c()` or `glue()` will be helpful to create the required file names
 ```{r, include=F, eval=F}
 library(glue)
-url = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/summer-2023/data/results"
+url = "https://raw.githubusercontent.com/alejandroschuler/r4ds-courses/mph-nhanes/data/results"
 
 dfs = expand_grid(
   r = 1:20,

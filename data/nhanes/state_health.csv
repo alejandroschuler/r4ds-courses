@@ -1,0 +1,51 @@
+state,state_abbr,obese_pct,overweight_pct
+Alabama,AL,38.3,33.7
+Alaska,AK,32.1,36.4
+Arizona,AZ,33.2,33.5
+Arkansas,AR,37.4,33.6
+California,CA,28.1,34.7
+Colorado,CO,25,35.6
+Connecticut,CT,30.6,35.6
+Delaware,DE,37.9,33.9
+Florida,FL,31.6,34.5
+Georgia,GA,37,31.9
+Hawaii,HI,25.9,33.8
+Idaho,ID,33.2,35.4
+Illinois,IL,33.4,33.8
+Indiana,IN,37.7,33.3
+Iowa,IA,37.4,33.8
+Kansas,KS,35.7,33.4
+Kentucky,KY,37.7,34.1
+Louisiana,LA,40.1,31.7
+Maine,ME,33.1,33
+Maryland,MD,33.2,34.4
+Massachusetts,MA,27.2,34.7
+Michigan,MI,34.5,32.8
+Minnesota,MN,33.6,34.9
+Mississippi,MS,39.4,32.7
+Missouri,MO,36.4,33.9
+Montana,MT,30.5,35.4
+Nebraska,NE,35.3,35.1
+Nevada,NV,33.5,33.8
+New Hampshire,NH,30.2,36.7
+New Jersey,NJ,29.1,36.7
+New Mexico,NM,32.4,36.9
+New York,NY,30.1,33.9
+North Carolina,NC,34.1,35.2
+North Dakota,ND,35.4,35.6
+Ohio,OH,38.1,32.8
+Oklahoma,OK,40,32.3
+Oregon,OR,30.9,36
+Pennsylvania,PA,33.4,34.3
+Rhode Island,RI,30.8,36.5
+South Carolina,SC,35,34.8
+South Dakota,SD,36.8,35.4
+Tennessee,TN,38.9,32
+Texas,TX,35.5,34.7
+Utah,UT,31.1,34.2
+Vermont,VT,26.8,34.1
+Virginia,VA,35.2,32.1
+Washington,WA,31.7,34.6
+West Virginia,WV,41,33.4
+Wisconsin,WI,37.6,33
+Wyoming,WY,34.2,35.6

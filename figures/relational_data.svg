@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 790" width="1400" height="790">
+  <style>
+    .tbl   { fill: #ffffff; stroke: #000000; stroke-width: 2.5; }
+    .name  { font-family: Helvetica, Arial, sans-serif; font-size: 27px; fill: #000000; }
+    .col   { font-family: Helvetica, Arial, sans-serif; font-size: 25px; fill: #000000; }
+    .link  { stroke: #000000; stroke-width: 2.5; fill: none; }
+  </style>
+  <rect width="1400" height="790" fill="#ffffff"/>
+
+  <!-- exams (centre) -->
+  <text class="name" x="655" y="80">exams</text>
+  <g>
+    <rect class="tbl" x="655" y="95"  width="215" height="66"/>
+    <rect class="tbl" x="655" y="161" width="215" height="66"/>
+    <rect class="tbl" x="655" y="227" width="215" height="66"/>
+    <rect class="tbl" x="655" y="293" width="215" height="66"/>
+    <rect class="tbl" x="655" y="359" width="215" height="66"/>
+    <rect class="tbl" x="655" y="425" width="215" height="66"/>
+    <text class="col" x="673" y="137">participant_id</text>
+    <text class="col" x="673" y="203">exam_id</text>
+    <text class="col" x="673" y="269">session_id</text>
+    <text class="col" x="673" y="335">center_id</text>
+    <text class="col" x="673" y="401">component</text>
+    <text class="col" x="673" y="467">status_code</text>
+  </g>
+
+  <!-- participants (left) -->
+  <text class="name" x="80" y="140">participants</text>
+  <g>
+    <rect class="tbl" x="80" y="155" width="225" height="66"/>
+    <rect class="tbl" x="80" y="221" width="225" height="66"/>
+    <rect class="tbl" x="80" y="287" width="225" height="66"/>
+    <rect class="tbl" x="80" y="353" width="225" height="66"/>
+    <text class="col" x="98" y="197">participant_id</text>
+    <text class="col" x="98" y="263">age_group</text>
+    <text class="col" x="98" y="329">sex</text>
+    <text class="col" x="98" y="395">birth_country</text>
+  </g>
+  <line class="link" x1="305" y1="188" x2="655" y2="128"/>
+
+  <!-- sessions (right) -->
+  <text class="name" x="1120" y="165">sessions</text>
+  <g>
+    <rect class="tbl" x="1120" y="180" width="215" height="66"/>
+    <rect class="tbl" x="1120" y="246" width="215" height="66"/>
+    <rect class="tbl" x="1120" y="312" width="215" height="66"/>
+    <text class="col" x="1138" y="222">session_id</text>
+    <text class="col" x="1138" y="288">session_type</text>
+    <text class="col" x="1138" y="354">session_date</text>
+  </g>
+  <line class="link" x1="870" y1="278" x2="1120" y2="213"/>
+
+  <!-- measurements (lower left) -->
+  <text class="name" x="315" y="510">measurements</text>
+  <g>
+    <rect class="tbl" x="315" y="525" width="215" height="66"/>
+    <rect class="tbl" x="315" y="591" width="215" height="66"/>
+    <rect class="tbl" x="315" y="657" width="215" height="66"/>
+    <text class="col" x="333" y="567">participant_id</text>
+    <text class="col" x="333" y="633">measure</text>
+    <text class="col" x="333" y="699">value</text>
+  </g>
+  <line class="link" x1="530" y1="558" x2="655" y2="205"/>
+
+  <!-- id (far lower left) -->
+  <text class="name" x="45" y="528">id</text>
+  <g>
+    <rect class="tbl" x="45" y="543" width="150" height="66"/>
+    <text class="col" x="63" y="585">...</text>
+  </g>
+  <line class="link" x1="195" y1="576" x2="315" y2="624"/>
+
+  <!-- centers (lower right) -->
+  <text class="name" x="1000" y="573">centers</text>
+  <g>
+    <rect class="tbl" x="1000" y="588" width="150" height="66"/>
+    <text class="col" x="1018" y="630">...</text>
+  </g>
+  <line class="link" x1="870" y1="344" x2="1000" y2="621"/>
+</svg>
