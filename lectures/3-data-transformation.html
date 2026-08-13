@@ -631,11 +631,11 @@ Alejandro Schuler
 <pre><code># A tibble: 5 x 28
   id      age age_group sex   race  education weight_kg height_cm   bmi waist_cm
   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 NHAN~     3 0-19      male  Mexi~ &lt;NA&gt;           NA        NA    NA       NA  
-2 NHAN~     5 0-19      fema~ Mexi~ &lt;NA&gt;           15        98.9  15.3     NA  
-3 NHAN~     8 0-19      male  Black &lt;NA&gt;           20.5     122.   13.9     50.2
-4 NHAN~    59 40-59     fema~ White High sch~      97.7     153.   41.8    117. 
-5 NHAN~    26 20-39     fema~ Mexi~ Some col~      75.5     160.   29.4     88.5
+1 NHAN~    12 0-19      male  Other &lt;NA&gt;           61.2      169   21.4     71.8
+2 NHAN~    16 0-19      male  Black &lt;NA&gt;           96        175.  31.5    101. 
+3 NHAN~    32 20-39     male  Asian College ~     126.       178.  39.8     NA  
+4 NHAN~    33 20-39     male  White 9-11th g~     147.       185.  42.9    136. 
+5 NHAN~    22 20-39     male  Black Some col~      64.6      171.  22       77.5
 # i 18 more variables: pulse &lt;dbl&gt;, bp_sys_1 &lt;dbl&gt;, bp_sys_2 &lt;dbl&gt;,
 #   bp_sys_3 &lt;dbl&gt;, bp_sys_4 &lt;dbl&gt;, bp_dia_1 &lt;dbl&gt;, bp_dia_2 &lt;dbl&gt;,
 #   bp_dia_3 &lt;dbl&gt;, bp_dia_4 &lt;dbl&gt;, cholesterol &lt;dbl&gt;, hdl &lt;dbl&gt;, hba1c &lt;dbl&gt;,
@@ -1439,7 +1439,7 @@ Caused by error in `number + 1`:
 <p><strong>Problem 1</strong></p>
 <p>I want a single blood pressure number for each participant instead of four separate readings. Using the NHANES data, create a new column containing the average of the four systolic readings. Most participants are missing the fourth reading, so ignore <code>NA</code>s when you take the average. (This is exactly what NHANES itself reports as the participant’s systolic blood pressure.)</p>
 <p><strong>Problem 2</strong></p>
-<p>Produce a plot showing systolic vs diastolic blood pressure for participants aged 60 and over only, and assign color based on whether or not the participant is obese (BMI of 30 or more).</p>
+<p>Produce a plot showing the first systolic reading vs the first diastolic reading for participants aged 60 and over only, and assign color based on whether or not the participant is obese (BMI of 30 or more).</p>
 <p><strong>Problem 3</strong></p>
 <p>Produce a vector containing the ten participant IDs (<code>id</code>) with the biggest difference between their first and third systolic readings.</p>
 </section>
