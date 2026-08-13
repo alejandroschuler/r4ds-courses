@@ -619,7 +619,7 @@ ggplot(aes(x=bmi >= 30, y=bp_sys_1)) +
 
 **Problem 1** 
 
-I want a single blood pressure number for each participant instead of three separate readings. Using the NHANES data, create a new column containing the average of the three systolic readings. (This is exactly what NHANES itself reports as the participant's systolic blood pressure.)
+I want a single blood pressure number for each participant instead of four separate readings. Using the NHANES data, create a new column containing the average of the four systolic readings. (This is exactly what NHANES itself reports as the participant's systolic blood pressure.)
 
 **Problem 2** 
 
