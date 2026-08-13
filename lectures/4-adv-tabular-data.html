@@ -806,6 +806,11 @@ Alejandro Schuler
 </div>
 </div>
 <p>The numbers in the table are the number of systolic readings that were missing across all the participants in each race and education group.</p>
+</section>
+<section id="exercise-one-number-per-participant" class="slide level2" data-background-color="teal">
+<h2>Exercise: one number per participant</h2>
+<p>I want a single blood pressure number for each participant instead of four separate readings. Using the NHANES data, produce a table with one row per participant and a column holding the average of that participant’s systolic readings. Most participants are missing the fourth reading, so ignore <code>NA</code>s when you take the average. (This is exactly what NHANES itself reports as the participant’s systolic blood pressure.)</p>
+<p><em>Hint: the readings live in four separate columns, and <code>mean()</code> only knows what to do with one vector at a time. Get them into a single column first.</em></p>
 </section></section>
 <section>
 <section id="combining-multiple-tables-with-joins" class="title-slide slide level1 center" data-background-color="black">

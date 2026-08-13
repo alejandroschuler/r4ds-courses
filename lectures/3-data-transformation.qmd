@@ -617,15 +617,11 @@ ggplot(aes(x=bmi >= 30, y=bp_sys_1)) +
 *Before writing code for each problem , break the problem into steps. Do you have to create new columns? Filter rows? Arrange rows? Select columns? In what order? Once you have a plan, write code, one step at a time.*
 
 
-**Problem 1** 
-
-I want a single blood pressure number for each participant instead of four separate readings. Using the NHANES data, create a new column containing the average of the four systolic readings. Most participants are missing the fourth reading, so ignore `NA`s when you take the average. (This is exactly what NHANES itself reports as the participant's systolic blood pressure.)
-
-**Problem 2** 
+**Problem 1**
 
 Produce a plot showing the first systolic reading vs the first diastolic reading for participants aged 60 and over only, and assign color based on whether or not the participant is obese (BMI of 30 or more).
 
-**Problem 3** 
+**Problem 2**
 
 Produce a vector containing the ten participant IDs (`id`) with the biggest difference between their first and third systolic readings.
 
