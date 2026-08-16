@@ -1,0 +1,301 @@
+---
+title: "Practice 5: Functional Programming"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# The below commands toggle scrolling in outputs
+options(width = 60)
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
+```
+
+This demonstration uses the `purrr` package to bundle repeated work into functions and then run those functions over many columns and many simulated samples of the NHANES data.
+
+#### Instructions
+
+This notebook includes a framework for summarizing and simulating from the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 5: Functional Programming. You will practice the following...
+
+1. Write and test your own functions
+2. Give a function an optional argument
+3. Return more than one value from a function
+4. Iterate a function over a list using `map` and its variants
+5. Write anonymous functions
+6. Use repeated sampling to see how much a conclusion depends on sample size
+
+#### Data Description
+
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
+
+The public NHANES files are documented here:
+
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real. In this example, we will be working with participant records stored in `participants.csv`.
+
+#### Import Modules
+
+```{r}
+library(tidyverse)
+```
+
+#### Specify and Load Data
+
+This demonstration will make use of data in the `data/participants.csv` file.
+
+```{r}
+# TODO: Specify the path to the `participants` table
+path_participant <- ...
+
+# TODO: Load the participants table using the `read.csv` function
+df_participant <- ...
+```
+
+#### Write Your First Function
+
+Many of the physical measurements in this data set are missing for some participants, because not everyone completed every part of the exam. R takes missing values seriously, so the mean of a column that contains even one `NA` is itself `NA`.
+
+```{r}
+# The body mass index column contains missing values, so its mean is NA
+mean(df_participant$bmi)
+```
+
+Passing the optional argument `na.rm = TRUE` tells `mean` to drop the missing values first. That works, but it has to be typed out on every single call.
+
+```{r}
+mean(df_participant$bmi, na.rm = TRUE)
+mean(df_participant$waist_cm, na.rm = TRUE)
+mean(df_participant$pulse, na.rm = TRUE)
+```
+
+Repeated code like this is a signal that a function is called for. Writing one gives the operation a name, and it means a later change has to be made in one place instead of three.
+
+```{r}
+# TODO: Write a function called `mean_obs` (short for "mean observed") that takes a vector
+# and returns the mean of its non-missing values. Your function should call `mean` internally.
+mean_obs <- ...
+```
+
+Before turning a new function loose on real data, run it on a few inputs whose answer you already know. Tests like these are a critical part of writing code you can trust.
+
+```{r}
+# The mean of 1, 2, and 3 is 2
+mean_obs(c(1, 2, 3))
+
+# Dropping the missing value leaves 1, 2, and 3, so the answer should not change
+mean_obs(c(1, 2, 3, NA))
+
+# There is nothing left to average here, so R returns NaN ("not a number")
+mean_obs(c(NA, NA))
+```
+
+Now that the function is working, the three lines from earlier read more clearly.
+
+```{r}
+mean_obs(df_participant$bmi)
+mean_obs(df_participant$waist_cm)
+mean_obs(df_participant$pulse)
+```
+
+#### Optional Arguments
+
+The means above print with more decimal places than a body mass index deserves. Rather than rounding at every call site, give the function an optional argument. An argument becomes optional when you write `=` and a default value after its name in the function declaration.
+
+```{r}
+# TODO: Write a new version of `mean_obs` that takes a second, optional argument called `digits`
+# with a default value of 1, and rounds the result to that many decimal places
+mean_obs <- ...
+```
+
+Callers who leave `digits` out get the default, and callers who need more precision can ask for it.
+
+```{r}
+mean_obs(df_participant$bmi)
+mean_obs(df_participant$bmi, digits = 3)
+```
+
+#### Returning Multiple Values
+
+A function can only return one object. When several numbers belong together, gather them into a list and return that single list.
+
+```{r}
+# TODO: Write a function called `describe` that takes a vector and returns a list with three
+# named elements:
+#   `n_observed`: the number of non-missing values
+#   `mean`: the mean of the non-missing values
+#   `range`: the smallest and largest non-missing values, as a vector of length two
+describe <- ...
+
+# Describe the body mass index column
+describe(df_participant$bmi)
+```
+
+#### Iterate a Function Over Columns
+
+`map` takes a list as its first argument and a function as its second, runs the function on every element of the list, and collects the results. A data frame is a list of columns, so mapping over one walks across its columns.
+
+Let's isolate five continuous measurements to work with.
+
+```{r}
+# Select five continuous measurements
+vitals <- df_participant %>%
+  select(bmi, waist_cm, pulse, cholesterol, hdl)
+```
+
+`map` itself always returns a list. The variants named after a data type return that type instead, so `map_dbl` returns a numeric vector, which is easier to read here.
+
+```{r}
+# TODO: Use `map_dbl` to compute `mean_obs` for every column of `vitals`
+vitals_means <- ...
+
+# Print the mean of each measurement
+print(vitals_means)
+```
+
+Notice that `map` kept the column names, so you can tell which mean belongs to which measurement.
+
+#### Anonymous Functions
+
+`mean_obs` was worth naming because we use it repeatedly. For a calculation used exactly once, you can define the function right inside the call to `map`. Such a function is called anonymous because it is never assigned a name. The syntax is `\(ARGUMENTS) BODY`, which is shorthand for `function(ARGUMENTS) {BODY}`.
+
+Every one of these measurements is missing for at least some participants. Let's find out how often.
+
+```{r}
+# TODO: Use `map_dbl` with an anonymous function to compute the proportion of values
+# that are missing in each column of `vitals`
+missing_share <- ...
+
+# Print the proportion missing for each measurement
+print(missing_share)
+```
+
+Pulse, cholesterol, and HDL are missing for roughly a quarter of participants, which limits what you can safely conclude from them.
+
+#### Build a Summary Table
+
+`imap` works like `map`, except the function it calls receives two arguments: the value and its name. That makes it possible to build a result that labels itself. Here we produce one single-row table per measurement and then stack them.
+
+```{r}
+# TODO: Use `imap` to build a one-row tibble for each column of `vitals` containing the
+# column name, the number of missing values, and the mean of the observed values,
+# then use `bind_rows` to stack the tibbles into a single table
+vitals_summary <- ...
+
+# Display the summary table
+print(vitals_summary)
+```
+
+#### Simulate a Small Survey
+
+Suppose a researcher wants to know whether most Americans are overweight, and cannot afford to examine 9,254 people. They measure 20 and find that only 9 of them have a body mass index of 25 or higher, so they report that most Americans are not overweight.
+
+Could they be wrong? We happen to have the larger sample, so we can check how often a 20-person study would reach the wrong conclusion.
+
+```{r}
+# Restrict to participants whose body mass index was actually recorded
+bmi_observed <- df_participant %>%
+  filter(!is.na(bmi)) %>%
+  pull(bmi)
+
+# The share of this population that is overweight or obese
+true_share <- mean(bmi_observed >= 25)
+
+cat(paste0(round(100 * true_share, 1), "% of participants have a body mass index of 25 or higher."))
+```
+
+A slim majority, so the researcher's conclusion is wrong. To see how easily that happens, write a function that simulates one 20-person study and reports what it would conclude.
+
+```{r}
+# TODO: Write a function called `survey_says` that takes a single argument (which it ignores),
+# draws a sample of 20 values from `bmi_observed`, and returns TRUE if more than half of
+# that sample is 25 or higher
+# Hint: `sample(bmi_observed, 20)` draws the sample
+survey_says <- ...
+```
+
+One study on its own tells us very little, so run 500 of them. Passing `1:500` to `map_lgl` calls the function 500 times, once per element, which is why `survey_says` takes an argument it never uses.
+
+```{r}
+# Fix the random number generator so this notebook gives the same answer every time it runs
+set.seed(1)
+
+# TODO: Use `map_lgl` to run `survey_says` 500 times
+survey_results <- ...
+
+# TODO: Take the average of `survey_results` to get the share of studies that got the answer right
+share_correct <- ...
+
+cat(paste0(round(100 * share_correct, 1), "% of 20-person studies concluded that most people are overweight."))
+```
+
+That is barely better than a coin flip, even though the underlying answer never changed. A 20-person study is too small to settle a question this close.
+
+#### Vary the Sample Size
+
+A larger study should do better. Rewrite the function so the sample size is an argument rather than a hard-coded 20.
+
+```{r}
+# TODO: Write a function called `survey_says_n` that takes the sample size `n` as its argument
+# and otherwise behaves like `survey_says`
+survey_says_n <- ...
+```
+
+`expand_grid` returns every combination of the values you hand it, so the table below has one row per study: 500 repetitions at each of three sample sizes.
+
+```{r}
+# One row per simulated study
+settings <- expand_grid(
+  n = c(20, 100, 500),
+  rep = 1:500
+)
+```
+
+`pmap` walks along several inputs in parallel, handing the function one value from each. Given a data frame it uses the columns, matching them to the argument names of the function you supply.
+
+```{r}
+set.seed(1)
+
+# TODO: Use `pmap_lgl` to run one study per row of `settings`
+# Hint: the anonymous function receives both `n` and `rep`, but only needs `n`
+correct <- ...
+
+# Attach the results to the settings they came from
+results <- settings %>%
+  mutate(correct = correct)
+
+# TODO: Group `results` by sample size and compute the share of studies that got the answer right
+share_by_n <- ...
+
+# Print the share correct at each sample size
+print(share_by_n)
+```
+
+Finally, plot the relationship between sample size and the chance of reaching the right conclusion.
+
+```{r}
+ggplot(share_by_n, aes(x = n, y = share_correct)) +
+  geom_line(color = "steelblue") +
+  geom_point(color = "steelblue", size = 3) +
+  geom_hline(yintercept = 0.5, color = "red", linetype = "dashed") +
+  labs(x = "Number of People Measured", y = "Share of Studies Reaching the Right Conclusion") +
+  ylim(0, 1) +
+  theme_minimal()
+```
+
+#### Summary
+
+Writing a function gives a piece of work a name, a single place to fix, and something you can test on inputs whose answers you already know. Once the work is packaged that way, `map` and its relatives let you run it across a whole list without copying anything. In this notebook we wrote `mean_obs` and gave it an optional argument, returned several values at once from `describe`, mapped across the columns of a data frame to summarize five measurements, and simulated 2,000 studies to show that a 20-person survey of a 54.5% majority reaches the right conclusion only a little more often than a coin flip.
