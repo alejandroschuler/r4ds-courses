@@ -132,18 +132,24 @@ I recommend the fantastic book [R for Data Science](https://r4ds.hadley.nz/) (R4
 
 These notebooks are optional. Each one walks through a short analysis of NHANES data, the same survey the lectures draw on, and leaves gaps for you to fill in. Look for the ellipses (`...`) with a `TODO` comment above them. An answer key is posted next to each exercise.
 
-Each exercise is a Quarto document, saved with a `.qmd` extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The [Quarto website](https://quarto.org/) covers the rest, including the other languages and output formats it can handle.
+There are two ways to work through them. Open one in your browser and start typing, with no setup at all, or download it and run it in RStudio the way you would any other analysis. Both routes contain the same exercises.
 
-| Module | Exercise | Answers |
-|---|---|---|
-| 1 | [Programming Basics](practice/p1_programming_basics.qmd) | [answer key](practice/p1_programming_basics_answers.qmd) |
-| 2 | [R Fundamentals](practice/p2_R_fundamentals.qmd) | [answer key](practice/p2_R_fundamentals_answers.qmd) |
-| 3 | [Basic Tabular Manipulation](practice/p3_basic_tabular_manipulation.qmd) | [answer key](practice/p3_basic_tabular_manipulation_answers.qmd) |
-| 4 | [Advanced Tabular Data](practice/p4_adv_tabular_data.qmd) | [answer key](practice/p4_adv_tabular_data_answers.qmd) |
-| 5 | [Functional Programming](practice/p5_functional_programming.qmd) | [answer key](practice/p5_functional_programming_answers.qmd) |
-| extra | [Datatypes and I/O](practice/extra_demo_datatypes.qmd) | worked example, nothing to fill in |
+| Module | Run in your browser | Download | Answers |
+|---|---|---|---|
+| 1 | [Programming Basics](practice/p1_programming_basics_live.html) | [notebook](practice/p1_programming_basics.qmd) | [answer key](practice/p1_programming_basics_answers.qmd) |
+| 2 | [R Fundamentals](practice/p2_R_fundamentals_live.html) | [notebook](practice/p2_R_fundamentals.qmd) | [answer key](practice/p2_R_fundamentals_answers.qmd) |
+| 3 | [Basic Tabular Manipulation](practice/p3_basic_tabular_manipulation_live.html) | [notebook](practice/p3_basic_tabular_manipulation.qmd) | [answer key](practice/p3_basic_tabular_manipulation_answers.qmd) |
+| 4 | [Advanced Tabular Data](practice/p4_adv_tabular_data_live.html) | [notebook](practice/p4_adv_tabular_data.qmd) | [answer key](practice/p4_adv_tabular_data_answers.qmd) |
+| 5 | [Functional Programming](practice/p5_functional_programming_live.html) | [notebook](practice/p5_functional_programming.qmd) | [answer key](practice/p5_functional_programming_answers.qmd) |
+| extra | [Datatypes and I/O](practice/extra_demo_datatypes_live.html) | [notebook](practice/extra_demo_datatypes.qmd) | worked example, nothing to fill in |
+
+#### Running in your browser
+
+The pages in the first column carry a full copy of R with them. Click one and you get the notebook with its code cells made editable: type an answer, press Run Code, and the result appears underneath the way it would in RStudio. Plots draw, error messages read normally, and each answer waits in a collapsed box under the cell it belongs to. Nothing is installed and nothing you type is uploaded, because R itself has been compiled to [WebAssembly](https://docs.r-wasm.org/webr/latest/) and runs inside the tab. The one cost is the first load. R and the packages come down in the background as soon as the page opens, which takes somewhere between half a minute and a minute depending on the module, and your browser keeps them for later visits. Cells share one session, so run them in order from the top.
 
 #### Downloading the files
+
+Each exercise is a Quarto document, saved with a `.qmd` extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The [Quarto website](https://quarto.org/) covers the rest, including the other languages and output formats it can handle.
 
 Every notebook reads its data from a folder called `data` that has to sit right next to the notebook, so saving the `.qmd` by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:
 

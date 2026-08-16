@@ -1,0 +1,253 @@
+---
+title: "Practice 1: Programming Basics"
+format: live-html
+engine: knitr
+webr:
+  packages:
+    - ggplot2
+    - maps
+  resources:
+    - data/participants.csv
+    - data/state_health.csv
+resources:
+  - data/participants.csv
+  - data/state_health.csv
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+::: {.callout-note appearance="simple"}
+This page runs R inside your browser: nothing to install and nothing to set up. R and the
+packages start loading the moment the page opens, which takes up to a minute the first
+time and is quick on later visits. Run the cells in order from the top, since they share
+one session, and edit anything you like to try something out. Each answer sits in a collapsed box under the cell it belongs to. To work through
+it on your own machine instead, download [the notebook](p1_programming_basics.qmd) and [the answer key](p1_programming_basics_answers.qmd) from the
+[course page](../index.html#optional-practice-exercises).
+:::
+
+This notebook introduces a NHANES data set that we will be using to practice for the duration of the workshop.
+
+#### Instructions
+
+This notebook includes a framework for loading and inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 1: Programming Basics. You will have a chance to...
+
+1. Assign variable
+2. Load data into a table
+2. Visualize the data set
+
+#### Data Description
+
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
+
+The public NHANES files are documented here:
+
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real. In this example, we will be working with participant records stored in `participants.csv`.
+
+#### Import Modules
+
+```{webr}
+library(ggplot2)
+```
+
+#### Assign Variable
+
+We will be working with the `participants.csv` file in this example.
+In the subsequent code block, you will specify the location of the data table.
+To do so, you will assign the value `"data/participants.csv"` to the variable `path`.
+
+```{webr}
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- "data/participants.csv"
+```
+:::
+
+#### Load Data into a Table
+
+During lecture 2, you will learn more about data frames. Briefly, data frames are tables of data. Below, we provide the code for loading the data in `participants.csv` into a data frame.
+
+```{webr}
+# Load the table using read.csv
+df_participant <- read.csv(path, header = TRUE)
+```
+
+Let's take a look at the data using the `print` command.
+
+```{webr}
+# Print the table of participant data
+print(df_participant)
+```
+#### Visualize the Data Set
+
+Let's start by inspecting the distribution of HbA1c among participants. HbA1c is the share of hemoglobin in the blood that has sugar attached to it, and it reflects average blood sugar over the previous two to three months. A value of 6.5% or above is diagnostic of diabetes.
+Below we use ggplot2 to plot a histogram of the HbA1c values, which are stored in the `hba1c` column of `df_participant`.
+
+```{webr}
+# Plot a histogram of HbA1c
+# TODO: Provide appropriate x and y labels for the histogram
+# TODO: Provide an appropriate title for the histogram
+ggplot(df_participant, aes(x = hba1c)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 20) +
+  labs(title = "...",
+       x = "...",
+       y = "...")
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Plot a histogram of HbA1c
+# TODO: Provide appropriate x and y labels for the histogram
+# TODO: Provide an appropriate title for the histogram
+ggplot(df_participant, aes(x = hba1c)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 20) +
+  labs(title = "Cost of Healthcare",
+       x = "HbA1c (%)",
+       y = "Frequency")
+```
+:::
+
+Please comment on the distribution of HbA1c.
+
+**TODO: Written Answer Here.**
+
+We can simplify the theme of our figure by adding `theme_minimal()` to our plotting code.
+
+```{webr}
+# Plot a histogram of HbA1c using a simple theme
+# TODO: Provide appropriate x and y labels for the histogram
+# TODO: Provide an appropriate title for the histogram
+ggplot(df_participant, aes(x = hba1c)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 20) +
+  labs(title = "...",
+       x = "...",
+       y = "...") +
+  theme_minimal()
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Plot a histogram of HbA1c using a simple theme
+# TODO: Provide appropriate x and y labels for the histogram
+# TODO: Provide an appropriate title for the histogram
+ggplot(df_participant, aes(x = hba1c)) +
+  geom_histogram(fill = "steelblue", color = "white", bins = 20) +
+  labs(title = "Cost of Healthcare",
+       x = "HbA1c (%)",
+       y = "Frequency") +
+  theme_minimal()
+```
+:::
+
+Now, let's visualize the distribution of race in the data set. Since race is a categorical attribute, we can visualize the distribution of race using a bar chart.
+We will use the built-in `table` function to generate a count of each race. We will then represent these counts in a data frame. Finally, we will plot our bar chart. Built-in functions and data frames will be discussed in more detail during lecture 2.
+
+```{webr}
+# Generate a count of each race in the `df_participant` table.
+# We will introduce data frames in more detail during lecture 2. For now, just consider data frames as a way to represent tables in R.
+counts <- table(df_participant$race)
+counts <- as.data.frame(counts)
+
+# Print the counts of each race
+print(counts)
+```
+
+```{webr}
+# For convenience, the following line of code assigns the row labels "race" and "count" in the `counts` table.
+names(counts) <- c("race", "count")
+
+# You will be better able to understand the code after we introduce vectors during lecture 2. For now, just notice what happens when we re-print the table.
+print(counts)
+```
+
+
+```{webr}
+# Plot a bar chart to visualize the distribution of races
+# TODO: Provide appropriate x and y labels for the bar chart
+# TODO: Provide an appropriate title for the bar chart
+ggplot(counts, aes(x = race, y = count)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "...",
+       x = "...",
+       y = "...") +
+  theme_minimal()
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Plot a bar chart to visualize the distribution of races
+# TODO: Provide appropriate x and y labels for the bar chart
+# TODO: Provide an appropriate title for the bar chart
+ggplot(counts, aes(x = race, y = count)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Distribution of Races in Participant Records",
+       x = "Race",
+       y = "Count") +
+  theme_minimal()
+```
+:::
+
+Please comment on the distribution of races in the data set. It is important to account for imbalanced representation in the data set when using the data to develop models (however, model development is beyond the scope of this course).
+
+**TODO: Written Answer Here.**
+
+#### Advanced Plotting (just for fun)
+
+NHANES deliberately releases no geographic information about its participants, so we cannot map them. Instead we will use a second table, `data/state_health.csv`, which holds the share of adults in each state who are obese according to the CDC's Behavioral Risk Factor Surveillance System. To demonstrate the capabilities of ggplot2, let's generate a heatmap of obesity prevalence across the United States. You do not need to worry about implementing this yourself! The code makes use of a third-party `maps` package that enables us to overlay a heatmap on the map of the US.
+
+```{webr}
+# Install the `maps` package
+# Uncomment the line below if you receive an error saying that `maps` is not installed.
+# install.packages("maps")
+
+# Load the `maps` package
+library(maps)
+```
+
+```{webr}
+# Load the state-level obesity prevalences
+state_health <- read.csv("data/state_health.csv", header = TRUE)
+print(state_health)
+```
+
+```{webr}
+# Don't worry about the rest of this code! This is for demonstration purposes only!
+
+# Get the boundaries of the US states using the `maps` package
+us_states <- map("state", fill = TRUE, plot = FALSE)
+us_states_df <- fortify(us_states, region = "names")
+
+## Relabel the states in `state_health` so they are consistent with `us_states_df`
+state_health$state <- tolower(as.character(state_health$state))
+
+# Overlay the obesity prevalences on the US map
+state_map_data <- merge(us_states_df, state_health, by.x = "region", by.y = "state", all.x = TRUE)
+
+# Visualize the state obesity prevalences as a heatmap
+ggplot(state_map_data, aes(x = long, y = lat, group = group, fill = obese_pct)) +
+  geom_polygon(color = "white") +
+  coord_fixed(1.3) +  # Aspect ratio for the map
+  labs(title = "Percent of adults who are obese, by state",
+       fill = "Percent") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+
+#### Summary
+
+In this demonstration, we loaded and inspected a table of participant information. We visualized the distribution of HbA1c using a histogram, participant races using a bar plot, and state-level obesity prevalence using a heatmap. The hands-on portion of this first demonstration is light. In future demonstrations, as you grow more familiar with the R syntax, you will have a chance to practice loading and manipulating data yourself!

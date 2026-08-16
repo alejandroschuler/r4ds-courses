@@ -1,0 +1,348 @@
+---
+title: "Practice 3: Basic Tabular Manipulation"
+format: live-html
+engine: knitr
+webr:
+  packages:
+    - ggplot2
+    - dplyr
+  resources:
+    - data/participants.csv
+resources:
+  - data/participants.csv
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+::: {.callout-note appearance="simple"}
+This page runs R inside your browser: nothing to install and nothing to set up. R and the
+packages start loading the moment the page opens, which takes up to a minute the first
+time and is quick on later visits. Run the cells in order from the top, since they share
+one session, and edit anything you like to try something out. Each answer sits in a collapsed box under the cell it belongs to. To work through
+it on your own machine instead, download [the notebook](p3_basic_tabular_manipulation.qmd) and [the answer key](p3_basic_tabular_manipulation_answers.qmd) from the
+[course page](../index.html#optional-practice-exercises).
+:::
+
+This demonstration applies data transformations and tabular manipulation with `dplyr` to gain insight into participant health records.
+
+#### Instructions
+
+This demonstration provides a framework for inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 3: Basic Tabular Manipulation. We will manipulate a data frame in the following ways...
+
+1. Filter rows using single conditions and logical conjunctions
+2. Compare values
+3. Sort rows by multiple columns
+4. Isolate a column
+5. Rename a column
+6. Create a new column from existing columns
+
+#### Data Description
+
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
+
+The public NHANES files are documented here:
+
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real.
+
+#### Import Modules
+
+```{webr}
+library(ggplot2)
+library(dplyr)
+```
+
+#### Specify and Load Data
+
+In the subsequent code block, we use the `read.csv` function to load participant data stored in `data/participants.csv`. We will use the same approach that we used in the first two demonstrations.
+
+```{webr}
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- ...
+
+# TODO: Load the table using read.csv
+df_participant <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- "data/participants.csv"
+
+# TODO: Load the table using read.csv
+df_participant <- read.csv(path, header = TRUE)
+```
+:::
+
+#### Identify Participant Ages at Some Reference Date
+
+We will provide you with a reference date. Using the `birth_date` column in the `participants` table, you will identify the age of each participant at the reference date. Please use the `difftime` function to do this. This function returns the difference between two time points in specified units. The documentation for `difftime` can be found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/difftime). We will store the participant ages in a new "age" column.
+
+```{webr}
+# Age will be evaluated at January 1, 2023
+ref_date <- as.Date("2023-01-01")
+
+# Convert the `birth_date` column in the `participants` table to date format
+df_participant$birth_date <- as.Date(df_participant$birth_date)
+
+# TODO: Take the difference between the `birth_date` column in the `participants` table and the `ref_date`
+# TODO: Represent the age in units of years (hint: if the age is given in days, divide by 365.25)
+# TODO: Store the results in a new column called `age`
+df_participant$age <- ...
+
+# For convenience, we express the age as a numerical value and round down to a whole number
+df_participant$age <- as.numeric(df_participant$age)
+df_participant$age <- floor(df_participant$age)
+
+# Let's be more descriptive
+# TODO: Rename the `age` column of the `participants` table to "age (years)"
+# Hint: Use the `rename` function
+df_participant <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Age will be evaluated at January 1, 2023
+ref_date <- as.Date("2023-01-01")
+
+# Convert the `birth_date` column in the `participants` table to date format
+df_participant$birth_date <- as.Date(df_participant$birth_date)
+
+# TODO: Take the difference between the `birth_date` column in the `participants` table and the `ref_date`
+# TODO: Represent the age in units of years (hint: if the age is given in days, divide by 365.25)
+# TODO: Store the results in a new column called `age`
+df_participant$age <- difftime(ref_date, df_participant$birth_date, units = "days") / 365.25
+
+# For convenience, we express the age as a numerical value and round down to a whole number
+df_participant$age <- as.numeric(df_participant$age)
+df_participant$age <- floor(df_participant$age)
+
+# Let's be more descriptive
+# TODO: Rename the `age` column of the `participants` table to "age (years)"
+# Hint: Use the `rename` function
+df_participant <- rename(df_participant, "age (years)" = "age")
+```
+:::
+
+#### Sort Participants
+
+Sort the participants by both their date of birth and their identifier. Report the participants in order of increasing age (most recent birthdays first), then alphabetical participant identifier. Please use the `arrange` function in the `dplyr` package to do this.
+
+```{webr}
+# TODO: Sort participants by `birth_date` and `id` using `dplyr`
+df_participant <- ...
+
+# Print the sorted `df_participant` table
+print(df_participant)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Sort participants by `birth_date` and `id` using `dplyr`
+df_participant <- df_participant %>%
+  arrange(desc(birth_date), id)
+
+# Print the sorted `df_participant` table
+print(df_participant)
+```
+:::
+
+#### Extract Participant Identifier and Age
+
+If we are only interested in the participant ID and age, we may want to isolate those columns from the data frame. Please isolate the participant ID and age columns in their own data frame called `participant_ages`. Please use the `select` function in `dplyr` to do this. Also, isolate the age column into its own vector called `age_vector`.
+
+```{webr}
+# TODO: Create a new data frame from the `id` and `age (years)` columns of the `participants` table using `dplyr`
+# Hint: Normally, with dplyr, we would not place quotes around column names.
+# Hint: When a column name has a space in it, we can use `backticks` around the column name to select it
+participant_ages <- ...
+
+# TODO: Isolate the age column into its own vector
+# Hint: Use the `pull` function in `dplyr`
+age_vector <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Create a new data frame from the `id` and `age (years)` columns of the `participants` table using `dplyr`
+# Hint: Normally, with dplyr, we would not place quotes around column names.
+# Hint: When a column name has a space in it, we can use `backticks` around the column name to select it
+participant_ages <- df_participant %>%
+  select(id, `age (years)`)
+
+# TODO: Isolate the age column into its own vector
+# Hint: Use the `pull` function in `dplyr`
+age_vector <- df_participant %>%
+  pull(`age (years)`)
+```
+:::
+
+#### Plot the Distribution of Participant Ages
+
+Plot a histogram of the participant ages. For more practice, add a vertical reference line at the mean age. Please use `ggplot` to do this.
+
+```{webr}
+# TODO: Plot a histogram of participant ages
+...
+
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Plot a histogram of participant ages
+ggplot(df_participant, aes(x = `age (years)`)) +
+  geom_histogram(binwidth = 4, fill = "steelblue", color = "white") +
+  labs(x = "Age (years)", y = "Number of participants") +
+  geom_vline(xintercept = mean(age_vector), color = "red", linetype = "dashed", size = 1) +
+  annotate("text", x = mean(age_vector) + 7, y = 10, label = "Average", color = "red") +
+  theme_minimal()
+```
+:::
+
+#### Filter on a Single Condition
+
+Filter the `participant_ages` data frame to participants under 18 years old, and store the filtered data frame in a variable called `under_18`.
+Then, filter the `participant_ages` data frame to participants over 65 years old, and store the filtered data frame in a variable called `over_65`.
+Please use `dplyr` to perform the filtering.
+
+```{webr}
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old
+under_18 <- ...
+
+# TODO: Isolate rows from `participant_ages` associated with participants over 65 years old
+over_65 <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old
+under_18 <- participant_ages %>%
+  filter(`age (years)` < 18)
+
+# TODO: Isolate rows from `participant_ages` associated with participants over 65 years old
+over_65 <- participant_ages %>%
+  filter(`age (years)` > 65)
+```
+:::
+
+#### Filter on Multiple Conditions
+
+Filter the `participant_ages` data frame to participants who are under 18 years old **or** over 65 years old, and store the filtered data in a variable called `under_18_or_over_65`. Then, filter the `participant_ages` data frame to participants who are at least 18 years old **and** at most 65 years old, and store the filtered data in a variable called `between_18_and_65`. Use `dplyr` to perform both tasks.
+
+```{webr}
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old or over 65 years old
+under_18_or_over_65 <- ...
+
+# TODO: Isolate rows from `participant_ages` associated with participants >=18 years old and <=65 years old
+between_18_and_65 <- ...
+
+# CHECKING WORK: The code below checks that no participants were lost during the filtering process
+# If this code block runs successfully without an error, your work is correct!
+stopifnot(nrow(under_18_or_over_65) + nrow(between_18_and_65) == nrow(participant_ages))
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Isolate rows from `participant_ages` associated with participants under 18 years old or over 65 years old
+under_18_or_over_65 <- participant_ages %>%
+  filter(`age (years)` < 18 | `age (years)` > 65)
+
+# TODO: Isolate rows from `participant_ages` associated with participants >=18 years old and <=65 years old
+between_18_and_65 <- participant_ages %>%
+  filter(`age (years)` >= 18) %>%
+  filter(`age (years)` <= 65)
+
+# CHECKING WORK: The code below checks that no participants were lost during the filtering process
+# If this code block runs successfully without an error, your work is correct!
+stopifnot(nrow(under_18_or_over_65) + nrow(between_18_and_65) == nrow(participant_ages))
+```
+:::
+
+#### Create New Columns using Existing Columns
+
+Using the `mutate` function in `dplyr` and the `sapply` in base R, create a new column in the `participant_ages` table called `"age_group"` with the following values: `"minor"` if the participant is under 18 years old, `"adult"` if the participant is between 18 and 65 years old, and `"older adult"` if the participant is over 65 years old. To support this task, we provide the function `get_age_group` that takes a numerical age in years and returns the associated age group.
+
+```{webr}
+# We will provide a function for identifying age category
+# The function accepts a numerical age and returns a string age category
+get_age_group <- function(age) {
+  if (age < 18) {
+    return("minor")
+  } else if (age >= 18 && age <= 65) {
+    return("adult")
+  } else {
+    return("older adult")
+  }
+}
+
+# TODO: Apply the function to the `age` column of `participant_ages` to obtain the age category of each participant
+# Hint: Use the `mutate` function in dplyr to define the `age_group` column
+# Hint: Use the `sapply` function to apply the `get_age_group` function to the `age (years)` column
+participant_ages <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# We will provide a function for identifying age category
+# The function accepts a numerical age and returns a string age category
+get_age_group <- function(age) {
+  if (age < 18) {
+    return("minor")
+  } else if (age >= 18 && age <= 65) {
+    return("adult")
+  } else {
+    return("older adult")
+  }
+}
+
+# TODO: Apply the function to the `age` column of `participant_ages` to obtain the age category of each participant
+# Hint: Use the `mutate` function in dplyr to define the `age_group` column
+# Hint: Use the `sapply` function to apply the `get_age_group` function to the `age (years)` column
+participant_ages <- participant_ages %>%
+  mutate(age_group = sapply(`age (years)`, get_age_group))
+```
+:::
+
+#### Grouped Summaries
+
+Calculate the average age of participants in the three age groups: `"minor"`, `"adult"`, and `"older adult"`. Use the `group_by` and `summarize` functions in `dplyr` to complete this task.
+
+```{webr}
+# TODO: Calculate the average age in each age group
+age_group_averages <- ...
+
+# Print the age group averages
+print(age_group_averages)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Calculate the average age in each age group
+age_group_averages <- participant_ages %>%
+  group_by(age_group) %>%
+  summarize(
+    mean_age = mean(`age (years)`),
+  )
+
+# Print the age group averages
+print(age_group_averages)
+```
+:::
+
+#### Summary
+
+In this notebook, we investigated the age distribution of participants in our records. We started by calculating age using each participant's date of birth. We visualized the distribution of ages using a histogram. We then filtered participants according to age criteria, and we assigned participants into age categories. Finally, we calculated the average age for each age category.

@@ -1,0 +1,277 @@
+---
+title: "Practice 2: R Fundamentals"
+format: live-html
+engine: knitr
+webr:
+  packages:
+    - ggplot2
+  resources:
+    - data/participants.csv
+    - data/exams.csv
+resources:
+  - data/participants.csv
+  - data/exams.csv
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+::: {.callout-note appearance="simple"}
+This page runs R inside your browser: nothing to install and nothing to set up. R and the
+packages start loading the moment the page opens, which takes up to a minute the first
+time and is quick on later visits. Run the cells in order from the top, since they share
+one session, and edit anything you like to try something out. Each answer sits in a collapsed box under the cell it belongs to. To work through
+it on your own machine instead, download [the notebook](p2_R_fundamentals.qmd) and [the answer key](p2_R_fundamentals_answers.qmd) from the
+[course page](../index.html#optional-practice-exercises).
+:::
+
+This notebook provides the opportunity to practice loading and manipulating data from yesterday's NHANES data set.
+
+#### Instructions
+
+This notebook includes a framework for inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 2: R Fundamentals. You will have a chance to...
+
+1. Assign variables
+2. Load and inspect data frames
+
+#### Data Description
+
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
+
+The public NHANES files are documented here:
+
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real.
+
+#### Import Modules
+
+```{webr}
+library(ggplot2)
+```
+
+#### Specify and Load Data
+
+During the first demonstration, we loaded participant data into a data frame. Please load the table below using the `read.csv` function. If you are stumped, please look back at the first demonstration or review the documentation [here](https://www.rdocumentation.org/packages/qtl2/versions/0.32/topics/read_csv).
+
+```{webr}
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- ...
+
+# TODO: Load the table using read.csv
+df_participant <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Assign the value "data/participants.csv" to the variable `path`
+path <- "data/participants.csv"
+
+# TODO: Load the table using read.csv
+df_participant <- read.csv(path, header = TRUE)
+```
+:::
+
+#### Load Column Names
+
+A data frame includes columns of fixed data types that are labeled with headers. You can identify the headers in a data frame using the `colnames` function. After reviewing the documentation for this function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/row%2Bcolnames), please use the `colnames` function to extract the column names in the `df_participant` data frame.
+
+```{webr}
+# TODO: Extract the column names of the `df_participant` table using the `colnames` function
+col_names <- ...
+
+# Print the column names
+print(col_names)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Extract the column names of the `df_participant` table using the `colnames` function
+col_names <- colnames(df_participant)
+
+# Print the column names
+print(col_names)
+```
+:::
+
+#### Identify Unique Participants
+
+The built-in `unique` function is used to identify unique values in a data set. If the function is applied to a data frame, then unique rows will be returned. If the function is applied to a vector, then unique elements will be returned. Please review the documentation for the `unique` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unique), then use the function to identify the unique values in the `id` column of `df_participant`.
+
+```{webr}
+# TODO: Identify the unique values in the `id` column of `df_participant`
+# Store the unique participant IDs in a vector
+unique_participants <- ...
+
+# Print the unique participants
+print(unique_participants)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Identify the unique values in the `id` column of `df_participant`
+# Store the unique participant IDs in a vector
+unique_participants <- unique(df_participant$id)
+
+# Print the unique participants
+print(unique_participants)
+```
+:::
+
+#### Count Unique Participants
+
+The built-in `length` function can be used to identify the number of elements in a vector. Please review the documentation for the `length` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/length), then use the function to identify the number of unique participants in `df_participant`.
+
+```{webr}
+# TODO: Use the `length` function to identify the number of unique participants in `df_participant`
+n_participants <- ...
+
+# Print the number of participants (There should be 9254 unique participants)
+print(n_participants)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Use the `length` function to identify the number of unique participants in `df_participant`
+n_participants <- length(unique_participants)
+
+# Print the number of participants (There should be 9254 unique participants)
+print(n_participants)
+```
+:::
+
+#### Sort Participant Identifiers
+
+The built-in `sort` function can be used to sort values in a vector. When the values in a vector are alphanumeric, they are sorted in alphabetical order with numbers coming first. Please review the documentation for the `sort` function [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/sort), then use the function to sort the unique participant identifiers.
+
+```{webr}
+# TODO: Sort the participants listed in `unique_participants` by their identifiers
+unique_patients_sorted <- ...
+
+# Print the sorted participant identifiers
+print(unique_patients_sorted)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Sort the participants listed in `unique_participants` by their identifiers
+unique_patients_sorted <- sort(unique_participants)
+
+# Print the sorted participant identifiers
+print(unique_patients_sorted)
+```
+:::
+
+#### Load Participant Encounters
+
+Now, we will open a second table from our data set to inspect encounters with participants. Again using the `read.csv` function, please load the encounters data stored in `data/exams.csv`.
+
+```{webr}
+# Specify the path to the encounters data
+exams_path <- "data/exams.csv"
+
+# TODO: Use the `read.csv`function to load the exam components into a data frame
+df_exams <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Specify the path to the encounters data
+exams_path <- "data/exams.csv"
+
+# TODO: Use the `read.csv`function to load the exam components into a data frame
+df_exams <- read.csv(exams_path)
+```
+:::
+
+#### Define a Vector
+
+We will use this notebook to inspect the number of exam components in each month. Please define a vector specifying the twelve months of the year ("January" through "December") as strings values.
+
+```{webr}
+# TODO: Generate a vector of strings specifying the twelve months of the year
+months <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Generate a vector of strings specifying the twelve months of the year
+months <- c(
+  "January", "February", "March", "April", "May", "June", "July", "August",
+  "September", "October", "November", "December"
+)
+```
+:::
+
+#### Extract Encounter Dates
+
+Using the code provided below, we will extract the date of each encounter. We will get this information from the `exam_start` column of the `encounters` table. We will format the encounter dates as POSIXct (date and time) information. POSIXct internally represents date and time as seconds since Junuary 1, 1970. We use the `as.POSIXct` function (with documentation [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/as.POSIX*)) to convert string timestamps into POSIXct format. You have no task in the subsequent code block.
+
+```{webr}
+# Extract encounters for each participant
+encounters <- df_exams[, c("participant_id", "exam_start")]
+
+# Reformat `exam_start` column as `POSIXct` (datetime) information
+encounters$exam_start <- as.POSIXct(encounters$exam_start)
+
+# Print the encounter start times
+print(encounters)
+```
+
+#### Identify the Month of Each Encounter
+
+For each of the exam components, we will identify the month of that encounter. We will do so by reformatting the data in the `exam_start` column using the `format` function (with documentation found [here](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/format)). The "%B" identifier specifies unabbreviated months (as noted [here](https://www.statmethods.net/input/dates.html). We will store the month in a new column. You have no task in the subsequent code block.
+
+```{webr}
+# Extract the month for each encounter
+encounters$MONTH <- format(encounters$exam_start, "%B")
+
+# Display the resulting table
+print(encounters)
+```
+
+#### Count Month Frequencies
+
+We will loop through each month in the `months` vector. For each month, we will do the following:
+
+1. Filter the rows in `encounters` to those with a corresponding value in the `MONTH` column
+2. Count the number of rows in the filtered table
+3. Store the row count in a dictionary called `n_encounters_by_month`
+
+This will give us the number of encounters in each month. You have no task in the subsequent code block.
+
+```{webr}
+# Initialize a list for encounter counts associated with each month
+n_encounters_by_month <- list()
+
+# Loop over months
+for (month in months) {
+  
+  # Filter rows in `encounters` matching month
+  encounters_filtered <- encounters[encounters$MONTH == month, ]
+  
+  # Count the number of rows in `encounters_filtered`
+  nrows <- nrow(encounters_filtered)
+  
+  # Store the row count in `n_encounters_by_month`
+  n_encounters_by_month[[month]] <- nrows
+  
+  # Print the number of encounters associated with the month
+  cat("Month:", month, "\n")
+  cat("Number of encounters:", nrows, "\n\n")
+}
+```
+
+#### Summary
+
+In this notebook, we loaded participant records into a data frame. We identified and sorted the unique participant IDs in our records. We also identified and plotted the number of exam components by month.

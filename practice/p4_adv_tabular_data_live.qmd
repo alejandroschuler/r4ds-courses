@@ -1,0 +1,410 @@
+---
+title: "Practice 4: Advanced Tabular Data Manipulation"
+format: live-html
+engine: knitr
+webr:
+  packages:
+    - tidyverse
+  resources:
+    - data/participants.csv
+    - data/medications.csv
+resources:
+  - data/participants.csv
+  - data/medications.csv
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+::: {.callout-note appearance="simple"}
+This page runs R inside your browser: nothing to install and nothing to set up. R and the
+packages start loading the moment the page opens, which takes up to a minute the first
+time and is quick on later visits. Run the cells in order from the top, since they share
+one session, and edit anything you like to try something out. Each answer sits in a collapsed box under the cell it belongs to. To work through
+it on your own machine instead, download [the notebook](p4_adv_tabular_data.qmd) and [the answer key](p4_adv_tabular_data_answers.qmd) from the
+[course page](../index.html#optional-practice-exercises).
+:::
+
+This demonstration combines information from multiple tables using the `dplyr` package to gain insight into participant health records.
+
+#### Instructions
+
+This notebook includes a framework for inspecting data in the example NHANES data set. Skeleton code for the analysis is provided for you. Your job is to fill in missing code denoted by ellipses (`...`) in the notebook. Each ellipse includes a commented `TODO` statement above it with instructions. Please fill in the missing code in the notebook.
+
+#### Scope
+
+This notebook includes material covered in Lecture 4: Advanced Tabular Data Manipulation. You will practice the following...
+
+1. Identify and impute missing values
+2. Pivot a table
+3. Join multiple tables
+4. Draw information from multiple tables to complete desired tasks
+
+#### Data Description
+
+We will be working with data from NHANES, the National Health and Nutrition Examination Survey. NHANES has been run by the CDC since the 1960s. Every two years it interviews a nationally representative sample of about 10,000 Americans, brings them into a mobile examination center for a physical exam, and draws blood. We are using the 2017-2018 cycle, which examined 9,254 people.
+
+The public NHANES files are documented here:
+
+>Centers for Disease Control and Prevention (CDC). National Center for Health Statistics (NCHS). National Health and Nutrition Examination Survey Data, 2017-2018. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. [https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2017)
+
+The tables we use here were built from those files by `data/build_nhanes_data.R` in this repository. **The tables are already stored in a subdirectory called "data" placed immediately inside the directory containing this notebook.** Note that NHANES does not release exam dates or dates of birth, so the `exam_start`, `exam_end`, and `birth_date` columns are simulated (consistent with each participant's real reported age and examination period). Every measurement, lab value, and drug name is real.
+
+#### Import Modules
+
+```{webr}
+library(tidyverse)
+```
+
+#### Specify and Load Data
+
+This demonstration will make use of data in the `data/participants.csv` and `data/medications.csv` files.
+Please use the `read.csv` function to load each table into its own data frame.
+
+```{webr}
+# TODO: Specify the path to the `participants` table
+path_participant <- ...
+
+# TODO: Load the participants table using the `read.csv` function
+df_participant <- ...
+
+# TODO: Specify the path to the `medications` table
+path_medication <- ...
+
+# TODO: Load the medications table using the `read.csv` function
+df_medication <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Specify the path to the `participants` table
+path_participant <- "data/participants.csv"
+
+# TODO: Load the participants table using the `read.csv` function
+df_participant <- read.csv(path_participant)
+
+# TODO: Specify the path to the `medications` table
+path_medication <- "data/medications.csv"
+
+# TODO: Load the medications table using the `read.csv` function
+df_medication <- read.csv(path_medication)
+```
+:::
+
+#### Load Column Names
+
+We've worked with the `data/participants.csv` table during previous examples, but we have not worked with the `data/medications.csv` table.
+Let's extract the column names of `df_medications` to gain some insight into what data is represented.
+
+```{webr}
+# Load the column names in `df_medication`
+cols_medication <- colnames(df_medication)
+
+# Print the column names
+print(cols_medication)
+```
+
+Notice, the medications table includes start and stop time points, encounter identifiers, payment information, and reasons for the medication.
+
+#### Inspect the Distribution of Medication Counts by Participant
+
+We will use information from the `medications` and `participants` tables to generate a distribution of medication counts per unique participant. We will begin working with the `medications` table, with which we will group rows by the `participant_id` column, taking the size of each grouping. For this analysis, we will focus on the number of unique medications taken by each participant; even if the same medication is taken more than once, that medication will be counted only once.
+
+```{webr}
+# To identify the number of medications taken by each participant, we only need the `PATENT` and `drug_id` columns of the `medications` table
+# For convenience, let's store those columns in their own data frame
+med_patient_codes <- df_medication %>%
+  select(participant_id, drug_id)
+
+# Remove duplicate records with same values in `participant_id` and `drug_id` columns
+med_patient_codes <- med_patient_codes %>%
+  distinct()
+
+# TODO: Group the medications table by the `participant_id` column, and take the size of each group
+# This will return the number of distinct medications that each participant is taking
+med_patient_codes_grouped <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# To identify the number of medications taken by each participant, we only need the `PATENT` and `drug_id` columns of the `medications` table
+# For convenience, let's store those columns in their own data frame
+med_patient_codes <- df_medication %>%
+  select(participant_id, drug_id)
+
+# Remove duplicate records with same values in `participant_id` and `drug_id` columns
+med_patient_codes <- med_patient_codes %>%
+  distinct()
+
+# TODO: Group the medications table by the `participant_id` column, and take the size of each group
+# This will return the number of distinct medications that each participant is taking
+med_patient_codes_grouped <- med_patient_codes %>%
+  group_by(participant_id) %>%
+  summarise("med_count" = n()) %>%
+  ungroup()
+```
+:::
+
+Keep in mind, participants with zero medications will not appear in the `med_patient_codes_grouped` table.
+Recall that the `df_participant` table includes all participants.
+We can use the `df_participant` table to fill in missing participant identifiers in the `med_patient_codes_grouped` table.
+Below, we select the participant identifiers from the `id` column of the `df_participant` table and merge them with the `med_patient_codes_grouped` table to create a row for all participants.
+
+```{webr}
+# Isolate the `id` column of the `df_participant` table, and merge the column with the `med_patient_codes_grouped` table.
+med_counts <- df_participant %>%
+  select(id) %>%
+  merge(med_patient_codes_grouped, by.x = "id", by.y = "participant_id", all = TRUE)
+
+# Print the result of the merged table
+print(med_counts)
+```
+You may notice that some rows have a missing value (`NA`) in the `med_count` column.
+These rows correspond to participants without medications, who do not appear in the `med_patient_codes_grouped` table.
+When we merged the `df_participant` and `med_patient_codes_grouped` tables, the `med_count` was not available for these rows. 
+We will replace the missing values with zero.
+
+```{webr}
+# Replace missing values with zero in the `med_count` column of the `med_counts` table
+med_counts <- med_counts %>%
+  mutate(med_count = replace_na(med_count, 0))
+```
+
+Finally, we can plot the medication counts from all participants using a histogram.
+
+```{webr}
+# Specify appropriate bin edges for the histogram
+bin_edges <- seq(0, 16, by = 1)
+
+# Plot a histogram giving the medication counts
+ggplot(med_counts, aes(x = med_count)) +
+  geom_histogram(breaks = bin_edges, fill = "steelblue", color = "black") +
+  labs(x = "Number of Medications", y = "Frequency") +
+  geom_vline(aes(xintercept = mean(med_count)), color = "red", linetype = "dashed", size = 1) +
+  xlim(0, 16) +
+  theme_minimal()
+```
+
+#### Pivot the Medication Table
+
+Assume we are interested in knowing which participants are taking a particular medication.
+We could filter the medications table on the `drug_id` column to isolate records where the code matches the medication of interest.
+For practice, filter the `df_medication` table to rows where the `drug_id` is `"d03807"` (metformin, the first-line drug for type 2 diabetes).
+
+```{webr}
+# TODO: Filter the `df_medication` table to rows where `drug_id` is "d03807"
+taking_metformin <- ...
+
+# TODO: Identify the number of distinct participants taking metformin
+# Hint: Start by isolating the `participant_id` column, then filter to distinct participant identifiers and count the number of rows remaining
+n_taking_metformin <- ...
+
+# Print the number of participants taking metformin
+print(paste(n_taking_metformin, "participants are taking metformin."))
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Filter the `df_medication` table to rows where `drug_id` is "d03807"
+taking_metformin <- df_medication %>%
+  filter(drug_id == "d03807")
+
+# TODO: Identify the number of distinct participants taking metformin
+# Hint: Start by isolating the `participant_id` column, then filter to distinct participant identifiers and count the number of rows remaining
+n_taking_metformin <- taking_metformin %>%
+  select(participant_id) %>%
+  distinct() %>%
+  nrow()
+
+# Print the number of participants taking metformin
+print(paste(n_taking_metformin, "participants are taking metformin."))
+```
+:::
+
+Alternatively, we could pivot the `df_medications` table so that each column corresponds to a medication `drug_id` and each row corresponds to a different participant.
+In this table, use a value of `1` to indicate that the participant corresponding to the row takes the medication corresponding to the column.
+Use a value of `0` to indicate that the participant corresponding to the row does not take the medication corresponding to the column.
+
+```{webr}
+# TODO: Pivot the 'df_medication' table so that rows correspond to participants and columns correspond to codes
+medications_pivot <- ...
+
+# Display the pivoted medications table
+print(medications_pivot)
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Pivot the 'df_medication' table so that rows correspond to participants and columns correspond to codes
+medications_pivot <- df_medication %>%
+  select(participant_id, drug_id) %>%
+  distinct() %>%
+  mutate(value = 1) %>%
+  pivot_wider(names_from = drug_id, values_from = value, values_fill = 0)
+
+# Display the pivoted medications table
+print(medications_pivot)
+```
+:::
+
+Now, you can identify the number of participants taking each medication by taking sums down the columns.
+
+```{webr}
+# Take a sum down the column of the pivot table to identify the number of participants taking each medication
+# This will yield a named vector
+n_taking_each_med <- colSums(medications_pivot[, -1])
+
+# Convert the named vector into a data frame
+n_taking_each_med <- data.frame(medication = names(n_taking_each_med), n_participants = n_taking_each_med)
+
+# Identify the number of participants taking metformin
+n_taking_metformin_from_pivot <- n_taking_each_med %>%
+  filter(medication == "d03807") %>%
+  select(n_participants)
+
+# Print the number of participants taking metformin
+print(paste(n_taking_metformin_from_pivot, "participants are taking metformin."))
+```
+
+Sort the medication codes by the number of participants taking them. Then, plot a bar chart indicating the number of participants taking each of the top 10 most common medications.
+
+```{webr}
+# TODO: Sort the medication codes by the number of participants taking them
+# Hint: Use the `arrange` function on the `n_taking_each_med` table
+n_taking_each_med_sorted <- ...
+
+# TODO: Isolate the top 10 rows in `n_taking_each_med_sorted`
+n_taking_top_10_meds <- ...
+
+# TODO: Generate a bar chart indicating the number of participants taking each of the top 10 most common medications
+...
+
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Sort the medication codes by the number of participants taking them
+# Hint: Use the `arrange` function on the `n_taking_each_med` table
+n_taking_each_med_sorted <- n_taking_each_med %>%
+  arrange(desc(n_participants))
+
+# TODO: Isolate the top 10 rows in `n_taking_each_med_sorted`
+n_taking_top_10_meds <- n_taking_each_med_sorted %>%
+  filter(row_number() <= 10)
+
+# TODO: Generate a bar chart indicating the number of participants taking each of the top 10 most common medications
+ggplot(n_taking_top_10_meds, aes(x = medication, y = n_participants)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = "Medication Code", y = "Number of Participants",
+       title = "Prevalence of Most Frequent Medications") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+:::
+
+#### Identify Younger Participants Taking Many Medications
+
+Our task is to identify participants under 40 years old who are taking "many" medications. We will define "many" medications as five or more medications.
+This task could be used to identify eligible participants for a clinical trial using existing health records.
+We will break the task down into four steps.
+
+**STEP 1.** Using the `birth_date` column of the `df_participant` table, identify the age of each participant (in years) on a provided reference date. For help, review the `p3_basic_tabular_manipulation` notebook.
+
+```{webr}
+# Age will be evaluated at January 1, 2023
+ref_date <- as.Date("2023-01-01")
+
+# Convert the `birth_date` column in the `df_participant` table to date format
+df_participant <- df_participant %>%
+  mutate(birth_date = as.Date(birth_date))
+
+# TODO: Create a column called `age (years)` in the `df_participant` table indicating the age of each participant
+df_participant <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# Age will be evaluated at January 1, 2023
+ref_date <- as.Date("2023-01-01")
+
+# Convert the `birth_date` column in the `df_participant` table to date format
+df_participant <- df_participant %>%
+  mutate(birth_date = as.Date(birth_date))
+
+# TODO: Create a column called `age (years)` in the `df_participant` table indicating the age of each participant
+df_participant <- df_participant %>%
+  mutate(`age (years)` = as.numeric(floor(ref_date - birth_date)) / 365.25)
+```
+:::
+
+**STEP 2.** Filter the participants table to include only rows associated with participants under 40 years old. Store this in a data frame called `under_40`
+
+```{webr}
+# TODO: Filter the `participants` table to include only rows associated with participants under 40
+under_40 <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Filter the `participants` table to include only rows associated with participants under 40
+under_40 <- df_participant %>%
+  filter(`age (years)` < 40)
+```
+:::
+
+**STEP 3.** Left-merge the `under_40` table with the `med_counts` table generated earlier in this notebook. Merge the two tables in the `id` column.
+
+```{webr}
+# TODO: Left-merge the `under_40` table with the `med_counts` table on the `id` column
+med_counts_under_40 <- ...
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Left-merge the `under_40` table with the `med_counts` table on the `id` column
+med_counts_under_40 <- left_join(under_40, med_counts, by = "id") %>%
+  select(id, med_count)
+```
+:::
+
+**STEP 4.** Filter rows to include only those with medication counts greater than or equal to 5.
+
+```{webr}
+# TODO: Filter the rows in `med_counts_under_40` to participants taking 5 or more medications
+highly_medicated_young <- ...
+
+# TODO: Count the number of participants under 40 taking at least 5 medications
+n_highly_medicated_young <- ...
+
+# Report the number of participants under 40 taking 5 or more medications
+cat(paste(n_highly_medicated_young, "participants under 40 are taking 5 or more medications."))
+```
+
+::: {.callout-tip collapse="true"}
+## Show the answer
+```r
+# TODO: Filter the rows in `med_counts_under_40` to participants taking 5 or more medications
+highly_medicated_young <- med_counts_under_40 %>%
+  filter(med_count >= 5)
+
+# TODO: Count the number of participants under 40 taking at least 5 medications
+n_highly_medicated_young <- nrow(highly_medicated_young)
+
+# Report the number of participants under 40 taking 5 or more medications
+cat(paste(n_highly_medicated_young, "participants under 40 are taking 5 or more medications."))
+```
+:::
+
+#### Summary
+
+As demonstrated by these examples, it is often necessary to combine information from multiple tables when analyzing a data set. In this notebook, we used information in the `participants` and `medications` tables to: (1) plot a distribution of the number of medications taken by each participant, (2) plot the number of participants taking the ten most common medications, and (3) identify the number of participants under 40 taking five or more medications.
+

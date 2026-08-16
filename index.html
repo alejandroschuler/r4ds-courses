@@ -351,50 +351,62 @@ R4DS ch.&nbsp;25, 26
 <section id="optional-practice-exercises" class="level3">
 <h3 class="anchored" data-anchor-id="optional-practice-exercises">Optional Practice Exercises</h3>
 <p>These notebooks are optional. Each one walks through a short analysis of NHANES data, the same survey the lectures draw on, and leaves gaps for you to fill in. Look for the ellipses (<code>...</code>) with a <code>TODO</code> comment above them. An answer key is posted next to each exercise.</p>
-<p>Each exercise is a Quarto document, saved with a <code>.qmd</code> extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The <a href="https://quarto.org/">Quarto website</a> covers the rest, including the other languages and output formats it can handle.</p>
+<p>There are two ways to work through them. Open one in your browser and start typing, with no setup at all, or download it and run it in RStudio the way you would any other analysis. Both routes contain the same exercises.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Module</th>
-<th>Exercise</th>
+<th>Run in your browser</th>
+<th>Download</th>
 <th>Answers</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td><a href="practice/p1_programming_basics.qmd">Programming Basics</a></td>
+<td><a href="practice/p1_programming_basics_live.html">Programming Basics</a></td>
+<td><a href="practice/p1_programming_basics.qmd">notebook</a></td>
 <td><a href="practice/p1_programming_basics_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>2</td>
-<td><a href="practice/p2_R_fundamentals.qmd">R Fundamentals</a></td>
+<td><a href="practice/p2_R_fundamentals_live.html">R Fundamentals</a></td>
+<td><a href="practice/p2_R_fundamentals.qmd">notebook</a></td>
 <td><a href="practice/p2_R_fundamentals_answers.qmd">answer key</a></td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td><a href="practice/p3_basic_tabular_manipulation.qmd">Basic Tabular Manipulation</a></td>
+<td><a href="practice/p3_basic_tabular_manipulation_live.html">Basic Tabular Manipulation</a></td>
+<td><a href="practice/p3_basic_tabular_manipulation.qmd">notebook</a></td>
 <td><a href="practice/p3_basic_tabular_manipulation_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td><a href="practice/p4_adv_tabular_data.qmd">Advanced Tabular Data</a></td>
+<td><a href="practice/p4_adv_tabular_data_live.html">Advanced Tabular Data</a></td>
+<td><a href="practice/p4_adv_tabular_data.qmd">notebook</a></td>
 <td><a href="practice/p4_adv_tabular_data_answers.qmd">answer key</a></td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><a href="practice/p5_functional_programming.qmd">Functional Programming</a></td>
+<td><a href="practice/p5_functional_programming_live.html">Functional Programming</a></td>
+<td><a href="practice/p5_functional_programming.qmd">notebook</a></td>
 <td><a href="practice/p5_functional_programming_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>extra</td>
-<td><a href="practice/extra_demo_datatypes.qmd">Datatypes and I/O</a></td>
+<td><a href="practice/extra_demo_datatypes_live.html">Datatypes and I/O</a></td>
+<td><a href="practice/extra_demo_datatypes.qmd">notebook</a></td>
 <td>worked example, nothing to fill in</td>
 </tr>
 </tbody>
 </table>
+<section id="running-in-your-browser" class="level4">
+<h4 class="anchored" data-anchor-id="running-in-your-browser">Running in your browser</h4>
+<p>The pages in the first column carry a full copy of R with them. Click one and you get the notebook with its code cells made editable: type an answer, press Run Code, and the result appears underneath the way it would in RStudio. Plots draw, error messages read normally, and each answer waits in a collapsed box under the cell it belongs to. Nothing is installed and nothing you type is uploaded, because R itself has been compiled to <a href="https://docs.r-wasm.org/webr/latest/">WebAssembly</a> and runs inside the tab. The one cost is the first load. R and the packages come down in the background as soon as the page opens, which takes somewhere between half a minute and a minute depending on the module, and your browser keeps them for later visits. Cells share one session, so run them in order from the top.</p>
+</section>
 <section id="downloading-the-files" class="level4">
 <h4 class="anchored" data-anchor-id="downloading-the-files">Downloading the files</h4>
+<p>Each exercise is a Quarto document, saved with a <code>.qmd</code> extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The <a href="https://quarto.org/">Quarto website</a> covers the rest, including the other languages and output formats it can handle.</p>
 <p>Every notebook reads its data from a folder called <code>data</code> that has to sit right next to the notebook, so saving the <code>.qmd</code> by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"practice/data"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>base <span class="ot">=</span> <span class="st">"https://alejandroschuler.github.io/r4ds-courses/practice/"</span></span>
