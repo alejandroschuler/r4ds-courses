@@ -1,6 +1,6 @@
 ---
 title: "Practice 1: Programming Basics"
-output: html_document
+format: html
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +21,7 @@ local({
 })
 ```
 
-This Jupyter notebook introduces a NHANES data set that we will be using to practice for the duration of the workshop.
+This notebook introduces a NHANES data set that we will be using to practice for the duration of the workshop.
 
 #### Instructions
 

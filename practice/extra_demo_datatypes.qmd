@@ -1,6 +1,6 @@
 ---
 title: "Extra Demonstration: Datatypes and I/O"
-output: html_document
+format: html
 ---
 
 ```{r setup, include=FALSE}

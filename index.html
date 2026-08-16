@@ -351,6 +351,7 @@ R4DS ch.&nbsp;25, 26
 <section id="optional-practice-exercises" class="level3">
 <h3 class="anchored" data-anchor-id="optional-practice-exercises">Optional Practice Exercises</h3>
 <p>These notebooks are optional. Each one walks through a short analysis of NHANES data, the same survey the lectures draw on, and leaves gaps for you to fill in. Look for the ellipses (<code>...</code>) with a <code>TODO</code> comment above them. An answer key is posted next to each exercise.</p>
+<p>Each exercise is a Quarto document, saved with a <code>.qmd</code> extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The <a href="https://quarto.org/">Quarto website</a> covers the rest, including the other languages and output formats it can handle.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -362,61 +363,61 @@ R4DS ch.&nbsp;25, 26
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td><a href="practice/p1_programming_basics.Rmd">Programming Basics</a></td>
-<td><a href="practice/p1_programming_basics_answers.Rmd">answer key</a></td>
+<td><a href="practice/p1_programming_basics.qmd">Programming Basics</a></td>
+<td><a href="practice/p1_programming_basics_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>2</td>
-<td><a href="practice/p2_R_fundamentals.Rmd">R Fundamentals</a></td>
-<td><a href="practice/p2_R_fundamentals_answers.Rmd">answer key</a></td>
+<td><a href="practice/p2_R_fundamentals.qmd">R Fundamentals</a></td>
+<td><a href="practice/p2_R_fundamentals_answers.qmd">answer key</a></td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td><a href="practice/p3_basic_tabular_manipulation.Rmd">Basic Tabular Manipulation</a></td>
-<td><a href="practice/p3_basic_tabular_manipulation_answers.Rmd">answer key</a></td>
+<td><a href="practice/p3_basic_tabular_manipulation.qmd">Basic Tabular Manipulation</a></td>
+<td><a href="practice/p3_basic_tabular_manipulation_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td><a href="practice/p4_adv_tabular_data.Rmd">Advanced Tabular Data</a></td>
-<td><a href="practice/p4_adv_tabular_data_answers.Rmd">answer key</a></td>
+<td><a href="practice/p4_adv_tabular_data.qmd">Advanced Tabular Data</a></td>
+<td><a href="practice/p4_adv_tabular_data_answers.qmd">answer key</a></td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><a href="practice/p5_functional_programming.Rmd">Functional Programming</a></td>
-<td><a href="practice/p5_functional_programming_answers.Rmd">answer key</a></td>
+<td><a href="practice/p5_functional_programming.qmd">Functional Programming</a></td>
+<td><a href="practice/p5_functional_programming_answers.qmd">answer key</a></td>
 </tr>
 <tr class="even">
 <td>extra</td>
-<td><a href="practice/extra_demo_datatypes.Rmd">Datatypes and I/O</a></td>
+<td><a href="practice/extra_demo_datatypes.qmd">Datatypes and I/O</a></td>
 <td>worked example, nothing to fill in</td>
 </tr>
 </tbody>
 </table>
 <section id="downloading-the-files" class="level4">
 <h4 class="anchored" data-anchor-id="downloading-the-files">Downloading the files</h4>
-<p>Every notebook reads its data from a folder called <code>data</code> that has to sit right next to the notebook, so saving the <code>.Rmd</code> by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:</p>
+<p>Every notebook reads its data from a folder called <code>data</code> that has to sit right next to the notebook, so saving the <code>.qmd</code> by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"practice/data"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>base <span class="ot">=</span> <span class="st">"https://alejandroschuler.github.io/r4ds-courses/practice/"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (f <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"p1_programming_basics.Rmd"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p2_R_fundamentals.Rmd"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p3_basic_tabular_manipulation.Rmd"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p4_adv_tabular_data.Rmd"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p5_functional_programming.Rmd"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"extra_demo_datatypes.Rmd"</span>)) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (f <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"p1_programming_basics.qmd"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p2_R_fundamentals.qmd"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p3_basic_tabular_manipulation.qmd"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p4_adv_tabular_data.qmd"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"p5_functional_programming.qmd"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"extra_demo_datatypes.qmd"</span>)) {</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(base, f), <span class="fu">file.path</span>(<span class="st">"practice"</span>, f), <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (f <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"participants.csv"</span>, <span class="st">"exams.csv"</span>, <span class="st">"medications.csv"</span>, <span class="st">"state_health.csv"</span>)) {</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(base, <span class="st">"data/"</span>, f), <span class="fu">file.path</span>(<span class="st">"practice/data"</span>, f), <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This behaves the same way on posit.cloud as it does on your own computer. It makes a <code>practice</code> folder inside your working directory, drops the six notebooks into it, and puts the four data tables in <code>practice/data</code>. If you want the answer keys on hand too, add <code>_answers</code> before the <code>.Rmd</code> in any of the file names above and run it again.</p>
+<p>This behaves the same way on posit.cloud as it does on your own computer. It makes a <code>practice</code> folder inside your working directory, drops the six notebooks into it, and puts the four data tables in <code>practice/data</code>. If you want the answer keys on hand too, add <code>_answers</code> before the <code>.qmd</code> in any of the file names above and run it again.</p>
 <p>To download by hand instead, click the links in the table and the notebook will save straight to your computer. You still need the four data tables: <a href="practice/data/participants.csv">participants.csv</a>, <a href="practice/data/exams.csv">exams.csv</a>, <a href="practice/data/medications.csv">medications.csv</a>, and <a href="practice/data/state_health.csv">state_health.csv</a>. Your browser opens those in a tab rather than saving them, so right-click each one and choose “Save link as”. Put all four in a folder named <code>data</code> next to the notebooks.</p>
 <p>On posit.cloud, the Upload button in the Files pane moves files from your computer into your project.</p>
 </section>
 <section id="opening-and-running-a-notebook" class="level4">
 <h4 class="anchored" data-anchor-id="opening-and-running-a-notebook">Opening and running a notebook</h4>
-<p>Look in the Files pane at the lower right of RStudio, click into the <code>practice</code> folder, and click a notebook. It opens in the editor as text and gray code chunks mixed together. Run one chunk at a time with the green triangle at its upper right. The Knit button above the editor runs everything from top to bottom and produces an HTML report.</p>
+<p>Look in the Files pane at the lower right of RStudio, click into the <code>practice</code> folder, and click a notebook. It opens in the editor as text and gray code chunks mixed together. Run one chunk at a time with the green triangle at its upper right. The Render button above the editor runs everything from top to bottom and produces an HTML report.</p>
 <p>The exercises need a few packages you may not have yet. Install them once with:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"maps"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>

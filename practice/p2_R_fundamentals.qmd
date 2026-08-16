@@ -1,6 +1,6 @@
 ---
 title: "Practice 2: R Fundamentals"
-output: html_document
+format: html
 ---
 
 ```{r setup, include=FALSE}
@@ -56,10 +56,10 @@ During the first demonstration, we loaded participant data into a data frame. Pl
 
 ```{r}
 # TODO: Assign the value "data/participants.csv" to the variable `path`
-path <- "data/participants.csv"
+path <- ...
 
 # TODO: Load the table using read.csv
-df_participant <- read.csv(path, header = TRUE)
+df_participant <- ...
 ```
 
 #### Load Column Names
@@ -68,7 +68,7 @@ A data frame includes columns of fixed data types that are labeled with headers.
 
 ```{r}
 # TODO: Extract the column names of the `df_participant` table using the `colnames` function
-col_names <- colnames(df_participant)
+col_names <- ...
 
 # Print the column names
 print(col_names)
@@ -81,7 +81,7 @@ The built-in `unique` function is used to identify unique values in a data set. 
 ```{r, max.height='200px'}
 # TODO: Identify the unique values in the `id` column of `df_participant`
 # Store the unique participant IDs in a vector
-unique_participants <- unique(df_participant$id)
+unique_participants <- ...
 
 # Print the unique participants
 print(unique_participants)
@@ -93,7 +93,7 @@ The built-in `length` function can be used to identify the number of elements in
 
 ```{r}
 # TODO: Use the `length` function to identify the number of unique participants in `df_participant`
-n_participants <- length(unique_participants)
+n_participants <- ...
 
 # Print the number of participants (There should be 9254 unique participants)
 print(n_participants)
@@ -105,7 +105,7 @@ The built-in `sort` function can be used to sort values in a vector. When the va
 
 ```{r, max.height='200px'}
 # TODO: Sort the participants listed in `unique_participants` by their identifiers
-unique_patients_sorted <- sort(unique_participants)
+unique_patients_sorted <- ...
 
 # Print the sorted participant identifiers
 print(unique_patients_sorted)
@@ -120,7 +120,7 @@ Now, we will open a second table from our data set to inspect encounters with pa
 exams_path <- "data/exams.csv"
 
 # TODO: Use the `read.csv`function to load the exam components into a data frame
-df_exams <- read.csv(exams_path)
+df_exams <- ...
 ```
 
 #### Define a Vector
@@ -129,10 +129,7 @@ We will use this notebook to inspect the number of exam components in each month
 
 ```{r}
 # TODO: Generate a vector of strings specifying the twelve months of the year
-months <- c(
-  "January", "February", "March", "April", "May", "June", "July", "August",
-  "September", "October", "November", "December"
-)
+months <- ...
 ```
 
 #### Extract Encounter Dates

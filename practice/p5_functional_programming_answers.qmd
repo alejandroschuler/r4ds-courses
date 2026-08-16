@@ -1,6 +1,6 @@
 ---
 title: "Practice 5: Functional Programming"
-output: html_document
+format: html
 ---
 
 ```{r setup, include=FALSE}

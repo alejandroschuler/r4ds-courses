@@ -132,29 +132,31 @@ I recommend the fantastic book [R for Data Science](https://r4ds.hadley.nz/) (R4
 
 These notebooks are optional. Each one walks through a short analysis of NHANES data, the same survey the lectures draw on, and leaves gaps for you to fill in. Look for the ellipses (`...`) with a `TODO` comment above them. An answer key is posted next to each exercise.
 
+Each exercise is a Quarto document, saved with a `.qmd` extension. A Quarto document mixes ordinary prose with chunks of runnable R code, so the explanation of a step sits directly above the code that carries it out. Running the file from top to bottom executes every chunk in order and produces an HTML report with the results and figures dropped in where they belong. RStudio has understood the format since version 2022.07 and ships with everything it needs, so there is nothing extra to install. The [Quarto website](https://quarto.org/) covers the rest, including the other languages and output formats it can handle.
+
 | Module | Exercise | Answers |
 |---|---|---|
-| 1 | [Programming Basics](practice/p1_programming_basics.Rmd) | [answer key](practice/p1_programming_basics_answers.Rmd) |
-| 2 | [R Fundamentals](practice/p2_R_fundamentals.Rmd) | [answer key](practice/p2_R_fundamentals_answers.Rmd) |
-| 3 | [Basic Tabular Manipulation](practice/p3_basic_tabular_manipulation.Rmd) | [answer key](practice/p3_basic_tabular_manipulation_answers.Rmd) |
-| 4 | [Advanced Tabular Data](practice/p4_adv_tabular_data.Rmd) | [answer key](practice/p4_adv_tabular_data_answers.Rmd) |
-| 5 | [Functional Programming](practice/p5_functional_programming.Rmd) | [answer key](practice/p5_functional_programming_answers.Rmd) |
-| extra | [Datatypes and I/O](practice/extra_demo_datatypes.Rmd) | worked example, nothing to fill in |
+| 1 | [Programming Basics](practice/p1_programming_basics.qmd) | [answer key](practice/p1_programming_basics_answers.qmd) |
+| 2 | [R Fundamentals](practice/p2_R_fundamentals.qmd) | [answer key](practice/p2_R_fundamentals_answers.qmd) |
+| 3 | [Basic Tabular Manipulation](practice/p3_basic_tabular_manipulation.qmd) | [answer key](practice/p3_basic_tabular_manipulation_answers.qmd) |
+| 4 | [Advanced Tabular Data](practice/p4_adv_tabular_data.qmd) | [answer key](practice/p4_adv_tabular_data_answers.qmd) |
+| 5 | [Functional Programming](practice/p5_functional_programming.qmd) | [answer key](practice/p5_functional_programming_answers.qmd) |
+| extra | [Datatypes and I/O](practice/extra_demo_datatypes.qmd) | worked example, nothing to fill in |
 
 #### Downloading the files
 
-Every notebook reads its data from a folder called `data` that has to sit right next to the notebook, so saving the `.Rmd` by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:
+Every notebook reads its data from a folder called `data` that has to sit right next to the notebook, so saving the `.qmd` by itself will not be enough. The quickest way to get everything into the right places is to paste this into the R console and hit enter:
 
 ```r
 dir.create("practice/data", recursive = TRUE)
 base = "https://alejandroschuler.github.io/r4ds-courses/practice/"
 
-for (f in c("p1_programming_basics.Rmd",
-            "p2_R_fundamentals.Rmd",
-            "p3_basic_tabular_manipulation.Rmd",
-            "p4_adv_tabular_data.Rmd",
-            "p5_functional_programming.Rmd",
-            "extra_demo_datatypes.Rmd")) {
+for (f in c("p1_programming_basics.qmd",
+            "p2_R_fundamentals.qmd",
+            "p3_basic_tabular_manipulation.qmd",
+            "p4_adv_tabular_data.qmd",
+            "p5_functional_programming.qmd",
+            "extra_demo_datatypes.qmd")) {
   download.file(paste0(base, f), file.path("practice", f), mode = "wb")
 }
 
@@ -163,7 +165,7 @@ for (f in c("participants.csv", "exams.csv", "medications.csv", "state_health.cs
 }
 ```
 
-This behaves the same way on posit.cloud as it does on your own computer. It makes a `practice` folder inside your working directory, drops the six notebooks into it, and puts the four data tables in `practice/data`. If you want the answer keys on hand too, add `_answers` before the `.Rmd` in any of the file names above and run it again.
+This behaves the same way on posit.cloud as it does on your own computer. It makes a `practice` folder inside your working directory, drops the six notebooks into it, and puts the four data tables in `practice/data`. If you want the answer keys on hand too, add `_answers` before the `.qmd` in any of the file names above and run it again.
 
 To download by hand instead, click the links in the table and the notebook will save straight to your computer. You still need the four data tables: [participants.csv](practice/data/participants.csv), [exams.csv](practice/data/exams.csv), [medications.csv](practice/data/medications.csv), and [state_health.csv](practice/data/state_health.csv). Your browser opens those in a tab rather than saving them, so right-click each one and choose "Save link as". Put all four in a folder named `data` next to the notebooks.
 
@@ -171,7 +173,7 @@ On posit.cloud, the Upload button in the Files pane moves files from your comput
 
 #### Opening and running a notebook
 
-Look in the Files pane at the lower right of RStudio, click into the `practice` folder, and click a notebook. It opens in the editor as text and gray code chunks mixed together. Run one chunk at a time with the green triangle at its upper right. The Knit button above the editor runs everything from top to bottom and produces an HTML report.
+Look in the Files pane at the lower right of RStudio, click into the `practice` folder, and click a notebook. It opens in the editor as text and gray code chunks mixed together. Run one chunk at a time with the green triangle at its upper right. The Render button above the editor runs everything from top to bottom and produces an HTML report.
 
 The exercises need a few packages you may not have yet. Install them once with:
 

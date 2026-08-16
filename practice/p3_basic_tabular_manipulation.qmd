@@ -1,6 +1,6 @@
 ---
 title: "Practice 3: Basic Tabular Manipulation"
-output: html_document
+format: html
 ---
 
 ```{r setup, include=FALSE}
